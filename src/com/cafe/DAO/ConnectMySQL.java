@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectMySQL {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/qlcafe";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cafe-management";
     private static final String USER = "root";
     private static final String PASS = "";
     private Connection conn;
