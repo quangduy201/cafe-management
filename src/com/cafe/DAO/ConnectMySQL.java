@@ -5,32 +5,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectMySQL {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/qlcafe";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cafe-management";
     private static final String USER = "root";
     private static final String PASS = "";
-    private Connection connection;
+    private Connection conn;
 
     public ConnectMySQL() {}
 
     public void connect() throws SQLException {
-        connection = DriverManager.getConnection(DB_URL, USER, PASS);
+        conn = DriverManager.getConnection(DB_URL, USER, PASS);
     }
 
     public void close() throws SQLException {
-        if (connection != null) {
-            connection.close();
+        if (conn != null) {
+            conn.close();
         }
     }
 
     public Connection getConnection() {
-        return connection;
+        return conn;
     }
 
     public List<List<String>> executeQuery(String query, List<Object> values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
         List<List<String>> result = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(formattedQuery);
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet resultSet = stmt.executeQuery(formattedQuery);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
             while (resultSet.next()) {
@@ -42,6 +42,15 @@ public class ConnectMySQL {
             }
         }
         return result;
+    }
+
+    public int executeUpdate(String query, List<Object> values) throws SQLException {
+        String formattedQuery = formatQuery(query, values);
+        int numOfRows;
+        try (Statement stmt = conn.createStatement()) {
+            numOfRows = stmt.executeUpdate(formattedQuery);
+        }
+        return numOfRows;
     }
 
     public String formatQuery(String query, List<Object> values) {
@@ -58,13 +67,15 @@ public class ConnectMySQL {
     }
 
     public static void main(String[] args) {
+        // Test ConnectMySQL and its functions
         try {
             ConnectMySQL connector = new ConnectMySQL();
             connector.connect();
 
+            // Select customer whose gender = 1 and name = 'Nguuyễn Văn A'
             String query = """
                 SELECT * FROM `customer`
-                WHERE gender = ? AND name = ?
+                WHERE gender = ? AND name = ?;
                 """;
             List<Object> values = new ArrayList<>();
             values.add('M');
@@ -73,10 +84,23 @@ public class ConnectMySQL {
             List<List<String>> result = connector.executeQuery(query, values);
             for (List<String> row : result) {
                 for (Object value : row) {
-                    System.out.print(value + " ");
+                    System.out.print(value + "\t");
                 }
                 System.out.println();
             }
+            values.clear();
+
+            // Delete customer whose CUSTOMER_ID = 'KH002' by setting its DELETED = 1
+            query = """
+                UPDATE `customer` SET DELETED = ?
+                WHERE CUSTOMER_ID = ?;
+                """;
+            values.add(1);
+            values.add("KH002");
+
+            int numsOfRows = connector.executeUpdate(query, values);
+            System.out.println(numsOfRows + " row(s) affected");
+
             connector.close();
         } catch (SQLException e) {
             e.printStackTrace();
