@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2023 at 04:06 AM
+-- Generation Time: Mar 08, 2023 at 04:40 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -193,22 +193,6 @@ CREATE TABLE `discount` (
   `DELETED` bit(1) DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `discount`
---
-
-INSERT INTO `discount` (`DISCOUNT_ID`, `DISCOUNT_PERCENT`, `START_DATE`, `END_DATE`, `STATUS`, `DELETED`) VALUES
-('DIS001', 5, '2023-03-06', '2023-03-07', b'0', b'0'),
-('DIS002', 10, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS003', 10, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS004', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS005', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS006', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS007', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS008', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS009', 0, '2023-03-06', '2023-03-07', b'1', b'0'),
-('DIS010', 0, '2023-03-06', '2023-03-07', b'1', b'0');
-
 -- --------------------------------------------------------
 
 --
@@ -221,19 +205,14 @@ CREATE TABLE `discount_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `discount_details`
+-- Triggers `discount_details`
 --
-
-INSERT INTO `discount_details` (`DISCOUNT_ID`, `PRODUCT_ID`) VALUES
-('DIS001', 'SP001'),
-('DIS001', 'SP002'),
-('DIS003', 'SP003'),
-('DIS005', 'SP005'),
-('DIS006', 'SP006'),
-('DIS007', 'SP007'),
-('DIS008', 'SP008'),
-('DIS009', 'SP009'),
-('DIS010', 'SP010');
+DELIMITER $$
+CREATE TRIGGER `UpdateStatus` AFTER INSERT ON `discount_details` FOR EACH ROW UPDATE discount
+SET discount.STATUS = 1
+WHERE discount.DISCOUNT_ID != NEW.DISCOUNT_ID
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
