@@ -4,17 +4,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectMySQL {
+public class MySQL {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/cafe-management";
     private static final String USER = "root";
     private static final String PASS = "";
-    private Connection conn;
+    private final Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+    private final Statement stmt = conn.createStatement();
 
-    public ConnectMySQL() {}
-
-    public void connect() throws SQLException {
-        conn = DriverManager.getConnection(DB_URL, USER, PASS);
-    }
+    public MySQL() throws SQLException {}
 
     public void close() throws SQLException {
         if (conn != null) {
@@ -26,10 +23,14 @@ public class ConnectMySQL {
         return conn;
     }
 
-    public List<List<String>> executeQuery(String query, List<Object> values) throws SQLException {
+    public Statement getStatement() {
+        return stmt;
+    }
+
+    public List<List<String>> executeQuery(String query, Object... values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
         List<List<String>> result = new ArrayList<>();
-        try (Statement stmt = conn.createStatement()) {
+        try {
             ResultSet resultSet = stmt.executeQuery(formattedQuery);
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -40,20 +41,24 @@ public class ConnectMySQL {
                 }
                 result.add(row);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
 
-    public int executeUpdate(String query, List<Object> values) throws SQLException {
+    public int executeUpdate(String query, Object... values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
         int numOfRows;
-        try (Statement stmt = conn.createStatement()) {
+        try {
             numOfRows = stmt.executeUpdate(formattedQuery);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
         return numOfRows;
     }
 
-    public String formatQuery(String query, List<Object> values) {
+    public String formatQuery(String query, Object... values) {
         String stringValue;
         for (Object value : values) {
             if (value instanceof String || value instanceof Character) {
@@ -67,39 +72,30 @@ public class ConnectMySQL {
     }
 
     public static void main(String[] args) {
-        // Test ConnectMySQL and its functions
+        // Test MySQL and its functions
         try {
-            ConnectMySQL connector = new ConnectMySQL();
-            connector.connect();
+            MySQL connector = new MySQL();
 
             // Select customer whose gender = 1 and name = 'Nguuyễn Văn A'
-            String query = """
+            List<List<String>> result = connector.executeQuery("""
                 SELECT * FROM `customer`
                 WHERE gender = ? AND name = ?;
-                """;
-            List<Object> values = new ArrayList<>();
-            values.add('M');
-            values.add("Nguuyễn Văn A");
-
-            List<List<String>> result = connector.executeQuery(query, values);
+                """,
+                'M', "Nguuyễn Văn A");
             for (List<String> row : result) {
                 for (Object value : row) {
                     System.out.print(value + "\t");
                 }
                 System.out.println();
             }
-            values.clear();
 
             // Delete customer whose CUSTOMER_ID = 'KH002' by setting its DELETED = 1
-            query = """
+            int numOfRows = connector.executeUpdate("""
                 UPDATE `customer` SET DELETED = ?
                 WHERE CUSTOMER_ID = ?;
-                """;
-            values.add(1);
-            values.add("KH002");
-
-            int numsOfRows = connector.executeUpdate(query, values);
-            System.out.println(numsOfRows + " row(s) affected");
+                """,
+                1, "KH002");
+            System.out.println(numOfRows + " row(s) affected");
 
             connector.close();
         } catch (SQLException e) {
