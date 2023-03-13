@@ -1,6 +1,4 @@
 package com.cafe.DAO;
-
-import com.cafe.DTO.Product;
 import com.cafe.DTO.Recipe;
 
 import java.sql.SQLException;
@@ -19,15 +17,12 @@ public class RecipeDAO extends Manager{
         ));
     }
 
-    public List<Recipe> getRecipes(){
-        List<Recipe> recipeList = new ArrayList<Recipe>() {
-        };
+    public List<Recipe> convertToRecipe(List<List<String>> data){
+        List<Recipe> recipeList = new ArrayList<>();
         try{
-            RecipeDAO recipeDAO = new RecipeDAO();
-            List<List<String>> recipes = recipeDAO.read();
-            for (List<String> row : recipes){
-                String product_ID, ingredient_ID, unit;
-                double mass;
+            String product_ID, ingredient_ID, unit;
+            double mass;
+            for (List<String> row : data){
                 product_ID = row.get(0);
                 ingredient_ID = row.get(1);
                 mass = Double.parseDouble(row.get(2));
@@ -35,55 +30,24 @@ public class RecipeDAO extends Manager{
                 Recipe recipe = new Recipe(product_ID, ingredient_ID, unit, mass);
                 recipeList.add(recipe);
             }
-        } catch(Exception e){
+        } catch(Exception ignored){
 
         }
         return recipeList;
     }
 
-    public Recipe readByPrimaryKey(String product_ID, String ingredient_ID){
+    public List<Recipe> readRecipes(String[] conditions){
+        List<Recipe> recipeList = new ArrayList<>();
         try {
-            for (Recipe recipe : getRecipes()){
-                if (recipe.getProduct_ID().indexOf(product_ID) != -1 && recipe.getIngredient_ID().indexOf(ingredient_ID) != -1){
-                    return recipe;
-                }
-            }
-        } catch(Exception e){
-            return null;
-        }
-        return null;
-    }
-
-    public List<Recipe> readByProduct_ID(String product_ID){
-        List<Recipe> result = new ArrayList<Recipe>();
-        try {
-            for (Recipe recipe : getRecipes()){
-                if (recipe.getProduct_ID().indexOf(product_ID) != -1){
-                    result.add(recipe);
-                }
-            }
-        } catch (Exception e){
+            recipeList = convertToRecipe(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
+        return recipeList;
     }
 
-    public List<Recipe> readByIngredient_ID(String ingredient_ID){
-        List<Recipe> result = new ArrayList<Recipe>();
-        try {
-            for (Recipe recipe : getRecipes()){
-                if (recipe.getIngredient_ID().indexOf(ingredient_ID) != -1){
-                    result.add(recipe);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public int create(String product_ID, String ingredient_ID, String unit, double mass){
-        if (readByPrimaryKey(product_ID, ingredient_ID) != null){
+    public int createRecipe(String product_ID, String ingredient_ID, String unit, double mass){
+        if (readRecipes(new String[]{"PRODUCT_ID = '" + product_ID + "'", "INGREDIENT_ID = '" + ingredient_ID + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -93,7 +57,7 @@ public class RecipeDAO extends Manager{
         }
     }
 
-    public int update(String product_ID, String ingredient_ID, String unit){
+    public int updateRecipe(String product_ID, String ingredient_ID, String unit){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("UNIT", unit);
@@ -103,7 +67,7 @@ public class RecipeDAO extends Manager{
         }
     }
 
-    public int update(String product_ID, String ingredient_ID, double mass){
+    public int updateRecipe(String product_ID, String ingredient_ID, double mass){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("MASS", mass);
@@ -113,7 +77,7 @@ public class RecipeDAO extends Manager{
         }
     }
 
-    public int delete(String product_ID, String ingredient_ID, double mass){
+    public int deleteRecipe(String product_ID, String ingredient_ID, double mass){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("MASS", mass);

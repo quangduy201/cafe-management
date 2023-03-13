@@ -1,8 +1,7 @@
 package com.cafe.DAO;
 
-import com.cafe.DTO.Bill;
+
 import com.cafe.DTO.Category;
-import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,75 +19,38 @@ public class CategoryDAO extends Manager{
         ));
     }
 
-    public List<Category> getCategories(){
-        List<Category> categoryList = new ArrayList<Category>();
+    public List<Category> convertToCategory(List<List<String>> data){
+        List<Category> categoryList = new ArrayList<>();
         try {
-            CategoryDAO CategoryDAO = new CategoryDAO();
             String category_ID, name;
             int quantity;
             boolean deleted;
-            List<List<String>> categories = CategoryDAO.read();
-            for (List<String> row : categories) {
+            for (List<String> row : data) {
                 category_ID = row.get(0);
                 name = row.get(1);
                 quantity = Integer.parseInt(row.get(2));
-                if (row.get(3).indexOf("0") != -1){
-                    deleted = false;
-                }else {
-                    deleted = true;
-                }
+                deleted = !row.get(3).contains("0");
                 Category category = new Category(category_ID, name, quantity, deleted);
                 categoryList.add(category);
             }
-        } catch (Exception e){
+        } catch (Exception ignored){
 
         }
         return categoryList;
     }
 
-    public Category readByPrimayKey (String category_ID){
+    public List<Category> readCategories(String[] conditions){
+        List<Category> categoryList = new ArrayList<>();
         try {
-            for (Category category: getCategories()) {
-                if (category.getCategory_ID().indexOf(category_ID) != -1){
-                    return category;
-                }
-            }
-        } catch (Exception e){
-            return null;
-        }
-        return  null;
-    }
-
-    public List<Category> readByName(String name){
-        List<Category> result = new ArrayList<>();
-        try {
-            for (Category category: getCategories()) {
-                if (category.getName().indexOf(name) != -1){
-                    result.add(category);
-                }
-            }
-        } catch (Exception e){
+            categoryList = convertToCategory(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
+        return categoryList;
     }
 
-    public List<Category> readByDeleted(Boolean deleted){
-        List<Category> result = new ArrayList<>();
-        try {
-            for (Category category: getCategories()) {
-                if (category.isDeleted() == deleted){
-                    result.add(category);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public int create(String category_ID, String name, int quanity){
-        if (readByPrimayKey(category_ID) != null){
+    public int createCategory(String category_ID, String name, int quanity){
+        if (readCategories(new String[]{"CATEGORY_ID = '" + category_ID + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -98,7 +60,7 @@ public class CategoryDAO extends Manager{
         }
     }
 
-    public int delete(String category_ID){
+    public int deleteCategory(String category_ID){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("DELETED", 1);

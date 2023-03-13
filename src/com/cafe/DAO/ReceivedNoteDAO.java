@@ -22,158 +22,40 @@ public class ReceivedNoteDAO extends  Manager{
         ));
     }
 
-    public List<ReceivedNote> getReceivedNotes(){
-        List<ReceivedNote> receivedNoteList = new ArrayList<ReceivedNote>() {
-        };
+    public List<ReceivedNote> convertToReceivedNote(List<List<String>> data){
+        List<ReceivedNote> receivedNoteList = new ArrayList<ReceivedNote>();
         try{
-            ReceivedNoteDAO receivedNoteDAO = new ReceivedNoteDAO();
-            List<List<String>> receivedNotes = receivedNoteDAO.read();
-            for (List<String> row : receivedNotes){
-                String receipt_ID, staff_ID;
-                Day DOR;
-                double grand_Total;
-                boolean deleted;
+            String receipt_ID, staff_ID;
+            Day DOR;
+            double grand_Total;
+            boolean deleted;
+            for (List<String> row : data){
                 receipt_ID = row.get(0);
                 staff_ID = row.get(1);
                 DOR = Day.parseDay(row.get(2));
                 grand_Total = Double.parseDouble(row.get(3));
-                if (row.get(4).indexOf("0") != -1){
-                    deleted = false;
-                }else {
-                    deleted = true;
-                }
+                deleted = !row.get(4).contains("0");
                 ReceivedNote receivedNote = new ReceivedNote(receipt_ID, staff_ID, DOR, grand_Total, deleted);
                 receivedNoteList.add(receivedNote);
             }
-        } catch(Exception e){
+        } catch(Exception ignored){
 
         }
         return receivedNoteList;
     }
 
-    public ReceivedNote readByPrimaryKey(String receipt_ID){
+    public List<ReceivedNote> readReceivedNotes(String[] conditions){
+        List<ReceivedNote> receivedNoteList = new ArrayList<>();
         try {
-            for (ReceivedNote receivedNote : getReceivedNotes()){
-                if (receivedNote.getReceipt_ID().indexOf(receipt_ID) != -1){
-                    return receivedNote;
-                }
-            }
-        } catch(Exception e){
-            return null;
-        }
-        return null;
-    }
-
-    public List<ReceivedNote> readByStaff_ID(String staff_ID){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            for (ReceivedNote receivedNote : getReceivedNotes()){
-                if (receivedNote.getStaff_ID().indexOf(staff_ID) != -1){
-                    result.add(receivedNote);
-                }
-            }
-        } catch (Exception e){
+            receivedNoteList = convertToReceivedNote(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
+        return receivedNoteList;
     }
 
-    public List<ReceivedNote> readByDOR(Day DOR){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                if (receivedNote.getDOR().equals(DOR)){
-                    result.add(receivedNote);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<ReceivedNote> readByDOR(Day DOR1, Day DOR2){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                if (receivedNote.getDOR().compare(DOR1, DOR2)){
-                    result.add(receivedNote);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<ReceivedNote> readByGrand_Total(String compare, double grand_Total){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            if (compare.indexOf("<") != -1){
-                for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                    if (receivedNote.getGrand_Total() < grand_Total){
-                        result.add(receivedNote);
-                    }
-                }
-            } else if (compare.indexOf("<=") != -1) {
-                for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                    if (receivedNote.getGrand_Total() <= grand_Total){
-                        result.add(receivedNote);
-                    }
-                }
-            } else if (compare.indexOf(">") != -1) {
-                for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                    if (receivedNote.getGrand_Total() > grand_Total){
-                        result.add(receivedNote);
-                    }
-                }
-            } else if (compare.indexOf(">=") != -1) {
-                for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                    if (receivedNote.getGrand_Total() >= grand_Total){
-                        result.add(receivedNote);
-                    }
-                }
-            } else if (compare.indexOf("=") != -1) {
-                for (ReceivedNote receivedNote : getReceivedNotes() ) {
-                    if (receivedNote.getGrand_Total() == grand_Total){
-                        result.add(receivedNote);
-                    }
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<ReceivedNote> readByGrand_Total(double grand_Total1, double grand_Total2){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            for (ReceivedNote receivedNote : getReceivedNotes()){
-                if (receivedNote.getGrand_Total() >= grand_Total1 && receivedNote.getGrand_Total() <= grand_Total2){
-                    result.add(receivedNote);
-                }
-            }
-        } catch(Exception e){
-        }
-        return result;
-    }
-
-    public List<ReceivedNote> readByDeleted(boolean deleted){
-        List<ReceivedNote> result = new ArrayList<ReceivedNote>();
-        try {
-            for (ReceivedNote receivedNote : getReceivedNotes()){
-                if (receivedNote.isDeleted() == deleted){
-                    result.add(receivedNote);
-                }
-            }
-        } catch(Exception e){
-        }
-        return result;
-    }
-
-    public int create(String receipt_ID, String staff_ID, Day DOR){
-        if (readByPrimaryKey(receipt_ID) != null){
+    public int createReceivedNote(String receipt_ID, String staff_ID, Day DOR){
+        if (readReceivedNotes(new String[]{"RECEIPT_ID = '" + receipt_ID + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -183,7 +65,7 @@ public class ReceivedNoteDAO extends  Manager{
         }
     }
 
-    public int update(String receipt_ID, String staff_ID, Day DOR){
+    public int updateReceivedNote(String receipt_ID, String staff_ID, Day DOR){
         // Những giá trị là _ID sẽ được combobox cho user chọn
         try {
             Map<String, Object> updateValues = new HashMap<>();
@@ -199,7 +81,7 @@ public class ReceivedNoteDAO extends  Manager{
         }
     }
 
-    public int delete(String receipt_ID){
+    public int deleteReceivedNote(String receipt_ID){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("DELETED", 1);
