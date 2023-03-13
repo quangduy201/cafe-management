@@ -1,9 +1,5 @@
 package com.cafe.DAO;
-
-import com.cafe.DTO.Discount;
-import com.cafe.DTO.DiscountDetails;
 import com.cafe.DTO.Ingredient;
-import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,7 +10,7 @@ import java.util.Map;
 public class IngredientDAO extends Manager{
     public IngredientDAO() throws SQLException {
         super("ingredient", new ArrayList<>(
-            List.of("INGEDIENT_ID",
+            List.of("INGREDIENT_ID",
                 "NAME",
                 "QUANTITY",
                 "UNIT",
@@ -23,91 +19,40 @@ public class IngredientDAO extends Manager{
         ));
     }
 
-    public List<Ingredient> getIngredients(){
-        List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+    public List<Ingredient> convertToIngredient(List<List<String>> data){
+        List<Ingredient> ingredientList = new ArrayList<>();
         try {
-            IngredientDAO ingredientDAO = new IngredientDAO();
             String ingredient_ID, name, unit, supplier_ID;
             double quantity;
             boolean deleted;
-            List<List<String>> ingredients = ingredientDAO.read();
-            for (List<String> row : ingredients) {
+            for (List<String> row : data) {
                 ingredient_ID = row.get(0);
                 name = row.get(1);
                 quantity = Double.parseDouble(row.get(2));
                 unit = row.get(3);
                 supplier_ID = row.get(4);
-                if (row.get(5).indexOf("0") != -1){
-                    deleted = false;
-                }else {
-                    deleted = true;
-                }
+                deleted = !row.get(5).contains("0");
                 Ingredient ingredient = new Ingredient(ingredient_ID, name, unit, supplier_ID, quantity, deleted);
                 ingredientList.add(ingredient);
             }
-        } catch (Exception e){
+        } catch (Exception ignored){
 
         }
         return ingredientList;
     }
 
-    public Ingredient readByPrimaryKey(String ingredient_ID){
+    public List<Ingredient> readIngredients(String[] conditions){
+        List<Ingredient> ingredientList = new ArrayList<>();
         try {
-            for (Ingredient ingredient: getIngredients()) {
-                if (ingredient.getIngredient_ID().indexOf(ingredient_ID) != -1){
-                    return ingredient;
-                }
-            }
-        } catch (Exception e){
-            return null;
-        }
-        return  null;
-    }
-
-    public List<Ingredient> readByName(String name){
-        List<Ingredient> result = new ArrayList<Ingredient>();
-        try {
-            for (Ingredient ingredient: getIngredients()) {
-                if (ingredient.getName().indexOf(name) != -1){
-                    result.add(ingredient);
-                }
-            }
-        } catch (Exception e){
+            ingredientList = convertToIngredient(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
+        return ingredientList;
     }
 
-    public List<Ingredient> readBySupplier_ID(String supplier_ID){
-        List<Ingredient> result = new ArrayList<Ingredient>();
-        try {
-            for (Ingredient ingredient: getIngredients()) {
-                if (ingredient.getSupplier_ID().indexOf(supplier_ID) != -1){
-                    result.add(ingredient);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<Ingredient> readByDeleted(boolean deleted){
-        List<Ingredient> result = new ArrayList<Ingredient>();
-        try {
-            for (Ingredient ingredient: getIngredients()) {
-                if (ingredient.isDeleted() != deleted){
-                    result.add(ingredient);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public int create(String ingredient_ID, String name, String unit, String supplier_ID){
-        if (readByPrimaryKey(ingredient_ID) != null){
+    public int createIngredient(String ingredient_ID, String name, String unit, String supplier_ID){
+        if (readIngredients(new String[] {"INGREDIENT_ID '" + ingredient_ID + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -117,7 +62,7 @@ public class IngredientDAO extends Manager{
         }
     }
 
-    public int update(String ingredient_ID, String name, String unit, String supplier_ID){
+    public int updateIngredient(String ingredient_ID, String name, String unit, String supplier_ID){
         // Những giá trị là _ID sẽ được combobox cho user chọn
         try {
             Map<String, Object> updateValues = new HashMap<>();
@@ -136,7 +81,7 @@ public class IngredientDAO extends Manager{
         }
     }
 
-    public int delete(String ingredient_ID){
+    public int deleteIngredient(String ingredient_ID){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("DELETED", 1);

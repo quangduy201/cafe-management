@@ -19,89 +19,38 @@ public class AccountDAO extends Manager {
         ));
     }
 
-    public List<Account> getAccounts(){
-        List<Account> accountList = new ArrayList<Account>();
+    public List<Account> convertToAccount(List<List<String>> data){
+        List<Account> accountList = new ArrayList<>();
         try {
-            AccountDAO accountDAO = new AccountDAO();
             String userName, passWord, decentralization_ID, staff_ID;
             boolean deleted;
-            List<List<String>> accounts = accountDAO.read();
-            for (List<String> row : accounts) {
+            for (List<String> row : data) {
                 userName = row.get(0);
                 passWord = row.get(1);
                 decentralization_ID = row.get(2);
                 staff_ID = row.get(3);
-                if (row.get(4).indexOf("0") != -1){
-                    deleted = false;
-                }else {
-                    deleted = true;
-                }
+                deleted = !row.get(4).contains("0");
                 Account account = new Account(userName, passWord, decentralization_ID, staff_ID, deleted);
                 accountList.add(account);
             }
-        } catch (Exception e){
+        } catch (Exception ignored){
 
         }
         return accountList;
     }
 
-    public Account readByPrimayKey (String userName){
+    public List<Account> readAccounts(String[] conditions){
+        List<Account> accountList = new ArrayList<>();
         try {
-            for (Account account: getAccounts()) {
-                if (account.getUserName().indexOf(userName) != -1){
-                    return account;
-                }
-            }
-            return null;
-        } catch (Exception e){
-            return null;
-        }
-    }
-
-    public List<Account> readByDecentralization_ID (String decentralization_ID){
-        List<Account> result = new ArrayList<Account>();
-        try {
-            for (Account account: getAccounts()) {
-                if (account.getDecentralization_ID().indexOf(decentralization_ID) != -1){
-                    result.add(account);
-                }
-            }
-        } catch (Exception e){
+            accountList = convertToAccount(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
-
+        return accountList;
     }
 
-    public List<Account> readByStaff_ID (String staff_ID){
-        List<Account> result = new ArrayList<Account>();
-        try {
-            for (Account account: getAccounts()) {
-                if (account.getDecentralization_ID().indexOf(staff_ID) != -1){
-                    result.add(account);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-    public List<Account> readByDeleted (boolean deleted){
-        List<Account> result = new ArrayList<Account>();
-        try {
-            for (Account account: getAccounts()) {
-                if (account.isDeleted() == deleted){
-                    result.add(account);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public int create(String userName, String passWord, String decentralization_ID, String staff_ID){
-        if (readByPrimayKey(userName) != null){
+    public int createAccount(String userName, String passWord, String decentralization_ID, String staff_ID){
+        if (readAccounts(new String[]{"USERNAME = '" + userName + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -111,7 +60,7 @@ public class AccountDAO extends Manager {
         }
     }
 
-    public int update(String userName, String passWord, String decentralization_ID, String staff_ID){
+    public int updateAccount(String userName, String passWord, String decentralization_ID, String staff_ID){
         // Những giá trị là _ID sẽ được combobox cho user chọn
         try {
             Map<String, Object> updateValues = new HashMap<>();
@@ -129,7 +78,7 @@ public class AccountDAO extends Manager {
             return 0;
         }
     }
-    public int delete(String userName){
+    public int deleteAcount(String userName){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("DELETED", 1);

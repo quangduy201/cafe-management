@@ -1,7 +1,4 @@
 package com.cafe.DAO;
-
-import com.cafe.DTO.Bill;
-import com.cafe.DTO.Category;
 import com.cafe.DTO.CustomerDTO;
 import com.cafe.utils.Day;
 
@@ -25,184 +22,51 @@ public class CustomerDAO extends Manager{
         ));
     }
 
-    public List<CustomerDTO> getCustomers(){
-        List<CustomerDTO> customerDTOList = new ArrayList<CustomerDTO>();
+    public List<CustomerDTO> convertToCustomer(List<List<String>> data){
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
         try {
-            CustomerDAO CustomerDAO = new CustomerDAO();
             String customer_ID, name, gender, phone;
             Day dateOfBirth, dateOfSub;
             boolean membership, deleted;
-            List<List<String>> customers = CustomerDAO.read();
-            for (List<String> row : customers) {
+            for (List<String> row : data) {
                 customer_ID = row.get(0);
                 name = row.get(1);
-                if (row.get(2).indexOf("0") != -1){
+                if (row.get(2).contains("0")){
                     gender = "Nữ";
                 }else {
                     gender = "Nam";
                 }
                 dateOfBirth = Day.parseDay(row.get(3));
                 phone = row.get(4);
-                if (row.get(5).indexOf("0") != -1){
+                if (row.get(5).contains("0")){
                     membership = false;
                     dateOfSub = null;
                 }else {
                     membership = true;
                     dateOfSub = Day.parseDay(row.get(6));
                 }
-                if (row.get(7).indexOf("0") != -1){
-                    deleted = false;
-                }else {
-                    deleted = true;
-                }
+                deleted = !row.get(7).contains("0");
                 CustomerDTO customer = new CustomerDTO(customer_ID, name, gender, phone, dateOfBirth, dateOfSub, membership, deleted);
                 customerDTOList.add(customer);
             }
-        } catch (Exception e){
+        } catch (Exception ignored){
 
         }
         return customerDTOList;
     }
 
-    public CustomerDTO readByPrimaryKey(String customer_ID){
+    public List<CustomerDTO> readCustomers(String[] conditions){
+        List<CustomerDTO> customerDTOList = new ArrayList<>();
         try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.getCustomer_ID().indexOf(customer_ID) != -1){
-                    return customerDTO;
-                }
-            }
-        } catch (Exception e){
-            return null;
-        }
-        return  null;
-    }
-
-    public List<CustomerDTO> readByName(String name){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.getName().indexOf(name) != -1){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
+            customerDTOList = convertToCustomer(read(conditions));
+        } catch (Exception ignored){
 
         }
-        return result;
+        return customerDTOList;
     }
 
-    public List<CustomerDTO> readByGender(String gender){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.getGender().indexOf(gender) != -1){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<CustomerDTO> readByAge(String compare, int age){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            if (compare.indexOf("<") != -1){
-                for (CustomerDTO customerDTO : getCustomers() ) {
-                    if (2023 - customerDTO.getDateOfBirth().getYear() < age){
-                        result.add(customerDTO);
-                    }
-                }
-            } else if (compare.indexOf("<=") != -1) {
-                for (CustomerDTO customerDTO : getCustomers() ) {
-                    if (2023 - customerDTO.getDateOfBirth().getYear() <= age){
-                        result.add(customerDTO);
-                    }
-                }
-            } else if (compare.indexOf(">") != -1) {
-                for (CustomerDTO customerDTO : getCustomers() ) {
-                    if (2023 - customerDTO.getDateOfBirth().getYear() > age){
-                        result.add(customerDTO);
-                    }
-                }
-            } else if (compare.indexOf(">=") != -1) {
-                for (CustomerDTO customerDTO : getCustomers() ) {
-                    if (2023 - customerDTO.getDateOfBirth().getYear() >= age){
-                        result.add(customerDTO);
-                    }
-                }
-            } else if (compare.indexOf("=") != -1) {
-                for (CustomerDTO customerDTO : getCustomers() ) {
-                    if (2023 - customerDTO.getDateOfBirth().getYear() == age){
-                        result.add(customerDTO);
-                    }
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<CustomerDTO> readByMemberhip(boolean membership){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.isMembership() == membership){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<CustomerDTO> readByDOSUB(Day DOSUB){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.getDateOfSup().equals(DOSUB)){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<CustomerDTO> readByDOSUB(Day DOSUB1, Day DOSUB2){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.getDateOfSup().compare(DOSUB1, DOSUB2)){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public List<CustomerDTO> readByDeleted(boolean deleted){
-        List<CustomerDTO> result = new ArrayList<CustomerDTO>();
-        try {
-            for (CustomerDTO customerDTO: getCustomers()) {
-                if (customerDTO.isDeleted() == deleted){
-                    result.add(customerDTO);
-                }
-            }
-        } catch (Exception e){
-
-        }
-        return result;
-    }
-
-    public int create(String customer_ID, String name, String gender, String phone, Day dateOfBirth, Day dateOfSup, boolean membership){
-        if (readByPrimaryKey(customer_ID) != null){
+    public int createCustomer(String customer_ID, String name, String gender, String phone, Day dateOfBirth, Day dateOfSup, boolean membership){
+        if (readCustomers(new String[]{"CUSTOMER_ID = '" + customer_ID + "'"}).size() != 0){
             return 0;
         }
         try {
@@ -212,7 +76,7 @@ public class CustomerDAO extends Manager{
         }
     }
 
-    public int update(String customer_ID, String name, String gender, String phone, Day dateOfBirth, Day dateOfSup){
+    public int updateCustomer(String customer_ID, String name, String gender, String phone, Day dateOfBirth, Day dateOfSup){
         // Những giá trị là _ID sẽ được combobox cho user chọn
         try {
             Map<String, Object> updateValues = new HashMap<>();
@@ -220,7 +84,7 @@ public class CustomerDAO extends Manager{
                 updateValues.put("NAME", name);
             }
             if (gender != null){
-                if (gender.indexOf("Nữ") != -1){
+                if (gender.contains("Nữ")){
                     updateValues.put("GENDER", 0);
                 }else {
                     updateValues.put("GENDER", 1);
@@ -241,7 +105,7 @@ public class CustomerDAO extends Manager{
         }
     }
 
-    public int update(String customer_ID , boolean membership){
+    public int updateCustomer(String customer_ID , boolean membership){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("MEMBERSHIP", membership);
@@ -251,7 +115,7 @@ public class CustomerDAO extends Manager{
         }
     }
 
-    public int delete(String customer_ID){
+    public int deleteCustomer(String customer_ID){
         try {
             Map<String, Object> updateValues = new HashMap<>();
             updateValues.put("DELETED", 1);
