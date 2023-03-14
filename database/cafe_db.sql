@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2023 at 05:08 PM
+-- Generation Time: Mar 14, 2023 at 07:31 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `account` (
+  `ACCOUNT_ID` varchar(10) NOT NULL,
   `USERNAME` varchar(20) NOT NULL,
   `PASSWD` varchar(20) DEFAULT NULL,
   `DECENTRALIZATION_ID` varchar(10) DEFAULT NULL,
@@ -39,16 +40,16 @@ CREATE TABLE `account` (
 -- Dumping data for table `account`
 --
 
-INSERT INTO `account` (`USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
-('dungboi', '123', 'DE01', 'ST01', b'0'),
-('legiang', '123', 'DE04', 'ST08', b'0'),
-('longbott', '123', 'DE01', 'ST03', b'0'),
-('quangduy', '123', 'DE01', 'ST02', b'0'),
-('tienmanh', '123', 'DE03', 'ST06', b'0'),
-('vanlam', '123', 'DE05', 'ST07', b'0'),
-('xuanmai', '123', 'DE06', 'ST05', b'0'),
-('xuanphuc', '123', 'DE02', 'ST09', b'0'),
-('zidan', '123', 'DE01', 'ST04', b'0');
+INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
+('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
+('AC0010', 'zidan', '123', 'DE01', 'ST04', b'0'),
+('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
+('AC003', 'longbott', '123', 'DE01', 'ST03', b'0'),
+('AC004', 'quangduy', '123', 'DE01', 'ST02', b'0'),
+('AC005', 'tienmanh', '123', 'DE03', 'ST06', b'0'),
+('AC006', 'vanlam', '123', 'DE05', 'ST07', b'0'),
+('AC007', 'xuanmai', '123', 'DE06', 'ST05', b'0'),
+('AC008', 'xuanphuc', '123', 'DE02', 'ST09', b'0');
 
 -- --------------------------------------------------------
 
@@ -170,7 +171,7 @@ INSERT INTO `category` (`CATEGORY_ID`, `NAME`, `QUANTITY`, `DELETED`) VALUES
 ('CA02', 'PHINDI', 9, b'0'),
 ('CA03', 'BÁNH MÌ QUE', 2, b'0'),
 ('CA04', 'TRÀ', 15, b'0'),
-('CA05', 'BÁNH', 6, b'0'),
+('CA05', 'BÁNH', 7, b'0'),
 ('CA06', 'FREERE', 15, b'0'),
 ('CA07', 'TRÀ SỮA', 8, b'0');
 
@@ -429,7 +430,7 @@ INSERT INTO `product` (`PRODUCT_ID`, `NAME`, `CATEGORY_ID`, `SIZED`, `COST`, `DE
 ('SP034', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', b'1', 55000, b'0'),
 ('SP035', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', b'1', 65000, b'0'),
 ('SP036', 'BÁNH CHUỐI', 'CA05', b'0', 29000, b'0'),
-('SP037', 'PHÔ MAI CHANH DÂY', '0', b'1', 29000, b'0'),
+('SP037', 'PHÔ MAI CHANH DÂY', 'CA05', b'1', 29000, b'0'),
 ('SP038', 'TIRAMISU', 'CA05', b'0', 35000, b'0'),
 ('SP039', 'MOUSSE ĐÀO', 'CA05', b'0', 35000, b'0'),
 ('SP040', 'PHÔ MAI TRÀ XANH', 'CA05', b'0', 35000, b'0'),
@@ -764,7 +765,7 @@ INSERT INTO `supplier` (`SUPPLIER_ID`, `NAME`, `PHONE`, `ADDRESS`, `EMAIL`, `PRI
 -- Indexes for table `account`
 --
 ALTER TABLE `account`
-  ADD PRIMARY KEY (`USERNAME`),
+  ADD PRIMARY KEY (`ACCOUNT_ID`),
   ADD KEY `FK_STAFF` (`STAFF_ID`) USING BTREE,
   ADD KEY `FK_DECENTRALIZATION` (`DECENTRALIZATION_ID`);
 
@@ -870,6 +871,7 @@ ALTER TABLE `supplier`
 -- Constraints for table `account`
 --
 ALTER TABLE `account`
+  ADD CONSTRAINT `FK_DECENTRALIZATION` FOREIGN KEY (`DECENTRALIZATION_ID`) REFERENCES `decentralization` (`DECENTRALIZATION_ID`) ON UPDATE CASCADE,
   ADD CONSTRAINT `PK_STAFF` FOREIGN KEY (`STAFF_ID`) REFERENCES `staff` (`STAFF_ID`) ON UPDATE CASCADE;
 
 --
