@@ -1,28 +1,28 @@
 package com.cafe.DTO;
 
 public class Ingredient {
-    private String ingredient_ID, name, unit, supplier_ID;
+    private String ingredientID, name, unit, supplierID;
     private double quantity;
-    private boolean deleted;// khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Ingredient() {
     }
 
-    public Ingredient(String ingredient_ID, String name, String unit, String supplier_ID, double quantity, boolean deleted) {
-        this.ingredient_ID = ingredient_ID;
+    public Ingredient(String ingredientID, String name, double quantity, String unit, String supplierID, boolean deleted) {
+        this.ingredientID = ingredientID;
         this.name = name;
-        this.unit = unit;
-        this.supplier_ID = supplier_ID;
         this.quantity = quantity;
+        this.unit = unit;
+        this.supplierID = supplierID;
         this.deleted = deleted;
     }
 
-    public String getIngredient_ID() {
-        return ingredient_ID;
+    public String getIngredientID() {
+        return ingredientID;
     }
 
-    public void setIngredient_ID(String ingredient_ID) {
-        this.ingredient_ID = ingredient_ID;
+    public void setIngredientID(String ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
     public String getName() {
@@ -41,12 +41,12 @@ public class Ingredient {
         this.unit = unit;
     }
 
-    public String getSupplier_ID() {
-        return supplier_ID;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setSupplier_ID(String supplier_ID) {
-        this.supplier_ID = supplier_ID;
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
     }
 
     public double getQuantity() {
@@ -63,5 +63,14 @@ public class Ingredient {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return ingredientID + "\t" +
+            name + "\t" +
+            quantity + "\t" +
+            unit + "\t" +
+            supplierID;
     }
 }

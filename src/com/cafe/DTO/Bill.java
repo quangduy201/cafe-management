@@ -3,53 +3,53 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Bill {
-    private String bill_ID, customer_ID, staff_ID;
-    private Day dayOfPurchase;
+    private String billID, customerID, staffID;
+    private Day dateOfPurchase;
     private double total;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Bill() {
     }
 
-    public Bill(String bill_ID, String customer_ID, String staff_ID, Day dayOfPurchase, double total, boolean deleted) {
-        this.bill_ID = bill_ID;
-        this.customer_ID = customer_ID;
-        this.staff_ID = staff_ID;
-        this.dayOfPurchase = dayOfPurchase;
+    public Bill(String billID, String customerID, String staffID, Day dateOfPurchase, double total, boolean deleted) {
+        this.billID = billID;
+        this.customerID = customerID;
+        this.staffID = staffID;
+        this.dateOfPurchase = dateOfPurchase;
         this.total = total;
         this.deleted = deleted;
     }
 
-    public String getBill_ID() {
-        return bill_ID;
+    public String getBillID() {
+        return billID;
     }
 
-    public void setBill_ID(String bill_ID) {
-        this.bill_ID = bill_ID;
+    public void setBillID(String billID) {
+        this.billID = billID;
     }
 
-    public String getCustomer_ID() {
-        return customer_ID;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomer_ID(String customer_ID) {
-        this.customer_ID = customer_ID;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
-    public String getStaff_ID() {
-        return staff_ID;
+    public String getStaffID() {
+        return staffID;
     }
 
-    public void setStaff_ID(String staff_ID) {
-        this.staff_ID = staff_ID;
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
     }
 
-    public Day getDayOfPurchase() {
-        return dayOfPurchase;
+    public Day getDateOfPurchase() {
+        return dateOfPurchase;
     }
 
-    public void setDayOfPurchase(Day dayOfPurchase) {
-        this.dayOfPurchase = dayOfPurchase;
+    public void setDateOfPurchase(Day dateOfPurchase) {
+        this.dateOfPurchase = dateOfPurchase;
     }
 
     public double getTotal() {
@@ -66,5 +66,14 @@ public class Bill {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return billID + "\t" +
+            customerID + "\t" +
+            staffID + "\t" +
+            dateOfPurchase + "\t" +
+            total;
     }
 }

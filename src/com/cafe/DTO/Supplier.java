@@ -1,15 +1,15 @@
 package com.cafe.DTO;
 
 public class Supplier {
-    private String supplier_ID, name, phone, address, email;
+    private String supplierID, name, phone, address, email;
     private double price;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Supplier() {
     }
 
-    public Supplier(String supplier_ID, String name, String phone, String address, String email, double price, boolean deleted) {
-        this.supplier_ID = supplier_ID;
+    public Supplier(String supplierID, String name, String phone, String address, String email, double price, boolean deleted) {
+        this.supplierID = supplierID;
         this.name = name;
         this.phone = phone;
         this.address = address;
@@ -18,12 +18,12 @@ public class Supplier {
         this.deleted = deleted;
     }
 
-    public String getSupplier_ID() {
-        return supplier_ID;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setSupplier_ID(String supplier_ID) {
-        this.supplier_ID = supplier_ID;
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
     }
 
     public String getName() {

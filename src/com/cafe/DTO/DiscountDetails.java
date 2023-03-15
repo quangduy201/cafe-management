@@ -1,29 +1,29 @@
 package com.cafe.DTO;
 
 public class DiscountDetails {
-    private String discount_ID, product_ID;
+    private String discountID, productID;
 
     public DiscountDetails() {
     }
 
-    public DiscountDetails(String discount_ID, String product_ID) {
-        this.discount_ID = discount_ID;
-        this.product_ID = product_ID;
+    public DiscountDetails(String discountID, String productID) {
+        this.discountID = discountID;
+        this.productID = productID;
     }
 
-    public String getDiscount_ID() {
-        return discount_ID;
+    public String getDiscountID() {
+        return discountID;
     }
 
-    public void setDiscount_ID(String discount_ID) {
-        this.discount_ID = discount_ID;
+    public void setDiscountID(String discountID) {
+        this.discountID = discountID;
     }
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductID() {
+        return productID;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductID(String productID) {
+        this.productID = productID;
     }
 }

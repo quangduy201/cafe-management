@@ -1,41 +1,41 @@
 package com.cafe.DTO;
 
 public class ReceiptDetails {
-    private String receipt_ID, ingredient_ID, supplier_ID;
+    private String receiptID, ingredientID, supplierID;
     private double quantity;
 
     public ReceiptDetails() {
     }
 
-    public ReceiptDetails(String receipt_ID, String ingredient_ID, String supplier_ID, double quantity) {
-        this.receipt_ID = receipt_ID;
-        this.ingredient_ID = ingredient_ID;
-        this.supplier_ID = supplier_ID;
+    public ReceiptDetails(String receiptID, String ingredientID, double quantity, String supplierID) {
+        this.receiptID = receiptID;
+        this.ingredientID = ingredientID;
         this.quantity = quantity;
+        this.supplierID = supplierID;
     }
 
-    public String getReceipt_ID() {
-        return receipt_ID;
+    public String getReceiptID() {
+        return receiptID;
     }
 
-    public void setReceipt_ID(String receipt_ID) {
-        this.receipt_ID = receipt_ID;
+    public void setReceiptID(String receiptID) {
+        this.receiptID = receiptID;
     }
 
-    public String getIngredient_ID() {
-        return ingredient_ID;
+    public String getIngredientID() {
+        return ingredientID;
     }
 
-    public void setIngredient_ID(String ingredient_ID) {
-        this.ingredient_ID = ingredient_ID;
+    public void setIngredientID(String ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
-    public String getSupplier_ID() {
-        return supplier_ID;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setSupplier_ID(String supplier_ID) {
-        this.supplier_ID = supplier_ID;
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
     }
 
     public double getQuantity() {
@@ -44,5 +44,13 @@ public class ReceiptDetails {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return receiptID + "\t" +
+            ingredientID + "\t" +
+            quantity + "\t" +
+            supplierID;
     }
 }

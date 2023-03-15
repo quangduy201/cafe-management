@@ -1,33 +1,33 @@
 package com.cafe.DTO;
 
 public class Recipe {
-    private String product_ID, ingredient_ID, unit;
+    private String productID, ingredientID, unit;
     private double mass;
 
     public Recipe() {
     }
 
-    public Recipe(String product_ID, String ingredient_ID, String unit, double mass) {
-        this.product_ID = product_ID;
-        this.ingredient_ID = ingredient_ID;
-        this.unit = unit;
+    public Recipe(String productID, String ingredientID, double mass, String unit) {
+        this.productID = productID;
+        this.ingredientID = ingredientID;
         this.mass = mass;
+        this.unit = unit;
     }
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductID() {
+        return productID;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductID(String productID) {
+        this.productID = productID;
     }
 
-    public String getIngredient_ID() {
-        return ingredient_ID;
+    public String getIngredientID() {
+        return ingredientID;
     }
 
-    public void setIngredient_ID(String ingredient_ID) {
-        this.ingredient_ID = ingredient_ID;
+    public void setIngredientID(String ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
     public String getUnit() {
@@ -44,5 +44,13 @@ public class Recipe {
 
     public void setMass(double mass) {
         this.mass = mass;
+    }
+
+    @Override
+    public String toString() {
+        return productID + "\t" +
+            ingredientID + "\t" +
+            mass + "\t" +
+            unit;
     }
 }

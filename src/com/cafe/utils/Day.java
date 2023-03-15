@@ -55,13 +55,13 @@ public class Day {
     }
 
     public static boolean isValidDay(int date, int month, int year) {
-        return  year > 1930 && year <= 2030 &&
+        return year > 1930 && year <= 2030 &&
             month > 0 && month <= 12 &&
             date > 0 && date <= numOfDays(month, year);
     }
 
     public static boolean isValidDay(Day day) {
-        return  day.year > 1930 && day.year <= 2030 &&
+        return day.year > 1930 && day.year <= 2030 &&
             day.month > 0 && day.month <= 12 &&
             day.date > 0 && day.date <= numOfDays(day.month, day.year);
     }
@@ -111,7 +111,7 @@ public class Day {
             hasError = false;
             System.out.print(message);
             String input = sc.nextLine();
-            String[] splitInput = input.split("/");
+            String[] splitInput = input.split("-");
             try {
                 day.setDate(Integer.parseInt(splitInput[0]));
                 day.setMonth(Integer.parseInt(splitInput[1]));
@@ -124,12 +124,12 @@ public class Day {
     }
 
     public static Day parseDay(String str) throws Exception {
-        String[] temp = str.split("/");
+        String[] temp = str.split("-");
         int date, month, year;
         try {
-            date = Integer.parseInt(temp[0]);
+            year = Integer.parseInt(temp[0]);
             month = Integer.parseInt(temp[1]);
-            year = Integer.parseInt(temp[2]);
+            date = Integer.parseInt(temp[2]);
             if (!Day.isValidDay(date, month, year))
                 throw new Exception();
         } catch (Exception e) {
@@ -138,23 +138,25 @@ public class Day {
         return new Day(date, month, year);
     }
 
-    public boolean equals(Day day){
-        if (getDate() == day.getDate() && getMonth() == day.getMonth() && getYear() == day.getYear()){
+    public boolean equals(Day day) {
+        if (getDate() == day.getDate() && getMonth() == day.getMonth() && getYear() == day.getYear()) {
             return true;
         }
         return false;
     }
-    public boolean compare(Day day1, Day day2){
-        if (getDate() >= day1.getDate() && getMonth() >= day1.getMonth() && getYear() >= day1.getYear() && getDate() <= day2.getDate() && getMonth() <= day2.getMonth() && getYear() <= day2.getYear()){
+
+    public boolean compare(Day day1, Day day2) {
+        if (getDate() >= day1.getDate() && getMonth() >= day1.getMonth() && getYear() >= day1.getYear() && getDate() <= day2.getDate() && getMonth() <= day2.getMonth() && getYear() <= day2.getYear()) {
             return true;
         }
         return false;
     }
+
     @Override
     public String toString() {
         // dd/mm/yyyy
-        return  ((date < 10) ? "0" : "") + date + "/" +
-            ((month < 10) ? "0" : "") + month + "/" +
+        return ((date < 10) ? "0" : "") + date + "-" +
+            ((month < 10) ? "0" : "") + month + "-" +
             year;
     }
 }

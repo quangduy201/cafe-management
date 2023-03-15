@@ -3,7 +3,7 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Staff {
-    private String staff_ID, name, gender, address, phone, email; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
+    private String staffID, name, gender, address, phone, email; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
     private double salary;
     private Day dateOfBirth, dateOfEntry;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
@@ -11,25 +11,25 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(String staff_ID, String name, String gender, String address, String phone, String email, double salary, Day dateOfBirth, Day dateOfEntry, boolean deleted) {
-        this.staff_ID = staff_ID;
+    public Staff(String staffID, String name, String gender, Day dateOfBirth, String address, String phone, String email, double salary, Day dateOfEntry, boolean deleted) {
+        this.staffID = staffID;
         this.name = name;
         this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.phone = phone;
         this.email = email;
         this.salary = salary;
-        this.dateOfBirth = dateOfBirth;
         this.dateOfEntry = dateOfEntry;
         this.deleted = deleted;
     }
 
-    public String getStaff_ID() {
-        return staff_ID;
+    public String getStaffID() {
+        return staffID;
     }
 
-    public void setStaff_ID(String staff_ID) {
-        this.staff_ID = staff_ID;
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
     }
 
     public String getName() {
@@ -102,5 +102,18 @@ public class Staff {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return staffID + "t" +
+            name + "\t" +
+            gender + "\t" +
+            dateOfBirth + "\t" +
+            address + "\t" +
+            phone + "\t" +
+            email + "\t" +
+            salary + "\t" +
+            dateOfEntry;
     }
 }

@@ -1,26 +1,26 @@
 package com.cafe.DTO;
 
 public class Category {
-    private String category_ID, name;
-    private int quanity;
+    private String categoryID, name;
+    private int quantity;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Category() {
     }
 
-    public Category(String category_ID, String name, int quanity, boolean deleted) {
-        this.category_ID = category_ID;
+    public Category(String categoryID, String name, int quantity, boolean deleted) {
+        this.categoryID = categoryID;
         this.name = name;
-        this.quanity = quanity;
+        this.quantity = quantity;
         this.deleted = deleted;
     }
 
-    public String getCategory_ID() {
-        return category_ID;
+    public String getCategoryID() {
+        return categoryID;
     }
 
-    public void setCategory_ID(String category_ID) {
-        this.category_ID = category_ID;
+    public void setCategoryID(String categoryID) {
+        this.categoryID = categoryID;
     }
 
     public String getName() {
@@ -31,12 +31,12 @@ public class Category {
         this.name = name;
     }
 
-    public int getQuanity() {
-        return quanity;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuanity(int quanity) {
-        this.quanity = quanity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public boolean isDeleted() {
@@ -45,5 +45,12 @@ public class Category {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return categoryID + "\t" +
+            name + "\t" +
+            quantity;
     }
 }

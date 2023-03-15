@@ -1,27 +1,27 @@
 package com.cafe.DTO;
 
 public class Product {
-    private String product_ID, name, category_ID;
+    private String productID, name, categoryID, size;
     private double cost;
-    private boolean deleted;// khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Product() {
     }
 
-    public Product(String product_ID, String name, String category_ID, double cost, boolean deleted) {
-        this.product_ID = product_ID;
+    public Product(String productID, String name, String categoryID, String size, double cost, boolean deleted) {
+        this.productID = productID;
         this.name = name;
-        this.category_ID = category_ID;
+        this.categoryID = categoryID;
         this.cost = cost;
         this.deleted = deleted;
     }
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductID() {
+        return productID;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductID(String productID) {
+        this.productID = productID;
     }
 
     public String getName() {
@@ -32,12 +32,20 @@ public class Product {
         this.name = name;
     }
 
-    public String getCategory_ID() {
-        return category_ID;
+    public String getCategoryID() {
+        return categoryID;
     }
 
-    public void setCategory_ID(String category_ID) {
-        this.category_ID = category_ID;
+    public void setCategoryID(String categoryID) {
+        this.categoryID = categoryID;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public double getCost() {
@@ -54,5 +62,14 @@ public class Product {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return productID + "\t" +
+            name + "\t" +
+            categoryID + "\t" +
+            size + "\t" +
+            cost;
     }
 }

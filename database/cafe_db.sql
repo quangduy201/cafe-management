@@ -42,7 +42,7 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
 ('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
-('AC0010', 'zidan', '123', 'DE01', 'ST04', b'0'),
+('AC010', 'zidan', '123', 'DE01', 'ST04', b'0'),
 ('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
 ('AC003', 'longbott', '123', 'DE01', 'ST03', b'0'),
 ('AC004', 'quangduy', '123', 'DE01', 'ST02', b'0'),
@@ -71,16 +71,16 @@ CREATE TABLE `bill` (
 --
 
 INSERT INTO `bill` (`BILL_ID`, `CUSTOMER_ID`, `STAFF_ID`, `DOPURCHASE`, `TOTAL`, `DELETED`) VALUES
-('INV0001', 'KH001', 'ST05', '2020-09-08', 239000, b'0'),
-('INV0002', 'KH002', 'ST05', '2021-02-07', 195000, b'0'),
-('INV0003', 'KH003', 'ST05', '2021-05-06', 110000, b'0'),
-('INV0004', 'KH004', 'ST05', '2021-08-03', 175000, b'0'),
-('INV0005', 'KH005', 'ST05', '2022-03-19', 173000, b'0'),
-('INV0006', 'KH006', 'ST05', '2022-03-28', 109000, b'0'),
-('INV0007', 'KH007', 'ST05', '2022-05-05', 135000, b'0'),
-('INV0008', 'KH008', 'ST05', '2022-09-08', 90000, b'0'),
-('INV0009', 'KH009', 'ST05', '2023-01-09', 277000, b'0'),
-('INV0010', 'KH010', 'ST05', '2023-03-07', 207000, b'0');
+('BI0001', 'CUS001', 'ST05', '2020-09-08', 239000, b'0'),
+('BI0002', 'CUS002', 'ST05', '2021-02-07', 195000, b'0'),
+('BI0003', 'CUS003', 'ST05', '2021-05-06', 110000, b'0'),
+('BI0004', 'CUS004', 'ST05', '2021-08-03', 175000, b'0'),
+('BI0005', 'CUS005', 'ST05', '2022-03-19', 173000, b'0'),
+('BI0006', 'CUS006', 'ST05', '2022-03-28', 109000, b'0'),
+('BI0007', 'CUS007', 'ST05', '2022-05-05', 135000, b'0'),
+('BI0008', 'CUS008', 'ST05', '2022-09-08', 90000, b'0'),
+('BI0009', 'CUS009', 'ST05', '2023-01-09', 277000, b'0'),
+('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, b'0');
 
 -- --------------------------------------------------------
 
@@ -99,27 +99,27 @@ CREATE TABLE `bill_details` (
 --
 
 INSERT INTO `bill_details` (`BILL_ID`, `PRODUCT_ID`, `QUANTITY`) VALUES
-('INV0001', 'SP001', 3),
-('INV0001', 'SP004', 2),
-('INV0001', 'SP009', 1),
-('INV0001', 'SP011', 1),
-('INV0002', 'SP023', 2),
-('INV0002', 'SP035', 1),
-('INV0003', 'SP046', 2),
-('INV0004', 'SP025', 2),
-('INV0004', 'SP050', 1),
-('INV0005', 'SP001', 1),
-('INV0005', 'SP010', 2),
-('INV0005', 'SP060', 1),
-('INV0006', 'SP019', 1),
-('INV0006', 'SP024', 2),
-('INV0007', 'SP027', 3),
-('INV0008', 'SP018', 1),
-('INV0008', 'SP038', 1),
-('INV0009', 'SP027', 2),
-('INV0009', 'SP051', 1),
-('INV0009', 'SP063', 2),
-('INV0010', 'SP045', 3);
+('BI0001', 'PR001', 3),
+('BI0001', 'PR004', 2),
+('BI0001', 'PR009', 1),
+('BI0001', 'PR011', 1),
+('BI0002', 'PR023', 2),
+('BI0002', 'PR035', 1),
+('BI0003', 'PR046', 2),
+('BI0004', 'PR025', 2),
+('BI0004', 'PR050', 1),
+('BI0005', 'PR001', 1),
+('BI0005', 'PR010', 2),
+('BI0005', 'PR060', 1),
+('BI0006', 'PR019', 1),
+('BI0006', 'PR024', 2),
+('BI0007', 'PR027', 3),
+('BI0008', 'PR018', 1),
+('BI0008', 'PR038', 1),
+('BI0009', 'PR027', 2),
+('BI0009', 'PR051', 1),
+('BI0009', 'PR063', 2),
+('BI0010', 'PR045', 3);
 
 --
 -- Triggers `bill_details`
@@ -197,16 +197,16 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
-('KH001', 'NGUYỄN VĂN NAM ', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
-('KH002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
-('KH003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
-('KH004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
-('KH005', 'NGUYỄN THỊ YẾN NHI', b'0', '2004-12-08', '0392258127', b'1', '2022-03-19', b'0'),
-('KH006', 'ĐẶNG NGUYỄN GIA HUY', b'1', '2003-06-09', '0371977937', b'0', '2022-03-28', b'0'),
-('KH007', 'NGUYỄN THI DIỆU CHI', b'0', '2000-04-09', '0378367833', b'0', '2022-05-05', b'1'),
-('KH008', 'NGUYỄN THỊ THANH NHÀN', b'0', '2001-08-03', '0323373316', b'1', '2022-09-08', b'0'),
-('KH009', 'NGUYỄN TRUNG TÍN', b'1', '2002-06-20', '0357118533', b'0', '2023-01-09', b'1'),
-('KH010', 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', b'0');
+('CUS001', 'NGUYỄN VĂN NAM ', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
+('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
+('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
+('CUS004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
+('CUS005', 'NGUYỄN THỊ YẾN NHI', b'0', '2004-12-08', '0392258127', b'1', '2022-03-19', b'0'),
+('CUS006', 'ĐẶNG NGUYỄN GIA HUY', b'1', '2003-06-09', '0371977937', b'0', '2022-03-28', b'0'),
+('CUS007', 'NGUYỄN THI DIỆU CHI', b'0', '2000-04-09', '0378367833', b'0', '2022-05-05', b'1'),
+('CUS008', 'NGUYỄN THỊ THANH NHÀN', b'0', '2001-08-03', '0323373316', b'1', '2022-09-08', b'0'),
+('CUS009', 'NGUYỄN TRUNG TÍN', b'1', '2002-06-20', '0357118533', b'0', '2023-01-09', b'1'),
+('CUS010', 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', b'0');
 
 -- --------------------------------------------------------
 
@@ -282,28 +282,28 @@ CREATE TABLE `discount_details` (
 --
 
 INSERT INTO `discount_details` (`DISCOUNT_ID`, `PRODUCT_ID`) VALUES
-('DIS001', 'SP003'),
-('DIS001', 'SP006'),
-('DIS001', 'SP009'),
-('DIS001', 'SP012'),
-('DIS001', 'SP015'),
-('DIS001', 'SP018'),
-('DIS002', 'SP021'),
-('DIS002', 'SP024'),
-('DIS002', 'SP027'),
-('DIS002', 'SP030'),
-('DIS002', 'SP033'),
-('DIS002', 'SP036'),
-('DIS002', 'SP039'),
-('DIS002', 'SP042'),
-('DIS003', 'SP045'),
-('DIS003', 'SP048'),
-('DIS003', 'SP051'),
-('DIS003', 'SP054'),
-('DIS003', 'SP057'),
-('DIS004', 'SP061'),
-('DIS004', 'SP063'),
-('DIS004', 'SP065');
+('DIS001', 'PR003'),
+('DIS001', 'PR006'),
+('DIS001', 'PR009'),
+('DIS001', 'PR012'),
+('DIS001', 'PR015'),
+('DIS001', 'PR018'),
+('DIS002', 'PR021'),
+('DIS002', 'PR024'),
+('DIS002', 'PR027'),
+('DIS002', 'PR030'),
+('DIS002', 'PR033'),
+('DIS002', 'PR036'),
+('DIS002', 'PR039'),
+('DIS002', 'PR042'),
+('DIS003', 'PR045'),
+('DIS003', 'PR048'),
+('DIS003', 'PR051'),
+('DIS003', 'PR054'),
+('DIS003', 'PR057'),
+('DIS004', 'PR061'),
+('DIS004', 'PR063'),
+('DIS004', 'PR065');
 
 --
 -- Triggers `discount_details`
@@ -384,7 +384,7 @@ CREATE TABLE `product` (
   `PRODUCT_ID` varchar(10) NOT NULL,
   `NAME` varchar(100) DEFAULT NULL,
   `CATEGORY_ID` varchar(10) NOT NULL,
-  `SIZED` bit(1) DEFAULT NULL,
+  `SIZED` int(1) DEFAULT NULL,
   `COST` double DEFAULT NULL,
   `DELETED` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -394,71 +394,71 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`PRODUCT_ID`, `NAME`, `CATEGORY_ID`, `SIZED`, `COST`, `DELETED`) VALUES
-('SP001', 'PHIN SỮA ĐÁ', 'CA01', b'0', 29000, b'0'),
-('SP002', 'PHIN SỮA ĐÁ', 'CA01', b'1', 39000, b'0'),
-('SP003', 'PHIN SỮA ĐÁ', 'CA01', b'1', 45000, b'0'),
-('SP004', 'PHIN ĐEN ĐÁ', 'CA01', b'0', 29000, b'0'),
-('SP005', 'PHIN ĐEN ĐÁ', 'CA01', b'1', 35000, b'0'),
-('SP006', 'PHIN ĐEN ĐÁ', 'CA01', b'1', 39000, b'0'),
-('SP007', 'BẠC XỈU', 'CA01', b'0', 29000, b'0'),
-('SP008', 'BẠC XỈU', 'CA01', b'1', 39000, b'0'),
-('SP009', 'BẠC XỈU', 'CA01', b'1', 45000, b'0'),
-('SP010', 'PHINDI HẠNH NHÂN', 'CA02', b'0', 45000, b'0'),
-('SP011', 'PHINDI HẠNH NHÂN', 'CA02', b'1', 49000, b'0'),
-('SP012', 'PHINDI HẠNH NHÂN', 'CA02', b'1', 55000, b'0'),
-('SP013', 'PHINDI KEM SỮA', 'CA02', b'0', 45000, b'0'),
-('SP014', 'PHINDI KEM SỮA', 'CA02', b'1', 49000, b'0'),
-('SP015', 'PHINDI KEM SỮA', 'CA02', b'1', 55000, b'0'),
-('SP016', 'PHINDI CHOCO', 'CA02', b'0', 45000, b'0'),
-('SP017', 'PHINDI CHOCO', 'CA02', b'1', 49000, b'0'),
-('SP018', 'PHINDI CHOCO', 'CA02', b'1', 55000, b'0'),
-('SP019', 'BÁNH MÌ PATE', 'CA03', b'0', 19000, b'0'),
-('SP020', 'BÁNH MÌ GÀ PHÔ MAI', 'CA03', b'0', 19000, b'0'),
-('SP021', 'TRÀ SEN VÀNG', 'CA04', b'0', 45000, b'0'),
-('SP022', 'TRÀ SEN VÀNG', 'CA04', b'1', 55000, b'0'),
-('SP023', 'TRÀ SEN VÀNG', 'CA04', b'1', 65000, b'0'),
-('SP024', 'TRÀ THẠCH ĐÀO', 'CA04', b'0', 45000, b'0'),
-('SP025', 'TRÀ THẠCH ĐÀO', 'CA04', b'1', 55000, b'0'),
-('SP026', 'TRÀ THẠCH ĐÀO', 'CA04', b'1', 65000, b'0'),
-('SP027', 'TRÀ THANH ĐÀO', 'CA04', b'0', 45000, b'0'),
-('SP028', 'TRÀ THANH ĐÀO', 'CA04', b'1', 55000, b'0'),
-('SP029', 'TRÀ THANH ĐÀO', 'CA04', b'1', 65000, b'0'),
-('SP030', 'TRÀ THẠCH VẢI', 'CA04', b'0', 45000, b'0'),
-('SP031', 'TRÀ THẠCH VẢI', 'CA04', b'1', 55000, b'0'),
-('SP032', 'TRÀ THẠCH VẢI', 'CA04', b'1', 65000, b'0'),
-('SP033', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', b'0', 45000, b'0'),
-('SP034', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', b'1', 55000, b'0'),
-('SP035', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', b'1', 65000, b'0'),
-('SP036', 'BÁNH CHUỐI', 'CA05', b'0', 29000, b'0'),
-('SP037', 'PHÔ MAI CHANH DÂY', 'CA05', b'1', 29000, b'0'),
-('SP038', 'TIRAMISU', 'CA05', b'0', 35000, b'0'),
-('SP039', 'MOUSSE ĐÀO', 'CA05', b'0', 35000, b'0'),
-('SP040', 'PHÔ MAI TRÀ XANH', 'CA05', b'0', 35000, b'0'),
-('SP041', 'PHÔ MAI CARAMEL', 'CA05', b'0', 35000, b'0'),
-('SP042', 'PHÔ MAI CACAO', 'CA05', b'0', 35000, b'0'),
-('SP043', 'FREEZE TRÀ XANH', 'CA06', b'0', 55000, b'0'),
-('SP044', 'FREEZE TRÀ XANH', 'CA06', b'1', 65000, b'0'),
-('SP045', 'FREEZE TRÀ XANH', 'CA06', b'1', 69000, b'0'),
-('SP046', 'CARAMEL PHIN FREEZE', 'CA06', b'0', 55000, b'0'),
-('SP047', 'CARAMEL PHIN FREEZE', 'CA06', b'1', 65000, b'0'),
-('SP048', 'CARAMEL PHIN FREEZE', 'CA06', b'1', 69000, b'0'),
-('SP049', 'COOKIES & CREAM', 'CA06', b'0', 55000, b'0'),
-('SP050', 'COOKIES & CREAM', 'CA06', b'1', 65000, b'0'),
-('SP051', 'COOKIES & CREAM', 'CA06', b'1', 69000, b'0'),
-('SP052', 'FREEZE SÔ-CÔ-LA', 'CA06', b'0', 55000, b'0'),
-('SP053', 'FREEZE SÔ-CÔ-LA', 'CA06', b'1', 65000, b'0'),
-('SP054', 'FREEZE SÔ-CÔ-LA', 'CA06', b'1', 69000, b'0'),
-('SP055', 'CLASSIC PHIN FREEZE', 'CA06', b'0', 55000, b'0'),
-('SP056', 'CLASSIC PHIN FREEZE', 'CA06', b'1', 65000, b'0'),
-('SP057', 'CLASSIC PHIN FREEZE', 'CA06', b'1', 69000, b'0'),
-('SP058', 'TRÀ SỮA BẠC HÀ', 'CA07', b'0', 54000, b'0'),
-('SP059', 'TRÀ SỮA BẠC HÀ', 'CA07', b'1', 59000, b'0'),
-('SP060', 'TRÀ SỮA TRÀ XANH', 'CA07', b'0', 54000, b'0'),
-('SP061', 'TRÀ SỮA TRÀ XANH', 'CA07', b'1', 59000, b'0'),
-('SP062', 'TRÀ SỮA DÂU', 'CA07', b'0', 54000, b'0'),
-('SP063', 'TRÀ SỮA DÂU', 'CA07', b'1', 59000, b'0'),
-('SP064', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', b'0', 54000, b'0'),
-('SP065', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', b'1', 59000, b'0');
+('PR001', 'PHIN SỮA ĐÁ', 'CA01', 0, 29000, b'0'),
+('PR002', 'PHIN SỮA ĐÁ', 'CA01', 1, 39000, b'0'),
+('PR003', 'PHIN SỮA ĐÁ', 'CA01', 2, 45000, b'0'),
+('PR004', 'PHIN ĐEN ĐÁ', 'CA01', 0, 29000, b'0'),
+('PR005', 'PHIN ĐEN ĐÁ', 'CA01', 1, 35000, b'0'),
+('PR006', 'PHIN ĐEN ĐÁ', 'CA01', 2, 39000, b'0'),
+('PR007', 'BẠC XỈU', 'CA01', 0, 29000, b'0'),
+('PR008', 'BẠC XỈU', 'CA01', 1, 39000, b'0'),
+('PR009', 'BẠC XỈU', 'CA01', 2, 45000, b'0'),
+('PR010', 'PHINDI HẠNH NHÂN', 'CA02', 0, 45000, b'0'),
+('PR011', 'PHINDI HẠNH NHÂN', 'CA02', 1, 49000, b'0'),
+('PR012', 'PHINDI HẠNH NHÂN', 'CA02', 2, 55000, b'0'),
+('PR013', 'PHINDI KEM SỮA', 'CA02', 0, 45000, b'0'),
+('PR014', 'PHINDI KEM SỮA', 'CA02', 1, 49000, b'0'),
+('PR015', 'PHINDI KEM SỮA', 'CA02', 2, 55000, b'0'),
+('PR016', 'PHINDI CHOCO', 'CA02', 0, 45000, b'0'),
+('PR017', 'PHINDI CHOCO', 'CA02', 1, 49000, b'0'),
+('PR018', 'PHINDI CHOCO', 'CA02', 2, 55000, b'0'),
+('PR019', 'BÁNH MÌ PATE', 'CA03', 0, 19000, b'0'),
+('PR020', 'BÁNH MÌ GÀ PHÔ MAI', 'CA03', 0, 19000, b'0'),
+('PR021', 'TRÀ SEN VÀNG', 'CA04', 0, 45000, b'0'),
+('PR022', 'TRÀ SEN VÀNG', 'CA04', 1, 55000, b'0'),
+('PR023', 'TRÀ SEN VÀNG', 'CA04', 2, 65000, b'0'),
+('PR024', 'TRÀ THẠCH ĐÀO', 'CA04', 0, 45000, b'0'),
+('PR025', 'TRÀ THẠCH ĐÀO', 'CA04', 1, 55000, b'0'),
+('PR026', 'TRÀ THẠCH ĐÀO', 'CA04', 2, 65000, b'0'),
+('PR027', 'TRÀ THANH ĐÀO', 'CA04', 0, 45000, b'0'),
+('PR028', 'TRÀ THANH ĐÀO', 'CA04', 1, 55000, b'0'),
+('PR029', 'TRÀ THANH ĐÀO', 'CA04', 2, 65000, b'0'),
+('PR030', 'TRÀ THẠCH VẢI', 'CA04', 0, 45000, b'0'),
+('PR031', 'TRÀ THẠCH VẢI', 'CA04', 1, 55000, b'0'),
+('PR032', 'TRÀ THẠCH VẢI', 'CA04', 2, 65000, b'0'),
+('PR033', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', 0, 45000, b'0'),
+('PR034', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', 1, 55000, b'0'),
+('PR035', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', 2, 65000, b'0'),
+('PR036', 'BÁNH CHUỐI', 'CA05', 0, 29000, b'0'),
+('PR037', 'PHÔ MAI CHANH DÂY', 'CA05', 1, 29000, b'0'),
+('PR038', 'TIRAMISU', 'CA05', 0, 35000, b'0'),
+('PR039', 'MOUSSE ĐÀO', 'CA05', 0, 35000, b'0'),
+('PR040', 'PHÔ MAI TRÀ XANH', 'CA05', 0, 35000, b'0'),
+('PR041', 'PHÔ MAI CARAMEL', 'CA05', 0, 35000, b'0'),
+('PR042', 'PHÔ MAI CACAO', 'CA05', 0, 35000, b'0'),
+('PR043', 'FREEZE TRÀ XANH', 'CA06', 0, 55000, b'0'),
+('PR044', 'FREEZE TRÀ XANH', 'CA06', 1, 65000, b'0'),
+('PR045', 'FREEZE TRÀ XANH', 'CA06', 2, 69000, b'0'),
+('PR046', 'CARAMEL PHIN FREEZE', 'CA06', 0, 55000, b'0'),
+('PR047', 'CARAMEL PHIN FREEZE', 'CA06', 1, 65000, b'0'),
+('PR048', 'CARAMEL PHIN FREEZE', 'CA06', 2, 69000, b'0'),
+('PR049', 'COOKIES & CREAM', 'CA06', 0, 55000, b'0'),
+('PR050', 'COOKIES & CREAM', 'CA06', 1, 65000, b'0'),
+('PR051', 'COOKIES & CREAM', 'CA06', 2, 69000, b'0'),
+('PR052', 'FREEZE SÔ-CÔ-LA', 'CA06', 0, 55000, b'0'),
+('PR053', 'FREEZE SÔ-CÔ-LA', 'CA06', 1, 65000, b'0'),
+('PR054', 'FREEZE SÔ-CÔ-LA', 'CA06', 2, 69000, b'0'),
+('PR055', 'CLASSIC PHIN FREEZE', 'CA06', 0, 55000, b'0'),
+('PR056', 'CLASSIC PHIN FREEZE', 'CA06', 1, 65000, b'0'),
+('PR057', 'CLASSIC PHIN FREEZE', 'CA06', 2, 69000, b'0'),
+('PR058', 'TRÀ SỮA BẠC HÀ', 'CA07', 0, 54000, b'0'),
+('PR059', 'TRÀ SỮA BẠC HÀ', 'CA07', 1, 59000, b'0'),
+('PR060', 'TRÀ SỮA TRÀ XANH', 'CA07', 0, 54000, b'0'),
+('PR061', 'TRÀ SỮA TRÀ XANH', 'CA07', 1, 59000, b'0'),
+('PR062', 'TRÀ SỮA DÂU', 'CA07', 0, 54000, b'0'),
+('PR063', 'TRÀ SỮA DÂU', 'CA07', 1, 59000, b'0'),
+('PR064', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', 0, 54000, b'0'),
+('PR065', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', 1, 59000, b'0');
 
 --
 -- Triggers `product`
@@ -538,9 +538,9 @@ CREATE TRIGGER `InserReceipt_Details` AFTER INSERT ON `receipt_details` FOR EACH
 UPDATE ingredient
 SET ingredient.QUANTITY = ingredient.QUANTITY + NEW.QUANTITY
 WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID;
-UPDATE received_note
-SET received_note.GRAND_TOTAL = received_note.GRAND_TOTAL + (SELECT supplier.PRICE FROM supplier WHERE supplier.SUPPLIER_ID = NEW.SUPPLIER_ID) * NEW.QUANTITY
-WHERE received_note.RECEIPT_ID = NEW.RECEIPT_ID;
+UPDATE receipt
+SET receipt.GRAND_TOTAL = receipt.GRAND_TOTAL + (SELECT supplier.PRICE FROM supplier WHERE supplier.SUPPLIER_ID = NEW.SUPPLIER_ID) * NEW.QUANTITY
+WHERE receipt.RECEIPT_ID = NEW.RECEIPT_ID;
 END
 $$
 DELIMITER ;
@@ -548,10 +548,10 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `received_note`
+-- Table structure for table `receipt`
 --
 
-CREATE TABLE `received_note` (
+CREATE TABLE `receipt` (
   `RECEIPT_ID` varchar(10) NOT NULL,
   `STAFF_ID` varchar(10) NOT NULL,
   `DOR` date DEFAULT NULL,
@@ -560,10 +560,10 @@ CREATE TABLE `received_note` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Dumping data for table `received_note`
+-- Dumping data for table `receipt`
 --
 
-INSERT INTO `received_note` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `DELETED`) VALUES
+INSERT INTO `receipt` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `DELETED`) VALUES
 ('REC001', 'ST06', '2023-03-01', 1500000, b'0'),
 ('REC002', 'ST06', '2023-01-01', 1500000, b'0'),
 ('REC003', 'ST06', '2023-02-01', 1500000, b'0'),
@@ -621,82 +621,82 @@ CREATE TABLE `recipe` (
 --
 
 INSERT INTO `recipe` (`PRODUCT_ID`, `INGREDIENT_ID`, `MASS`, `UNIT`) VALUES
-('SP001', 'ING001', 0.03, 'kg'),
-('SP001', 'ING002', 0.015, 'l'),
-('SP001', 'ING003', 0.01, 'l'),
-('SP001', 'ING004', 0.02, 'bag'),
-('SP001', 'ING005', 0.13, 'l'),
-('SP004', 'ING001', 0.02, 'kg'),
-('SP004', 'ING004', 0.02, 'bag'),
-('SP004', 'ING005', 0.13, 'l'),
-('SP004', 'ING006', 0.002, 'kg'),
-('SP004', 'ING007', 0.005, 'kg'),
-('SP007', 'ING002', 0.03, 'kg'),
-('SP007', 'ING003', 0.02, 'kg'),
-('SP007', 'ING004', 0.02, 'bag'),
-('SP007', 'ING005', 0.1, 'l'),
-('SP007', 'ING008', 0.01, 'l'),
-('SP010', 'ING004', 0.02, 'bag'),
-('SP010', 'ING008', 0.01, 'l'),
-('SP010', 'ING009', 0.01, 'l'),
-('SP010', 'ING010', 0.075, 'l'),
-('SP010', 'ING011', 0.025, 'l'),
-('SP010', 'ING012', 0.025, 'kg'),
-('SP013', 'ING004', 0.02, 'bag'),
-('SP013', 'ING010', 0.075, 'l'),
-('SP013', 'ING011', 0.025, 'l'),
-('SP013', 'ING012', 0.025, 'kg'),
-('SP013', 'ING013', 0.01, 'l'),
-('SP013', 'ING014', 0.035, 'l'),
-('SP016', 'ING004', 0.02, 'bag'),
-('SP016', 'ING010', 0.075, 'l'),
-('SP016', 'ING011', 0.025, 'l'),
-('SP016', 'ING012', 0.25, 'kg'),
-('SP016', 'ING013', 0.015, 'l'),
-('SP016', 'ING015', 0.01, 'l'),
-('SP019', 'ING016', 0.015, 'kg'),
-('SP019', 'ING017', 0.01, 'l'),
-('SP019', 'ING018', 0.03, 'kg'),
-('SP019', 'ING019', 0.03, 'kg'),
-('SP019', 'ING020', 0.1, 'bag'),
-('SP020', 'ING017', 0.01, 'l'),
-('SP020', 'ING018', 0.03, 'kg'),
-('SP020', 'ING020', 0.1, 'bag'),
-('SP020', 'ING021', 0.01, 'kg'),
-('SP021', 'ING004', 0.02, 'bag'),
-('SP021', 'ING005', 0.13, 'l'),
-('SP021', 'ING022', 0.002, 'kg'),
-('SP021', 'ING023', 0.02, 'kg'),
-('SP021', 'ING024', 0.05, 'l'),
-('SP021', 'ING025', 0.015, 'kg'),
-('SP024', 'ING004', 0.02, 'bag'),
-('SP024', 'ING005', 0.13, 'l'),
-('SP024', 'ING007', 0.02, 'l'),
-('SP024', 'ING026', 0.04, 'kg'),
-('SP024', 'ING027', 0.03, 'kg'),
-('SP024', 'ING028', 0.02, 'kg'),
-('SP024', 'ING029', 0.05, 'kg'),
-('SP027', 'ING004', 0.02, 'bag'),
-('SP027', 'ING005', 0.13, 'l'),
-('SP027', 'ING007', 0.01, 'kg'),
-('SP027', 'ING029', 0.05, 'kg'),
-('SP027', 'ING030', 0.04, 'kg'),
-('SP027', 'ING031', 0.01, 'kg'),
-('SP027', 'ING032', 0.015, 'l'),
-('SP030', 'ING004', 0.02, 'bag'),
-('SP030', 'ING005', 0.12, 'l'),
-('SP030', 'ING007', 0.02, 'l'),
-('SP030', 'ING032', 0.002, 'kg'),
-('SP030', 'ING033', 0.015, 'kg'),
-('SP030', 'ING034', 0.05, 'kg'),
-('SP030', 'ING035', 0.05, 'kg'),
-('SP033', 'ING002', 0.025, 'l'),
-('SP033', 'ING003', 0.02, 'l'),
-('SP033', 'ING004', 0.02, 'bag'),
-('SP033', 'ING005', 0.12, 'l'),
-('SP033', 'ING036', 0.002, 'kg'),
-('SP033', 'ING037', 0.005, 'l'),
-('SP033', 'ING038', 0.015, 'kg');
+('PR001', 'ING001', 0.03, 'kg'),
+('PR001', 'ING002', 0.015, 'l'),
+('PR001', 'ING003', 0.01, 'l'),
+('PR001', 'ING004', 0.02, 'bag'),
+('PR001', 'ING005', 0.13, 'l'),
+('PR004', 'ING001', 0.02, 'kg'),
+('PR004', 'ING004', 0.02, 'bag'),
+('PR004', 'ING005', 0.13, 'l'),
+('PR004', 'ING006', 0.002, 'kg'),
+('PR004', 'ING007', 0.005, 'kg'),
+('PR007', 'ING002', 0.03, 'kg'),
+('PR007', 'ING003', 0.02, 'kg'),
+('PR007', 'ING004', 0.02, 'bag'),
+('PR007', 'ING005', 0.1, 'l'),
+('PR007', 'ING008', 0.01, 'l'),
+('PR010', 'ING004', 0.02, 'bag'),
+('PR010', 'ING008', 0.01, 'l'),
+('PR010', 'ING009', 0.01, 'l'),
+('PR010', 'ING010', 0.075, 'l'),
+('PR010', 'ING011', 0.025, 'l'),
+('PR010', 'ING012', 0.025, 'kg'),
+('PR013', 'ING004', 0.02, 'bag'),
+('PR013', 'ING010', 0.075, 'l'),
+('PR013', 'ING011', 0.025, 'l'),
+('PR013', 'ING012', 0.025, 'kg'),
+('PR013', 'ING013', 0.01, 'l'),
+('PR013', 'ING014', 0.035, 'l'),
+('PR016', 'ING004', 0.02, 'bag'),
+('PR016', 'ING010', 0.075, 'l'),
+('PR016', 'ING011', 0.025, 'l'),
+('PR016', 'ING012', 0.25, 'kg'),
+('PR016', 'ING013', 0.015, 'l'),
+('PR016', 'ING015', 0.01, 'l'),
+('PR019', 'ING016', 0.015, 'kg'),
+('PR019', 'ING017', 0.01, 'l'),
+('PR019', 'ING018', 0.03, 'kg'),
+('PR019', 'ING019', 0.03, 'kg'),
+('PR019', 'ING020', 0.1, 'bag'),
+('PR020', 'ING017', 0.01, 'l'),
+('PR020', 'ING018', 0.03, 'kg'),
+('PR020', 'ING020', 0.1, 'bag'),
+('PR020', 'ING021', 0.01, 'kg'),
+('PR021', 'ING004', 0.02, 'bag'),
+('PR021', 'ING005', 0.13, 'l'),
+('PR021', 'ING022', 0.002, 'kg'),
+('PR021', 'ING023', 0.02, 'kg'),
+('PR021', 'ING024', 0.05, 'l'),
+('PR021', 'ING025', 0.015, 'kg'),
+('PR024', 'ING004', 0.02, 'bag'),
+('PR024', 'ING005', 0.13, 'l'),
+('PR024', 'ING007', 0.02, 'l'),
+('PR024', 'ING026', 0.04, 'kg'),
+('PR024', 'ING027', 0.03, 'kg'),
+('PR024', 'ING028', 0.02, 'kg'),
+('PR024', 'ING029', 0.05, 'kg'),
+('PR027', 'ING004', 0.02, 'bag'),
+('PR027', 'ING005', 0.13, 'l'),
+('PR027', 'ING007', 0.01, 'kg'),
+('PR027', 'ING029', 0.05, 'kg'),
+('PR027', 'ING030', 0.04, 'kg'),
+('PR027', 'ING031', 0.01, 'kg'),
+('PR027', 'ING032', 0.015, 'l'),
+('PR030', 'ING004', 0.02, 'bag'),
+('PR030', 'ING005', 0.12, 'l'),
+('PR030', 'ING007', 0.02, 'l'),
+('PR030', 'ING032', 0.002, 'kg'),
+('PR030', 'ING033', 0.015, 'kg'),
+('PR030', 'ING034', 0.05, 'kg'),
+('PR030', 'ING035', 0.05, 'kg'),
+('PR033', 'ING002', 0.025, 'l'),
+('PR033', 'ING003', 0.02, 'l'),
+('PR033', 'ING004', 0.02, 'bag'),
+('PR033', 'ING005', 0.12, 'l'),
+('PR033', 'ING036', 0.002, 'kg'),
+('PR033', 'ING037', 0.005, 'l'),
+('PR033', 'ING038', 0.015, 'kg');
 
 -- --------------------------------------------------------
 
@@ -838,9 +838,9 @@ ALTER TABLE `receipt_details`
   ADD KEY `FK_SUP` (`SUPPLIER_ID`);
 
 --
--- Indexes for table `received_note`
+-- Indexes for table `receipt`
 --
-ALTER TABLE `received_note`
+ALTER TABLE `receipt`
   ADD PRIMARY KEY (`RECEIPT_ID`),
   ADD KEY `FK_STAF` (`STAFF_ID`);
 
@@ -912,13 +912,13 @@ ALTER TABLE `product`
 --
 ALTER TABLE `receipt_details`
   ADD CONSTRAINT `FK_INGRED` FOREIGN KEY (`INGREDIENT_ID`) REFERENCES `ingredient` (`INGREDIENT_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `received_note` (`RECEIPT_ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `receipt` (`RECEIPT_ID`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_SUP` FOREIGN KEY (`SUPPLIER_ID`) REFERENCES `supplier` (`SUPPLIER_ID`) ON UPDATE CASCADE;
 
 --
--- Constraints for table `received_note`
+-- Constraints for table `receipt`
 --
-ALTER TABLE `received_note`
+ALTER TABLE `receipt`
   ADD CONSTRAINT `FK_STAF` FOREIGN KEY (`STAFF_ID`) REFERENCES `staff` (`STAFF_ID`) ON UPDATE CASCADE;
 
 --

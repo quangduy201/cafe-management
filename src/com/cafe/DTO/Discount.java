@@ -3,29 +3,29 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Discount {
-    private String discount_ID, status;
-    private double discount_Percent;
-    private Day start_Day, end_Day;
+    private String discountID, status;
+    private double discountPercent;
+    private Day startDay, endDay;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Discount() {
     }
 
-    public Discount(String discount_ID, String status, double discount_Percent, Day start_Day, Day end_Day, boolean deleted) {
-        this.discount_ID = discount_ID;
+    public Discount(String discountID, double discountPercent, Day startDay, Day endDay, String status, boolean deleted) {
+        this.discountID = discountID;
+        this.discountPercent = discountPercent;
+        this.startDay = startDay;
+        this.endDay = endDay;
         this.status = status;
-        this.discount_Percent = discount_Percent;
-        this.start_Day = start_Day;
-        this.end_Day = end_Day;
         this.deleted = deleted;
     }
 
-    public String getDiscount_ID() {
-        return discount_ID;
+    public String getDiscountID() {
+        return discountID;
     }
 
-    public void setDiscount_ID(String discount_ID) {
-        this.discount_ID = discount_ID;
+    public void setDiscountID(String discountID) {
+        this.discountID = discountID;
     }
 
     public String getStatus() {
@@ -36,28 +36,28 @@ public class Discount {
         this.status = status;
     }
 
-    public double getDiscount_Percent() {
-        return discount_Percent;
+    public double getDiscountPercent() {
+        return discountPercent;
     }
 
-    public void setDiscount_Percent(double discount_Percent) {
-        this.discount_Percent = discount_Percent;
+    public void setDiscountPercent(double discountPercent) {
+        this.discountPercent = discountPercent;
     }
 
-    public Day getStart_Day() {
-        return start_Day;
+    public Day getStartDay() {
+        return startDay;
     }
 
-    public void setStart_Day(Day start_Day) {
-        this.start_Day = start_Day;
+    public void setStartDay(Day startDay) {
+        this.startDay = startDay;
     }
 
-    public Day getEnd_Day() {
-        return end_Day;
+    public Day getEndDay() {
+        return endDay;
     }
 
-    public void setEnd_Day(Day end_Day) {
-        this.end_Day = end_Day;
+    public void setEndDay(Day endDay) {
+        this.endDay = endDay;
     }
 
     public boolean isDeleted() {
@@ -66,5 +66,14 @@ public class Discount {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return discountID + "\t" +
+            status + "\t" +
+            discountPercent + "\t" +
+            startDay + "\t" +
+            endDay;
     }
 }

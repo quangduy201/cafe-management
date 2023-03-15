@@ -1,50 +1,59 @@
 package com.cafe.DTO;
 
 public class Account {
-    private String userName, passWord, decentralization_ID, staff_ID;
+    private String accountID, username, password, decentralizationID, staffID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Account() {
     }
 
-    public Account(String userName, String passWord, String decentralization_ID, String staff_ID, boolean deleted) {
-        this.userName = userName;
-        this.passWord = passWord;
-        this.decentralization_ID = decentralization_ID;
-        this.staff_ID = staff_ID;
+    public Account(String accountID, String username, String password, String decentralizationID, String staffID, boolean deleted) {
+        this.accountID = accountID;
+        this.username = username;
+        this.password = password;
+        this.decentralizationID = decentralizationID;
+        this.staffID = staffID;
         this.deleted = deleted;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getAccountID() {
+        return accountID;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setAccountID(String accountID) {
+        this.accountID = accountID;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getDecentralization_ID() {
-        return decentralization_ID;
+    public String getPassword() {
+        return password;
     }
 
-    public void setDecentralization_ID(String decentralization_ID) {
-        this.decentralization_ID = decentralization_ID;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public String getStaff_ID() {
-        return staff_ID;
+    public String getDecentralizationID() {
+        return decentralizationID;
     }
 
-    public void setStaff_ID(String staff_ID) {
-        this.staff_ID = staff_ID;
+    public void setDecentralizationID(String decentralizationID) {
+        this.decentralizationID = decentralizationID;
+    }
+
+    public String getStaffID() {
+        return staffID;
+    }
+
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
     }
 
     public boolean isDeleted() {
@@ -55,7 +64,12 @@ public class Account {
         this.deleted = deleted;
     }
 
-    public String toString (){
-        return getUserName() + "\t" + getPassWord() + "\t" + getDecentralization_ID() + "\t" + getStaff_ID() + "\t" + isDeleted();
+    @Override
+    public String toString() {
+        return accountID + "\t" +
+            username + "\t" +
+            password + "\t" +
+            decentralizationID + "\t" +
+            staffID;
     }
 }

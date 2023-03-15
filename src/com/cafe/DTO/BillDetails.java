@@ -1,32 +1,32 @@
 package com.cafe.DTO;
 
 public class BillDetails {
-    private String bill_ID, product_ID;
+    private String billID, productID;
     private int quantity;
 
     public BillDetails() {
     }
 
-    public BillDetails(String bill_ID, String product_ID, int quantity) {
-        this.bill_ID = bill_ID;
-        this.product_ID = product_ID;
+    public BillDetails(String billID, String productID, int quantity) {
+        this.billID = billID;
+        this.productID = productID;
         this.quantity = quantity;
     }
 
-    public String getBill_ID() {
-        return bill_ID;
+    public String getBillID() {
+        return billID;
     }
 
-    public void setBill_ID(String bill_ID) {
-        this.bill_ID = bill_ID;
+    public void setBillID(String billID) {
+        this.billID = billID;
     }
 
-    public String getProduct_ID() {
-        return product_ID;
+    public String getProductID() {
+        return productID;
     }
 
-    public void setProduct_ID(String product_ID) {
-        this.product_ID = product_ID;
+    public void setProductID(String productID) {
+        this.productID = productID;
     }
 
     public int getQuantity() {
