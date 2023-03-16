@@ -1,7 +1,8 @@
 package com.cafe.DTO;
 
 public class DiscountDetails {
-    private String discountID, productID;
+    private String discountID;
+    private String productID;
 
     public DiscountDetails() {
     }
@@ -25,5 +26,11 @@ public class DiscountDetails {
 
     public void setProductID(String productID) {
         this.productID = productID;
+    }
+
+    @Override
+    public String toString() {
+        return discountID + " | " +
+            productID;
     }
 }

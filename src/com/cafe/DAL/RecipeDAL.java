@@ -4,9 +4,7 @@ import com.cafe.DTO.Recipe;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class RecipeDAL extends Manager {
     public RecipeDAL() throws SQLException {
@@ -23,7 +21,8 @@ public class RecipeDAL extends Manager {
             row.get(0), // productID
             row.get(1), // ingredientID
             Double.parseDouble(row.get(2)), // mass
-            row.get(3) // unit
+            row.get(3), // unit
+            false
         ));
     }
 
@@ -40,9 +39,16 @@ public class RecipeDAL extends Manager {
         return 0;
     }
 
-    public int updateRecipe(Map<String, Object> updateValues, String... conditions) {
+    public int updateRecipe(Recipe recipe) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(recipe.getProductID());
+            updateValues.add(recipe.getIngredientID());
+            updateValues.add(recipe.getMass());
+            updateValues.add(recipe.getUnit());
+            updateValues.add(recipe.isDeleted());
+            return update(updateValues, "PRODUCT_ID = " + recipe.getProductID(),
+                "INGREDIENT_ID = " + recipe.getIngredientID());
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.updateRecipe(): " + e.getMessage());
         }
@@ -51,8 +57,8 @@ public class RecipeDAL extends Manager {
 
     public int deleteRecipe(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.deleteRecipe(): " + e.getMessage());

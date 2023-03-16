@@ -4,7 +4,6 @@ import com.cafe.DAL.DiscountDAL;
 import com.cafe.DTO.Discount;
 
 import java.util.List;
-import java.util.Map;
 
 public class DiscountBLL {
     private DiscountDAL discountDAL;
@@ -21,8 +20,8 @@ public class DiscountBLL {
         return discountDAL.insertDiscount(discount) != 0;
     }
 
-    public boolean updateDiscount(Map<String, Object> updateValues, String... conditions) {
-        return discountDAL.updateDiscount(updateValues, conditions) != 0;
+    public boolean updateDiscount(Discount discount) {
+        return discountDAL.updateDiscount(discount) != 0;
     }
 
     public boolean removeDiscount(String id) {

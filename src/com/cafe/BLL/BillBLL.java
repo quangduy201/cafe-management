@@ -4,7 +4,6 @@ import com.cafe.DAL.BillDAL;
 import com.cafe.DTO.Bill;
 
 import java.util.List;
-import java.util.Map;
 
 public class BillBLL {
     private BillDAL billDAL;
@@ -21,8 +20,8 @@ public class BillBLL {
         return billDAL.insertBill(bill) != 0;
     }
 
-    public boolean updateBill(Map<String, Object> updateValues, String... conditions) {
-        return billDAL.updateBill(updateValues, conditions) != 0;
+    public boolean updateBill(Bill bill) {
+        return billDAL.updateBill(bill) != 0;
     }
 
     public boolean removeBill(String id) {

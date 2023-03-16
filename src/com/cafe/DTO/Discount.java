@@ -3,9 +3,11 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Discount {
-    private String discountID, status;
+    private String discountID;
     private double discountPercent;
-    private Day startDay, endDay;
+    private Day startDay;
+    private Day endDay;
+    private String status;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Discount() {
@@ -26,14 +28,6 @@ public class Discount {
 
     public void setDiscountID(String discountID) {
         this.discountID = discountID;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public double getDiscountPercent() {
@@ -60,6 +54,14 @@ public class Discount {
         this.endDay = endDay;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -70,10 +72,10 @@ public class Discount {
 
     @Override
     public String toString() {
-        return discountID + "\t" +
-            status + "\t" +
-            discountPercent + "\t" +
-            startDay + "\t" +
+        return discountID + " | " +
+            status + " | " +
+            discountPercent + " | " +
+            startDay + " | " +
             endDay;
     }
 }

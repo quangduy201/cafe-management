@@ -5,9 +5,7 @@ import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DiscountDAL extends Manager {
     public DiscountDAL() throws SQLException {
@@ -42,7 +40,6 @@ public class DiscountDAL extends Manager {
     public int insertDiscount(Discount discount) {
         try {
             return create(discount.getDiscountID(),
-                discount.getDiscountID(),
                 discount.getDiscountPercent(),
                 discount.getStartDay(),
                 discount.getEndDay(),
@@ -55,9 +52,16 @@ public class DiscountDAL extends Manager {
         return 0;
     }
 
-    public int updateDiscount(Map<String, Object> updateValues, String... conditions) {
+    public int updateDiscount(Discount discount) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(discount.getDiscountID());
+            updateValues.add(discount.getDiscountPercent());
+            updateValues.add(discount.getStartDay());
+            updateValues.add(discount.getEndDay());
+            updateValues.add(discount.getStatus());
+            updateValues.add(discount.isDeleted());
+            return update(updateValues, "DISCOUNT_ID = " + discount.getDiscountID());
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.updateDiscount(): " + e.getMessage());
         }
@@ -66,8 +70,8 @@ public class DiscountDAL extends Manager {
 
     public int deleteDiscount(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.deleteDiscount(): " + e.getMessage());

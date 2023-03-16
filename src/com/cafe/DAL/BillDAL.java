@@ -5,9 +5,7 @@ import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BillDAL extends Manager {
     public BillDAL() throws SQLException {
@@ -54,19 +52,26 @@ public class BillDAL extends Manager {
         return 0;
     }
 
-    public int updateBill(Map<String, Object> updateValues, String... conditions) {
+    public int updateBill(Bill bill) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(bill.getBillID());
+            updateValues.add(bill.getCustomerID());
+            updateValues.add(bill.getStaffID());
+            updateValues.add(bill.getDateOfPurchase());
+            updateValues.add(bill.getTotal());
+            updateValues.add(bill.isDeleted());
+            return update(updateValues, "BILL_ID = " + bill.getBillID());
         } catch (Exception e) {
             System.out.println("Error occurred in BillDAL.updateBill(): " + e.getMessage());
-            return 0;
         }
+        return 0;
     }
 
     public int deleteBill(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in BillDAL.deleteBill(): " + e.getMessage());
@@ -85,7 +90,7 @@ public class BillDAL extends Manager {
 
     public String getAutoID() {
         try {
-            return getAutoID("INV", 4);
+            return getAutoID("BI", 4);
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
         }

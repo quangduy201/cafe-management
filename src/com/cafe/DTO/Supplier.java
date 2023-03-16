@@ -1,7 +1,11 @@
 package com.cafe.DTO;
 
 public class Supplier {
-    private String supplierID, name, phone, address, email;
+    private String supplierID;
+    private String name;
+    private String phone;
+    private String address;
+    private String email;
     private double price;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
@@ -72,5 +76,15 @@ public class Supplier {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return supplierID + " | " +
+            name + " | " +
+            phone + " | " +
+            address + " | " +
+            email + " | " +
+            price;
     }
 }

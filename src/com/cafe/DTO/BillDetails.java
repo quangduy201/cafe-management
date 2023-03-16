@@ -1,7 +1,8 @@
 package com.cafe.DTO;
 
 public class BillDetails {
-    private String billID, productID;
+    private String billID;
+    private String productID;
     private int quantity;
 
     public BillDetails() {
@@ -35,5 +36,12 @@ public class BillDetails {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return billID + " | " +
+            productID + " | " +
+            quantity;
     }
 }

@@ -3,9 +3,14 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Customer {
-    private String customerID, name, gender, phone; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
-    private Day dateOfBirth, dateOfSup;
-    private boolean membership, deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
+    private String customerID;
+    private String name;
+    private String gender;
+    private Day dateOfBirth;
+    private String phone; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
+    private boolean membership;
+    private Day dateOfSup;
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Customer() {
     }
@@ -45,20 +50,20 @@ public class Customer {
         this.gender = gender;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public Day getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(Day dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public boolean isMembership() {
@@ -69,14 +74,6 @@ public class Customer {
         this.membership = membership;
     }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
     public Day getDateOfSup() {
         return dateOfSup;
     }
@@ -85,14 +82,22 @@ public class Customer {
         this.dateOfSup = dateOfSup;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
-        return customerID + "\t" +
-            name + "\t" +
-            gender + "\t" +
-            dateOfBirth + "\t" +
-            phone + "\t" +
-            membership + "\t" +
+        return customerID + " | " +
+            name + " | " +
+            gender + " | " +
+            dateOfBirth + " | " +
+            phone + " | " +
+            membership + " | " +
             dateOfSup;
     }
 }

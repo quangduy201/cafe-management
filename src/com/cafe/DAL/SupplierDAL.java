@@ -4,9 +4,7 @@ import com.cafe.DTO.Supplier;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SupplierDAL extends Manager {
     public SupplierDAL() throws SQLException {
@@ -21,65 +19,77 @@ public class SupplierDAL extends Manager {
         ));
     }
 
-    public List<Supplier> convertToSupplier(List<List<String>> data) {
-        List<Supplier> supplierList = new ArrayList<>();
-        try {
-            String supplier_ID, name, phone, address, email;
-            double price;
-            boolean deleted;
-            for (List<String> row : data) {
-                supplier_ID = row.get(0);
-                name = row.get(1);
-                phone = row.get(2);
-                address = row.get(3);
-                email = row.get(4);
-                price = Double.parseDouble(row.get(5));
-                deleted = !row.get(6).contains("0");
-                Supplier supplier = new Supplier(supplier_ID, name, phone, address, email, price, deleted);
-                supplierList.add(supplier);
-            }
-        } catch (Exception ignored) {
-
-        }
-        return supplierList;
+    public List<Supplier> convertToSuppliers(List<List<String>> data) {
+        return convert(data, row -> new Supplier(
+            row.get(0), // supplierID
+            row.get(1), // name
+            row.get(2), // phone
+            row.get(3), // address
+            row.get(4), // email
+            Double.parseDouble(row.get(5)), // price
+            Boolean.parseBoolean(row.get(6)) // deleted
+        ));
     }
 
-    public List<Supplier> readSuppliers(String[] conditions) {
-        List<Supplier> supplierList = new ArrayList<>();
+    public int insertSupplier(Supplier supplier) {
         try {
-            supplierList = convertToSupplier(read(conditions));
-        } catch (Exception ignored) {
-
-        }
-        return supplierList;
-    }
-
-    public int createSupplier(String supplier_ID, String name, String phone, String address, String email, double price) {
-        if (readSuppliers(new String[]{"SUPPLIER_ID = '" + supplier_ID + "'"}).size() != 0) {
-            return 0;
-        }
-        try {
-            return super.create(supplier_ID, name, phone, address, email, price, 0);
+            return create(supplier.getSupplierID(),
+                supplier.getName(),
+                supplier.getPhone(),
+                supplier.getAddress(),
+                supplier.getEmail(),
+                supplier.getPrice(),
+                false
+            ); // supplier khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            return 0;
+            System.out.println("Error occurred in SupplierDAL.insertSupplier(): " + e.getMessage());
         }
+        return 0;
     }
 
-    public int updateSupplier(Map<String, Object> updateValues, String... conditions) {
+    public int updateSupplier(Supplier supplier) {
         try {
-            return super.update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(supplier.getSupplierID());
+            updateValues.add(supplier.getName());
+            updateValues.add(supplier.getPhone());
+            updateValues.add(supplier.getAddress());
+            updateValues.add(supplier.getEmail());
+            updateValues.add(supplier.getPrice());
+            updateValues.add(supplier.isDeleted());
+            return update(updateValues, "SUPPLIER_ID = " + supplier.getSupplierID());
         } catch (Exception e) {
-            return 0;
+            System.out.println("Error occurred in SupplierDAL.updateSupplier(): " + e.getMessage());
         }
+        return 0;
     }
 
-    public int deleteSupplier(String... id) {
+    public int deleteSupplier(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
-            return super.update(updateValues, id);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
+            return update(updateValues, conditions);
         } catch (Exception e) {
-            return 0;
+            System.out.println("Error occurred in SupplierDAL.deleteSupplier(): " + e.getMessage());
         }
+        return 0;
+    }
+
+    public List<Supplier> searchSuppliers(String... conditions) {
+        try {
+            return convertToSuppliers(read(conditions));
+        } catch (Exception e) {
+            System.out.println("Error occurred in SupplierDAL.searchSuppliers(): " + e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+    public String getAutoID() {
+        try {
+            return getAutoID("SUP", 3);
+        } catch (Exception e) {
+            System.out.println("Error occurred in SupplierDAL.getAutoID(): " + e.getMessage());
+        }
+        return "";
     }
 }

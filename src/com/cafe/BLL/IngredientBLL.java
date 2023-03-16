@@ -4,7 +4,6 @@ import com.cafe.DAL.IngredientDAL;
 import com.cafe.DTO.Ingredient;
 
 import java.util.List;
-import java.util.Map;
 
 public class IngredientBLL {
     private IngredientDAL ingredientDAL;
@@ -25,8 +24,8 @@ public class IngredientBLL {
         return ingredientDAL.insertIngredient(ingredient) != 0;
     }
 
-    public boolean updateIngredient(Map<String, Object> updateValues, String... conditions) {
-        return ingredientDAL.updateIngredient(updateValues, conditions) != 0;
+    public boolean updateIngredient(Ingredient ingredient) {
+        return ingredientDAL.updateIngredient(ingredient) != 0;
     }
 
     public boolean removeIngredient(String id) {

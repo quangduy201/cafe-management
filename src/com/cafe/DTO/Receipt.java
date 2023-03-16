@@ -3,7 +3,8 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Receipt {
-    private String receiptID, staffID;
+    private String receiptID;
+    private String staffID;
     private Day dor;
     private double grandTotal;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
@@ -61,9 +62,9 @@ public class Receipt {
 
     @Override
     public String toString() {
-        return receiptID + "\t" +
-            staffID + "\t" +
-            dor + "\t" +
+        return receiptID + "  | " +
+            staffID + "  | " +
+            dor + "  | " +
             grandTotal;
     }
 }

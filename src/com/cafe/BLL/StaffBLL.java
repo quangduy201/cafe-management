@@ -4,7 +4,6 @@ import com.cafe.DAL.StaffDAL;
 import com.cafe.DTO.Staff;
 
 import java.util.List;
-import java.util.Map;
 
 public class StaffBLL {
     private StaffDAL staffDAL;
@@ -25,8 +24,8 @@ public class StaffBLL {
         return staffDAL.insertStaff(staff) != 0;
     }
 
-    public boolean updateStaff(Map<String, Object> updateValues, String... conditions) {
-        return staffDAL.updateStaff(updateValues, conditions) != 0;
+    public boolean updateStaff(Staff staff) {
+        return staffDAL.updateStaff(staff) != 0;
     }
 
     public boolean removeStaff(String id) {

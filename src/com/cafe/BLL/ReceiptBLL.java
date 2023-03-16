@@ -4,7 +4,6 @@ import com.cafe.DAL.ReceiptDAL;
 import com.cafe.DTO.Receipt;
 
 import java.util.List;
-import java.util.Map;
 
 public class ReceiptBLL {
     private ReceiptDAL receiptDAL;
@@ -21,8 +20,8 @@ public class ReceiptBLL {
         return receiptDAL.insertReceipt(receipt) != 0;
     }
 
-    public boolean updateReceipt(Map<String, Object> updateValues, String... conditions) {
-        return receiptDAL.updateReceipt(updateValues, conditions) != 0;
+    public boolean updateReceipt(Receipt receipt) {
+        return receiptDAL.updateReceipt(receipt) != 0;
     }
 
     public boolean removeReceipt(String id) {

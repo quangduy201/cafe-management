@@ -1,7 +1,10 @@
 package com.cafe.DTO;
 
 public class Product {
-    private String productID, name, categoryID, size;
+    private String productID;
+    private String name;
+    private String categoryID;
+    private String size;
     private double cost;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
@@ -12,6 +15,7 @@ public class Product {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
+        this.size = size;
         this.cost = cost;
         this.deleted = deleted;
     }
@@ -66,10 +70,10 @@ public class Product {
 
     @Override
     public String toString() {
-        return productID + "\t" +
-            name + "\t" +
-            categoryID + "\t" +
-            size + "\t" +
+        return productID + " | " +
+            name + " | " +
+            categoryID + " | " +
+            size + " | " +
             cost;
     }
 }

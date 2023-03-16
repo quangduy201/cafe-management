@@ -1,17 +1,21 @@
 package com.cafe.DTO;
 
 public class Recipe {
-    private String productID, ingredientID, unit;
+    private String productID;
+    private String ingredientID;
     private double mass;
+    private String unit;
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Recipe() {
     }
 
-    public Recipe(String productID, String ingredientID, double mass, String unit) {
+    public Recipe(String productID, String ingredientID, double mass, String unit, boolean deleted) {
         this.productID = productID;
         this.ingredientID = ingredientID;
         this.mass = mass;
         this.unit = unit;
+        this.deleted = deleted;
     }
 
     public String getProductID() {
@@ -30,14 +34,6 @@ public class Recipe {
         this.ingredientID = ingredientID;
     }
 
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
     public double getMass() {
         return mass;
     }
@@ -46,11 +42,27 @@ public class Recipe {
         this.mass = mass;
     }
 
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Override
     public String toString() {
-        return productID + "\t" +
-            ingredientID + "\t" +
-            mass + "\t" +
+        return productID + " | " +
+            ingredientID + " | " +
+            mass + " | " +
             unit;
     }
 }

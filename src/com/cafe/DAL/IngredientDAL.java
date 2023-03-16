@@ -4,9 +4,7 @@ import com.cafe.DTO.Ingredient;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class IngredientDAL extends Manager {
     public IngredientDAL() throws SQLException {
@@ -46,9 +44,16 @@ public class IngredientDAL extends Manager {
         return 0;
     }
 
-    public int updateIngredient(Map<String, Object> updateValues, String... conditions) {
+    public int updateIngredient(Ingredient ingredient) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(ingredient.getIngredientID());
+            updateValues.add(ingredient.getName());
+            updateValues.add(ingredient.getQuantity());
+            updateValues.add(ingredient.getUnit());
+            updateValues.add(ingredient.getSupplierID());
+            updateValues.add(ingredient.isDeleted());
+            return update(updateValues, "INGREDIENT_ID = " + ingredient.getIngredientID());
         } catch (Exception e) {
             System.out.println("Error occurred in IngredientDAL.updateIngredient(): " + e.getMessage());
         }
@@ -57,8 +62,8 @@ public class IngredientDAL extends Manager {
 
     public int deleteIngredient(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in IngredientDAL.deleteIngredient(): " + e.getMessage());

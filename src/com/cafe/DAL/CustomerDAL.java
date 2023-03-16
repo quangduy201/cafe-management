@@ -5,9 +5,7 @@ import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CustomerDAL extends Manager {
     public CustomerDAL() throws SQLException {
@@ -46,12 +44,12 @@ public class CustomerDAL extends Manager {
     public int insertCustomer(Customer customer) {
         try {
             return create(customer.getCustomerID(),
-                customer.getCustomerID(),
                 customer.getName(),
                 customer.getGender(),
                 customer.getDateOfBirth(),
                 customer.getPhone(),
                 customer.isMembership(),
+                customer.getDateOfSup(),
                 false
             ); // customer khi tạo mặc định deleted = 0
         } catch (Exception e) {
@@ -60,9 +58,18 @@ public class CustomerDAL extends Manager {
         return 0;
     }
 
-    public int updateCustomer(Map<String, Object> updateValues, String... conditions) {
+    public int updateCustomer(Customer customer) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(customer.getCustomerID());
+            updateValues.add(customer.getName());
+            updateValues.add(customer.getGender());
+            updateValues.add(customer.getDateOfBirth());
+            updateValues.add(customer.getPhone());
+            updateValues.add(customer.isMembership());
+            updateValues.add(customer.getDateOfSup());
+            updateValues.add(customer.isDeleted());
+            return update(updateValues, "CUSTOMER_ID = " + customer.getCustomerID());
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerDAL.updateCustomer(): " + e.getMessage());
         }
@@ -71,8 +78,8 @@ public class CustomerDAL extends Manager {
 
     public int deleteCustomer(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerDAL.deleteCustomer(): " + e.getMessage());
@@ -91,7 +98,7 @@ public class CustomerDAL extends Manager {
 
     public String getAutoID() {
         try {
-            return getAutoID("KH", 3);
+            return getAutoID("CUS", 3);
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerDAL.getAutoID(): " + e.getMessage());
         }

@@ -1,7 +1,11 @@
 package com.cafe.DTO;
 
 public class Account {
-    private String accountID, username, password, decentralizationID, staffID;
+    private String accountID;
+    private String username;
+    private String password;
+    private String decentralizationID;
+    private String staffID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Account() {
@@ -66,10 +70,10 @@ public class Account {
 
     @Override
     public String toString() {
-        return accountID + "\t" +
-            username + "\t" +
-            password + "\t" +
-            decentralizationID + "\t" +
+        return accountID + " | " +
+            username + " | " +
+            password + " | " +
+            decentralizationID + " | " +
             staffID;
     }
 }

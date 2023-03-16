@@ -1,8 +1,11 @@
 package com.cafe.DTO;
 
 public class Ingredient {
-    private String ingredientID, name, unit, supplierID;
+    private String ingredientID;
+    private String name;
     private double quantity;
+    private String unit;
+    private String supplierID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Ingredient() {
@@ -33,6 +36,14 @@ public class Ingredient {
         this.name = name;
     }
 
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
     public String getUnit() {
         return unit;
     }
@@ -49,14 +60,6 @@ public class Ingredient {
         this.supplierID = supplierID;
     }
 
-    public double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }
@@ -67,10 +70,10 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return ingredientID + "\t" +
-            name + "\t" +
-            quantity + "\t" +
-            unit + "\t" +
+        return ingredientID + " | " +
+            name + " | " +
+            quantity + " | " +
+            unit + " | " +
             supplierID;
     }
 }

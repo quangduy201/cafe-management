@@ -4,7 +4,6 @@ import com.cafe.DAL.CategoryDAL;
 import com.cafe.DTO.Category;
 
 import java.util.List;
-import java.util.Map;
 
 public class CategoryBLL {
     private CategoryDAL categoryDAL;
@@ -25,8 +24,8 @@ public class CategoryBLL {
         return categoryDAL.insertCategory(category) != 0;
     }
 
-    public boolean updateCategory(Map<String, Object> updateValues, String... conditions) {
-        return categoryDAL.updateCategory(updateValues, conditions) != 0;
+    public boolean updateCategory(Category category) {
+        return categoryDAL.updateCategory(category) != 0;
     }
 
     public boolean removeCategory(String id) {
