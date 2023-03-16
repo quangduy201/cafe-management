@@ -1,7 +1,8 @@
 package com.cafe.DTO;
 
 public class Category {
-    private String categoryID, name;
+    private String categoryID;
+    private String name;
     private int quantity;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
@@ -49,8 +50,8 @@ public class Category {
 
     @Override
     public String toString() {
-        return categoryID + "\t" +
-            name + "\t" +
+        return categoryID + " | " +
+            name + " | " +
             quantity;
     }
 }

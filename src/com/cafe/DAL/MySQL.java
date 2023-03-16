@@ -84,7 +84,7 @@ public class MySQL {
                     SELECT * FROM `customer`
                     WHERE gender = ? AND name = ?;
                     """,
-                'M', "Nguuyễn Văn A");
+                1, "Nguuyễn Văn A");
             for (List<String> row : result) {
                 for (Object value : row) {
                     System.out.print(value + "\t");

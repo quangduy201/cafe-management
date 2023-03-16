@@ -4,9 +4,7 @@ import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StaffDAL extends Manager{
     public StaffDAL() throws SQLException {
@@ -51,7 +49,7 @@ public class StaffDAL extends Manager{
                 staff.getName(),
                 staff.getGender(),
                 staff.getDateOfBirth(),
-                staff.getAdddress(),
+                staff.getAddress(),
                 staff.getPhone(),
                 staff.getEmail(),
                 staff.getSalary(),
@@ -64,9 +62,20 @@ public class StaffDAL extends Manager{
         return 0;
     }
 
-    public int updateStaff(Map<String, Object> updateValues, String... conditions) {
+    public int updateStaff(Staff staff) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(staff.getStaffID());
+            updateValues.add(staff.getName());
+            updateValues.add(staff.getGender());
+            updateValues.add(staff.getDateOfBirth());
+            updateValues.add(staff.getAddress());
+            updateValues.add(staff.getPhone());
+            updateValues.add(staff.getEmail());
+            updateValues.add(staff.getSalary());
+            updateValues.add(staff.getDateOfEntry());
+            updateValues.add(staff.isDeleted());
+            return update(updateValues, "STAFF_ID = " + staff.getStaffID());
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.updateStaff(): " + e.getMessage());
         }
@@ -75,8 +84,8 @@ public class StaffDAL extends Manager{
 
     public int deleteStaff(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.deleteStaff(): " + e.getMessage());
@@ -95,7 +104,7 @@ public class StaffDAL extends Manager{
 
     public String getAutoID() {
         try {
-            return getAutoID("ST", 3);
+            return getAutoID("ST", 2);
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.getAutoID(): " + e.getMessage());
         }

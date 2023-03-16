@@ -5,9 +5,7 @@ import com.cafe.DTO.Category;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CategoryDAL extends Manager {
     public CategoryDAL() throws SQLException {
@@ -31,7 +29,6 @@ public class CategoryDAL extends Manager {
     public int insertCategory(Category category) {
         try {
             return create(category.getCategoryID(),
-                category.getCategoryID(),
                 category.getName(),
                 category.getQuantity(),
                 false
@@ -42,9 +39,14 @@ public class CategoryDAL extends Manager {
         return 0;
     }
 
-    public int updateCategory(Map<String, Object> updateValues, String... conditions) {
+    public int updateCategory(Category category) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(category.getCategoryID());
+            updateValues.add(category.getName());
+            updateValues.add(category.getQuantity());
+            updateValues.add(category.isDeleted());
+            return update(updateValues, "CATEGORY_ID = " + category.getCategoryID());
         } catch (Exception e) {
             System.out.println("Error occurred in CategoryDAL.updateCategory(): " + e.getMessage());
         }
@@ -53,8 +55,8 @@ public class CategoryDAL extends Manager {
 
     public int deleteCategory(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in CategoryDAL.deleteCategory(): " + e.getMessage());

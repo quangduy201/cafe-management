@@ -1,8 +1,10 @@
 package com.cafe.DTO;
 
 public class ReceiptDetails {
-    private String receiptID, ingredientID, supplierID;
+    private String receiptID;
+    private String ingredientID;
     private double quantity;
+    private String supplierID;
 
     public ReceiptDetails() {
     }
@@ -30,14 +32,6 @@ public class ReceiptDetails {
         this.ingredientID = ingredientID;
     }
 
-    public String getSupplierID() {
-        return supplierID;
-    }
-
-    public void setSupplierID(String supplierID) {
-        this.supplierID = supplierID;
-    }
-
     public double getQuantity() {
         return quantity;
     }
@@ -46,11 +40,19 @@ public class ReceiptDetails {
         this.quantity = quantity;
     }
 
+    public String getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
+    }
+
     @Override
     public String toString() {
-        return receiptID + "\t" +
-            ingredientID + "\t" +
-            quantity + "\t" +
+        return receiptID + " | " +
+            ingredientID + " | " +
+            quantity + " | " +
             supplierID;
     }
 }

@@ -5,9 +5,7 @@ import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ReceiptDAL extends Manager {
     public ReceiptDAL() throws SQLException {
@@ -51,9 +49,15 @@ public class ReceiptDAL extends Manager {
         return 0;
     }
 
-    public int updateReceipt(Map<String, Object> updateValues, String... conditions) {
+    public int updateReceipt(Receipt receipt) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(receipt.getReceiptID());
+            updateValues.add(receipt.getStaffID());
+            updateValues.add(receipt.getDor());
+            updateValues.add(receipt.getGrandTotal());
+            updateValues.add(receipt.isDeleted());
+            return update(updateValues, "RECEIPT_ID = " + receipt.getReceiptID());
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptDAL.updateReceipt(): " + e.getMessage());
         }
@@ -62,8 +66,8 @@ public class ReceiptDAL extends Manager {
 
     public int deleteReceipt(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptDAL.deleteReceipt(): " + e.getMessage());

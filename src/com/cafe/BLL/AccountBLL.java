@@ -4,7 +4,6 @@ import com.cafe.DAL.AccountDAL;
 import com.cafe.DTO.Account;
 
 import java.util.List;
-import java.util.Map;
 
 public class AccountBLL {
     private AccountDAL accountDAL;
@@ -25,8 +24,8 @@ public class AccountBLL {
         return accountDAL.insertAccount(account) != 0;
     }
 
-    public boolean updateAccount(Map<String, Object> updateValues, String... conditions) {
-        return accountDAL.updateAccount(updateValues, conditions) != 0;
+    public boolean updateAccount(Account account) {
+        return accountDAL.updateAccount(account) != 0;
     }
 
     public boolean removeAccount(String id) {

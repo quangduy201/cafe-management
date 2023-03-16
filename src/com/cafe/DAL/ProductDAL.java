@@ -4,9 +4,7 @@ import com.cafe.DTO.Product;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProductDAL extends Manager {
     public ProductDAL() throws SQLException {
@@ -45,9 +43,16 @@ public class ProductDAL extends Manager {
         return 0;
     }
 
-    public int updateProduct(Map<String, Object> updateValues, String... conditions) {
+    public int updateProduct(Product product) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(product.getProductID());
+            updateValues.add(product.getName());
+            updateValues.add(product.getCategoryID());
+            updateValues.add(product.getSize());
+            updateValues.add(product.getCost());
+            updateValues.add(product.isDeleted());
+            return update(updateValues, "PRODUCT_ID = " + product.getProductID());
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.updateProduct(): " + e.getMessage());
         }
@@ -56,8 +61,8 @@ public class ProductDAL extends Manager {
 
     public int deleteProduct(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.deleteProduct(): " + e.getMessage());
@@ -76,7 +81,7 @@ public class ProductDAL extends Manager {
 
     public String getAutoID() {
         try {
-            return getAutoID("SP", 3);
+            return getAutoID("PR", 3);
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.getAutoID(): " + e.getMessage());
         }

@@ -4,9 +4,7 @@ import com.cafe.DTO.Account;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AccountDAL extends Manager {
     public AccountDAL() throws SQLException {
@@ -46,9 +44,16 @@ public class AccountDAL extends Manager {
         return 0;
     }
 
-    public int updateAccount(Map<String, Object> updateValues, String... conditions) {
+    public int updateAccount(Account account) {
         try {
-            return update(updateValues, conditions);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(account.getAccountID());
+            updateValues.add(account.getUsername());
+            updateValues.add(account.getPassword());
+            updateValues.add(account.getDecentralizationID());
+            updateValues.add(account.getStaffID());
+            updateValues.add(account.isDeleted());
+            return update(updateValues, "ACCOUNT_ID = " + account.getAccountID());
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.updateAccount(): " + e.getMessage());
         }
@@ -57,8 +62,8 @@ public class AccountDAL extends Manager {
 
     public int deleteAccount(String... conditions) {
         try {
-            Map<String, Object> updateValues = new HashMap<>();
-            updateValues.put("DELETED", 1);
+            List<Object> updateValues = new ArrayList<>();
+            updateValues.add(1);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.deleteAccount(): " + e.getMessage());

@@ -4,7 +4,6 @@ import com.cafe.DAL.CustomerDAL;
 import com.cafe.DTO.Customer;
 
 import java.util.List;
-import java.util.Map;
 
 public class CustomerBLL {
     private CustomerDAL customerDAL;
@@ -25,8 +24,8 @@ public class CustomerBLL {
         return customerDAL.insertCustomer(customer) != 0;
     }
 
-    public boolean updateCustomer(Map<String, Object> updateValues, String... conditions) {
-        return customerDAL.updateCustomer(updateValues, conditions) != 0;
+    public boolean updateCustomer(Customer customer) {
+        return customerDAL.updateCustomer(customer) != 0;
     }
 
     public boolean removeCustomer(String id) {

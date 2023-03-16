@@ -3,9 +3,15 @@ package com.cafe.DTO;
 import com.cafe.utils.Day;
 
 public class Staff {
-    private String staffID, name, gender, address, phone, email; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
+    private String staffID;
+    private String name;
+    private String gender; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
+    private Day dateOfBirth;
+    private String address;
+    private String phone;
+    private String email;
     private double salary;
-    private Day dateOfBirth, dateOfEntry;
+    private Day dateOfEntry;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Staff() {
@@ -48,11 +54,19 @@ public class Staff {
         this.gender = gender;
     }
 
-    public String getAdddress() {
+    public Day getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Day dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
         return address;
     }
 
-    public void setAdddress(String address) {
+    public void setAddress(String address) {
         this.address = address;
     }
 
@@ -80,14 +94,6 @@ public class Staff {
         this.salary = salary;
     }
 
-    public Day getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Day dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
     public Day getDateOfEntry() {
         return dateOfEntry;
     }
@@ -106,14 +112,14 @@ public class Staff {
 
     @Override
     public String toString() {
-        return staffID + "t" +
-            name + "\t" +
-            gender + "\t" +
-            dateOfBirth + "\t" +
-            address + "\t" +
-            phone + "\t" +
-            email + "\t" +
-            salary + "\t" +
+        return staffID + " | " +
+            name + " | " +
+            gender + " | " +
+            dateOfBirth + " | " +
+            address + " | " +
+            phone + " | " +
+            email + " | " +
+            salary + " | " +
             dateOfEntry;
     }
 }

@@ -4,7 +4,6 @@ import com.cafe.DAL.ProductDAL;
 import com.cafe.DTO.Product;
 
 import java.util.List;
-import java.util.Map;
 
 public class ProductBLL {
     private ProductDAL productDAL;
@@ -21,8 +20,8 @@ public class ProductBLL {
         return productDAL.insertProduct(product) != 0;
     }
 
-    public boolean updateProduct(Map<String, Object> updateValues, String... conditions) {
-        return productDAL.updateProduct(updateValues, conditions) != 0;
+    public boolean updateProduct(Product product) {
+        return productDAL.updateProduct(product) != 0;
     }
 
     public boolean removeProduct(String id) {

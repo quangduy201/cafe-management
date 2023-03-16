@@ -3,7 +3,6 @@ package com.cafe.DAL;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Manager extends MySQL {
     private final String tableName;
@@ -17,7 +16,7 @@ public class Manager extends MySQL {
 
     public int create(Object... values) throws SQLException {
         if (values == null || values.length != columnsName.size()) {
-            throw new IllegalArgumentException("Invalid number of arguments");
+            throw new IllegalArgumentException("Invalid number of arguments.");
         }
 
         String query = "INSERT INTO `" + tableName + "` VALUES(?" + ", ?".repeat(values.length - 1) + ");";
@@ -37,27 +36,34 @@ public class Manager extends MySQL {
         return executeQuery(query);
     }
 
-    public int update(Map<String, Object> updateValues, String... conditions) throws SQLException {
+    public int update(List<Object> updateValues, String... conditions) throws SQLException {
         if (updateValues == null || updateValues.isEmpty()) {
-            throw new IllegalArgumentException("Update values cannot be null or empty");
+            throw new IllegalArgumentException("Update values cannot be null or empty.");
         }
 
-        String setClause = updateValues.entrySet().stream()
-            .filter(entry -> entry.getValue() != null)
-            .map(entry -> entry.getKey() + " = ?")
-            .collect(Collectors.joining(", "));
+        int conditionsLength = 0;
+        if (conditions != null && conditions.length > 0) {
+            conditionsLength = conditions.length;
+        }
+
+        String setClause;
+        if (updateValues.size() == 1) {
+            // only update the DELETED
+            setClause = "DELETED = ?";
+        } else {
+            // not updating the ID
+            List<String> columns = columnsName.subList(conditionsLength, columnsName.size() - 1);
+            setClause = String.join(" = ?, ", columns) + " = ?";
+        }
 
         String query = "UPDATE `" + tableName + "` SET " + setClause;
-        List<Object> values = updateValues.values().stream()
-            .filter(Objects::nonNull)
-            .toList();
 
-        if (conditions != null && conditions.length > 0) {
+        if (conditionsLength > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
         }
 
         query += ";";
-        return executeUpdate(query, values.toArray());
+        return executeUpdate(query, updateValues.toArray());
     }
 
     public int delete(String... conditions) throws SQLException {
