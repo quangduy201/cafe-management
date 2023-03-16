@@ -1,0 +1,230 @@
+package com.cafe.GUI;
+
+import com.cafe.BLL.AccountBLL;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.util.List;
+import com.cafe.DTO.Account;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+
+public class Login_GUI extends JFrame {
+    ImageIcon logo = new ImageIcon("img/logo_cafe.png");
+    JPanel contentPane = new JPanel();
+    JPanel panel1 = new JPanel();
+    JPanel panel2 = new JPanel();
+    JPanel panel3 = new JPanel();
+    JPanel panel4 = new JPanel();
+    JPanel panel5 = new JPanel();
+    JPanel panel6 = new JPanel();
+    JPanel panel7 = new JPanel();
+    JTextField textField = new JTextField(20);
+    JPasswordField passwordField = new JPasswordField(20);
+    JLabel brandName = new JLabel();
+    JLabel jLabel1 = new JLabel(logo);
+    JLabel jLabel2 = new JLabel();
+    JLabel jLabel3 = new JLabel();
+    JLabel jLabel4 = new JLabel();
+    JButton button = new JButton();
+
+    // End of variables declaration//GEN-END:variables
+    public Login_GUI() throws HeadlessException{
+        initComponents();
+        setVisible(true);
+    }
+    private void initComponents() {
+        setSize(960, 800);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+
+        contentPane.setLayout(new BorderLayout());
+        contentPane.setBackground(new Color(0xFFFFFF));
+        setContentPane(contentPane);
+
+        panel1.setPreferredSize(new Dimension(960, 100));
+        panel1.setBackground(new Color(0xFFFFFF));
+        panel1.setBorder(BorderFactory.createMatteBorder(0,0,5,0,new Color(35,166,97)));
+        contentPane.add(panel1, BorderLayout.NORTH);
+
+        panel2.setLayout(new GridBagLayout());
+        panel2.setPreferredSize(new Dimension(400, 690));
+        panel2.setBackground(new Color(35,166,97));
+        panel2.setBorder(BorderFactory.createMatteBorder(10,0,0,0,new Color(0xFFFFFF)));
+        contentPane.add(panel2, BorderLayout.WEST);
+
+        panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
+        panel3.setPreferredSize(new Dimension(560, 690));
+        panel3.setBackground(new Color(0xFFFFFF));
+        panel3.setBorder(BorderFactory.createMatteBorder(150,0,0,0,new Color(0xFFFFFF)));
+        panel3.setAlignmentX(Component.CENTER_ALIGNMENT);
+        contentPane.add(panel3, BorderLayout.EAST);
+
+        panel4.setLayout(new GridBagLayout());
+        panel4.setPreferredSize(new Dimension(300, 100));
+        panel4.setMaximumSize(new Dimension(300, 100));
+        panel4.setMinimumSize(new Dimension(300, 150));
+        panel4.setBackground(new Color(0xFFFFFF));
+
+        panel5.setPreferredSize(new Dimension(300, 130));
+        panel5.setMaximumSize(new Dimension(300, 130));
+        panel5.setMinimumSize(new Dimension(300, 130));
+        panel5.setBackground(new Color(0xFFFFFF));
+        panel5.add(jLabel2);
+
+        panel6.setLayout(new BoxLayout(panel6, BoxLayout.Y_AXIS));
+        panel6.setPreferredSize(new Dimension(200, 40));
+        panel6.setBorder(BorderFactory.createMatteBorder(0,10,0,0,new Color(0xFFFFFF)));
+        panel6.add(textField);
+
+        panel7.setLayout(new BoxLayout(panel7, BoxLayout.Y_AXIS));
+        panel7.setPreferredSize(new Dimension(200, 40));
+        panel7.setBorder(BorderFactory.createMatteBorder(0,10,0,0,new Color(0xFFFFFF)));
+        panel7.add(passwordField);
+
+        brandName.setText("King Cafe");
+        brandName.setHorizontalAlignment(JLabel.CENTER);
+        brandName.setFont(new Font("open sans", Font.BOLD, 50));
+        brandName.setForeground(new Color(35,166,97));
+        panel1.add(brandName);
+
+        logo.setImage(logo.getImage().getScaledInstance(400,300,Image.SCALE_DEFAULT));
+        panel2.add(jLabel1);
+
+        jLabel2.setText("Login");
+        jLabel2.setHorizontalAlignment(JLabel.CENTER);
+        jLabel2.setFont(new Font("open sans", Font.BOLD, 40));
+        jLabel2.setForeground(new Color(35,166,97));
+
+        panel3.add(panel5);
+        panel3.add(panel4);
+
+        jLabel3.setText("Username");
+        jLabel3.setHorizontalAlignment(JLabel.CENTER);
+        jLabel3.setFont(new Font("open sans", Font.BOLD, 18));
+
+        jLabel4.setText("Password");
+        jLabel4.setHorizontalAlignment(JLabel.CENTER);
+        jLabel4.setFont(new Font("open sans", Font.BOLD, 18));
+
+        textField.setText("Username");
+        textField.setBackground(new Color(0xffffff));
+        textField.setForeground(new Color(0x000000));
+        textField.setFont(new Font("open sans", Font.PLAIN, 15));
+        textField.addFocusListener(new FocusAdapter(){
+            public void focusGained(java.awt.event.FocusEvent ignoredEvt) {
+                textFieldFocusGained(ignoredEvt);
+            }
+            public void focusLost(java.awt.event.FocusEvent ignoredEvt) {
+                textFieldFocusLost(ignoredEvt);
+            }
+        });
+        textField.addKeyListener(new KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+                    login(evt);
+                }
+            }
+        });
+
+        passwordField.setText("Password");
+        passwordField.setBackground(new Color(0xffffff));
+        passwordField.setForeground(new Color(0x000000));
+        passwordField.addFocusListener(new FocusAdapter(){
+            public void focusGained(java.awt.event.FocusEvent ignoredEvt) {
+                passwordFieldFocusGained(ignoredEvt);
+            }
+            public void focusLost(java.awt.event.FocusEvent ignoredEvt) {
+                passwordFieldFocusLost(ignoredEvt);
+            }
+        });
+        passwordField.addKeyListener(new KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+                    login(evt);
+                }
+            }
+        });
+
+        button.setText("Login");
+        button.setBackground(new Color(44, 119, 44));
+        button.setPreferredSize(new Dimension(90,40));
+        button.setMaximumSize(new Dimension(90,40));
+        button.setMinimumSize(new Dimension(90,40));
+        button.setFocusPainted(false);
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                login(evt);
+            }
+        });
+        panel3.add(button);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel4.add(jLabel3, gbc);
+        gbc.gridx++;
+        panel4.add(panel6,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        panel4.add(jLabel4, gbc);
+        gbc.gridx++;
+        panel4.add(panel7, gbc);
+
+    }
+
+    private void textFieldFocusGained(java.awt.event.FocusEvent ignoredEvt) {
+        if (textField.getText().equals("Username")){
+            textField.setText("");
+        }
+    }
+
+    private void textFieldFocusLost(java.awt.event.FocusEvent ignoredEvt) {
+        if (textField.getText().equals("")){
+            textField.setText("Username");
+        }
+    }
+
+    private void passwordFieldFocusGained(java.awt.event.FocusEvent ignoredEvt) {
+        if (passwordField.getText().equals("Password")) {
+            passwordField.setText("");
+        }
+    }
+
+    private void passwordFieldFocusLost(java.awt.event.FocusEvent ignoredEvt) {
+        if (passwordField.getText().equals("")){
+            passwordField.setText("Password");
+        }
+    }
+
+    private void login(java.awt.event.MouseEvent ignoredEvt){
+        String userName, passWord;
+        userName = textField.getText();
+        passWord = passwordField.getText();
+        AccountBLL accountBLL = new AccountBLL();
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'");
+        if (accountList.size() == 0){
+            JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void login(java.awt.event.KeyEvent ignoredEvt){
+        String userName, passWord;
+        userName = textField.getText();
+        passWord = passwordField.getText();
+        AccountBLL accountBLL = new AccountBLL();
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'");
+        if (accountList.size() == 0){
+            JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    public static void main(String[] args) {
+        new Login_GUI();
+    }
+}
