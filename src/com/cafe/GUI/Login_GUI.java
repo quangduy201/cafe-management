@@ -30,13 +30,12 @@ public class Login_GUI extends JFrame {
     JLabel jLabel4 = new JLabel();
     JButton button = new JButton();
 
-    // End of variables declaration//GEN-END:variables
     public Login_GUI() throws HeadlessException{
         initComponents();
         setVisible(true);
     }
     private void initComponents() {
-        setSize(960, 800);
+        setSize(700, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -44,21 +43,21 @@ public class Login_GUI extends JFrame {
         contentPane.setBackground(new Color(0xFFFFFF));
         setContentPane(contentPane);
 
-        panel1.setPreferredSize(new Dimension(960, 100));
+        panel1.setPreferredSize(new Dimension(700, 80));
         panel1.setBackground(new Color(0xFFFFFF));
         panel1.setBorder(BorderFactory.createMatteBorder(0,0,5,0,new Color(35,166,97)));
         contentPane.add(panel1, BorderLayout.NORTH);
 
         panel2.setLayout(new GridBagLayout());
-        panel2.setPreferredSize(new Dimension(400, 690));
+        panel2.setPreferredSize(new Dimension(300, 410));
         panel2.setBackground(new Color(35,166,97));
         panel2.setBorder(BorderFactory.createMatteBorder(10,0,0,0,new Color(0xFFFFFF)));
         contentPane.add(panel2, BorderLayout.WEST);
 
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
-        panel3.setPreferredSize(new Dimension(560, 690));
+        panel3.setPreferredSize(new Dimension(400, 410));
         panel3.setBackground(new Color(0xFFFFFF));
-        panel3.setBorder(BorderFactory.createMatteBorder(150,0,0,0,new Color(0xFFFFFF)));
+        panel3.setBorder(BorderFactory.createMatteBorder(50,0,200,0,new Color(0xFFFFFF)));
         panel3.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentPane.add(panel3, BorderLayout.EAST);
 
@@ -68,9 +67,9 @@ public class Login_GUI extends JFrame {
         panel4.setMinimumSize(new Dimension(300, 150));
         panel4.setBackground(new Color(0xFFFFFF));
 
-        panel5.setPreferredSize(new Dimension(300, 130));
-        panel5.setMaximumSize(new Dimension(300, 130));
-        panel5.setMinimumSize(new Dimension(300, 130));
+        panel5.setPreferredSize(new Dimension(300, 70));
+        panel5.setMaximumSize(new Dimension(300, 70));
+        panel5.setMinimumSize(new Dimension(300, 70));
         panel5.setBackground(new Color(0xFFFFFF));
         panel5.add(jLabel2);
 
@@ -90,7 +89,7 @@ public class Login_GUI extends JFrame {
         brandName.setForeground(new Color(35,166,97));
         panel1.add(brandName);
 
-        logo.setImage(logo.getImage().getScaledInstance(400,300,Image.SCALE_DEFAULT));
+        logo.setImage(logo.getImage().getScaledInstance(273,267,Image.SCALE_DEFAULT));
         panel2.add(jLabel1);
 
         jLabel2.setText("Login");
@@ -150,6 +149,7 @@ public class Login_GUI extends JFrame {
 
         button.setText("Login");
         button.setBackground(new Color(44, 119, 44));
+        button.setForeground(new Color(0x000000));
         button.setPreferredSize(new Dimension(90,40));
         button.setMaximumSize(new Dimension(90,40));
         button.setMinimumSize(new Dimension(90,40));
