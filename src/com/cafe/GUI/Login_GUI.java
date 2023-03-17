@@ -4,6 +4,7 @@ import com.cafe.BLL.AccountBLL;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import com.cafe.DTO.Account;
 
@@ -29,6 +30,7 @@ public class Login_GUI extends JFrame {
     JLabel jLabel3 = new JLabel();
     JLabel jLabel4 = new JLabel();
     JButton button = new JButton();
+    JButton exit = new JButton();
 
     public Login_GUI() throws HeadlessException{
         initComponents();
@@ -38,11 +40,13 @@ public class Login_GUI extends JFrame {
         setSize(700, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setUndecorated(true);
 
         contentPane.setLayout(new BorderLayout());
         contentPane.setBackground(new Color(0xFFFFFF));
         setContentPane(contentPane);
 
+        panel1.setLayout(null);
         panel1.setPreferredSize(new Dimension(700, 80));
         panel1.setBackground(new Color(0xFFFFFF));
         panel1.setBorder(BorderFactory.createMatteBorder(0,0,5,0,new Color(35,166,97)));
@@ -66,12 +70,15 @@ public class Login_GUI extends JFrame {
         panel4.setMaximumSize(new Dimension(300, 100));
         panel4.setMinimumSize(new Dimension(300, 150));
         panel4.setBackground(new Color(0xFFFFFF));
+        panel3.add(panel5);
+        panel3.add(panel4);
 
         panel5.setPreferredSize(new Dimension(300, 70));
         panel5.setMaximumSize(new Dimension(300, 70));
         panel5.setMinimumSize(new Dimension(300, 70));
         panel5.setBackground(new Color(0xFFFFFF));
         panel5.add(jLabel2);
+
 
         panel6.setLayout(new BoxLayout(panel6, BoxLayout.Y_AXIS));
         panel6.setPreferredSize(new Dimension(200, 40));
@@ -87,6 +94,7 @@ public class Login_GUI extends JFrame {
         brandName.setHorizontalAlignment(JLabel.CENTER);
         brandName.setFont(new Font("open sans", Font.BOLD, 50));
         brandName.setForeground(new Color(35,166,97));
+        brandName.setBounds(200,0,300,70);
         panel1.add(brandName);
 
         logo.setImage(logo.getImage().getScaledInstance(273,267,Image.SCALE_DEFAULT));
@@ -97,8 +105,6 @@ public class Login_GUI extends JFrame {
         jLabel2.setFont(new Font("open sans", Font.BOLD, 40));
         jLabel2.setForeground(new Color(35,166,97));
 
-        panel3.add(panel5);
-        panel3.add(panel4);
 
         jLabel3.setText("Username");
         jLabel3.setHorizontalAlignment(JLabel.CENTER);
@@ -121,9 +127,9 @@ public class Login_GUI extends JFrame {
             }
         });
         textField.addKeyListener(new KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-                    login(evt);
+            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+                    login(keyEvent);
                 }
             }
         });
@@ -140,9 +146,9 @@ public class Login_GUI extends JFrame {
             }
         });
         passwordField.addKeyListener(new KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                if (evt.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-                    login(evt);
+            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
+                    login(keyEvent);
                 }
             }
         });
@@ -153,13 +159,27 @@ public class Login_GUI extends JFrame {
         button.setPreferredSize(new Dimension(90,40));
         button.setMaximumSize(new Dimension(90,40));
         button.setMinimumSize(new Dimension(90,40));
+        button.setForeground(new Color(0xFFFFFF));
         button.setFocusPainted(false);
         button.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                login(evt);
+            public void mouseClicked(java.awt.event.MouseEvent mouseEvent) {
+                login(mouseEvent);
             }
         });
         panel3.add(button);
+
+        exit.setText("X");
+        exit.setFont(new Font("Public Sans", Font.BOLD, 15));
+        exit.setBounds(655,0,45,30);
+        exit.setBackground(new Color(0xFD1111));
+        exit.setForeground(new Color(0xFFFFFF));
+        exit.setFocusPainted(false);
+        exit.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent mouseEvent){
+                exit(mouseEvent);
+            }
+        });
+        panel1.add(exit);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -199,7 +219,7 @@ public class Login_GUI extends JFrame {
         }
     }
 
-    private void login(java.awt.event.MouseEvent ignoredEvt){
+    private void login(java.awt.event.MouseEvent mouseEvent){
         String userName, passWord;
         userName = textField.getText();
         passWord = passwordField.getText();
@@ -208,11 +228,14 @@ public class Login_GUI extends JFrame {
         if (accountList.size() == 0){
             JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Notification", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            Account account = accountList.get(0);
             JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+//            new Home_GUI(Account);
+            System.out.println(account);
         }
     }
 
-    private void login(java.awt.event.KeyEvent ignoredEvt){
+    private void login(java.awt.event.KeyEvent keyEvent){
         String userName, passWord;
         userName = textField.getText();
         passWord = passwordField.getText();
@@ -221,8 +244,15 @@ public class Login_GUI extends JFrame {
         if (accountList.size() == 0){
             JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Notification", JOptionPane.INFORMATION_MESSAGE);
         } else {
+            Account account = accountList.get(0);
             JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+//            new Home_GUI(Account);
+            System.out.println(account);
         }
+    }
+
+    private void exit(java.awt.event.MouseEvent mouseEvent){
+        System.exit(0);
     }
     public static void main(String[] args) {
         new Login_GUI();
