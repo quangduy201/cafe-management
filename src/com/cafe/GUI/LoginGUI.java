@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 
-public class Login_GUI extends JFrame {
+public class LoginGUI extends JFrame {
     ImageIcon logo = new ImageIcon("img/logo_cafe.png");
     JPanel contentPane = new JPanel();
     JPanel panel1 = new JPanel();
@@ -31,8 +31,9 @@ public class Login_GUI extends JFrame {
     JLabel jLabel4 = new JLabel();
     JButton button = new JButton();
     JButton exit = new JButton();
+    JButton minimize = new JButton();
 
-    public Login_GUI() throws HeadlessException{
+    public LoginGUI() throws HeadlessException{
         initComponents();
         setVisible(true);
     }
@@ -97,7 +98,9 @@ public class Login_GUI extends JFrame {
         brandName.setBounds(200,0,300,70);
         panel1.add(brandName);
 
-        logo.setImage(logo.getImage().getScaledInstance(273,267,Image.SCALE_DEFAULT));
+        Image imgScaled = logo.getImage().getScaledInstance(273,267,Image.SCALE_DEFAULT | Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(imgScaled);
+        jLabel1.setIcon(scaledIcon);
         panel2.add(jLabel1);
 
         jLabel2.setText("Login");
@@ -170,7 +173,7 @@ public class Login_GUI extends JFrame {
 
         exit.setText("X");
         exit.setFont(new Font("Public Sans", Font.BOLD, 15));
-        exit.setBounds(655,0,45,30);
+        exit.setBounds(650,0,50,30);
         exit.setBackground(new Color(0xFD1111));
         exit.setForeground(new Color(0xFFFFFF));
         exit.setFocusPainted(false);
@@ -179,7 +182,22 @@ public class Login_GUI extends JFrame {
                 exit(mouseEvent);
             }
         });
+        exit.setBorderPainted(false);
         panel1.add(exit);
+
+        minimize.setText("—");
+        minimize.setFont(new Font("Public Sans", Font.BOLD, 15));
+        minimize.setBounds(600,0,50,30);
+        minimize.setBackground(new Color(0x676161));
+        minimize.setForeground(new Color(0xFFFFFF));
+        minimize.setFocusPainted(false);
+        minimize.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent mouseEvent){
+                minimize(mouseEvent);
+            }
+        });
+        minimize.setBorderPainted(false);
+        panel1.add(minimize);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -254,7 +272,7 @@ public class Login_GUI extends JFrame {
     private void exit(java.awt.event.MouseEvent mouseEvent){
         System.exit(0);
     }
-    public static void main(String[] args) {
-        new Login_GUI();
+    private void minimize(MouseEvent mouseEvent) {
+        setState(Frame.ICONIFIED);
     }
 }
