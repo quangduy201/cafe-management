@@ -29,7 +29,7 @@ public class CategoryBLL {
     }
 
     public boolean removeCategory(String id) {
-        return categoryDAL.deleteCategory(id) != 0;
+        return categoryDAL.deleteCategory("CATEGORY_ID = '" + id + "'") != 0;
     }
 
     public List<Category> searchCategories(String... conditions) {

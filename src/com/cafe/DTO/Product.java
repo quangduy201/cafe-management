@@ -5,18 +5,20 @@ public class Product {
     private String name;
     private String categoryID;
     private String size;
+    private String image;
     private double cost;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Product() {
     }
 
-    public Product(String productID, String name, String categoryID, String size, double cost, boolean deleted) {
+    public Product(String productID, String name, String categoryID, String size, double cost, String image, boolean deleted) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
         this.size = size;
         this.cost = cost;
+        this.image = image;
         this.deleted = deleted;
     }
 
@@ -58,6 +60,14 @@ public class Product {
 
     public void setCost(double cost) {
         this.cost = cost;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public boolean isDeleted() {

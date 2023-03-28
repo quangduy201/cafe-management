@@ -130,8 +130,8 @@ public class Day {
             year = Integer.parseInt(temp[0]);
             month = Integer.parseInt(temp[1]);
             date = Integer.parseInt(temp[2]);
-            if (!Day.isValidDay(date, month, year))
-                throw new Exception();
+//            if (!Day.isValidDay(date, month, year))
+//                throw new Exception();
         } catch (Exception e) {
             throw new Exception();
         }

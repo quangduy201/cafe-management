@@ -12,7 +12,8 @@ public class RecipeDAL extends Manager {
             List.of("PRODUCT_ID",
                 "INGREDIENT_ID",
                 "MASS",
-                "UNIT")
+                "UNIT",
+                "DELETED")
         ));
     }
 
@@ -22,7 +23,7 @@ public class RecipeDAL extends Manager {
             row.get(1), // ingredientID
             Double.parseDouble(row.get(2)), // mass
             row.get(3), // unit
-            false
+            Boolean.parseBoolean(row.get(4)) // deleted
         ));
     }
 
@@ -31,7 +32,8 @@ public class RecipeDAL extends Manager {
             return create(recipe.getProductID(),
                 recipe.getIngredientID(),
                 recipe.getMass(),
-                recipe.getUnit()
+                recipe.getUnit(),
+                false
             );
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.insertRecipe(): " + e.getMessage());
