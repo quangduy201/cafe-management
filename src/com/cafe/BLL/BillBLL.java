@@ -25,7 +25,7 @@ public class BillBLL {
     }
 
     public boolean removeBill(String id) {
-        return billDAL.deleteBill(id) != 0;
+        return billDAL.deleteBill("BILL_ID = '" + id + "'") != 0;
     }
 
     public List<Bill> searchBills(String... conditions) {

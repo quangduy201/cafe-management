@@ -29,7 +29,7 @@ public class CustomerBLL {
     }
 
     public boolean removeCustomer(String id) {
-        return customerDAL.deleteCustomer(id) != 0;
+        return customerDAL.deleteCustomer("CUSTOMER_ID = '" + id + "'") != 0;
     }
 
     public List<Customer> searchCustomers(String... conditions) {

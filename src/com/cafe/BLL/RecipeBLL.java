@@ -24,10 +24,6 @@ public class RecipeBLL {
         return recipeDAL.updateRecipe(recipe) != 0;
     }
 
-    public boolean removeRecipe(String id) {
-        return recipeDAL.deleteRecipe(id) != 0;
-    }
-
     public List<Recipe> searchRecipes(String... conditions) {
         return recipeDAL.searchRecipes(conditions);
     }

@@ -6,7 +6,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
+import com.cafe.DAL.DecentralizationDAL;
 import com.cafe.DTO.Account;
+import com.cafe.DTO.Decentralization;
 
 import javax.swing.*;
 import java.awt.*;

@@ -20,7 +20,8 @@ public class DecentralizationDAL extends Manager {
                 "IS_STAFF",
                 "IS_ACCOUNT",
                 "IS_DECENTRALIZE",
-                "DECENTRALIZATION_NAME")
+                "DECENTRALIZATION_NAME",
+                "DELETED")
         ));
     }
 
@@ -98,7 +99,7 @@ public class DecentralizationDAL extends Manager {
         return 0;
     }
 
-    public List<Decentralization> searchDecentralization(String... conditions) {
+    public List<Decentralization> searchDecentralizations(String... conditions) {
         try {
             return convertToDecentralization(read(conditions));
         } catch (Exception e) {
