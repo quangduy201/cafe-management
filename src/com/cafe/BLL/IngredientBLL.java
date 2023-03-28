@@ -29,7 +29,7 @@ public class IngredientBLL {
     }
 
     public boolean removeIngredient(String id) {
-        return ingredientDAL.deleteIngredient(id) != 0;
+        return ingredientDAL.deleteIngredient("INGREDIENT_ID = '" + id + "'") != 0;
     }
 
     public List<Ingredient> searchIngredients(String... conditions) {
