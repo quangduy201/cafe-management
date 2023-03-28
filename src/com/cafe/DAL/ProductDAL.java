@@ -23,18 +23,20 @@ public class ProductDAL extends Manager {
             row.get(1), // name
             row.get(2), // categoryID
             row.get(3), // size
-            Double.parseDouble(row.get(4)), // cost
-            Boolean.parseBoolean(row.get(5)) // deleted
+            Double.parseDouble(row.get(4)), // cost,
+            row.get(5), // image
+            Boolean.parseBoolean(row.get(6)) // deleted
         ));
     }
 
-    public int insertProduct(Product Product) {
+    public int insertProduct(Product product) {
         try {
-            return create(Product.getProductID(),
-                Product.getName(),
-                Product.getCategoryID(),
-                Product.getSize(),
-                Product.getCost(),
+            return create(product.getProductID(),
+                product.getName(),
+                product.getCategoryID(),
+                product.getSize(),
+                product.getCost(),
+                product.getImage(),
                 false
             ); // product khi tạo mặc định deleted = 0
         } catch (Exception e) {
@@ -51,6 +53,7 @@ public class ProductDAL extends Manager {
             updateValues.add(product.getCategoryID());
             updateValues.add(product.getSize());
             updateValues.add(product.getCost());
+            updateValues.add(product.getImage());
             updateValues.add(product.isDeleted());
             return update(updateValues, "PRODUCT_ID = " + product.getProductID());
         } catch (Exception e) {
