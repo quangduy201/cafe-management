@@ -6,7 +6,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+
+import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.DTO.Account;
+import com.cafe.DTO.Decentralization;
 
 import javax.swing.*;
 import java.awt.*;
@@ -132,7 +135,7 @@ public class LoginGUI extends JFrame {
         textField.addKeyListener(new KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-                    login(keyEvent);
+                    login();
                 }
             }
         });
@@ -151,7 +154,7 @@ public class LoginGUI extends JFrame {
         passwordField.addKeyListener(new KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent keyEvent) {
                 if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER){
-                    login(keyEvent);
+                    login();
                 }
             }
         });
@@ -166,7 +169,7 @@ public class LoginGUI extends JFrame {
         button.setFocusPainted(false);
         button.addMouseListener(new MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent mouseEvent) {
-                login(mouseEvent);
+                login();
             }
         });
         panel3.add(button);
@@ -237,10 +240,10 @@ public class LoginGUI extends JFrame {
         }
     }
 
-    private void login(java.awt.event.MouseEvent mouseEvent){
+    private void login(){
         String userName, passWord;
         userName = textField.getText();
-        passWord = passwordField.getText();
+        passWord = String.valueOf(passwordField.getPassword());
         AccountBLL accountBLL = new AccountBLL();
         List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'");
         if (accountList.size() == 0){
@@ -248,24 +251,8 @@ public class LoginGUI extends JFrame {
         } else {
             Account account = accountList.get(0);
             JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-//            new Home_GUI(Account);
-            System.out.println(account);
-        }
-    }
-
-    private void login(java.awt.event.KeyEvent keyEvent){
-        String userName, passWord;
-        userName = textField.getText();
-        passWord = passwordField.getText();
-        AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'");
-        if (accountList.size() == 0){
-            JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            Account account = accountList.get(0);
-            JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-//            new Home_GUI(Account);
-            System.out.println(account);
+            new HomeGUI(account).setVisible(true);
+            dispose();
         }
     }
 

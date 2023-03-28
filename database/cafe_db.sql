@@ -216,16 +216,20 @@ INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBER
 
 CREATE TABLE `decentralization` (
   `DECENTRALIZATION_ID` varchar(10) NOT NULL,
-  `IS_RECIPE` int(1) DEFAULT NULL,
+
+  `IS_SALE` int(1) DEFAULT NULL,
   `IS_PRODUCT` int(1) DEFAULT NULL,
   `IS_CATEGORY` int(1) DEFAULT NULL,
+  `IS_RECIPE` int(1) DEFAULT NULL,
+  `IS_IMPORT` int(1) DEFAULT NULL,
   `IS_BILL` int(1) DEFAULT NULL,
-  `IS_DISCOUNT` int(1) DEFAULT NULL,
-  `IS_CUSTOMER` int(1) DEFAULT NULL,
   `IS_WAREHOUSES` int(1) DEFAULT NULL,
-  `IS_STAFF` int(1) DEFAULT NULL,
   `IS_ACCOUNT` int(1) DEFAULT NULL,
+  `IS_STAFF` int(1) DEFAULT NULL,
+  `IS_CUSTOMER` int(1) DEFAULT NULL,
+  `IS_DISCOUNT` int(1) DEFAULT NULL,
   `IS_DECENTRALIZE` int(1) DEFAULT NULL,
+
   `DECENTRALIZATION_NAME` varchar(20) NOT NULL,
   `DELETED` bit(1) DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -234,13 +238,13 @@ CREATE TABLE `decentralization` (
 -- Dumping data for table `decentralization`
 --
 
-INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_RECIPE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_BILL`, `IS_DISCOUNT`, `IS_CUSTOMER`, `IS_WAREHOUSES`, `IS_STAFF`, `IS_ACCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
-('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
-('DE02', 0, 1, 1, 0, 2, 0, 0, 0, 0, 0, 'staffSale'),
-('DE03', 0, 1, 1, 0, 0, 0, 2, 0, 0, 0, 'staffWarehousing'),
-('DE04', 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
-('DE05', 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
-('DE06', 0, 1, 1, 2, 1, 2, 0, 0, 0, 0, 'staffCashier');
+INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_SALE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_RECIPE`, `IS_IMPORT`, `IS_BILL`, `IS_WAREHOUSES`, `IS_ACCOUNT`, `IS_STAFF`, `IS_CUSTOMER`, `IS_DISCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
+('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
+('DE02', 1, 2, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 'staffSale'),
+('DE03', 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 'staffWarehousing'),
+('DE04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
+('DE05', 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
+('DE06', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 'staffdiscount');
 
 -- --------------------------------------------------------
 
