@@ -6,6 +6,9 @@ import java.awt.image.BufferedImage;
 
 public class ImageAvatar extends JComponent {
 
+    private Icon icon;
+    private int borderSize;
+
     public Icon getIcon() {
         return icon;
     }
@@ -22,11 +25,9 @@ public class ImageAvatar extends JComponent {
     public void setBorderSize(int borderSize) {
         this.borderSize = borderSize;
     }
-    private Icon icon;
-    private int borderSize;
 
     @Override
-    protected void paintComponent(Graphics grphcs) {
+    protected void paintComponent(Graphics graphics) {
         if (icon != null) {
             int width = getWidth();
             int height = getHeight();
@@ -46,7 +47,7 @@ public class ImageAvatar extends JComponent {
             g2_img.drawImage(toImage(icon), size.x, size.y, size.width, size.height, null);
             g2_img.setComposite(composite);
             g2_img.dispose();
-            Graphics2D g2 = (Graphics2D) grphcs;
+            Graphics2D g2 = (Graphics2D) graphics;
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             if (borderSize > 0) {
                 diameter += border;
@@ -60,16 +61,14 @@ public class ImageAvatar extends JComponent {
             }
             g2.drawImage(img, x + borderSize, y + borderSize, null);
         }
-        super.paintComponent(grphcs);
+        super.paintComponent(graphics);
     }
 
     private Rectangle getAutoSize(Icon image, int size) {
-        int w = size;
-        int h = size;
         int iw = image.getIconWidth();
         int ih = image.getIconHeight();
-        double xScale = (double) w / iw;
-        double yScale = (double) h / ih;
+        double xScale = (double) size / iw;
+        double yScale = (double) size / ih;
         double scale = Math.max(xScale, yScale);
         int width = (int) (scale * iw);
         int height = (int) (scale * ih);
@@ -79,10 +78,8 @@ public class ImageAvatar extends JComponent {
         if (height < 1) {
             height = 1;
         }
-        int cw = size;
-        int ch = size;
-        int x = (cw - width) / 2;
-        int y = (ch - height) / 2;
+        int x = (size - width) / 2;
+        int y = (size - height) / 2;
         return new Rectangle(new Point(x, y), new Dimension(width, height));
     }
 
