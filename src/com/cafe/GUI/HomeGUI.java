@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.awt.event.*;
 
 public class HomeGUI extends JFrame {
     private Account account;
@@ -143,7 +144,7 @@ public class HomeGUI extends JFrame {
         button4.setRadius(15);
         north.add(button4);
         button4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 button4MouseClicked(evt);
             }
         });
@@ -161,7 +162,7 @@ public class HomeGUI extends JFrame {
         button5.setRadius(15);
         north.add(button5);
         button5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 button5MouseClicked(evt);
             }
         });
@@ -206,7 +207,7 @@ public class HomeGUI extends JFrame {
         }
 
         roundPanel[1].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel1MouseClicked(evt);
             }
         });
@@ -214,21 +215,21 @@ public class HomeGUI extends JFrame {
 
 
         roundPanel[2].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel2MouseClicked(evt);
             }
         });
 
 
         roundPanel[3].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel3MouseClicked(evt);
             }
         });
 
 
         roundPanel[4].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel4MouseClicked(evt);
             }
         });
@@ -236,7 +237,7 @@ public class HomeGUI extends JFrame {
 
 
         roundPanel[5].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel5MouseClicked(evt);
             }
         });
@@ -244,13 +245,13 @@ public class HomeGUI extends JFrame {
 
 
         roundPanel[6].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel6MouseClicked(evt);
             }
         });
 
         roundPanel[7].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel7MouseClicked(evt);
             }
         });
@@ -258,47 +259,47 @@ public class HomeGUI extends JFrame {
 
 
         roundPanel[8].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel8MouseClicked(evt);
             }
         });
 
 
         roundPanel[9].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel9MouseClicked(evt);
             }
         });
 
 
         roundPanel[10].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel10MouseClicked(evt);
             }
         });
 
 
         roundPanel[11].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel11MouseClicked(evt);
             }
         });
 
         roundPanel[11].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel11MouseClicked(evt);
             }
         });
 
 
         roundPanel[12].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel12MouseClicked(evt);
             }
         });
 
         roundPanel[13].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel13MouseClicked(evt);
             }
         });
@@ -340,80 +341,80 @@ public class HomeGUI extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }
-    private void roundPanel1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel1MouseClicked(MouseEvent evt) {
         roundPanel[1].setBackground(new Color(25,25,25));
         Active(roundPanel[1]);
         OpenChildForm(new SaleGUI());
     }
 
-    private void roundPanel2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel2MouseClicked(MouseEvent evt) {
         roundPanel[2].setBackground(new Color(25,25,25));
         Active(roundPanel[2]);
         OpenChildForm(new ProductGUI());
     }
 
 
-    private void roundPanel3MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel3MouseClicked(MouseEvent evt) {
         roundPanel[3].setBackground(new Color(25,25,25));
         Active(roundPanel[3]);
         OpenChildForm(new CategoryGUI());
     }
 
 
-    private void roundPanel4MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel4MouseClicked(MouseEvent evt) {
         roundPanel[4].setBackground(new Color(25,25,25));
-        Active(roundPanel[3]);
+        Active(roundPanel[4]);
         OpenChildForm(new RecipeGUI());
     }
 
 
-    private void roundPanel5MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel5MouseClicked(MouseEvent evt) {
         roundPanel[5].setBackground(new Color(25,25,25));
         Active(roundPanel[5]);
         OpenChildForm(new ImportGUI());
     }
 
-    private void roundPanel6MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel6MouseClicked(MouseEvent evt) {
         roundPanel[6].setBackground(new Color(25,25,25));
         Active(roundPanel[6]);
         OpenChildForm(new BillGUI());
     }
 
-    private void roundPanel7MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel7MouseClicked(MouseEvent evt) {
         roundPanel[7].setBackground(new Color(25,25,25));
         Active(roundPanel[7]);
         OpenChildForm(new WarehousesGUI());
     }
 
-    private void roundPanel8MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel8MouseClicked(MouseEvent evt) {
         roundPanel[8].setBackground(new Color(25,25,25));
         Active(roundPanel[8]);
         OpenChildForm(new StatisticGUI());
     }
-    private void roundPanel9MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel9MouseClicked(MouseEvent evt) {
         roundPanel[9].setBackground(new Color(25,25,25));
         Active(roundPanel[9]);
         OpenChildForm(new AccountGUI());
     }
-    private void roundPanel10MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel10MouseClicked(MouseEvent evt) {
         roundPanel[10].setBackground(new Color(25,25,25));
         Active(roundPanel[10]);
         OpenChildForm(new StaffGUI());
     }
 
-    private void roundPanel11MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel11MouseClicked(MouseEvent evt) {
         roundPanel[11].setBackground(new Color(25,25,25));
         Active(roundPanel[11]);
         OpenChildForm(new CustomerGUI());
     }
 
-    private void roundPanel12MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel12MouseClicked(MouseEvent evt) {
         roundPanel[12].setBackground(new Color(25,25,25));
         Active(roundPanel[12]);
         OpenChildForm(new DiscountGUI());
     }
 
-    private void roundPanel13MouseClicked(java.awt.event.MouseEvent evt) {
+    private void roundPanel13MouseClicked(MouseEvent evt) {
         roundPanel[13].setBackground(new Color(25,25,25));
         Active(roundPanel[13]);
         OpenChildForm(new DecentralizationGUI());
@@ -437,11 +438,11 @@ public class HomeGUI extends JFrame {
         east.add(function);
     }
 
-    private void button5MouseClicked(java.awt.event.MouseEvent evt) {
+    private void button5MouseClicked(MouseEvent evt) {
         setState(HomeGUI.ICONIFIED);
     }
 
-    private void button4MouseClicked(java.awt.event.MouseEvent evt) {
+    private void button4MouseClicked(MouseEvent evt) {
         int message = JOptionPane.showConfirmDialog(null,"Bạn có chắc muốn thoát!!!","Quit",JOptionPane.YES_NO_OPTION);
         if (message == JOptionPane.YES_OPTION)
         {
@@ -501,6 +502,7 @@ public class HomeGUI extends JFrame {
     private JLabel lb_Time;
 
     private RoundPanel roundPanel[] = new RoundPanel[15];
+   // private JPanel roundPanel[] = new JPanel[15];
     private ImageAvatar imageAvatar[] = new ImageAvatar[15];
 
     private int mouseX,mouseY;
