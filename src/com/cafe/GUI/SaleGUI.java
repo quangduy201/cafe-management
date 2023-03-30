@@ -121,7 +121,7 @@ public class SaleGUI extends JPanel {
         roundPanel10.setPreferredSize(new Dimension(350,100));
         roundPanel2.add(roundPanel10);
 
-        roundPanel11.setLayout(new FlowLayout(FlowLayout.CENTER,50,0));
+        roundPanel11.setLayout(new FlowLayout(FlowLayout.CENTER,30,0));
         roundPanel11.setPreferredSize(new Dimension(350,40));
         roundPanel2.add(roundPanel11);
 
@@ -192,27 +192,28 @@ public class SaleGUI extends JPanel {
         jTextField3.setText("0đ");
         roundPanel14.add(jTextField3);
 
-        button3.setPreferredSize(new Dimension(100,40));
-        button3.setBackground(new java.awt.Color(176, 72, 72));
+        button3.setPreferredSize(new Dimension(135,40));
         button3.setBorderPainted(false);
         button3.setRadius(15);
         button3.setFocusPainted(false);
         button3.setFont(new java.awt.Font("Times New Roman", 0, 14));
+        button3.setIcon(new ImageIcon(("img/plus.png")));
         button3.setColor(new Color(0x70E149));
         button3.setColorOver(new Color(0x5EFF00));
         button3.setColorClick(new Color(0x8AD242));
-        button3.setText();
+        button3.setText("Thanh Toán");
         roundPanel11.add(button3);
 
-        button4.setPreferredSize(new Dimension(100,40));
-        button4.setBackground(new java.awt.Color(176, 72, 72));
+        button4.setPreferredSize(new Dimension(135,40));
         button4.setBorderPainted(false);
         button4.setRadius(15);
         button4.setFocusPainted(false);
         button4.setFont(new java.awt.Font("Times New Roman", 0, 14));
+        button4.setIcon(new ImageIcon(("img/remove.png")));
         button4.setColor(new Color(0xFFBD3737));
         button4.setColorOver(new Color(0xFF0000));
         button4.setColorClick(new Color(0xB65858));
+        button4.setText("Hủy");
         roundPanel11.add(button4);
     }
 
