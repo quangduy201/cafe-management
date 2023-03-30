@@ -25,8 +25,8 @@ public class HomeGUI extends JFrame {
     private Decentralization decentralization;
     private int mang[] = new int[14];
     private JPanel currentBtn;
-    private Button button4;
-    private Button button5;
+    private Button exit;
+    private Button minimize;
     private Header header2;
     private RoundPanel home;
     private RoundPanel fram_cate;
@@ -92,8 +92,8 @@ public class HomeGUI extends JFrame {
         function = new RoundPanel();
 
         header2 = new Header();
-        button4 = new Button();
-        button5 = new Button();
+        exit = new Button();
+        minimize = new Button();
         lb_Time = new JLabel();
 
         for (int i = 1; i < roundPanel.length; i++) {
@@ -164,40 +164,40 @@ public class HomeGUI extends JFrame {
         fram_cate.add(cate);
 
 
-        button4.setBorderPainted(false);
-        button4.setText("X");
-        button4.setBounds(1290, 10, 50, 30);
-        button4.setFocusPainted(false);
-        button4.setBackground(new Color(0xFD1111));
-        button4.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        button4.setRadius(15);
-        north.add(button4);
-        button4.addMouseListener(new java.awt.event.MouseAdapter() {
+        exit.setBorderPainted(false);
+        exit.setText("X");
+        exit.setBounds(1290, 10, 50, 30);
+        exit.setFocusPainted(false);
+        exit.setBackground(new Color(0xFD1111));
+        exit.setFont(new Font("Public Sans", Font.BOLD, 15));
+        exit.setRadius(15);
+        north.add(exit);
+        exit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                button4MouseClicked();
+                exit();
             }
         });
-        button4.setColor(new Color(0xFD1111));
-        button4.setColorOver(new Color(0xB04848));
-        button4.setColorClick(new Color(0xE79292));
+        exit.setColor(new Color(0xFD1111));
+        exit.setColorOver(new Color(0xB04848));
+        exit.setColorClick(new Color(0xE79292));
 
 
-        button5.setBorderPainted(false);
-        button5.setText("-");
-        button5.setBounds(1235, 10, 50, 30);
-        button5.setFocusPainted(false);
-        button5.setBackground(new Color(0xF3F0F0));
-        button5.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        button5.setRadius(15);
-        north.add(button5);
-        button5.addMouseListener(new java.awt.event.MouseAdapter() {
+        minimize.setBorderPainted(false);
+        minimize.setText("-");
+        minimize.setBounds(1235, 10, 50, 30);
+        minimize.setFocusPainted(false);
+        minimize.setBackground(new Color(0xF3F0F0));
+        minimize.setFont(new Font("Public Sans", Font.BOLD, 15));
+        minimize.setRadius(15);
+        north.add(minimize);
+        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                button5MouseClicked();
+                minimize();
             }
         });
-        button5.setColor(new Color(0xF3F0F0));
-        button5.setColorOver(new Color(0xC4BDBD));
-        button5.setColorClick(new Color(0x676161));
+        minimize.setColor(new Color(0xF3F0F0));
+        minimize.setColorOver(new Color(0xC4BDBD));
+        minimize.setColorClick(new Color(0x676161));
 
         lb_Time.setBounds(80, 10, 200, 30);
         lb_Time.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -240,13 +240,11 @@ public class HomeGUI extends JFrame {
             }
         });
 
-
         roundPanel[2].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel2MouseClicked();
             }
         });
-
 
         roundPanel[3].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -254,20 +252,17 @@ public class HomeGUI extends JFrame {
             }
         });
 
-
         roundPanel[4].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel4MouseClicked();
             }
         });
 
-
         roundPanel[5].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel5MouseClicked();
             }
         });
-
 
         roundPanel[6].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -280,7 +275,6 @@ public class HomeGUI extends JFrame {
                 roundPanel7MouseClicked();
             }
         });
-
 
         roundPanel[8].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -308,13 +302,6 @@ public class HomeGUI extends JFrame {
                 roundPanel11MouseClicked();
             }
         });
-
-        roundPanel[11].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                roundPanel11MouseClicked();
-            }
-        });
-
 
         roundPanel[12].addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -387,7 +374,7 @@ public class HomeGUI extends JFrame {
     }
 
     private void roundPanel4MouseClicked() {
-        roundPanel[4].setBackground(new Color(35, 166, 97));
+        roundPanel[4].setBackground(new Color(25, 25, 25));
         Active(roundPanel[4]);
         OpenChildForm(new RecipeGUI());
     }
@@ -459,19 +446,19 @@ public class HomeGUI extends JFrame {
 
     private void OpenChildForm(JPanel panel) {
         function.removeAll();
-        function.setLayout(new BorderLayout());
+//        function.setLayout(new BorderLayout());
         function.add(panel);
         function.repaint();
         function.revalidate();
         east.add(function);
     }
 
-    private void button5MouseClicked() {
+    private void minimize() {
         setState(HomeGUI.ICONIFIED);
     }
 
-    private void button4MouseClicked() {
-        int message = JOptionPane.showConfirmDialog(null, "Do you really want to Exit?", "Quit", JOptionPane.YES_NO_OPTION);
+    private void exit() {
+        int message = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn thoát?", "Quit", JOptionPane.YES_NO_OPTION);
         if (message == JOptionPane.YES_OPTION) {
             this.dispose();
             new LoginGUI();
@@ -479,7 +466,7 @@ public class HomeGUI extends JFrame {
     }
 
     private void set_Time() {
-        LocalDate date = LocalDate.now();// Lấy ngày tháng năm hiện tại
+        LocalDate date = LocalDate.now(); // Lấy ngày tháng năm hiện tại
         String dateString = String.valueOf(date);
         String[] dateArray = dateString.split("-");
         String day = dateArray[2];
