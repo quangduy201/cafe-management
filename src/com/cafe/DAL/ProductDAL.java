@@ -12,7 +12,9 @@ public class ProductDAL extends Manager {
             List.of("PRODUCT_ID",
                 "NAME",
                 "CATEGORY_ID",
+                "SIZE",
                 "COST",
+                "IMAGE",
                 "DELETED")
         ));
     }

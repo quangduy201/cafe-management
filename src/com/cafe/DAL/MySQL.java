@@ -82,9 +82,9 @@ public class MySQL {
             // Select customer whose gender = 1 and name = 'Nguuyễn Văn A'
             List<List<String>> result = connector.executeQuery("""
                     SELECT * FROM `customer`
-                    WHERE gender = ? AND name = ?;
+                    WHERE CUSTOMER_ID = ?;
                     """,
-                1, "Nguuyễn Văn A");
+                 "CUS001");
             for (List<String> row : result) {
                 for (Object value : row) {
                     System.out.print(value + "\t");
@@ -93,12 +93,12 @@ public class MySQL {
             }
 
             // Delete customer whose CUSTOMER_ID = 'KH002' by setting its DELETED = 1
-            int numOfRows = connector.executeUpdate("""
-                    UPDATE `customer` SET DELETED = ?
-                    WHERE CUSTOMER_ID = ?;
-                    """,
-                1, "KH002");
-            System.out.println(numOfRows + " row(s) affected");
+//            int numOfRows = connector.executeUpdate("""
+//                    UPDATE `customer` SET DELETED = ?
+//                    WHERE CUSTOMER_ID = ?;
+//                    """,
+//                1, "KH002");
+//            System.out.println(numOfRows + " row(s) affected");
 
             connector.close();
         } catch (SQLException e) {

@@ -7,13 +7,30 @@ import java.util.List;
 
 public class ProductBLL {
     private ProductDAL productDAL;
-
+    private List<Product> productList;
     public ProductBLL() {
         try {
             productDAL = new ProductDAL();
+            productList = searchProducts();
         } catch (Exception ignored) {
 
         }
+    }
+
+    public ProductDAL getProductDAL() {
+        return productDAL;
+    }
+
+    public void setProductDAL(ProductDAL productDAL) {
+        this.productDAL = productDAL;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 
     public boolean insertProduct(Product product) {
@@ -29,10 +46,19 @@ public class ProductBLL {
     }
 
     public List<Product> searchProducts(String... conditions) {
-        return productDAL.searchProducts(conditions);
+        this.productList = productDAL.searchProducts(conditions);
+        return this.productList;
     }
 
+    public Object[][] getData (){
+        Object [][] data = new Object[productList.size()][];
+        for (int i=0; i<data.length; i++){
+            data[i] = productList.get(i).toString().split(" \\| ");
+        }
+        return data;
+    }
     public String getAutoID() {
         return productDAL.getAutoID();
     }
+
 }

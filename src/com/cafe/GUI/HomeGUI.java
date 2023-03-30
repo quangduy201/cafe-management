@@ -46,10 +46,10 @@ public class HomeGUI extends JFrame {
     public HomeGUI(Account account) {
         this.account = account;
         decentralization = new DecentralizationBLL()
-            .searchDecentralization("DECENTRALIZATION_ID = '" + account.getDecentralizationID() + "'")
+            .searchDecentralization("DECENTRALIZATION_ID = '" + this.account.getDecentralizationID() + "'")
             .get(0);
         staff = new StaffBLL()
-            .searchStaffs("STAFF_ID = '" + account.getStaffID() + "'")
+            .searchStaffs("STAFF_ID = '" + this.account.getStaffID() + "'")
             .get(0);
         mang[1] = decentralization.getIsSale();
         mang[2] = decentralization.getIsProduct();
@@ -106,10 +106,10 @@ public class HomeGUI extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setBackground(new Color(25, 25, 25));
+        setBackground(new Color(35, 166, 97));
 
         home.setLayout(new BorderLayout(10, 10));
-        home.setBackground(new Color(25, 25, 25));
+        home.setBackground(new Color(35, 166, 97));
         setContentPane(home);
 //        header2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
 //            public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -128,12 +128,12 @@ public class HomeGUI extends JFrame {
 
         center.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         center.setPreferredSize(new Dimension(1350, 710));
-        center.setBackground(new Color(25, 25, 25));
+        center.setBackground(new Color(35, 166, 97));
         home.add(center, BorderLayout.CENTER);
 
         west.setLayout(new BorderLayout(0, 10));
         west.setPreferredSize(new Dimension(300, 700));
-        west.setBackground(new Color(25, 25, 25));
+        west.setBackground(new Color(35, 166, 97));
         center.add(west);
 
         east.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
@@ -173,7 +173,7 @@ public class HomeGUI extends JFrame {
         button4.setRadius(15);
         north.add(button4);
         button4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 button4MouseClicked();
             }
         });
@@ -191,7 +191,7 @@ public class HomeGUI extends JFrame {
         button5.setRadius(15);
         north.add(button5);
         button5.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 button5MouseClicked();
             }
         });
@@ -235,95 +235,95 @@ public class HomeGUI extends JFrame {
         }
 
         roundPanel[1].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel1MouseClicked();
             }
         });
 
 
         roundPanel[2].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel2MouseClicked();
             }
         });
 
 
         roundPanel[3].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel3MouseClicked();
             }
         });
 
 
         roundPanel[4].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel4MouseClicked();
             }
         });
 
 
         roundPanel[5].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel5MouseClicked();
             }
         });
 
 
         roundPanel[6].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel6MouseClicked();
             }
         });
 
         roundPanel[7].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel7MouseClicked();
             }
         });
 
 
         roundPanel[8].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel8MouseClicked();
             }
         });
 
 
         roundPanel[9].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel9MouseClicked();
             }
         });
 
 
         roundPanel[10].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel10MouseClicked();
             }
         });
 
 
         roundPanel[11].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel11MouseClicked();
             }
         });
 
         roundPanel[11].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel11MouseClicked();
             }
         });
 
 
         roundPanel[12].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel12MouseClicked();
             }
         });
 
         roundPanel[13].addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 roundPanel13MouseClicked();
             }
         });
@@ -369,79 +369,79 @@ public class HomeGUI extends JFrame {
     }
 
     private void roundPanel1MouseClicked() {
-        roundPanel[1].setBackground(new Color(25, 25, 25));
+        roundPanel[1].setBackground(new Color(35, 166, 97));
         Active(roundPanel[1]);
         OpenChildForm(new SaleGUI());
     }
 
     private void roundPanel2MouseClicked() {
-        roundPanel[2].setBackground(new Color(25, 25, 25));
+        roundPanel[2].setBackground(new Color(35, 166, 97));
         Active(roundPanel[2]);
         OpenChildForm(new ProductGUI());
     }
 
     private void roundPanel3MouseClicked() {
-        roundPanel[3].setBackground(new Color(25, 25, 25));
+        roundPanel[3].setBackground(new Color(35, 166, 97));
         Active(roundPanel[3]);
         OpenChildForm(new CategoryGUI());
     }
 
     private void roundPanel4MouseClicked() {
-        roundPanel[4].setBackground(new Color(25, 25, 25));
-        Active(roundPanel[3]);
+        roundPanel[4].setBackground(new Color(35, 166, 97));
+        Active(roundPanel[4]);
         OpenChildForm(new RecipeGUI());
     }
 
     private void roundPanel5MouseClicked() {
-        roundPanel[5].setBackground(new Color(25, 25, 25));
+        roundPanel[5].setBackground(new Color(35, 166, 97));
         Active(roundPanel[5]);
         OpenChildForm(new ImportGUI());
     }
 
     private void roundPanel6MouseClicked() {
-        roundPanel[6].setBackground(new Color(25, 25, 25));
+        roundPanel[6].setBackground(new Color(35, 166, 97));
         Active(roundPanel[6]);
         OpenChildForm(new BillGUI());
     }
 
     private void roundPanel7MouseClicked() {
-        roundPanel[7].setBackground(new Color(25, 25, 25));
+        roundPanel[7].setBackground(new Color(35, 166, 97));
         Active(roundPanel[7]);
         OpenChildForm(new WarehousesGUI());
     }
 
     private void roundPanel8MouseClicked() {
-        roundPanel[8].setBackground(new Color(25, 25, 25));
+        roundPanel[8].setBackground(new Color(35, 166, 97));
         Active(roundPanel[8]);
         OpenChildForm(new StatisticGUI());
     }
 
     private void roundPanel9MouseClicked() {
-        roundPanel[9].setBackground(new Color(25, 25, 25));
+        roundPanel[9].setBackground(new Color(35, 166, 97));
         Active(roundPanel[9]);
         OpenChildForm(new AccountGUI());
     }
 
     private void roundPanel10MouseClicked() {
-        roundPanel[10].setBackground(new Color(25, 25, 25));
+        roundPanel[10].setBackground(new Color(35, 166, 97));
         Active(roundPanel[10]);
         OpenChildForm(new StaffGUI());
     }
 
     private void roundPanel11MouseClicked() {
-        roundPanel[11].setBackground(new Color(25, 25, 25));
+        roundPanel[11].setBackground(new Color(35, 166, 97));
         Active(roundPanel[11]);
         OpenChildForm(new CustomerGUI());
     }
 
     private void roundPanel12MouseClicked() {
-        roundPanel[12].setBackground(new Color(25, 25, 25));
+        roundPanel[12].setBackground(new Color(35, 166, 97));
         Active(roundPanel[12]);
         OpenChildForm(new DiscountGUI());
     }
 
     private void roundPanel13MouseClicked() {
-        roundPanel[13].setBackground(new Color(25, 25, 25));
+        roundPanel[13].setBackground(new Color(35, 166, 97));
         Active(roundPanel[13]);
         OpenChildForm(new DecentralizationGUI());
     }
@@ -454,7 +454,7 @@ public class HomeGUI extends JFrame {
     private void Active(JPanel btn) {
         Disable();
         currentBtn = btn;
-        currentBtn.setBackground(new Color(25, 25, 25));
+        currentBtn.setBackground(new Color(35, 166, 97));
     }
 
     private void OpenChildForm(JPanel panel) {
@@ -471,7 +471,7 @@ public class HomeGUI extends JFrame {
     }
 
     private void button4MouseClicked() {
-        int message = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn thoát?", "Quit", JOptionPane.YES_NO_OPTION);
+        int message = JOptionPane.showConfirmDialog(null, "Do you really want to Exit?", "Quit", JOptionPane.YES_NO_OPTION);
         if (message == JOptionPane.YES_OPTION) {
             this.dispose();
             new LoginGUI();

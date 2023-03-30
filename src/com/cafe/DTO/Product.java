@@ -16,7 +16,13 @@ public class Product {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
-        this.size = size;
+        if (size.equals("0")) {
+            this.size = "S";
+        } else if (size.equals("1")) {
+            this.size = "M";
+        } else if (size.equals("2")) {
+            this.size = "L";
+        }
         this.cost = cost;
         this.image = image;
         this.deleted = deleted;
