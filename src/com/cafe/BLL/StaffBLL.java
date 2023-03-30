@@ -29,7 +29,7 @@ public class StaffBLL {
     }
 
     public boolean removeStaff(String id) {
-        return staffDAL.deleteStaff(id) != 0;
+        return staffDAL.deleteStaff("STAFF_ID = '" + id + "'") != 0;
     }
 
     public List<Staff> searchStaffs(String... conditions) {

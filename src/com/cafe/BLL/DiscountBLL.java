@@ -25,7 +25,7 @@ public class DiscountBLL {
     }
 
     public boolean removeDiscount(String id) {
-        return discountDAL.deleteDiscount(id) != 0;
+        return discountDAL.deleteDiscount("DISCOUNT_ID = '" + id +"'") != 0;
     }
 
     public List<Discount> searchDiscounts(String... conditions) {

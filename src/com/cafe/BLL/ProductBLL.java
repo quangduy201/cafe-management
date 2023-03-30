@@ -25,7 +25,7 @@ public class ProductBLL {
     }
 
     public boolean removeProduct(String id) {
-        return productDAL.deleteProduct(id) != 0;
+        return productDAL.deleteProduct("PRODUCT_ID = '" + id + "'") != 0;
     }
 
     public List<Product> searchProducts(String... conditions) {

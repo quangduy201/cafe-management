@@ -14,6 +14,14 @@ public class Manager extends MySQL {
         this.columnsName = columnsName;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public List<String> getColumnsName() {
+        return columnsName;
+    }
+
     public int create(Object... values) throws SQLException {
         if (values == null || values.length != columnsName.size()) {
             throw new IllegalArgumentException("Invalid number of arguments.");
