@@ -25,7 +25,7 @@ public class ReceiptBLL {
     }
 
     public boolean removeReceipt(String id) {
-        return receiptDAL.deleteReceipt(id) != 0;
+        return receiptDAL.deleteReceipt("RECEIPT_ID = '" + id + "'") != 0;
     }
 
     public List<Receipt> searchReceipts(String... conditions) {

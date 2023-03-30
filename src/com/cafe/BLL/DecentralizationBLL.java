@@ -25,7 +25,7 @@ public class DecentralizationBLL {
     }
 
     public List<Decentralization> searchDecentralization(String... conditions) {
-        return decentralizationDAL.searchDecentralization(conditions);
+        return decentralizationDAL.searchDecentralizations(conditions);
     }
 
     public String getAutoID() {

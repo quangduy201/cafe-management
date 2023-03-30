@@ -29,7 +29,7 @@ public class SupplierBLL {
     }
 
     public boolean removeSupplier(String id) {
-        return supplierDAL.deleteSupplier(id) != 0;
+        return supplierDAL.deleteSupplier("SUPPLIER_ID = '" + id + "'") != 0;
     }
 
     public List<Supplier> searchSuppliers(String... conditions) {

@@ -29,7 +29,7 @@ public class AccountBLL {
     }
 
     public boolean removeAccount(String id) {
-        return accountDAL.deleteAccount(id) != 0;
+        return accountDAL.deleteAccount("ACCOUNT_ID = '" + id + "'" ) != 0;
     }
 
     public List<Account> searchAccounts(String... conditions) {
