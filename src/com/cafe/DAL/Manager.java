@@ -59,8 +59,7 @@ public class Manager extends MySQL {
             // only update the DELETED
             setClause = "DELETED = ?";
         } else {
-            // not updating the ID
-            List<String> columns = columnsName.subList(conditionsLength, columnsName.size() - 1);
+            List<String> columns = columnsName.subList(0, columnsName.size() - 1);
             setClause = String.join(" = ?, ", columns) + " = ?";
         }
 
@@ -69,8 +68,8 @@ public class Manager extends MySQL {
         if (conditionsLength > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
         }
-
         query += ";";
+        System.out.println(query);
         return executeUpdate(query, updateValues.toArray());
     }
 
@@ -106,7 +105,6 @@ public class Manager extends MySQL {
 
         List<String> lastAccount = data.get(data.size() - 1);
         String size = type + formatNumberToString(data.size(), digits);
-        System.out.println(size);
         if (lastAccount.get(0).equals(size)) {
             count += data.size();
         } else {

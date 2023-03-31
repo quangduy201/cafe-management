@@ -12,7 +12,7 @@ public class ProductDAL extends Manager {
             List.of("PRODUCT_ID",
                 "NAME",
                 "CATEGORY_ID",
-                "SIZE",
+                "SIZED",
                 "COST",
                 "IMAGE",
                 "DELETED")
@@ -24,10 +24,10 @@ public class ProductDAL extends Manager {
             row.get(0), // productID
             row.get(1), // name
             row.get(2), // categoryID
-            row.get(3), // size
+            row.get(3), // sized
             Double.parseDouble(row.get(4)), // cost,
             row.get(5), // image
-            Boolean.parseBoolean(row.get(6)) // deleted
+            row.get(6) // deleted
         ));
     }
 
@@ -36,7 +36,7 @@ public class ProductDAL extends Manager {
             return create(product.getProductID(),
                 product.getName(),
                 product.getCategoryID(),
-                product.getSize(),
+                product.getSized(),
                 product.getCost(),
                 product.getImage(),
                 false
@@ -53,11 +53,11 @@ public class ProductDAL extends Manager {
             updateValues.add(product.getProductID());
             updateValues.add(product.getName());
             updateValues.add(product.getCategoryID());
-            updateValues.add(product.getSize());
+            updateValues.add(product.getSized());
             updateValues.add(product.getCost());
             updateValues.add(product.getImage());
             updateValues.add(product.isDeleted());
-            return update(updateValues, "PRODUCT_ID = " + product.getProductID());
+            return update(updateValues, "PRODUCT_ID = '" + product.getProductID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.updateProduct(): " + e.getMessage());
         }

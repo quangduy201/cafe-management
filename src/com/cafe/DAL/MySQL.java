@@ -50,6 +50,7 @@ public class MySQL {
 
     public int executeUpdate(String query, Object... values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
+        System.out.println(formattedQuery);
         int numOfRows;
         try {
             numOfRows = stmt.executeUpdate(formattedQuery);
