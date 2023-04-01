@@ -20,15 +20,18 @@ public class ProductDAL extends Manager {
     }
 
     public List<Product> convertToProducts(List<List<String>> data) {
-        return convert(data, row -> new Product(
-            row.get(0), // productID
-            row.get(1), // name
-            row.get(2), // categoryID
-            row.get(3), // sized
-            Double.parseDouble(row.get(4)), // cost,
-            row.get(5), // image
-            row.get(6) // deleted
-        ));
+        return convert(data, row -> {
+            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            return new Product(
+                row.get(0), // productID
+                row.get(1), // name
+                row.get(2), // categoryID
+                row.get(3), // sized
+                Double.parseDouble(row.get(4)), // cost,
+                row.get(5), // image
+                Boolean.parseBoolean(row.get(6))    // deleted
+            );
+        });
     }
 
     public int insertProduct(Product product) {

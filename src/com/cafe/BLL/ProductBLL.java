@@ -103,7 +103,7 @@ public class ProductBLL {
     public List<Product> findProducts(String key, String value){
         List<Product> list = new ArrayList<>();
         for (Product product : productList){
-            if (getValueByKey(product, key).toString().contains(value)){
+            if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase())){
                 list.add(product);
             }
         }

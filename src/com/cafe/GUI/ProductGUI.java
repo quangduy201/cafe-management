@@ -140,6 +140,8 @@ public class ProductGUI extends JPanel {
                 case "PRODUCT_ID" -> {
                     jTextFieldsForm[index] = new JTextField(productBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
+                    jTextFieldsForm[i].setBorder(null);
+                    jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                     pnlProductConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -318,7 +320,7 @@ public class ProductGUI extends JPanel {
             size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
             image = chosenImg;
             assert size != null;
-            newProduct = new Product(productID, name, categoryID, size, cost, image, "0");
+            newProduct = new Product(productID, name, categoryID, size, cost, image, false);
             productBLL.insertProduct(newProduct);
             refeshForm();
         }
@@ -345,7 +347,7 @@ public class ProductGUI extends JPanel {
             size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
             image = chosenImg;
             assert size != null;
-            newProduct = new Product(productID, name, categoryID, size, cost, image, "0");
+            newProduct = new Product(productID, name, categoryID, size, cost, image, false);
             productBLL.updateProduct(newProduct);
             refeshForm();
         }

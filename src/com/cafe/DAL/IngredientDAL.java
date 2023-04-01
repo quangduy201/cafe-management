@@ -13,20 +13,23 @@ public class IngredientDAL extends Manager {
                 "NAME",
                 "QUANTITY",
                 "UNIT",
-                "SUPPLIER",
+                "SUPPLIER_ID",
                 "DELETED")
         ));
     }
 
     public List<Ingredient> convertToIngredients(List<List<String>> data) {
-        return convert(data, row -> new Ingredient(
-            row.get(0), // ingredientID
-            row.get(1), // name
-            Double.parseDouble(row.get(2)), // quantity
-            row.get(3), // unit
-            row.get(4), // supplierID
-            Boolean.parseBoolean(row.get(5)) // deleted
-        ));
+        return convert(data, row -> {
+            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            return new Ingredient(
+                row.get(0), // ingredientID
+                row.get(1), // name
+                Double.parseDouble(row.get(2)), // quantity
+                row.get(3), // unit
+                row.get(4), // supplierID
+                Boolean.parseBoolean(row.get(5)) // deleted
+            );
+        });
     }
 
     public int insertIngredient(Ingredient ingredient) {

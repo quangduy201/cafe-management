@@ -12,14 +12,14 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productID, String name, String categoryID, String sized, double cost, String image, String deleted) {
+    public Product(String productID, String name, String categoryID, String sized, double cost, String image, boolean deleted) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
         this.sized = sized;
         this.cost = cost;
         this.image = image;
-        this.deleted = !deleted.contains("0");
+        this.deleted = deleted;
     }
 
     public String getProductID() {
