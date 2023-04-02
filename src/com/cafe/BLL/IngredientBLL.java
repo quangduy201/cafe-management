@@ -1,9 +1,9 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.IngredientDAL;
-import com.cafe.DTO.Discount;
 import com.cafe.DTO.Ingredient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +15,7 @@ public class IngredientBLL extends Manager<Ingredient> {
         try {
             ingredientDAL = new IngredientDAL();
             ingredientList = searchIngredients();
+            readIngredient();
         } catch (Exception ignored) {
 
         }
@@ -36,7 +37,7 @@ public class IngredientBLL extends Manager<Ingredient> {
         this.ingredientList = ingredientList;
     }
 
-    public  Object[][] getData() {
+    public Object[][] getData() {
         return getData(ingredientList);
     }
 
@@ -55,13 +56,33 @@ public class IngredientBLL extends Manager<Ingredient> {
     }
 
     public boolean deleteIngredient(Ingredient ingredient) {
-        ingredient.setDeleted(true);
-        ingredientList.set(getIndex(ingredient, "INGREDIENT_ID", ingredientList), ingredient);
+        ingredientList.remove(getIndex(ingredient, "INGREDIENT_ID", ingredientList));
         return ingredientDAL.deleteIngredient("INGREDIENT_ID = '" + ingredient.getIngredientID() + "'") != 0;
     }
 
     public List<Ingredient> searchIngredients(String... conditions) {
-        return ingredientDAL.searchIngredients(conditions);
+        this.ingredientList = ingredientDAL.searchIngredients(conditions);
+        return this.ingredientList;
+    }
+
+    public void readIngredient() {
+        List<Ingredient> list = new ArrayList<>();
+        for (Ingredient ingredient : ingredientList) {
+            if (!ingredient.isDeleted()) {
+                list.add(ingredient);
+            }
+        }
+        ingredientList = list;
+    }
+
+    public List<Ingredient> findIngredients(String key, String value) {
+        List<Ingredient> list = new ArrayList<>();
+        for (Ingredient ingredient : ingredientList) {
+            if (getValueByKey(ingredient, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(ingredient);
+            }
+        }
+        return list;
     }
 
     public List<Ingredient> findIngredientsBy(Map<String, Object> conditions) {

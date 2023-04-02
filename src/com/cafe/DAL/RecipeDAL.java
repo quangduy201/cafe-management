@@ -49,8 +49,8 @@ public class RecipeDAL extends Manager {
             updateValues.add(recipe.getMass());
             updateValues.add(recipe.getUnit());
             updateValues.add(recipe.isDeleted());
-            return update(updateValues, "PRODUCT_ID = " + recipe.getProductID(),
-                "INGREDIENT_ID = " + recipe.getIngredientID());
+            return update(updateValues, "PRODUCT_ID = '" + recipe.getProductID() + "'",
+                "INGREDIENT_ID = '" + recipe.getIngredientID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.updateRecipe(): " + e.getMessage());
         }
@@ -60,7 +60,7 @@ public class RecipeDAL extends Manager {
     public int deleteRecipe(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.deleteRecipe(): " + e.getMessage());

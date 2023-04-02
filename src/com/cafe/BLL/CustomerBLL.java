@@ -3,10 +3,11 @@ package com.cafe.BLL;
 import com.cafe.DAL.CustomerDAL;
 import com.cafe.DTO.Customer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class CustomerBLL extends Manager<Customer> {
+public class CustomerBLL extends Manager<Customer> {
     private CustomerDAL customerDAL;
     private List<Customer> customerList;
 
@@ -14,6 +15,7 @@ public abstract class CustomerBLL extends Manager<Customer> {
         try {
             customerDAL = new CustomerDAL();
             customerList = searchCustomers();
+            readCustomer();
         } catch (Exception ignored) {
 
         }
@@ -35,7 +37,7 @@ public abstract class CustomerBLL extends Manager<Customer> {
         this.customerList = customerList;
     }
 
-    public Object[][] getDate() {
+    public Object[][] getData() {
         return getData(customerList);
     }
 
@@ -54,13 +56,39 @@ public abstract class CustomerBLL extends Manager<Customer> {
     }
 
     public boolean deleteCustomer(Customer customer) {
-        customer.setDeleted(true);
-        customerList.set(getIndex(customer, "CUSTOMER_ID", customerList), customer);
+        customerList.remove(getIndex(customer, "CUSTOMER_ID", customerList));
         return customerDAL.deleteCustomer("CUSTOMER_ID = '" + customer.getCustomerID() + "'") != 0;
     }
 
     public List<Customer> searchCustomers(String... conditions) {
         return customerDAL.searchCustomers(conditions);
+    }
+
+    public void readCustomer() {
+        List<Customer> list = new ArrayList<>();
+        for (Customer customer : customerList) {
+            if (!customer.isDeleted()) {
+                list.add(customer);
+            }
+        }
+        customerList = list;
+    }
+
+    public List<Customer> findCustomers(String key, Object value) {
+        List<Customer> list = new ArrayList<>();
+        for (Customer customer : customerList) {
+            if (value instanceof Boolean) {
+                if (getValueByKey(customer, key) == value) {
+                    list.add(customer);
+                }
+            } else {
+                if (getValueByKey(customer, key).toString().toLowerCase().contains(value.toString().toLowerCase())) {
+                    list.add(customer);
+                }
+            }
+
+        }
+        return list;
     }
 
     public List<Customer> findCustomerBy(Map<String, Object> conditions) {
@@ -84,7 +112,7 @@ public abstract class CustomerBLL extends Manager<Customer> {
         return switch (key) {
             case "CUSTOMER_ID" -> customer.getCustomerID();
             case "NAME" -> customer.getName();
-            case "GENDER" -> customer.getGender();
+            case "GENDER" -> customer.isGender();
             case "DOB" -> customer.getDateOfBirth();
             case "PHONE" -> customer.getPhone();
             case "MEMBERSHIP" -> customer.isMembership();

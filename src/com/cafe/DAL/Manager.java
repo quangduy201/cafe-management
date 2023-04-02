@@ -1,29 +1,31 @@
 package com.cafe.DAL;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 public class Manager extends MySQL {
     private final String tableName;
-    private final List<String> columnsName;
+    private final List<String> columnNames;
 
-    public Manager(String tableName, List<String> columnsName) throws SQLException {
+    public Manager(String tableName, List<String> columnNames) throws SQLException {
         super();
         this.tableName = tableName;
-        this.columnsName = columnsName;
+        this.columnNames = columnNames;
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public List<String> getColumnsName() {
-        return columnsName;
+    public List<String> getColumnNames() {
+        return columnNames;
     }
 
     public int create(Object... values) throws SQLException {
-        if (values == null || values.length != columnsName.size()) {
+        if (values == null || values.length != columnNames.size()) {
             throw new IllegalArgumentException("Invalid number of arguments.");
         }
 
@@ -59,8 +61,7 @@ public class Manager extends MySQL {
             // only update the DELETED
             setClause = "DELETED = ?";
         } else {
-            // not updating the ID
-            List<String> columns = columnsName.subList(conditionsLength, columnsName.size() - 1);
+            List<String> columns = columnNames.subList(0, columnNames.size() - 1);
             setClause = String.join(" = ?, ", columns) + " = ?";
         }
 
@@ -69,8 +70,8 @@ public class Manager extends MySQL {
         if (conditionsLength > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
         }
-
         query += ";";
+        System.out.println(query);
         return executeUpdate(query, updateValues.toArray());
     }
 

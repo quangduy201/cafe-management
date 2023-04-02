@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.ProductDAL;
 import com.cafe.DTO.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ public class ProductBLL extends Manager<Product> {
         try {
             productDAL = new ProductDAL();
             productList = searchProducts();
+            readProduct();
         } catch (Exception ignored) {
 
         }
@@ -54,13 +56,33 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public boolean deleteProduct(Product product) {
-        product.setDeleted(true);
-        productList.set(getIndex(product, "PRODUCT_ID", productList), product);
+        productList.remove(getIndex(product, "PRODUCT_ID", productList));
         return productDAL.deleteProduct("PRODUCT_ID = '" + product.getProductID() + "'") != 0;
     }
 
     public List<Product> searchProducts(String... conditions) {
-        return productDAL.searchProducts(conditions);
+        this.productList = productDAL.searchProducts(conditions);
+        return this.productList;
+    }
+
+    public void readProduct() {
+        List<Product> list = new ArrayList<>();
+        for (Product product : productList) {
+            if (!product.isDeleted()) {
+                list.add(product);
+            }
+        }
+        productList = list;
+    }
+
+    public List<Product> findProducts(String key, String value) {
+        List<Product> list = new ArrayList<>();
+        for (Product product : productList) {
+            if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(product);
+            }
+        }
+        return list;
     }
 
     public List<Product> findProductsBy(Map<String, Object> conditions) {
@@ -85,9 +107,11 @@ public class ProductBLL extends Manager<Product> {
             case "PRODUCT_ID" -> product.getProductID();
             case "NAME" -> product.getName();
             case "CATEGORY_ID" -> product.getCategoryID();
-            case "SIZE" -> product.getSize();
+            case "SIZED" -> product.getSized();
             case "COST" -> product.getCost();
+            case "IMAGE" -> product.getImage();
             default -> null;
         };
     }
+
 }

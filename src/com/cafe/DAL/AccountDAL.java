@@ -53,7 +53,7 @@ public class AccountDAL extends Manager {
             updateValues.add(account.getDecentralizationID());
             updateValues.add(account.getStaffID());
             updateValues.add(account.isDeleted());
-            return update(updateValues, "ACCOUNT_ID = " + account.getAccountID());
+            return update(updateValues, "ACCOUNT_ID = '" + account.getAccountID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.updateAccount(): " + e.getMessage());
         }
@@ -63,7 +63,7 @@ public class AccountDAL extends Manager {
     public int deleteAccount(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.deleteAccount(): " + e.getMessage());

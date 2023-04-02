@@ -61,7 +61,7 @@ public class BillDAL extends Manager {
             updateValues.add(bill.getDateOfPurchase());
             updateValues.add(bill.getTotal());
             updateValues.add(bill.isDeleted());
-            return update(updateValues, "BILL_ID = " + bill.getBillID());
+            return update(updateValues, "BILL_ID = '" + bill.getBillID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in BillDAL.updateBill(): " + e.getMessage());
         }
@@ -71,7 +71,7 @@ public class BillDAL extends Manager {
     public int deleteBill(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in BillDAL.deleteBill(): " + e.getMessage());

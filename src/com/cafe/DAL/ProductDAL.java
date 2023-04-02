@@ -12,21 +12,26 @@ public class ProductDAL extends Manager {
             List.of("PRODUCT_ID",
                 "NAME",
                 "CATEGORY_ID",
+                "SIZED",
                 "COST",
+                "IMAGE",
                 "DELETED")
         ));
     }
 
     public List<Product> convertToProducts(List<List<String>> data) {
-        return convert(data, row -> new Product(
-            row.get(0), // productID
-            row.get(1), // name
-            row.get(2), // categoryID
-            row.get(3), // size
-            Double.parseDouble(row.get(4)), // cost,
-            row.get(5), // image
-            Boolean.parseBoolean(row.get(6)) // deleted
-        ));
+        return convert(data, row -> {
+            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            return new Product(
+                row.get(0), // productID
+                row.get(1), // name
+                row.get(2), // categoryID
+                row.get(3), // sized
+                Double.parseDouble(row.get(4)), // cost,
+                row.get(5), // image
+                Boolean.parseBoolean(row.get(6))    // deleted
+            );
+        });
     }
 
     public int addProduct(Product product) {
@@ -34,7 +39,7 @@ public class ProductDAL extends Manager {
             return create(product.getProductID(),
                 product.getName(),
                 product.getCategoryID(),
-                product.getSize(),
+                product.getSized(),
                 product.getCost(),
                 product.getImage(),
                 false
@@ -51,11 +56,11 @@ public class ProductDAL extends Manager {
             updateValues.add(product.getProductID());
             updateValues.add(product.getName());
             updateValues.add(product.getCategoryID());
-            updateValues.add(product.getSize());
+            updateValues.add(product.getSized());
             updateValues.add(product.getCost());
             updateValues.add(product.getImage());
             updateValues.add(product.isDeleted());
-            return update(updateValues, "PRODUCT_ID = " + product.getProductID());
+            return update(updateValues, "PRODUCT_ID = '" + product.getProductID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.updateProduct(): " + e.getMessage());
         }
@@ -65,7 +70,7 @@ public class ProductDAL extends Manager {
     public int deleteProduct(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.deleteProduct(): " + e.getMessage());

@@ -57,7 +57,7 @@ public class ReceiptDAL extends Manager {
             updateValues.add(receipt.getDor());
             updateValues.add(receipt.getGrandTotal());
             updateValues.add(receipt.isDeleted());
-            return update(updateValues, "RECEIPT_ID = " + receipt.getReceiptID());
+            return update(updateValues, "RECEIPT_ID = '" + receipt.getReceiptID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptDAL.updateReceipt(): " + e.getMessage());
         }
@@ -67,7 +67,7 @@ public class ReceiptDAL extends Manager {
     public int deleteReceipt(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptDAL.deleteReceipt(): " + e.getMessage());

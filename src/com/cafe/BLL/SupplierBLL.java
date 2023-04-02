@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.SupplierDAL;
 import com.cafe.DTO.Supplier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ public class SupplierBLL extends Manager<Supplier> {
         try {
             supplierDAL = new SupplierDAL();
             supplierList = searchSuppliers();
+            readSupplier();
         } catch (Exception ignored) {
 
         }
@@ -39,6 +41,7 @@ public class SupplierBLL extends Manager<Supplier> {
         return getData(supplierList);
     }
 
+    //    public boolean addSupplier(Supplier supplier) {
     public boolean addSupplier(Supplier supplier) {
         if (searchSuppliers("PHONE = '" + supplier.getPhone() + "'").size() != 0) {
             System.out.println("Can't add new supplier. Phone already exists.");
@@ -54,13 +57,33 @@ public class SupplierBLL extends Manager<Supplier> {
     }
 
     public boolean deleteSupplier(Supplier supplier) {
-        supplier.setDeleted(true);
-        supplierList.set(getIndex(supplier, "SUPPLIER_ID", supplierList), supplier);
+        supplierList.remove(getIndex(supplier, "SUPPLIER_ID", supplierList));
         return supplierDAL.deleteSupplier("SUPPLIER_ID = '" + supplier.getSupplierID() + "'") != 0;
     }
 
     public List<Supplier> searchSuppliers(String... conditions) {
-        return supplierDAL.searchSuppliers(conditions);
+        this.supplierList = supplierDAL.searchSuppliers(conditions);
+        return this.supplierList;
+    }
+
+    public void readSupplier() {
+        List<Supplier> list = new ArrayList<>();
+        for (Supplier supplier : supplierList) {
+            if (!supplier.isDeleted()) {
+                list.add(supplier);
+            }
+        }
+        supplierList = list;
+    }
+
+    public List<Supplier> findSuppliers(String key, String value) {
+        List<Supplier> list = new ArrayList<>();
+        for (Supplier supplier : supplierList) {
+            if (getValueByKey(supplier, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(supplier);
+            }
+        }
+        return list;
     }
 
     public List<Supplier> findSuppliersBy(Map<String, Object> conditions) {
@@ -91,4 +114,5 @@ public class SupplierBLL extends Manager<Supplier> {
             default -> null;
         };
     }
+
 }

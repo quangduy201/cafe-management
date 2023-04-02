@@ -91,7 +91,7 @@ public class DecentralizationDAL extends Manager {
             updateValues.add(decentralization.getDecentralizationID());
             updateValues.add(decentralization.getDecentralizationName());
             updateValues.add(decentralization.isDeleted());
-            return update(updateValues, "DECENTRALIZATION_ID = " + decentralization.getDecentralizationID());
+            return update(updateValues, "DECENTRALIZATION_ID = '" + decentralization.getDecentralizationID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in DecentralizationDAL.updateDecentralization(): " + e.getMessage());
         }
@@ -101,7 +101,7 @@ public class DecentralizationDAL extends Manager {
     public int deleteDecentralization(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in DecentralizationDAL.deleteDecentralization(): " + e.getMessage());
