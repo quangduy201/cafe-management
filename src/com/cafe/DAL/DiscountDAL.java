@@ -37,7 +37,7 @@ public class DiscountDAL extends Manager {
         });
     }
 
-    public int insertDiscount(Discount discount) {
+    public int addDiscount(Discount discount) {
         try {
             return create(discount.getDiscountID(),
                 discount.getDiscountPercent(),
@@ -47,7 +47,7 @@ public class DiscountDAL extends Manager {
                 false
             ); // discount khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in DiscountDAL.insertDiscount(): " + e.getMessage());
+            System.out.println("Error occurred in DiscountDAL.addDiscount(): " + e.getMessage());
         }
         return 0;
     }
@@ -61,7 +61,7 @@ public class DiscountDAL extends Manager {
             updateValues.add(discount.getEndDay());
             updateValues.add(discount.getStatus());
             updateValues.add(discount.isDeleted());
-            return update(updateValues, "DISCOUNT_ID = " + discount.getDiscountID());
+            return update(updateValues, "DISCOUNT_ID = '" + discount.getDiscountID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.updateDiscount(): " + e.getMessage());
         }
@@ -71,7 +71,7 @@ public class DiscountDAL extends Manager {
     public int deleteDiscount(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.deleteDiscount(): " + e.getMessage());
@@ -86,14 +86,5 @@ public class DiscountDAL extends Manager {
             System.out.println("Error occurred in DiscountDAL.searchDiscounts(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("DIS", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in DiscountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

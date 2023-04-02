@@ -5,7 +5,7 @@ import com.cafe.utils.Day;
 public class Customer {
     private String customerID;
     private String name;
-    private String gender;
+    private boolean gender;
     private Day dateOfBirth;
     private String phone; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
     private boolean membership;
@@ -15,7 +15,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String customerID, String name, String gender, Day dateOfBirth, String phone, boolean membership, Day dateOfSup, boolean deleted) {
+    public Customer(String customerID, String name, boolean gender, Day dateOfBirth, String phone, boolean membership, Day dateOfSup, boolean deleted) {
         this.customerID = customerID;
         this.name = name;
         this.gender = gender;
@@ -42,11 +42,11 @@ public class Customer {
         this.name = name;
     }
 
-    public String getGender() {
+    public boolean isGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(boolean gender) {
         this.gender = gender;
     }
 
@@ -92,12 +92,14 @@ public class Customer {
 
     @Override
     public String toString() {
+        String gender1 = gender ? "Nam" : "Nữ";
+        String member = membership ? "Có" : "Không";
         return customerID + " | " +
             name + " | " +
-            gender + " | " +
+            gender1 + " | " +
             dateOfBirth + " | " +
             phone + " | " +
-            membership + " | " +
+            member + " | " +
             dateOfSup;
     }
 }

@@ -1,4 +1,5 @@
 package com.cafe.DAL;
+
 import com.cafe.DTO.Staff;
 import com.cafe.utils.Day;
 
@@ -6,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffDAL extends Manager{
+public class StaffDAL extends Manager {
     public StaffDAL() throws SQLException {
         super("staff", new ArrayList<>(
             List.of("STAFF_ID",
@@ -43,7 +44,7 @@ public class StaffDAL extends Manager{
         });
     }
 
-    public int insertStaff(Staff staff) {
+    public int addStaff(Staff staff) {
         try {
             return create(staff.getStaffID(),
                 staff.getName(),
@@ -57,7 +58,7 @@ public class StaffDAL extends Manager{
                 false
             ); // staff khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in StaffDAL.insertStaff(): " + e.getMessage());
+            System.out.println("Error occurred in StaffDAL.addStaff(): " + e.getMessage());
         }
         return 0;
     }
@@ -75,7 +76,7 @@ public class StaffDAL extends Manager{
             updateValues.add(staff.getSalary());
             updateValues.add(staff.getDateOfEntry());
             updateValues.add(staff.isDeleted());
-            return update(updateValues, "STAFF_ID = " + staff.getStaffID());
+            return update(updateValues, "STAFF_ID = '" + staff.getStaffID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.updateStaff(): " + e.getMessage());
         }
@@ -85,7 +86,7 @@ public class StaffDAL extends Manager{
     public int deleteStaff(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.deleteStaff(): " + e.getMessage());
@@ -100,14 +101,5 @@ public class StaffDAL extends Manager{
             System.out.println("Error occurred in StaffDAL.searchStaffs(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("ST", 2);
-        } catch (Exception e) {
-            System.out.println("Error occurred in StaffDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

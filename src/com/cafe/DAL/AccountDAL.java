@@ -29,7 +29,7 @@ public class AccountDAL extends Manager {
         ));
     }
 
-    public int insertAccount(Account account) {
+    public int addAccount(Account account) {
         try {
             return create(account.getAccountID(),
                 account.getUsername(),
@@ -39,7 +39,7 @@ public class AccountDAL extends Manager {
                 false
             ); // account khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.insertAccount(): " + e.getMessage());
+            System.out.println("Error occurred in AccountDAL.addAccount(): " + e.getMessage());
         }
         return 0;
     }
@@ -53,7 +53,7 @@ public class AccountDAL extends Manager {
             updateValues.add(account.getDecentralizationID());
             updateValues.add(account.getStaffID());
             updateValues.add(account.isDeleted());
-            return update(updateValues, "ACCOUNT_ID = " + account.getAccountID());
+            return update(updateValues, "ACCOUNT_ID = '" + account.getAccountID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.updateAccount(): " + e.getMessage());
         }
@@ -63,7 +63,7 @@ public class AccountDAL extends Manager {
     public int deleteAccount(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.deleteAccount(): " + e.getMessage());
@@ -78,14 +78,5 @@ public class AccountDAL extends Manager {
             System.out.println("Error occurred in AccountDAL.searchAccounts(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("AC", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

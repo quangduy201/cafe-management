@@ -23,14 +23,14 @@ public class BillDetailsDAL extends Manager {
         ));
     }
 
-    public int insertBillDetails(BillDetails billDetails) {
+    public int addBillDetails(BillDetails billDetails) {
         try {
             return create(billDetails.getBillID(),
                 billDetails.getProductID(),
                 billDetails.getQuantity()
             );
         } catch (Exception e) {
-            System.out.println("Error occurred in BillDetailsDAL.insertBillDetails(): " + e.getMessage());
+            System.out.println("Error occurred in BillDetailsDAL.addBillDetails(): " + e.getMessage());
         }
         return 0;
     }

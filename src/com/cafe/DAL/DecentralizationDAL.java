@@ -47,7 +47,7 @@ public class DecentralizationDAL extends Manager {
         ));
     }
 
-    public int insertDecentralization(Decentralization Decentralization) {
+    public int addDecentralization(Decentralization Decentralization) {
         try {
             return create(Decentralization.getDecentralizationID(),
                 Decentralization.getIsSale(),
@@ -67,7 +67,7 @@ public class DecentralizationDAL extends Manager {
                 false
             ); // decentralization khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.insertDecentralization(): " + e.getMessage());
+            System.out.println("Error occurred in DecentralizationDAL.addDecentralization(): " + e.getMessage());
         }
         return 0;
     }
@@ -91,7 +91,7 @@ public class DecentralizationDAL extends Manager {
             updateValues.add(decentralization.getDecentralizationID());
             updateValues.add(decentralization.getDecentralizationName());
             updateValues.add(decentralization.isDeleted());
-            return update(updateValues, "DECENTRALIZATION_ID = " + decentralization.getDecentralizationID());
+            return update(updateValues, "DECENTRALIZATION_ID = '" + decentralization.getDecentralizationID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in DecentralizationDAL.updateDecentralization(): " + e.getMessage());
         }
@@ -101,7 +101,7 @@ public class DecentralizationDAL extends Manager {
     public int deleteDecentralization(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in DecentralizationDAL.deleteDecentralization(): " + e.getMessage());
@@ -116,14 +116,5 @@ public class DecentralizationDAL extends Manager {
             System.out.println("Error occurred in DecentralizationDAL.searchDecentralizations(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("DE", 2);
-        } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

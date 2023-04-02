@@ -4,7 +4,7 @@ public class Product {
     private String productID;
     private String name;
     private String categoryID;
-    private String size;
+    private String sized;
     private String image;
     private double cost;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
@@ -12,11 +12,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productID, String name, String categoryID, String size, double cost, String image, boolean deleted) {
+    public Product(String productID, String name, String categoryID, String sized, double cost, String image, boolean deleted) {
         this.productID = productID;
         this.name = name;
         this.categoryID = categoryID;
-        this.size = size;
+        this.sized = sized;
         this.cost = cost;
         this.image = image;
         this.deleted = deleted;
@@ -46,12 +46,12 @@ public class Product {
         this.categoryID = categoryID;
     }
 
-    public String getSize() {
-        return size;
+    public String getSized() {
+        return sized;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setSized(String sized) {
+        this.sized = sized;
     }
 
     public double getCost() {
@@ -83,7 +83,7 @@ public class Product {
         return productID + " | " +
             name + " | " +
             categoryID + " | " +
-            size + " | " +
+            sized + " | " +
             cost;
     }
 }

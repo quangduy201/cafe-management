@@ -1,29 +1,31 @@
 package com.cafe.DAL;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 public class Manager extends MySQL {
     private final String tableName;
-    private final List<String> columnsName;
+    private final List<String> columnNames;
 
-    public Manager(String tableName, List<String> columnsName) throws SQLException {
+    public Manager(String tableName, List<String> columnNames) throws SQLException {
         super();
         this.tableName = tableName;
-        this.columnsName = columnsName;
+        this.columnNames = columnNames;
     }
 
     public String getTableName() {
         return tableName;
     }
 
-    public List<String> getColumnsName() {
-        return columnsName;
+    public List<String> getColumnNames() {
+        return columnNames;
     }
 
     public int create(Object... values) throws SQLException {
-        if (values == null || values.length != columnsName.size()) {
+        if (values == null || values.length != columnNames.size()) {
             throw new IllegalArgumentException("Invalid number of arguments.");
         }
 
@@ -59,8 +61,7 @@ public class Manager extends MySQL {
             // only update the DELETED
             setClause = "DELETED = ?";
         } else {
-            // not updating the ID
-            List<String> columns = columnsName.subList(conditionsLength, columnsName.size() - 1);
+            List<String> columns = columnNames.subList(0, columnNames.size() - 1);
             setClause = String.join(" = ?, ", columns) + " = ?";
         }
 
@@ -69,8 +70,8 @@ public class Manager extends MySQL {
         if (conditionsLength > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
         }
-
         query += ";";
+        System.out.println(query);
         return executeUpdate(query, updateValues.toArray());
     }
 
@@ -94,31 +95,5 @@ public class Manager extends MySQL {
             list.add(object);
         }
         return list;
-    }
-
-    public String getAutoID(String type, int digits) throws SQLException {
-        int count = 0;
-        List<List<String>> data = read();
-
-        if (data.size() == 0) {
-            return type + formatNumberToString(1, digits);
-        }
-
-        List<String> lastAccount = data.get(data.size() - 1);
-        String size = type + formatNumberToString(data.size(), digits);
-        System.out.println(size);
-        if (lastAccount.get(0).equals(size)) {
-            count += data.size();
-        } else {
-            while (data.get(count).get(0).equals(type + formatNumberToString(count + 1, digits)))
-                count++;
-        }
-        return type + formatNumberToString(count + 1, digits);
-    }
-
-    public String formatNumberToString(int number, int digits) {
-        String n = number + "";
-        int count = digits - n.length();
-        return "0".repeat(count) + n;
     }
 }

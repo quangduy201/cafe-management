@@ -21,13 +21,13 @@ public class DiscountDetailsDAL extends Manager {
         ));
     }
 
-    public int insertDiscountDetails(DiscountDetails discountDetails) {
+    public int addDiscountDetails(DiscountDetails discountDetails) {
         try {
             return create(discountDetails.getDiscountID(),
                 discountDetails.getProductID()
             );
         } catch (Exception e) {
-            System.out.println("Error occurred in DiscountDetailsDAL.insertDiscountDetails(): " + e.getMessage());
+            System.out.println("Error occurred in DiscountDetailsDAL.addDiscountDetails(): " + e.getMessage());
         }
         return 0;
     }

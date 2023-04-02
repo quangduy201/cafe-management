@@ -4,10 +4,9 @@ import com.cafe.DAL.CategoryDAL;
 import com.cafe.DTO.Category;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
+import java.util.Map;
 
-public class CategoryBLL {
+public class CategoryBLL extends Manager<Category> {
     private CategoryDAL categoryDAL;
     private List<Category> categoryList;
 
@@ -37,20 +36,49 @@ public class CategoryBLL {
     }
 
     public Object[][] getData() {
-        Object[][] data = new Object[categoryList.size()][];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = categoryList.get(i).toString().split(" \\| ");
+        return getData(categoryList);
+    }
+
+    public boolean addCategory(Category category) {
+        if (getIndex(category, "NAME", categoryList) != -1) {
+            System.out.println("Can't add new category. Name already exists.");
+            return false;
         }
-        return data;
+        categoryList.add(category);
+        return categoryDAL.addCategory(category) != 0;
     }
 
-    public int getIndex(Category category, String key) {
-        return IntStream.range(0, categoryList.size())
-            .filter(i -> Objects.equals(getValueByKey(categoryList.get(i), key), getValueByKey(category, key)))
-            .findFirst()
-            .orElse(-1);
+    public boolean updateCategory(Category category) {
+        categoryList.set(getIndex(category, "CATEGORY_ID", categoryList), category);
+        return categoryDAL.updateCategory(category) != 0;
     }
 
+    public boolean deleteCategory(Category category) {
+        categoryList.remove(getIndex(category, "CATEGORY_ID", categoryList));
+        return categoryDAL.deleteCategory("CATEGORY_ID = '" + category.getCategoryID() + "'") != 0;
+    }
+
+    public List<Category> searchCategories(String... conditions) {
+        return categoryDAL.searchCategories(conditions);
+    }
+
+    public List<Category> findCategoriesBy(Map<String, Object> conditions) {
+        List<Category> categories = categoryList;
+        for (Map.Entry<String, Object> entry : conditions.entrySet())
+            categories = findObjectsBy(entry.getKey(), entry.getValue(), categories);
+        return categories;
+    }
+
+    public String getAutoID() {
+        try {
+            return getAutoID("CA", 2, categoryList);
+        } catch (Exception e) {
+            System.out.println("Error occurred in CategoryBLL.getAutoID(): " + e.getMessage());
+        }
+        return "";
+    }
+
+    @Override
     public Object getValueByKey(Category category, String key) {
         return switch (key) {
             case "CATEGORY_ID" -> category.getCategoryID();
@@ -60,30 +88,10 @@ public class CategoryBLL {
         };
     }
 
-    public boolean insertCategory(Category category) {
-        if (getIndex(category, "NAME") != -1) {
-            System.out.println("Can't insert new category. Name already exists.");
-            return false;
-        }
-        categoryList.add(category);
-        return categoryDAL.insertCategory(category) != 0;
-    }
-
-    public boolean updateCategory(Category category) {
-        categoryList.set(getIndex(category, "CATEGORY_ID"), category);
-        return categoryDAL.updateCategory(category) != 0;
-    }
-
-    public boolean removeCategory(Category category) {
-        categoryList.set(getIndex(category, "CATEGORY_ID"), category);
-        return categoryDAL.deleteCategory("CATEGORY_ID = '" + category.getCategoryID() + "'") != 0;
-    }
-
-    public List<Category> searchCategories(String... conditions) {
-        return categoryDAL.searchCategories(conditions);
-    }
-
-    public String getAutoID() {
-        return categoryDAL.getAutoID();
+    public static void main(String[] args) {
+        CategoryBLL categoryBLL = new CategoryBLL();
+        List<Category> categories = categoryBLL.findCategoriesBy(Map.of("QUANTITY", 15, "NAME", "TRÀ"));
+        for (Category category : categories)
+            System.out.println(category);
     }
 }
