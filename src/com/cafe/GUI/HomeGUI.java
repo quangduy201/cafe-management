@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.awt.event.*;
 
 public class HomeGUI extends JFrame {
     private Account account;
@@ -162,7 +163,6 @@ public class HomeGUI extends JFrame {
         cate.setBackground(new Color(51, 51, 51));
         cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         fram_cate.add(cate);
-
 
         exit.setBorderPainted(false);
         exit.setText("X");
