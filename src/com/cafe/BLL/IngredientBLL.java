@@ -1,42 +1,94 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.IngredientDAL;
+import com.cafe.DTO.Discount;
 import com.cafe.DTO.Ingredient;
 
 import java.util.List;
+import java.util.Map;
 
-public class IngredientBLL {
+public class IngredientBLL extends Manager<Ingredient> {
     private IngredientDAL ingredientDAL;
+    private List<Ingredient> ingredientList;
 
     public IngredientBLL() {
         try {
             ingredientDAL = new IngredientDAL();
+            ingredientList = searchIngredients();
         } catch (Exception ignored) {
 
         }
     }
 
-    public boolean insertIngredient(Ingredient ingredient) {
-        if (searchIngredients("NAME = '" + ingredient.getName() + "'").size() != 0) {
-            System.out.println("Can't insert new ingredient. Name already exists.");
+    public IngredientDAL getIngredientDAL() {
+        return ingredientDAL;
+    }
+
+    public void setIngredientDAL(IngredientDAL ingredientDAL) {
+        this.ingredientDAL = ingredientDAL;
+    }
+
+    public List<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
+    }
+
+    public  Object[][] getData() {
+        return getData(ingredientList);
+    }
+
+    public boolean addIngredient(Ingredient ingredient) {
+        if (getIndex(ingredient, "NAME", ingredientList) != -1) {
+            System.out.println("Can't add new ingredient. Name already exists.");
             return false;
         }
-        return ingredientDAL.insertIngredient(ingredient) != 0;
+        ingredientList.add(ingredient);
+        return ingredientDAL.addIngredient(ingredient) != 0;
     }
 
     public boolean updateIngredient(Ingredient ingredient) {
+        ingredientList.set(getIndex(ingredient, "INGREDIENT_ID", ingredientList), ingredient);
         return ingredientDAL.updateIngredient(ingredient) != 0;
     }
 
-    public boolean removeIngredient(String id) {
-        return ingredientDAL.deleteIngredient("INGREDIENT_ID = '" + id + "'") != 0;
+    public boolean deleteIngredient(Ingredient ingredient) {
+        ingredient.setDeleted(true);
+        ingredientList.set(getIndex(ingredient, "INGREDIENT_ID", ingredientList), ingredient);
+        return ingredientDAL.deleteIngredient("INGREDIENT_ID = '" + ingredient.getIngredientID() + "'") != 0;
     }
 
     public List<Ingredient> searchIngredients(String... conditions) {
         return ingredientDAL.searchIngredients(conditions);
     }
 
+    public List<Ingredient> findIngredientsBy(Map<String, Object> conditions) {
+        List<Ingredient> ingredients = ingredientList;
+        for (Map.Entry<String, Object> entry : conditions.entrySet())
+            ingredients = findObjectsBy(entry.getKey(), entry.getValue(), ingredients);
+        return ingredients;
+    }
+
     public String getAutoID() {
-        return ingredientDAL.getAutoID();
+        try {
+            return getAutoID("ING", 3, ingredientList);
+        } catch (Exception e) {
+            System.out.println("Error occurred in IngredientBLL.getAutoID(): " + e.getMessage());
+        }
+        return "";
+    }
+
+    @Override
+    public Object getValueByKey(Ingredient ingredient, String key) {
+        return switch (key) {
+            case "INGREDIENT_ID" -> ingredient.getIngredientID();
+            case "NAME" -> ingredient.getName();
+            case "QUANTITY" -> ingredient.getQuantity();
+            case "UNIT" -> ingredient.getUnit();
+            case "SUPPLIER_ID" -> ingredient.getSupplierID();
+            default -> null;
+        };
     }
 }

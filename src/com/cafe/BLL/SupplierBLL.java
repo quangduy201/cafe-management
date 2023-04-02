@@ -4,39 +4,91 @@ import com.cafe.DAL.SupplierDAL;
 import com.cafe.DTO.Supplier;
 
 import java.util.List;
+import java.util.Map;
 
-public class SupplierBLL {
+public class SupplierBLL extends Manager<Supplier> {
     private SupplierDAL supplierDAL;
+    private List<Supplier> supplierList;
 
     public SupplierBLL() {
         try {
             supplierDAL = new SupplierDAL();
+            supplierList = searchSuppliers();
         } catch (Exception ignored) {
 
         }
     }
 
-    public boolean insertSupplier(Supplier supplier) {
+    public SupplierDAL getSupplierDAL() {
+        return supplierDAL;
+    }
+
+    public void setSupplierDAL(SupplierDAL supplierDAL) {
+        this.supplierDAL = supplierDAL;
+    }
+
+    public List<Supplier> getSupplierList() {
+        return supplierList;
+    }
+
+    public void setSupplierList(List<Supplier> supplierList) {
+        this.supplierList = supplierList;
+    }
+
+    public Object[][] getData() {
+        return getData(supplierList);
+    }
+
+    public boolean addSupplier(Supplier supplier) {
         if (searchSuppliers("PHONE = '" + supplier.getPhone() + "'").size() != 0) {
-            System.out.println("Can't insert new supplier. Phone already exists.");
+            System.out.println("Can't add new supplier. Phone already exists.");
             return false;
         }
-        return supplierDAL.insertSupplier(supplier) != 0;
+        supplierList.add(supplier);
+        return supplierDAL.addSupplier(supplier) != 0;
     }
 
     public boolean updateSupplier(Supplier supplier) {
+        supplierList.set(getIndex(supplier, "SUPPLIER_ID", supplierList), supplier);
         return supplierDAL.updateSupplier(supplier) != 0;
     }
 
-    public boolean removeSupplier(String id) {
-        return supplierDAL.deleteSupplier("SUPPLIER_ID = '" + id + "'") != 0;
+    public boolean deleteSupplier(Supplier supplier) {
+        supplier.setDeleted(true);
+        supplierList.set(getIndex(supplier, "SUPPLIER_ID", supplierList), supplier);
+        return supplierDAL.deleteSupplier("SUPPLIER_ID = '" + supplier.getSupplierID() + "'") != 0;
     }
 
     public List<Supplier> searchSuppliers(String... conditions) {
         return supplierDAL.searchSuppliers(conditions);
     }
 
+    public List<Supplier> findSuppliersBy(Map<String, Object> conditions) {
+        List<Supplier> suppliers = supplierList;
+        for (Map.Entry<String, Object> entry : conditions.entrySet())
+            suppliers = findObjectsBy(entry.getKey(), entry.getValue(), suppliers);
+        return suppliers;
+    }
+
     public String getAutoID() {
-        return supplierDAL.getAutoID();
+        try {
+            return getAutoID("SUP", 3, supplierList);
+        } catch (Exception e) {
+            System.out.println("Error occurred in SupplierBLL.getAutoID(): " + e.getMessage());
+        }
+        return "";
+    }
+
+    @Override
+    public Object getValueByKey(Supplier supplier, String key) {
+        return switch (key) {
+            case "SUPPLIER_ID" -> supplier.getSupplierID();
+            case "NAME" -> supplier.getName();
+            case "PHONE" -> supplier.getPhone();
+            case "ADDRESS" -> supplier.getAddress();
+            case "EMAIL" -> supplier.getEmail();
+            case "PRICE" -> supplier.getPrice();
+            default -> null;
+        };
     }
 }
