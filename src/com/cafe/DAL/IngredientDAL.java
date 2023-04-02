@@ -29,7 +29,7 @@ public class IngredientDAL extends Manager {
         ));
     }
 
-    public int insertIngredient(Ingredient ingredient) {
+    public int addIngredient(Ingredient ingredient) {
         try {
             return create(ingredient.getIngredientID(),
                 ingredient.getName(),
@@ -39,7 +39,7 @@ public class IngredientDAL extends Manager {
                 false
             ); // ingredient khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in IngredientDAL.insertIngredient(): " + e.getMessage());
+            System.out.println("Error occurred in IngredientDAL.addIngredient(): " + e.getMessage());
         }
         return 0;
     }
@@ -78,14 +78,5 @@ public class IngredientDAL extends Manager {
             System.out.println("Error occurred in IngredientDAL.searchIngredients(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("ING", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in IngredientDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

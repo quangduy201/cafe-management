@@ -1,6 +1,5 @@
 package com.cafe.DAL;
 
-
 import com.cafe.DTO.Category;
 
 import java.sql.SQLException;
@@ -26,7 +25,7 @@ public class CategoryDAL extends Manager {
         ));
     }
 
-    public int insertCategory(Category category) {
+    public int addCategory(Category category) {
         try {
             return create(category.getCategoryID(),
                 category.getName(),
@@ -34,7 +33,7 @@ public class CategoryDAL extends Manager {
                 false
             ); // category khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in CategoryDAL.insertCategory(): " + e.getMessage());
+            System.out.println("Error occurred in CategoryDAL.addCategory(): " + e.getMessage());
         }
         return 0;
     }
@@ -71,14 +70,5 @@ public class CategoryDAL extends Manager {
             System.out.println("Error occurred in CategoryDAL.searchCategories(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("CA", 2);
-        } catch (Exception e) {
-            System.out.println("Error occurred in CategoryDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

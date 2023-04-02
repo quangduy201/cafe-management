@@ -25,7 +25,7 @@ public class ReceiptDetailsDAL extends Manager {
         ));
     }
 
-    public int insertReceiptDetails(ReceiptDetails receiptDetails) {
+    public int addReceiptDetails(ReceiptDetails receiptDetails) {
         try {
             return create(receiptDetails.getReceiptID(),
                 receiptDetails.getIngredientID(),
@@ -33,7 +33,7 @@ public class ReceiptDetailsDAL extends Manager {
                 receiptDetails.getSupplierID()
             );
         } catch (Exception e) {
-            System.out.println("Error occurred in ReceiptDetailsDAL.insertReceiptDetails(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDetailsDAL.addReceiptDetails(): " + e.getMessage());
         }
         return 0;
     }

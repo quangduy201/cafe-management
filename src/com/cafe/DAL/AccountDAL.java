@@ -29,7 +29,7 @@ public class AccountDAL extends Manager {
         ));
     }
 
-    public int insertAccount(Account account) {
+    public int addAccount(Account account) {
         try {
             return create(account.getAccountID(),
                 account.getUsername(),
@@ -39,7 +39,7 @@ public class AccountDAL extends Manager {
                 false
             ); // account khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.insertAccount(): " + e.getMessage());
+            System.out.println("Error occurred in AccountDAL.addAccount(): " + e.getMessage());
         }
         return 0;
     }
@@ -78,14 +78,5 @@ public class AccountDAL extends Manager {
             System.out.println("Error occurred in AccountDAL.searchAccounts(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("AC", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

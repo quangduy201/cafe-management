@@ -35,7 +35,7 @@ public class ReceiptDAL extends Manager {
         });
     }
 
-    public int insertReceipt(Receipt receipt) {
+    public int addReceipt(Receipt receipt) {
         try {
             return create(receipt.getReceiptID(),
                 receipt.getStaffID(),
@@ -44,7 +44,7 @@ public class ReceiptDAL extends Manager {
                 false
             ); // receipt khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in ReceiptDAL.insertReceipt(): " + e.getMessage());
+            System.out.println("Error occurred in ReceiptDAL.addReceipt(): " + e.getMessage());
         }
         return 0;
     }
@@ -82,14 +82,5 @@ public class ReceiptDAL extends Manager {
             System.out.println("Error occurred in ReceiptDAL.searchReceipts(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("REC", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in ReceiptDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

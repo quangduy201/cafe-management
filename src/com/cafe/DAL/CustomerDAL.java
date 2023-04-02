@@ -41,7 +41,7 @@ public class CustomerDAL extends Manager {
         });
     }
 
-    public int insertCustomer(Customer customer) {
+    public int addCustomer(Customer customer) {
         try {
             return create(customer.getCustomerID(),
                 customer.getName(),
@@ -53,7 +53,7 @@ public class CustomerDAL extends Manager {
                 false
             ); // customer khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in CustomerDAL.insertCustomer(): " + e.getMessage());
+            System.out.println("Error occurred in CustomerDAL.addCustomer(): " + e.getMessage());
         }
         return 0;
     }
@@ -94,14 +94,5 @@ public class CustomerDAL extends Manager {
             System.out.println("Error occurred in CustomerDAL.searchCustomers(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("CUS", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in CustomerDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

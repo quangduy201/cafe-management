@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffDAL extends Manager{
+public class StaffDAL extends Manager {
     public StaffDAL() throws SQLException {
         super("staff", new ArrayList<>(
             List.of("STAFF_ID",
@@ -43,7 +43,7 @@ public class StaffDAL extends Manager{
         });
     }
 
-    public int insertStaff(Staff staff) {
+    public int addStaff(Staff staff) {
         try {
             return create(staff.getStaffID(),
                 staff.getName(),
@@ -57,7 +57,7 @@ public class StaffDAL extends Manager{
                 false
             ); // staff khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in StaffDAL.insertStaff(): " + e.getMessage());
+            System.out.println("Error occurred in StaffDAL.addStaff(): " + e.getMessage());
         }
         return 0;
     }
@@ -100,14 +100,5 @@ public class StaffDAL extends Manager{
             System.out.println("Error occurred in StaffDAL.searchStaffs(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("ST", 2);
-        } catch (Exception e) {
-            System.out.println("Error occurred in StaffDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

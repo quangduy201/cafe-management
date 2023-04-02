@@ -29,7 +29,7 @@ public class ProductDAL extends Manager {
         ));
     }
 
-    public int insertProduct(Product product) {
+    public int addProduct(Product product) {
         try {
             return create(product.getProductID(),
                 product.getName(),
@@ -40,7 +40,7 @@ public class ProductDAL extends Manager {
                 false
             ); // product khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in ProductDAL.insertProduct(): " + e.getMessage());
+            System.out.println("Error occurred in ProductDAL.addProduct(): " + e.getMessage());
         }
         return 0;
     }
@@ -80,14 +80,5 @@ public class ProductDAL extends Manager {
             System.out.println("Error occurred in ProductDAL.searchProducts(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("PR", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in ProductDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

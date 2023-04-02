@@ -31,7 +31,7 @@ public class SupplierDAL extends Manager {
         ));
     }
 
-    public int insertSupplier(Supplier supplier) {
+    public int addSupplier(Supplier supplier) {
         try {
             return create(supplier.getSupplierID(),
                 supplier.getName(),
@@ -42,7 +42,7 @@ public class SupplierDAL extends Manager {
                 false
             ); // supplier khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in SupplierDAL.insertSupplier(): " + e.getMessage());
+            System.out.println("Error occurred in SupplierDAL.addSupplier(): " + e.getMessage());
         }
         return 0;
     }
@@ -82,14 +82,5 @@ public class SupplierDAL extends Manager {
             System.out.println("Error occurred in SupplierDAL.searchSuppliers(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("SUP", 3);
-        } catch (Exception e) {
-            System.out.println("Error occurred in SupplierDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

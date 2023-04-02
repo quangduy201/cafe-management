@@ -95,30 +95,4 @@ public class Manager extends MySQL {
         }
         return list;
     }
-
-    public String getAutoID(String type, int digits) throws SQLException {
-        int count = 0;
-        List<List<String>> data = read();
-
-        if (data.size() == 0) {
-            return type + formatNumberToString(1, digits);
-        }
-
-        List<String> lastAccount = data.get(data.size() - 1);
-        String size = type + formatNumberToString(data.size(), digits);
-        System.out.println(size);
-        if (lastAccount.get(0).equals(size)) {
-            count += data.size();
-        } else {
-            while (data.get(count).get(0).equals(type + formatNumberToString(count + 1, digits)))
-                count++;
-        }
-        return type + formatNumberToString(count + 1, digits);
-    }
-
-    public String formatNumberToString(int number, int digits) {
-        String n = number + "";
-        int count = digits - n.length();
-        return "0".repeat(count) + n;
-    }
 }

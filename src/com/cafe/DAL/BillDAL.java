@@ -37,7 +37,7 @@ public class BillDAL extends Manager {
         });
     }
 
-    public int insertBill(Bill bill) {
+    public int addBill(Bill bill) {
         try {
             return create(bill.getBillID(),
                 bill.getCustomerID(),
@@ -47,7 +47,7 @@ public class BillDAL extends Manager {
                 false
             ); // bill khi tạo mặc định total, deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in BillDAL.insertBill(): " + e.getMessage());
+            System.out.println("Error occurred in BillDAL.addBill(): " + e.getMessage());
         }
         return 0;
     }
@@ -86,14 +86,5 @@ public class BillDAL extends Manager {
             System.out.println("Error occurred in BillDAL.searchBills(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("BI", 4);
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

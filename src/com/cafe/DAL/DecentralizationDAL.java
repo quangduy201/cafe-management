@@ -47,7 +47,7 @@ public class DecentralizationDAL extends Manager {
         ));
     }
 
-    public int insertDecentralization(Decentralization Decentralization) {
+    public int addDecentralization(Decentralization Decentralization) {
         try {
             return create(Decentralization.getDecentralizationID(),
                 Decentralization.getIsSale(),
@@ -67,7 +67,7 @@ public class DecentralizationDAL extends Manager {
                 false
             ); // decentralization khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.insertDecentralization(): " + e.getMessage());
+            System.out.println("Error occurred in DecentralizationDAL.addDecentralization(): " + e.getMessage());
         }
         return 0;
     }
@@ -116,14 +116,5 @@ public class DecentralizationDAL extends Manager {
             System.out.println("Error occurred in DecentralizationDAL.searchDecentralizations(): " + e.getMessage());
         }
         return new ArrayList<>();
-    }
-
-    public String getAutoID() {
-        try {
-            return getAutoID("DE", 2);
-        } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
     }
 }

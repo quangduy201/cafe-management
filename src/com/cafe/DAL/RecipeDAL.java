@@ -27,7 +27,7 @@ public class RecipeDAL extends Manager {
         ));
     }
 
-    public int insertRecipe(Recipe recipe) {
+    public int addRecipe(Recipe recipe) {
         try {
             return create(recipe.getProductID(),
                 recipe.getIngredientID(),
@@ -36,7 +36,7 @@ public class RecipeDAL extends Manager {
                 false
             );
         } catch (Exception e) {
-            System.out.println("Error occurred in RecipeDAL.insertRecipe(): " + e.getMessage());
+            System.out.println("Error occurred in RecipeDAL.addRecipe(): " + e.getMessage());
         }
         return 0;
     }
