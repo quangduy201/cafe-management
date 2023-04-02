@@ -3,8 +3,6 @@ package com.cafe.BLL;
 import com.cafe.DAL.AccountDAL;
 import com.cafe.DTO.Account;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,8 +54,7 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public boolean deleteAccount(Account account) {
-        account.setDeleted(true);
-        accountList.set(getIndex(account, "ACCOUNT_ID", accountList), account);
+        accountList.remove(getIndex(account, "ACCOUNT_ID", accountList));
         return accountDAL.deleteAccount("ACCOUNT_ID = '" + account.getAccountID() + "'") != 0;
     }
 

@@ -20,7 +20,7 @@ public class IngredientDAL extends Manager {
 
     public List<Ingredient> convertToIngredients(List<List<String>> data) {
         return convert(data, row -> {
-            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Ingredient(
                 row.get(0), // ingredientID
                 row.get(1), // name

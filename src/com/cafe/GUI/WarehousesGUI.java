@@ -28,18 +28,19 @@ public class WarehousesGUI extends JPanel {
     private JPanel pnlSupplierConfiguration;
     private JPanel mode;
     private JPanel showImg;
-    private JLabel jLabelsForm [];
+    private JLabel jLabelsForm[];
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbSupplierID;
     private JComboBox<Object> cbbSupplierIDSearch;
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm [];
+    private JTextField jTextFieldsForm[];
     private com.cafe.custom.Button btAdd;
     private com.cafe.custom.Button btUpd;
     private com.cafe.custom.Button btDel;
     private Button btRef;
+
     public WarehousesGUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(51, 51, 51));
@@ -47,7 +48,7 @@ public class WarehousesGUI extends JPanel {
     }
 
     public void initComponents() {
-        List<String> columsName = ingredientBLL.getIngredientDAL().getColumnsName();
+        List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
         SupplierBLL supplierBLL = new SupplierBLL();
         List<String> suppliersID = new ArrayList<>();
         for (int i = 0; i < supplierBLL.getSupplierList().size(); i++) {
@@ -60,14 +61,14 @@ public class WarehousesGUI extends JPanel {
         pnlSupplierConfiguration = new JPanel();
         mode = new JPanel();
         showImg = new JPanel();
-        jLabelsForm = new JLabel[columsName.size()-1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
-        cbbUnit = new JComboBox<>(new String[]{"kg","l","bag"});
-        cbbUnitSearch = new JComboBox<>(new String[]{"kg","l","bag"});
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
+        cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbSupplierID = new JComboBox<>(suppliersID.toArray());
         cbbSupplierIDSearch = new JComboBox<>(suppliersID.toArray());
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size()-3];
+        jTextFieldsForm = new JTextField[columnNames.size() - 3];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -136,7 +137,7 @@ public class WarehousesGUI extends JPanel {
         });
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), columsName.subList(0, columsName.size()-1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(ingredientBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), getListSelectionListener());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -146,11 +147,11 @@ public class WarehousesGUI extends JPanel {
         pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
-        for (int i=0; i<columsName.size()-1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i)+": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlSupplierConfiguration.add(jLabelsForm[i]);
-            switch (columsName.get(i)) {
+            switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
                     jTextFieldsForm[i] = new JTextField(ingredientBLL.getAutoID());
                     jTextFieldsForm[i].setEnabled(false);
@@ -168,13 +169,13 @@ public class WarehousesGUI extends JPanel {
             }
         }
         showImg.setLayout(new FlowLayout());
-        showImg.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2,2,20,20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mode.setBackground(new Color(0xFFFFFF));
         mode.setPreferredSize(new Dimension(635, 130));
         roundPanel2.add(mode, BorderLayout.SOUTH);
@@ -192,7 +193,7 @@ public class WarehousesGUI extends JPanel {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()){
+                if (btAdd.isEnabled()) {
                     addIngredient();
                 }
             }
@@ -212,7 +213,7 @@ public class WarehousesGUI extends JPanel {
         btUpd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()){
+                if (btUpd.isEnabled()) {
                     updateIngredient();
                 }
             }
@@ -232,7 +233,7 @@ public class WarehousesGUI extends JPanel {
         btDel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()){
+                if (btDel.isEnabled()) {
                     deleteIngredient();
                 }
             }
@@ -258,15 +259,15 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void uniSearch() {
-        loadDataTable(ingredientBLL.finIngredients("UNIT", Objects.requireNonNull(cbbUnitSearch.getSelectedItem()).toString()));
+        loadDataTable(ingredientBLL.findIngredients("UNIT", Objects.requireNonNull(cbbUnitSearch.getSelectedItem()).toString()));
     }
 
     private void supplierIDSearch() {
-        loadDataTable(ingredientBLL.finIngredients("SUPPLIER_ID", Objects.requireNonNull(cbbSupplierIDSearch.getSelectedItem()).toString()));
+        loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", Objects.requireNonNull(cbbSupplierIDSearch.getSelectedItem()).toString()));
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("UNIT")){
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("UNIT")) {
             txtSearch.setVisible(false);
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
@@ -287,10 +288,10 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void searchIngredients() {
-        if (txtSearch.getText().isEmpty()){
+        if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
-            loadDataTable(ingredientBLL.finIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
         }
     }
 
@@ -307,44 +308,47 @@ public class WarehousesGUI extends JPanel {
             btDel.setEnabled(true);
         };
     }
+
     private void addIngredient() {
-        if (checkInput()){
+        if (checkInput()) {
             Ingredient newIngredient;
             String ingredientID = null;
             String name = null;
             double quantity = 0;
             String unit;
             String supplierID;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> ingredientID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
                     case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
             supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
             newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
-            ingredientBLL.insertIngredient(newIngredient);
+            ingredientBLL.addIngredient(newIngredient);
             refreshForm();
         }
     }
 
     private void updateIngredient() {
-        if (checkInput()){
+        if (checkInput()) {
             Ingredient newIngredient;
             String ingredientID = null;
             String name = null;
             double quantity = 0;
             String unit;
             String supplierID;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> ingredientID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
                     case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
@@ -356,17 +360,19 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void deleteIngredient() {
-        ingredientBLL.removeIngredient(jTextFieldsForm[0].getText());
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredientID(jTextFieldsForm[0].getText());
+        ingredientBLL.deleteIngredient(ingredient);
         refreshForm();
     }
 
     private void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        ingredientBLL=new IngredientBLL();
+        ingredientBLL = new IngredientBLL();
         loadDataTable(ingredientBLL.getIngredientList());
         jTextFieldsForm[0].setText(ingredientBLL.getAutoID());
-        for (int i=1; i<jTextFieldsForm.length; i++) {
+        for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
         cbbUnit.setSelectedIndex(0);
@@ -384,8 +390,8 @@ public class WarehousesGUI extends JPanel {
         }
     }
 
-    public boolean checkInput(){
-        for (JTextField textField : jTextFieldsForm){
+    public boolean checkInput() {
+        for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
                 JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);

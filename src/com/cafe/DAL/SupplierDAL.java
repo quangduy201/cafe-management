@@ -22,7 +22,7 @@ public class SupplierDAL extends Manager {
     public List<Supplier> convertToSuppliers(List<List<String>> data) {
 
         return convert(data, row -> {
-            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Supplier(
                 row.get(0), // supplierID
                 row.get(1), // name

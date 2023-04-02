@@ -21,7 +21,7 @@ public class ProductDAL extends Manager {
 
     public List<Product> convertToProducts(List<List<String>> data) {
         return convert(data, row -> {
-            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Product(
                 row.get(0), // productID
                 row.get(1), // name

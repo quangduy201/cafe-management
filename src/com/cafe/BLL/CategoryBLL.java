@@ -54,8 +54,7 @@ public class CategoryBLL extends Manager<Category> {
     }
 
     public boolean deleteCategory(Category category) {
-        category.setDeleted(true);
-        categoryList.set(getIndex(category, "CATEGORY_ID", categoryList), category);
+        categoryList.remove(getIndex(category, "CATEGORY_ID", categoryList));
         return categoryDAL.deleteCategory("CATEGORY_ID = '" + category.getCategoryID() + "'") != 0;
     }
 

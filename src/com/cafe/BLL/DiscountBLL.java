@@ -1,7 +1,6 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDAL;
-import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Discount;
 
 import java.util.List;
@@ -51,8 +50,7 @@ public class DiscountBLL extends Manager<Discount> {
     }
 
     public boolean deleteDiscount(Discount discount) {
-        discount.setDeleted(true);
-        discountList.set(getIndex(discount, "DISCOUNT_ID", discountList), discount);
+        discountList.remove(getIndex(discount, "DISCOUNT_ID", discountList));
         return discountDAL.deleteDiscount("DISCOUNT_ID = '" + discount.getDiscountID() + "'") != 0;
     }
 

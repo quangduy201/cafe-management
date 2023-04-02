@@ -28,23 +28,23 @@ public class SupplierGUI extends JPanel {
     private JPanel pnlSupplierConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm [];
+    private JLabel jLabelsForm[];
     private JComboBox<Object> cbbSearchFilter;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm [];
+    private JTextField jTextFieldsForm[];
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
     private Button btRef;
 
     public SupplierGUI() {
-        setLayout(new BorderLayout(10,10));
-        setBackground(new Color(51,51,51));
+        setLayout(new BorderLayout(10, 10));
+        setBackground(new Color(51, 51, 51));
         initComponents();
     }
 
     public void initComponents() {
-        List<String> columsName = supplierBLL.getSupplierDAL().getColumnsName();
+        List<String> columsName = supplierBLL.getSupplierDAL().getColumnNames();
         supplier = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -52,10 +52,10 @@ public class SupplierGUI extends JPanel {
         pnlSupplierConfiguration = new JPanel();
         showImg = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size()-1];
+        jLabelsForm = new JLabel[columsName.size() - 1];
         cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size()-1];
+        jTextFieldsForm = new JTextField[columsName.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -113,9 +113,9 @@ public class SupplierGUI extends JPanel {
         pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
-        for (int i=0; i<columsName.size()-1; i++) {
+        for (int i = 0; i < columsName.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i)+": ");
+            jLabelsForm[i].setText(columsName.get(i) + ": ");
             pnlSupplierConfiguration.add(jLabelsForm[i]);
             if ("SUPPLIER_ID".equals(columsName.get(i))) {
                 jTextFieldsForm[i] = new JTextField(supplierBLL.getAutoID());
@@ -130,13 +130,13 @@ public class SupplierGUI extends JPanel {
             }
         }
         showImg.setLayout(new FlowLayout());
-        showImg.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 250));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2,2,20,20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mode.setBackground(new Color(0xFFFFFF));
         mode.setPreferredSize(new Dimension(635, 130));
         roundPanel2.add(mode, BorderLayout.SOUTH);
@@ -154,7 +154,7 @@ public class SupplierGUI extends JPanel {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()){
+                if (btAdd.isEnabled()) {
                     addSupplier();
                 }
             }
@@ -174,7 +174,7 @@ public class SupplierGUI extends JPanel {
         btUpd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()){
+                if (btUpd.isEnabled()) {
                     updateSupplier();
                 }
             }
@@ -194,7 +194,7 @@ public class SupplierGUI extends JPanel {
         btDel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()){
+                if (btDel.isEnabled()) {
                     deleteSupplier();
                 }
             }
@@ -223,7 +223,7 @@ public class SupplierGUI extends JPanel {
     public ActionListener getListSelectionListener() {
         return e -> {
             String[] supplier = (String[]) supplierBLL.getData()[dataTable.getSelectedRow()];
-            for (int i=0; i<supplier.length; i++) {
+            for (int i = 0; i < supplier.length; i++) {
                 jTextFieldsForm[i].setText(supplier[i]);
             }
             btAdd.setEnabled(false);
@@ -232,16 +232,16 @@ public class SupplierGUI extends JPanel {
         };
     }
 
-    public void searchSuppliers(){
-        if (txtSearch.getText().isEmpty()){
+    public void searchSuppliers() {
+        if (txtSearch.getText().isEmpty()) {
             loadDataTable(supplierBLL.getSupplierList());
         } else {
             loadDataTable(supplierBLL.findSuppliers(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
         }
     }
 
-    public void addSupplier(){
-        if (checkInput()){
+    public void addSupplier() {
+        if (checkInput()) {
             Supplier newSupplier;
             String supplierID = null;
             String name = null;
@@ -249,7 +249,7 @@ public class SupplierGUI extends JPanel {
             String address = null;
             String email = null;
             double price = 0;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> supplierID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
@@ -257,17 +257,18 @@ public class SupplierGUI extends JPanel {
                     case 3 -> address = jTextFieldsForm[i].getText();
                     case 4 -> email = jTextFieldsForm[i].getText();
                     case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
-            supplierBLL.insertSupplier(newSupplier);
+            supplierBLL.addSupplier(newSupplier);
             refreshForm();
         }
     }
 
-    public void updateSupplier(){
-        if (checkInput()){
+    public void updateSupplier() {
+        if (checkInput()) {
             Supplier newSupplier;
             String supplierID = null;
             String name = null;
@@ -275,7 +276,7 @@ public class SupplierGUI extends JPanel {
             String address = null;
             String email = null;
             double price = 0;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> supplierID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
@@ -283,7 +284,8 @@ public class SupplierGUI extends JPanel {
                     case 3 -> address = jTextFieldsForm[i].getText();
                     case 4 -> email = jTextFieldsForm[i].getText();
                     case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
@@ -293,17 +295,19 @@ public class SupplierGUI extends JPanel {
     }
 
     private void deleteSupplier() {
-        supplierBLL.removeSupplier(jTextFieldsForm[0].getText());
+        Supplier supplier = new Supplier();
+        supplier.setSupplierID(jTextFieldsForm[0].getText());
+        supplierBLL.deleteSupplier(supplier);
         refreshForm();
     }
 
-    public void refreshForm(){
+    public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
         supplierBLL = new SupplierBLL();
         loadDataTable(supplierBLL.getSupplierList());
         jTextFieldsForm[0].setText(supplierBLL.getAutoID());
-        for (int i=1; i<jTextFieldsForm.length; i++) {
+        for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
         btAdd.setEnabled(true);
@@ -311,7 +315,7 @@ public class SupplierGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
-    public void loadDataTable (List<Supplier> supplierList){
+    public void loadDataTable(List<Supplier> supplierList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Supplier supplier : supplierList) {
@@ -319,8 +323,8 @@ public class SupplierGUI extends JPanel {
         }
     }
 
-    public boolean checkInput(){
-        for (JTextField textField : jTextFieldsForm){
+    public boolean checkInput() {
+        for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
                 JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);

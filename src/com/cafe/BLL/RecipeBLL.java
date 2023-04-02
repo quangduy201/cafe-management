@@ -45,8 +45,7 @@ public class RecipeBLL extends Manager<Recipe> {
     }
 
     public boolean updateRecipe(Recipe recipe) {
-        List<Recipe> recipes = findRecipesBy("PRODUCT_ID", recipe.getProductID());
-        recipes = findObjectsBy("INGREDIENT_ID", recipe.getIngredientID(), recipes);
+        List<Recipe> recipes = findRecipesBy(Map.of("PRODUCT_ID", recipe.getProductID(), "INGREDIENT_ID", recipe.getIngredientID()));
         Recipe recipeNeedsUpdating = recipes.get(0);
         recipeNeedsUpdating.setMass(recipe.getMass());
         recipeNeedsUpdating.setUnit(recipe.getUnit());

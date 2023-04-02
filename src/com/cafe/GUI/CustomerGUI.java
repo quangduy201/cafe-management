@@ -29,7 +29,7 @@ public class CustomerGUI extends JPanel {
     private JPanel mode;
     private JPanel radiusBtGender;
     private JPanel radiusBtMember;
-    private JLabel jLabelsForm [];
+    private JLabel jLabelsForm[];
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
@@ -40,7 +40,7 @@ public class CustomerGUI extends JPanel {
     private JRadioButton rbNo;
     private JRadioButton rbNoSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm [];
+    private JTextField jTextFieldsForm[];
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
@@ -53,7 +53,7 @@ public class CustomerGUI extends JPanel {
     }
 
     public void initComponents() {
-        List<String> columsName = customerBLL.getCustomerDAL().getColumnsName();
+        List<String> columnNames = customerBLL.getCustomerDAL().getColumnNames();
         customer = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -63,8 +63,8 @@ public class CustomerGUI extends JPanel {
         mode = new JPanel();
         radiusBtGender = new JPanel();
         radiusBtMember = new JPanel();
-        jLabelsForm = new JLabel[columsName.size()-1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
         rbFemale = new JRadioButton("Nữ");
@@ -74,7 +74,7 @@ public class CustomerGUI extends JPanel {
         rbNo = new JRadioButton("Không");
         rbNoSearch = new JRadioButton("Không");
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size()-3];
+        jTextFieldsForm = new JTextField[columnNames.size() - 3];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -176,7 +176,7 @@ public class CustomerGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(customerBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(customerBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), getListSelectionListener());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -187,11 +187,11 @@ public class CustomerGUI extends JPanel {
         roundPanel2.add(pnlCustomerConfiguration, BorderLayout.NORTH);
 
         int index = 0;
-        for (int i=0; i<columsName.size()-1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i)+": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCustomerConfiguration.add(jLabelsForm[i]);
-            switch (columsName.get(i)) {
+            switch (columnNames.get(i)) {
                 case "CUSTOMER_ID" -> {
                     jTextFieldsForm[index] = new JTextField(customerBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
@@ -233,13 +233,13 @@ public class CustomerGUI extends JPanel {
             }
         }
         showImg.setLayout(new FlowLayout());
-        showImg.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 200));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2,2,20,20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mode.setBackground(new Color(0xFFFFFF));
         mode.setPreferredSize(new Dimension(635, 130));
         roundPanel2.add(mode, BorderLayout.SOUTH);
@@ -257,7 +257,7 @@ public class CustomerGUI extends JPanel {
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()){
+                if (btAdd.isEnabled()) {
                     try {
                         addCustomer();
                     } catch (Exception ignored) {
@@ -281,7 +281,7 @@ public class CustomerGUI extends JPanel {
         btUpd.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()){
+                if (btUpd.isEnabled()) {
                     try {
                         updateCustomer();
                     } catch (Exception ignored) {
@@ -304,7 +304,7 @@ public class CustomerGUI extends JPanel {
         btDel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()){
+                if (btDel.isEnabled()) {
                     deleteCustomer();
                 }
             }
@@ -330,7 +330,7 @@ public class CustomerGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")){
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")) {
             txtSearch.setVisible(false);
             radiusBtMember.setVisible(false);
             radiusBtGender.setVisible(true);
@@ -347,6 +347,7 @@ public class CustomerGUI extends JPanel {
             searchCustomers();
         }
     }
+
     private void genderSearch() {
         boolean gender = rbMaleSearch.isSelected();
         loadDataTable(customerBLL.findCustomers("GENDER", gender));
@@ -382,8 +383,8 @@ public class CustomerGUI extends JPanel {
         };
     }
 
-    public void searchCustomers(){
-        if (txtSearch.getText().isEmpty()){
+    public void searchCustomers() {
+        if (txtSearch.getText().isEmpty()) {
             loadDataTable(customerBLL.getCustomerList());
         } else {
             loadDataTable(customerBLL.findCustomers(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
@@ -391,7 +392,7 @@ public class CustomerGUI extends JPanel {
     }
 
     public void addCustomer() throws Exception {
-        if (checkInput()){
+        if (checkInput()) {
             Customer newCustomer;
             String customerID = null;
             String name = null;
@@ -400,26 +401,27 @@ public class CustomerGUI extends JPanel {
             String phone = null;
             boolean membership;
             Day dateOfSup = null;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> customerID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
                     case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
                     case 3 -> phone = jTextFieldsForm[i].getText();
                     case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             gender = rbMale.isSelected();
             membership = rbYes.isSelected();
             newCustomer = new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
-            customerBLL.insertCustomer(newCustomer);
+            customerBLL.addCustomer(newCustomer);
             refreshForm();
         }
     }
 
     public void updateCustomer() throws Exception {
-        if (checkInput()){
+        if (checkInput()) {
             Customer newCustomer;
             String customerID = null;
             String name = null;
@@ -428,14 +430,15 @@ public class CustomerGUI extends JPanel {
             String phone = null;
             boolean membership;
             Day dateOfSup = null;
-            for (int i=0; i<jTextFieldsForm.length; i++) {
+            for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> customerID = jTextFieldsForm[i].getText();
                     case 1 -> name = jTextFieldsForm[i].getText();
                     case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
                     case 3 -> phone = jTextFieldsForm[i].getText();
                     case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {}
+                    default -> {
+                    }
                 }
             }
             gender = rbMale.isSelected();
@@ -447,17 +450,19 @@ public class CustomerGUI extends JPanel {
     }
 
     private void deleteCustomer() {
-        customerBLL.removeCustomer(jTextFieldsForm[0].getText());
+        Customer customer = new Customer();
+        customer.setCustomerID(jTextFieldsForm[0].getText());
+        customerBLL.deleteCustomer(customer);
         refreshForm();
     }
 
-    public void refreshForm(){
+    public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
         customerBLL = new CustomerBLL();
         loadDataTable(customerBLL.getCustomerList());
         jTextFieldsForm[0].setText(customerBLL.getAutoID());
-        for (int i=1; i<jTextFieldsForm.length; i++) {
+        for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
         rbMale.setSelected(true);
@@ -467,7 +472,7 @@ public class CustomerGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
-    public void loadDataTable (List<Customer> customerList){
+    public void loadDataTable(List<Customer> customerList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Customer customer : customerList) {
@@ -479,8 +484,8 @@ public class CustomerGUI extends JPanel {
         }
     }
 
-    public boolean checkInput(){
-        for (JTextField textField : jTextFieldsForm){
+    public boolean checkInput() {
+        for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
                 JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
@@ -491,7 +496,7 @@ public class CustomerGUI extends JPanel {
             Day.parseDay(jTextFieldsForm[2].getText());
         } catch (Exception exception) {
             jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "yyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         try {
@@ -505,7 +510,7 @@ public class CustomerGUI extends JPanel {
             Day.parseDay(jTextFieldsForm[4].getText());
         } catch (Exception exception) {
             jTextFieldsForm[4].setText(null);
-            JOptionPane.showMessageDialog(this, "yyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
         return true;

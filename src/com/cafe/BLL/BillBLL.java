@@ -50,8 +50,7 @@ public class BillBLL extends Manager<Bill> {
     }
 
     public boolean deleteBill(Bill bill) {
-        bill.setDeleted(true);
-        billList.set(getIndex(bill, "BILL_ID", billList), bill);
+        billList.remove(getIndex(bill, "BILL_ID", billList));
         return billDAL.deleteBill("BILL_ID = '" + bill.getBillID() + "'") != 0;
     }
 
@@ -79,7 +78,7 @@ public class BillBLL extends Manager<Bill> {
     public Object getValueByKey(Bill bill, String key) {
         return switch (key) {
             case "BILL_ID" -> bill.getBillID();
-            case "CUSTOMER_ID" ->bill.getCustomerID();
+            case "CUSTOMER_ID" -> bill.getCustomerID();
             case "STAFF_ID" -> bill.getStaffID();
             case "DOPURCHASE" -> bill.getDateOfPurchase();
             case "TOTAL" -> bill.getTotal();

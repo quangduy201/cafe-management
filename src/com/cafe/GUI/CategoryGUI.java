@@ -1,17 +1,13 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
-import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 
 public class CategoryGUI extends JPanel {
@@ -72,7 +68,7 @@ public class CategoryGUI extends JPanel {
         searchPanel.setAutoscrolls(true);
         searchPanel.add(new JComboBox<>(combo), BorderLayout.WEST);
         searchPanel.add(new JTextField("", 35), BorderLayout.EAST);
-        ArrayList<String> columnNames = (ArrayList<String>) categoryBLL.getCategoryDAL().getColumnsName();
+        ArrayList<String> columnNames = (ArrayList<String>) categoryBLL.getCategoryDAL().getColumnNames();
         dataTable = new DataTable(
             categoryBLL.getData(),
             columnNames.subList(0, columnNames.size() - 1).toArray(),

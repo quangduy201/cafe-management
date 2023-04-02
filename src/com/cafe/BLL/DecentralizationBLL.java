@@ -54,8 +54,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     }
 
     public boolean deleteDecentralization(Decentralization decentralization) {
-        decentralization.setDeleted(true);
-        decentralizationList.set(getIndex(decentralization, "DECENTRALIZATION_ID", decentralizationList), decentralization);
+        decentralizationList.remove(getIndex(decentralization, "DECENTRALIZATION_ID", decentralizationList));
         return decentralizationDAL.deleteDecentralization("DECENTRALIZATION_ID = '" + decentralization.getDecentralizationID() + "'") != 0;
     }
 

@@ -22,10 +22,10 @@ public class CustomerDAL extends Manager {
     }
 
     public List<Customer> convertToCustomers(List<List<String>> data) {
-        return convert(data, row ->  {
+        return convert(data, row -> {
             row.set(2, row.get(2).equals("0") ? "false" : "true");
             row.set(5, row.get(5).equals("0") ? "false" : "true");
-            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             try {
                 return new Customer(
                     row.get(0), // customerID

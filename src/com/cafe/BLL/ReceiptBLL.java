@@ -50,8 +50,7 @@ public class ReceiptBLL extends Manager<Receipt> {
     }
 
     public boolean removeReceipt(Receipt receipt) {
-        receipt.setDeleted(true);
-        receiptList.set(getIndex(receipt, "RECEIPT_ID", receiptList), receipt);
+        receiptList.remove(getIndex(receipt, "RECEIPT_ID", receiptList));
         return receiptDAL.deleteReceipt("RECEIPT_ID = '" + receipt.getReceiptID() + "'") != 0;
     }
 

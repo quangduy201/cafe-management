@@ -54,8 +54,7 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public boolean deleteStaff(Staff staff) {
-        staff.setDeleted(true);
-        staffList.set(getIndex(staff, "STAFF_ID", staffList), staff);
+        staffList.remove(getIndex(staff, "STAFF_ID", staffList));
         return staffDAL.deleteStaff("STAFF_ID = '" + staff.getStaffID() + "'") != 0;
     }
 
