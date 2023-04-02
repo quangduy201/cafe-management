@@ -188,7 +188,7 @@ public class ProductGUI extends JPanel {
         btAdd.setEnabled(true);
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btAdd.isEnabled()){
                     addProduct();
                 }
@@ -208,7 +208,7 @@ public class ProductGUI extends JPanel {
         btUpd.setEnabled(false);
         btUpd.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btUpd.isEnabled()){
                     updateProduct();
                 }
@@ -228,7 +228,7 @@ public class ProductGUI extends JPanel {
         btDel.setEnabled(false);
         btDel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btDel.isEnabled()){
                     deleteProduct();
                 }
@@ -239,7 +239,7 @@ public class ProductGUI extends JPanel {
         btRef.setBackground(new Color(35, 166, 97));
         btRef.setBorder(null);
         btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refesh");
+        btRef.setText("  Refresh");
         btRef.setColor(new Color(240, 240, 240));
         btRef.setColorClick(new Color(141, 222, 175));
         btRef.setColorOver(new Color(35, 166, 97));
@@ -247,8 +247,8 @@ public class ProductGUI extends JPanel {
         btRef.setRadius(20);
         btRef.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                refeshForm();
+            public void mousePressed(MouseEvent mouseEvent) {
+                refreshForm();
             }
         });
         mode.add(btRef);
@@ -322,7 +322,7 @@ public class ProductGUI extends JPanel {
             assert size != null;
             newProduct = new Product(productID, name, categoryID, size, cost, image, false);
             productBLL.insertProduct(newProduct);
-            refeshForm();
+            refreshForm();
         }
     }
 
@@ -349,16 +349,16 @@ public class ProductGUI extends JPanel {
             assert size != null;
             newProduct = new Product(productID, name, categoryID, size, cost, image, false);
             productBLL.updateProduct(newProduct);
-            refeshForm();
+            refreshForm();
         }
     }
 
     private void deleteProduct() {
         productBLL.removeProduct(jTextFieldsForm[0].getText());
-        refeshForm();
+        refreshForm();
     }
 
-    public void refeshForm(){
+    public void refreshForm(){
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
         loadDataTable(productBLL.getProductList());

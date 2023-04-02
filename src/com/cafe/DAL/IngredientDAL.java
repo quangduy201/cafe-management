@@ -56,7 +56,7 @@ public class IngredientDAL extends Manager {
             updateValues.add(ingredient.getUnit());
             updateValues.add(ingredient.getSupplierID());
             updateValues.add(ingredient.isDeleted());
-            return update(updateValues, "INGREDIENT_ID = " + ingredient.getIngredientID());
+            return update(updateValues, "INGREDIENT_ID = '" + ingredient.getIngredientID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in IngredientDAL.updateIngredient(): " + e.getMessage());
         }
@@ -66,7 +66,7 @@ public class IngredientDAL extends Manager {
     public int deleteIngredient(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in IngredientDAL.deleteIngredient(): " + e.getMessage());

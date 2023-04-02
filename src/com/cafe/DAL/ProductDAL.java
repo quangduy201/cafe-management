@@ -70,7 +70,7 @@ public class ProductDAL extends Manager {
     public int deleteProduct(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in ProductDAL.deleteProduct(): " + e.getMessage());

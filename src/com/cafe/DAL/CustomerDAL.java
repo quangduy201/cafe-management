@@ -22,17 +22,20 @@ public class CustomerDAL extends Manager {
     }
 
     public List<Customer> convertToCustomers(List<List<String>> data) {
-        return convert(data, row -> {
+        return convert(data, row ->  {
+            row.set(2, row.get(2).equals("0") ? "false" : "true");
+            row.set(5, row.get(5).equals("0") ? "false" : "true");
+            row.set(row.size()-1, row.get(row.size()-1).equals("0") ? "false" : "true");
             try {
                 return new Customer(
                     row.get(0), // customerID
                     row.get(1), // name
-                    Boolean.parseBoolean(row.get(2)) ? "Nam" : "Nữ", // gender
+                    Boolean.parseBoolean(row.get(2)), // gender
                     Day.parseDay(row.get(3)), // dateOfBirth
                     row.get(4), // phone
-                    Boolean.parseBoolean(row.get(4)), // membership
-                    Day.parseDay(row.get(3)), // dateOfSup
-                    Boolean.parseBoolean(row.get(5)) // deleted
+                    Boolean.parseBoolean(row.get(5)), // membership
+                    Day.parseDay(row.get(6)), // dateOfSup
+                    Boolean.parseBoolean(row.get(7)) // deleted
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in DAL.convertTos(): " + e.getMessage());
@@ -45,7 +48,7 @@ public class CustomerDAL extends Manager {
         try {
             return create(customer.getCustomerID(),
                 customer.getName(),
-                customer.getGender(),
+                customer.isGender(),
                 customer.getDateOfBirth(),
                 customer.getPhone(),
                 customer.isMembership(),
@@ -63,13 +66,13 @@ public class CustomerDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(customer.getCustomerID());
             updateValues.add(customer.getName());
-            updateValues.add(customer.getGender());
+            updateValues.add(customer.isGender());
             updateValues.add(customer.getDateOfBirth());
             updateValues.add(customer.getPhone());
             updateValues.add(customer.isMembership());
             updateValues.add(customer.getDateOfSup());
             updateValues.add(customer.isDeleted());
-            return update(updateValues, "CUSTOMER_ID = " + customer.getCustomerID());
+            return update(updateValues, "CUSTOMER_ID = '" + customer.getCustomerID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerDAL.updateCustomer(): " + e.getMessage());
         }
@@ -79,7 +82,7 @@ public class CustomerDAL extends Manager {
     public int deleteCustomer(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerDAL.deleteCustomer(): " + e.getMessage());

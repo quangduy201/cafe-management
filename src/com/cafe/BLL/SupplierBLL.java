@@ -2,8 +2,7 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.SupplierDAL;
 import com.cafe.DTO.Supplier;
-import com.cafe.DTO.Supplier;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -15,6 +14,7 @@ public class SupplierBLL {
         try {
             supplierDAL = new SupplierDAL();
             supplierList = searchSuppliers();
+            readSupplier();
         } catch (Exception ignored) {
 
         }
@@ -41,19 +41,29 @@ public class SupplierBLL {
             System.out.println("Can't insert new supplier. Phone already exists.");
             return false;
         }
+        supplierList.add(supplier);
         return supplierDAL.insertSupplier(supplier) != 0;
     }
 
     public boolean updateSupplier(Supplier supplier) {
+        supplierList.set(getIndex(supplier, "SUPPLIER_ID"), supplier);
         return supplierDAL.updateSupplier(supplier) != 0;
     }
 
     public boolean removeSupplier(String id) {
+        List<Supplier> list = new ArrayList<>();
+        for (Supplier supplier : supplierList){
+            if (!supplier.getSupplierID().contains(id)){
+                list.add(supplier);
+            }
+        }
+        supplierList = list;
         return supplierDAL.deleteSupplier("SUPPLIER_ID = '" + id + "'") != 0;
     }
 
     public List<Supplier> searchSuppliers(String... conditions) {
-        return supplierDAL.searchSuppliers(conditions);
+        this.supplierList = supplierDAL.searchSuppliers(conditions);
+        return this.supplierList;
     }
 
     public Object[][] getData (){
@@ -83,7 +93,28 @@ public class SupplierBLL {
         };
     }
 
+    public void readSupplier(){
+        List<Supplier> list = new ArrayList<>();
+        for (Supplier supplier : supplierList){
+            if (!supplier.isDeleted()){
+                list.add(supplier);
+            }
+        }
+        supplierList = list;
+    }
+
+    public List<Supplier> findSuppliers(String key, String value) {
+        List<Supplier> list = new ArrayList<>();
+        for (Supplier supplier : supplierList){
+            if (getValueByKey(supplier, key).toString().toLowerCase().contains(value.toLowerCase())){
+                list.add(supplier);
+            }
+        }
+        return list;
+    }
+
     public String getAutoID() {
         return supplierDAL.getAutoID();
     }
+
 }

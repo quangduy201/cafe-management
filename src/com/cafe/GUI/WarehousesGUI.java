@@ -27,6 +27,7 @@ public class WarehousesGUI extends JPanel {
     private JScrollPane scrollPane;
     private JPanel pnlSupplierConfiguration;
     private JPanel mode;
+    private JPanel showImg;
     private JLabel jLabelsForm [];
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbSupplierID;
@@ -58,6 +59,7 @@ public class WarehousesGUI extends JPanel {
         search = new RoundPanel();
         pnlSupplierConfiguration = new JPanel();
         mode = new JPanel();
+        showImg = new JPanel();
         jLabelsForm = new JLabel[columsName.size()-1];
         cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
         cbbUnit = new JComboBox<>(new String[]{"kg","l","bag"});
@@ -121,7 +123,6 @@ public class WarehousesGUI extends JPanel {
         cbbSupplierIDSearch.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-
                 supplierIDSearch();
             }
         });
@@ -135,14 +136,14 @@ public class WarehousesGUI extends JPanel {
         });
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), columsName.subList(0, columsName.size() - 2).toArray(), getListSelectionListener());
+        dataTable = new DataTable(ingredientBLL.getData(), columsName.subList(0, columsName.size()-1).toArray(), getListSelectionListener());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
+        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
         for (int i=0; i<columsName.size()-1; i++) {
@@ -166,6 +167,11 @@ public class WarehousesGUI extends JPanel {
                 }
             }
         }
+        showImg.setLayout(new FlowLayout());
+        showImg.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        showImg.setPreferredSize(new Dimension(635, 300));
+        showImg.setBackground(new Color(0xFFFFFF));
+        roundPanel2.add(showImg, BorderLayout.CENTER);
 
         mode.setLayout(new GridLayout(2,2,20,20));
         mode.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -185,7 +191,7 @@ public class WarehousesGUI extends JPanel {
         btAdd.setEnabled(true);
         btAdd.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btAdd.isEnabled()){
                     addIngredient();
                 }
@@ -205,7 +211,7 @@ public class WarehousesGUI extends JPanel {
         btUpd.setEnabled(false);
         btUpd.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btUpd.isEnabled()){
                     updateIngredient();
                 }
@@ -225,7 +231,7 @@ public class WarehousesGUI extends JPanel {
         btDel.setEnabled(false);
         btDel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (btDel.isEnabled()){
                     deleteIngredient();
                 }
@@ -236,7 +242,7 @@ public class WarehousesGUI extends JPanel {
         btRef.setBackground(new Color(35, 166, 97));
         btRef.setBorder(null);
         btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refesh");
+        btRef.setText("  Refresh");
         btRef.setColor(new Color(240, 240, 240));
         btRef.setColorClick(new Color(141, 222, 175));
         btRef.setColorOver(new Color(35, 166, 97));
@@ -244,8 +250,8 @@ public class WarehousesGUI extends JPanel {
         btRef.setRadius(20);
         btRef.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                refeshForm();
+            public void mousePressed(MouseEvent mouseEvent) {
+                refreshForm();
             }
         });
         mode.add(btRef);
@@ -321,7 +327,7 @@ public class WarehousesGUI extends JPanel {
             supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
             newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
             ingredientBLL.insertIngredient(newIngredient);
-            refeshForm();
+            refreshForm();
         }
     }
 
@@ -345,16 +351,16 @@ public class WarehousesGUI extends JPanel {
             supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
             newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
             ingredientBLL.updateIngredient(newIngredient);
-            refeshForm();
+            refreshForm();
         }
     }
 
     private void deleteIngredient() {
         ingredientBLL.removeIngredient(jTextFieldsForm[0].getText());
-        refeshForm();
+        refreshForm();
     }
 
-    private void refeshForm() {
+    private void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
         ingredientBLL=new IngredientBLL();

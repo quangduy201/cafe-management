@@ -46,7 +46,7 @@ public class CategoryDAL extends Manager {
             updateValues.add(category.getName());
             updateValues.add(category.getQuantity());
             updateValues.add(category.isDeleted());
-            return update(updateValues, "CATEGORY_ID = " + category.getCategoryID());
+            return update(updateValues, "CATEGORY_ID = '" + category.getCategoryID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in CategoryDAL.updateCategory(): " + e.getMessage());
         }
@@ -56,7 +56,7 @@ public class CategoryDAL extends Manager {
     public int deleteCategory(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in CategoryDAL.deleteCategory(): " + e.getMessage());

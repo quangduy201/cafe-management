@@ -68,7 +68,7 @@ public class MySQL {
             } else if (value instanceof Boolean) {
                 stringValue = (boolean) value ? "1" : "0";
             } else {
-                stringValue = value.toString();
+                stringValue = "'" + value.toString() + "'";
             }
             query = query.replaceFirst("\\?", stringValue);
         }

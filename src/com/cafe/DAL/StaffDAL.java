@@ -75,7 +75,7 @@ public class StaffDAL extends Manager{
             updateValues.add(staff.getSalary());
             updateValues.add(staff.getDateOfEntry());
             updateValues.add(staff.isDeleted());
-            return update(updateValues, "STAFF_ID = " + staff.getStaffID());
+            return update(updateValues, "STAFF_ID = '" + staff.getStaffID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.updateStaff(): " + e.getMessage());
         }
@@ -85,7 +85,7 @@ public class StaffDAL extends Manager{
     public int deleteStaff(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in StaffDAL.deleteStaff(): " + e.getMessage());

@@ -61,7 +61,7 @@ public class DiscountDAL extends Manager {
             updateValues.add(discount.getEndDay());
             updateValues.add(discount.getStatus());
             updateValues.add(discount.isDeleted());
-            return update(updateValues, "DISCOUNT_ID = " + discount.getDiscountID());
+            return update(updateValues, "DISCOUNT_ID = '" + discount.getDiscountID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.updateDiscount(): " + e.getMessage());
         }
@@ -71,7 +71,7 @@ public class DiscountDAL extends Manager {
     public int deleteDiscount(String... conditions) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(1);
+            updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountDAL.deleteDiscount(): " + e.getMessage());

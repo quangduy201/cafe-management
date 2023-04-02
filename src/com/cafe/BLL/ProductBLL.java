@@ -28,7 +28,6 @@ public class ProductBLL {
     public void setProductDAL(ProductDAL productDAL) {
         this.productDAL = productDAL;
     }
-
     public List<Product> getProductList() {
         return productList;
     }
