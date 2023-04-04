@@ -28,7 +28,7 @@ public class CategoryGUI extends JPanel {
 
     public CategoryGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
@@ -43,7 +43,7 @@ public class CategoryGUI extends JPanel {
 
         // initialize main panel
         category.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        category.setBackground(new Color(51, 51, 51));
+        category.setBackground(new Color(70, 67, 67));
         this.add(category, BorderLayout.CENTER);
 
         // initialize left panel
@@ -103,4 +103,5 @@ public class CategoryGUI extends JPanel {
                 jTextFieldsForm[i].setText(category[i]);
         };
     }
+
 }
