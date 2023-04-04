@@ -1,16 +1,42 @@
 package com.cafe.GUI;
 
+import com.cafe.BLL.CategoryBLL;
+import com.cafe.BLL.DecentralizationBLL;
+import com.cafe.BLL.StaffBLL;
+import com.cafe.DAL.CategoryDAL;
+import com.cafe.DTO.Account;
+import com.cafe.DTO.Category;
+import com.cafe.DTO.Decentralization;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import static javax.swing.ScrollPaneConstants.UPPER_RIGHT_CORNER;
+import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class SaleGUI extends JPanel {
+
+    private CategoryBLL categoryBLL;
+    private ArrayList<String> NameList;
     public SaleGUI() {
+        categoryBLL = new CategoryBLL();
+        NameList = new ArrayList<>();
+        for (Category category : categoryBLL.getCategoryList()) {
+            NameList.add(category.getName());
+        }
         setLayout(new BorderLayout(10,10));
-        setBackground(new Color(51,51,51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
+        Vector comboBoxItems = new Vector();
+        comboBoxItems.add("Tất cả");
+        for(String Name: NameList)
+            comboBoxItems.add(Name);
+        jComboBox.setModel(new DefaultComboBoxModel(comboBoxItems));
     }
 
     public void initComponents() {
@@ -28,6 +54,12 @@ public class SaleGUI extends JPanel {
         roundPanel12 = new RoundPanel();
         roundPanel13 = new RoundPanel();
         roundPanel14 = new RoundPanel();
+        roundPanel15 = new RoundPanel();
+
+
+        pictureScrollPane = new JScrollPane(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         jlabel1 = new JLabel();
         jlabel2 = new JLabel();
@@ -50,28 +82,29 @@ public class SaleGUI extends JPanel {
         jComboBox = new JComboBox<>();
 
         sale.setLayout(new FlowLayout(FlowLayout.CENTER,10,0));
-        sale.setBackground(new Color(51,51,51));
+        sale.setBackground(new Color(70, 67, 67));
         this.add(sale,BorderLayout.CENTER);
 
-        roundPanel1.setPreferredSize(new Dimension(615,680));
+        roundPanel1.setPreferredSize(new Dimension(615,670));
         roundPanel1.setAutoscrolls(true);
         sale.add(roundPanel1);
 
         roundPanel2.setLayout(new FlowLayout(FlowLayout.CENTER,5,10));
-        roundPanel2.setPreferredSize(new Dimension(370,680));
+        roundPanel2.setPreferredSize(new Dimension(370,670));
         roundPanel2.setAutoscrolls(true);
         sale.add(roundPanel2);
 
         roundPanel3.setLayout(new BorderLayout(90,0));
-        roundPanel3.setPreferredSize(new Dimension(625,50));
+        roundPanel3.setPreferredSize(new Dimension(615,50));
         roundPanel3.setAutoscrolls(true);
         roundPanel1.add(roundPanel3);
 
-        roundPanel4.setPreferredSize(new Dimension(625,615));
+        roundPanel4.setPreferredSize(new Dimension(600,600));
+        roundPanel4.setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel4.setAutoscrolls(true);
         roundPanel1.add(roundPanel4);
 
-        roundPanel6.setLayout(new FlowLayout(FlowLayout.LEFT,15,5));
+        roundPanel6.setLayout(new FlowLayout(FlowLayout.LEFT,10,5));
         roundPanel6.setPreferredSize(new Dimension(135,35));
         roundPanel6.setAutoscrolls(true);
         roundPanel3.add(roundPanel6,BorderLayout.WEST);
@@ -83,7 +116,7 @@ public class SaleGUI extends JPanel {
         jComboBox.setFocusable(false);
         roundPanel6.add(jComboBox);
 
-        roundPanel5.setLayout(new FlowLayout(FlowLayout.LEFT,25,5));
+        roundPanel5.setLayout(new FlowLayout(FlowLayout.LEFT,23,5));
         roundPanel5.setPreferredSize(new Dimension(300,35));
         roundPanel5.setAutoscrolls(true);
         roundPanel3.add(roundPanel5,BorderLayout.CENTER);
@@ -113,9 +146,19 @@ public class SaleGUI extends JPanel {
         roundPanel8.setPreferredSize(new Dimension(350,35));
         roundPanel2.add(roundPanel8);
 
+
+        pictureScrollPane.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
+        pictureScrollPane.setPreferredSize(new Dimension(18,400));
+//        roundPanel9.add(pictureScrollPane,BorderLayout.CENTER);
+        pictureScrollPane.setViewportView(roundPanel9);
+
+        roundPanel9.setLayout(new GridLayout(1,1,0,0));
+        roundPanel9.setBackground(new Color(25,25,25));
         roundPanel9.setBorder(BorderFactory.createLineBorder(Color.black));
+        roundPanel9.setAutoscrolls(true);
         roundPanel9.setPreferredSize(new Dimension(350,400));
         roundPanel2.add(roundPanel9);
+
 
         roundPanel10.setLayout(new BoxLayout(roundPanel10,BoxLayout.Y_AXIS));
         roundPanel10.setPreferredSize(new Dimension(350,100));
@@ -215,6 +258,10 @@ public class SaleGUI extends JPanel {
         button4.setColorClick(new Color(0xB65858));
         button4.setText("Hủy");
         roundPanel11.add(button4);
+
+        roundPanel15.setPreferredSize(new Dimension(250,600));
+        roundPanel15.setBackground(new Color(0xB65858));
+        roundPanel9.add(roundPanel15);
     }
 
     private JComboBox<String> jComboBox;
@@ -229,6 +276,9 @@ public class SaleGUI extends JPanel {
     private RoundPanel sale;
     private RoundPanel roundPanel1;
     private RoundPanel roundPanel2;
+
+
+    private JScrollPane pictureScrollPane;
 
     private Button button1;
     private Button button2;
@@ -253,4 +303,5 @@ public class SaleGUI extends JPanel {
     private RoundPanel roundPanel13;
     private RoundPanel roundPanel14;
 
+    private RoundPanel roundPanel15;
 }

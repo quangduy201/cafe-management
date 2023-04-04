@@ -48,8 +48,10 @@ public class ProductGUI extends JPanel {
     private String chosenImg = null;
 
     public ProductGUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+//        setLayout(new BorderLayout(10, 10));
+//        setBackground(new Color(51, 51, 51));
+        setLayout(new BorderLayout(10,10));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 

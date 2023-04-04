@@ -43,7 +43,7 @@ public class WarehousesGUI extends JPanel {
 
     public WarehousesGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
