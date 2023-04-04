@@ -297,7 +297,9 @@ public class WarehousesGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] ingredient = (String[]) ingredientBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] ingredient = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(ingredient[0]);
             jTextFieldsForm[1].setText(ingredient[1]);
             jTextFieldsForm[2].setText(ingredient[2]);

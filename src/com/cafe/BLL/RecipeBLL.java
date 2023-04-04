@@ -2,7 +2,9 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.RecipeDAL;
 import com.cafe.DTO.Recipe;
+import com.cafe.DTO.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public class RecipeBLL extends Manager<Recipe> {
     public RecipeBLL() {
         try {
             recipeDAL = new RecipeDAL();
-            recipeList = searchRecipes();
+            recipeList = searchRecipes("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -55,6 +57,16 @@ public class RecipeBLL extends Manager<Recipe> {
 
     public List<Recipe> searchRecipes(String... conditions) {
         return recipeDAL.searchRecipes(conditions);
+    }
+
+    public List<Recipe> findRecipes(String key, String value) {
+        List<Recipe> list = new ArrayList<>();
+        for (Recipe recipe : recipeList) {
+            if (getValueByKey(recipe, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(recipe);
+            }
+        }
+        return list;
     }
 
     public List<Recipe> findRecipesBy(Map<String, Object> conditions) {

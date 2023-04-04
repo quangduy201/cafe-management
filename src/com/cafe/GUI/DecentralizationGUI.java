@@ -244,7 +244,7 @@ public class DecentralizationGUI extends JPanel {
 
     private void comboboxSearch() {
         String value = null;
-        switch (jComboBoxSearch.getSelectedItem().toString()){
+        switch (Objects.requireNonNull(jComboBoxSearch.getSelectedItem()).toString()){
             case "Không" -> value = "0";
             case "Xem" -> value = "1";
             case "Sửa" -> value = "2";
@@ -277,7 +277,9 @@ public class DecentralizationGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] decentralization = (String[]) decentralizationBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] decentralization = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(decentralization[0]);
             jTextFieldsForm[1].setText(decentralization[decentralization.length-1]);
             int index = 0;

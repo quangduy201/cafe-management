@@ -361,7 +361,9 @@ public class CustomerGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] customer = (String[]) customerBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] customer = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(customer[0]);
             jTextFieldsForm[1].setText(customer[1]);
             if (customer[2].contains("Nam")) {

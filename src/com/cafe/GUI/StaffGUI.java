@@ -302,7 +302,9 @@ public class StaffGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] staff = (String[]) staffBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] staff = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(staff[0]);
             jTextFieldsForm[1].setText(staff[1]);
             if (staff[2].contains("Nam")) {

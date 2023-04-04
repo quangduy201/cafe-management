@@ -306,7 +306,9 @@ public class AccountGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] account = (String[]) accountBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] account = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(account[0]);
             jTextFieldsForm[1].setText(account[1]);
             jTextFieldsForm[2].setText(account[2]);

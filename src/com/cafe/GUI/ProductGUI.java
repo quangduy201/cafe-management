@@ -319,7 +319,9 @@ public class ProductGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] product = (String[]) productBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] product = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(product[0]);
             jTextFieldsForm[1].setText(product[1]);
             cbbCategoryID.setSelectedItem(product[2]);

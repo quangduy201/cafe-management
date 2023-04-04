@@ -222,7 +222,9 @@ public class SupplierGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] supplier = (String[]) supplierBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] supplier = rowData.substring(1, rowData.length() - 1).split(", ");
             for (int i = 0; i < supplier.length; i++) {
                 jTextFieldsForm[i].setText(supplier[i]);
             }
