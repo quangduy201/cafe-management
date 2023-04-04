@@ -19,14 +19,17 @@ public class AccountDAL extends Manager {
     }
 
     public List<Account> convertToAccounts(List<List<String>> data) {
-        return convert(data, row -> new Account(
-            row.get(0), // accountID
-            row.get(1), // username
-            row.get(2), // password
-            row.get(3), // decentralizationID
-            row.get(4), // staffID
-            Boolean.parseBoolean(row.get(5)) // deleted
-        ));
+        return convert(data, row -> {
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
+            return new Account(
+                row.get(0), // accountID
+                row.get(1), // username
+                row.get(2), // password
+                row.get(3), // decentralizationID
+                row.get(4), // staffID
+                Boolean.parseBoolean(row.get(5)) // deleted
+            );
+        });
     }
 
     public int addAccount(Account account) {

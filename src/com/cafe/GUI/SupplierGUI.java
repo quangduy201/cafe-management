@@ -290,7 +290,7 @@ public class SupplierGUI extends JPanel {
             }
             newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
             supplierBLL.updateSupplier(newSupplier);
-            refreshForm();
+            loadDataTable(supplierBLL.getSupplierList());
         }
     }
 

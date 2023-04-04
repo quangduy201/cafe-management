@@ -67,7 +67,7 @@ public class ReceiptBLL extends Manager<Receipt> {
 
     public String getAutoID() {
         try {
-            return getAutoID("REC", 3, receiptList);
+            return getAutoID("REC", 3, searchReceipts());
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptBLL.getAutoID(): " + e.getMessage());
         }

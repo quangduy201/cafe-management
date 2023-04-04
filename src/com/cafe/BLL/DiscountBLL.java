@@ -67,7 +67,7 @@ public class DiscountBLL extends Manager<Discount> {
 
     public String getAutoID() {
         try {
-            return getAutoID("DIS", 3, discountList);
+            return getAutoID("DIS", 3, searchDiscounts());
         } catch (Exception e) {
             System.out.println("Error occurred in DiscountBLL.getAutoID(): " + e.getMessage());
         }

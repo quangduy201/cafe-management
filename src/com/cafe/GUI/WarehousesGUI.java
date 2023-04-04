@@ -355,7 +355,7 @@ public class WarehousesGUI extends JPanel {
             supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
             newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
             ingredientBLL.updateIngredient(newIngredient);
-            refreshForm();
+            loadDataTable(ingredientBLL.getIngredientList());
         }
     }
 
