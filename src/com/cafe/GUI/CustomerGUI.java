@@ -195,8 +195,8 @@ public class CustomerGUI extends JPanel {
                 case "CUSTOMER_ID" -> {
                     jTextFieldsForm[index] = new JTextField(customerBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
-                    jTextFieldsForm[i].setBorder(null);
-                    jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
+                    jTextFieldsForm[index].setBorder(null);
+                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -361,7 +361,9 @@ public class CustomerGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] customer = (String[]) customerBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] customer = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(customer[0]);
             jTextFieldsForm[1].setText(customer[1]);
             if (customer[2].contains("Nam")) {
@@ -445,7 +447,7 @@ public class CustomerGUI extends JPanel {
             membership = rbYes.isSelected();
             newCustomer = new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
             customerBLL.updateCustomer(newCustomer);
-            refreshForm();
+            loadDataTable(customerBLL.getCustomerList());
         }
     }
 

@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.DecentralizationDAL;
 import com.cafe.DTO.Decentralization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     public DecentralizationBLL() {
         try {
             decentralizationDAL = new DecentralizationDAL();
-            decentralizationList = searchDecentralization();
+            decentralizationList = searchDecentralization("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -62,6 +63,16 @@ public class DecentralizationBLL extends Manager<Decentralization> {
         return decentralizationDAL.searchDecentralizations(conditions);
     }
 
+    public List<Decentralization> findDecentralizations(String key, String value) {
+        List<Decentralization> list = new ArrayList<>();
+        for (Decentralization decentralization : decentralizationList) {
+            if (getValueByKey(decentralization, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(decentralization);
+            }
+        }
+        return list;
+    }
+
     public List<Decentralization> findDecentralizationBy(Map<String, Object> conditions) {
         List<Decentralization> decentralizations = decentralizationList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -71,7 +82,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
 
     public String getAutoID() {
         try {
-            return getAutoID("DE", 2, decentralizationList);
+            return getAutoID("DE", 2, searchDecentralization());
         } catch (Exception e) {
             System.out.println("Error occurred in DecentralizationBLL.getAutoID(): " + e.getMessage());
         }
@@ -98,4 +109,5 @@ public class DecentralizationBLL extends Manager<Decentralization> {
             default -> null;
         };
     }
+
 }

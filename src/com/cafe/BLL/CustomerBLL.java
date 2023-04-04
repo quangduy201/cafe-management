@@ -14,8 +14,7 @@ public class CustomerBLL extends Manager<Customer> {
     public CustomerBLL() {
         try {
             customerDAL = new CustomerDAL();
-            customerList = searchCustomers();
-            readCustomer();
+            customerList = searchCustomers("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -64,16 +63,6 @@ public class CustomerBLL extends Manager<Customer> {
         return customerDAL.searchCustomers(conditions);
     }
 
-    public void readCustomer() {
-        List<Customer> list = new ArrayList<>();
-        for (Customer customer : customerList) {
-            if (!customer.isDeleted()) {
-                list.add(customer);
-            }
-        }
-        customerList = list;
-    }
-
     public List<Customer> findCustomers(String key, Object value) {
         List<Customer> list = new ArrayList<>();
         for (Customer customer : customerList) {
@@ -100,7 +89,7 @@ public class CustomerBLL extends Manager<Customer> {
 
     public String getAutoID() {
         try {
-            return getAutoID("CUS", 3, customerList);
+            return getAutoID("CUS", 3, searchCustomers());
         } catch (Exception e) {
             System.out.println("Error occurred in CustomerBLL.getAutoID(): " + e.getMessage());
         }

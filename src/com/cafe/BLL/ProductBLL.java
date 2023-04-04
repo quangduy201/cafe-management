@@ -14,8 +14,7 @@ public class ProductBLL extends Manager<Product> {
     public ProductBLL() {
         try {
             productDAL = new ProductDAL();
-            productList = searchProducts();
-            readProduct();
+            productList = searchProducts("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -65,16 +64,6 @@ public class ProductBLL extends Manager<Product> {
         return this.productList;
     }
 
-    public void readProduct() {
-        List<Product> list = new ArrayList<>();
-        for (Product product : productList) {
-            if (!product.isDeleted()) {
-                list.add(product);
-            }
-        }
-        productList = list;
-    }
-
     public List<Product> findProducts(String key, String value) {
         List<Product> list = new ArrayList<>();
         for (Product product : productList) {
@@ -94,7 +83,7 @@ public class ProductBLL extends Manager<Product> {
 
     public String getAutoID() {
         try {
-            return getAutoID("PR", 3, productList);
+            return getAutoID("PR", 3, searchProducts());
         } catch (Exception e) {
             System.out.println("Error occurred in ProductBLL.getAutoID(): " + e.getMessage());
         }

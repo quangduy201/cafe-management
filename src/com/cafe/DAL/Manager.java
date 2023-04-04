@@ -38,7 +38,7 @@ public class Manager extends MySQL {
 //        List<Object> values = new ArrayList<>();
 
         if (conditions != null && conditions.length > 0) {
-            query += " WHERE " + String.join(" AND ", conditions) + " AND DELETED = 0";
+            query += " WHERE " + String.join(" AND ", conditions);
 //            values = Arrays.asList(conditions);
         }
 

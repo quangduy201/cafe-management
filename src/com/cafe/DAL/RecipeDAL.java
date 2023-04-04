@@ -18,13 +18,16 @@ public class RecipeDAL extends Manager {
     }
 
     public List<Recipe> convertToRecipes(List<List<String>> data) {
-        return convert(data, row -> new Recipe(
-            row.get(0), // productID
-            row.get(1), // ingredientID
-            Double.parseDouble(row.get(2)), // mass
-            row.get(3), // unit
-            Boolean.parseBoolean(row.get(4)) // deleted
-        ));
+        return convert(data, row -> {
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
+            return new Recipe(
+                row.get(0), // productID
+                row.get(1), // ingredientID
+                Double.parseDouble(row.get(2)), // mass
+                row.get(3), // unit
+                Boolean.parseBoolean(row.get(4)) // deleted
+            );
+        });
     }
 
     public int addRecipe(Recipe recipe) {
