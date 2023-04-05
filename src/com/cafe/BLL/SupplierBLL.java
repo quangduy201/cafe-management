@@ -83,12 +83,7 @@ public class SupplierBLL extends Manager<Supplier> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("SUP", 3, searchSuppliers());
-        } catch (Exception e) {
-            System.out.println("Error occurred in SupplierBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("SUP", 3, searchSuppliers());
     }
 
     @Override
