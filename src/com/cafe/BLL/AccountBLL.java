@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.AccountDAL;
 import com.cafe.DTO.Account;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class AccountBLL extends Manager<Account> {
     public AccountBLL() {
         try {
             accountDAL = new AccountDAL();
-            accountList = searchAccounts();
+            accountList = searchAccounts("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -62,6 +63,16 @@ public class AccountBLL extends Manager<Account> {
         return accountDAL.searchAccounts(conditions);
     }
 
+    public List<Account> findAccounts(String key, String value) {
+        List<Account> list = new ArrayList<>();
+        for (Account account : accountList) {
+            if (getValueByKey(account, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(account);
+            }
+        }
+        return list;
+    }
+
     public List<Account> findAccountsBy(Map<String, Object> conditions) {
         List<Account> accounts = accountList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -70,12 +81,7 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("AC", 3, accountList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("AC", 3, searchAccounts());
     }
 
     @Override

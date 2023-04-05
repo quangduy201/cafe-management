@@ -14,8 +14,7 @@ public class SupplierBLL extends Manager<Supplier> {
     public SupplierBLL() {
         try {
             supplierDAL = new SupplierDAL();
-            supplierList = searchSuppliers();
-            readSupplier();
+            supplierList = searchSuppliers("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -66,16 +65,6 @@ public class SupplierBLL extends Manager<Supplier> {
         return this.supplierList;
     }
 
-    public void readSupplier() {
-        List<Supplier> list = new ArrayList<>();
-        for (Supplier supplier : supplierList) {
-            if (!supplier.isDeleted()) {
-                list.add(supplier);
-            }
-        }
-        supplierList = list;
-    }
-
     public List<Supplier> findSuppliers(String key, String value) {
         List<Supplier> list = new ArrayList<>();
         for (Supplier supplier : supplierList) {
@@ -94,12 +83,7 @@ public class SupplierBLL extends Manager<Supplier> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("SUP", 3, supplierList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in SupplierBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("SUP", 3, searchSuppliers());
     }
 
     @Override

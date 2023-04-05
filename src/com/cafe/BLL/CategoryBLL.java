@@ -2,7 +2,9 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.CategoryDAL;
 import com.cafe.DTO.Category;
+import com.cafe.DTO.Category;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public class CategoryBLL extends Manager<Category> {
     public CategoryBLL() {
         try {
             categoryDAL = new CategoryDAL();
-            categoryList = searchCategories();
+            categoryList = searchCategories("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -62,6 +64,16 @@ public class CategoryBLL extends Manager<Category> {
         return categoryDAL.searchCategories(conditions);
     }
 
+    public List<Category> findCategories(String key, String value) {
+        List<Category> list = new ArrayList<>();
+        for (Category category : categoryList) {
+            if (getValueByKey(category, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(category);
+            }
+        }
+        return list;
+    }
+
     public List<Category> findCategoriesBy(Map<String, Object> conditions) {
         List<Category> categories = categoryList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -70,12 +82,7 @@ public class CategoryBLL extends Manager<Category> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("CA", 2, categoryList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in CategoryBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("CA", 2, searchCategories());
     }
 
     @Override

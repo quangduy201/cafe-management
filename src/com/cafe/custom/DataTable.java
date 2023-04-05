@@ -39,18 +39,17 @@ public class DataTable extends JTable {
                     }
                 }
             }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (DataTable.super.getSelectedRow() == -1) {
+                    lastSelectedRow = -1;
+                }
+            }
         });
         addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                int row = rowAtPoint(e.getPoint());
-                if (row != -1 && row != lastSelectedRow) {
-                    setRowSelectionInterval(lastSelectedRow, lastSelectedRow);
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
                 int row = rowAtPoint(e.getPoint());
                 if (row != -1 && row != lastSelectedRow) {
                     setRowSelectionInterval(lastSelectedRow, lastSelectedRow);

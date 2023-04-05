@@ -222,7 +222,9 @@ public class SupplierGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] supplier = (String[]) supplierBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] supplier = rowData.substring(1, rowData.length() - 1).split(", ");
             for (int i = 0; i < supplier.length; i++) {
                 jTextFieldsForm[i].setText(supplier[i]);
             }
@@ -290,7 +292,7 @@ public class SupplierGUI extends JPanel {
             }
             newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
             supplierBLL.updateSupplier(newSupplier);
-            refreshForm();
+            loadDataTable(supplierBLL.getSupplierList());
         }
     }
 
@@ -304,7 +306,6 @@ public class SupplierGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        supplierBLL = new SupplierBLL();
         loadDataTable(supplierBLL.getSupplierList());
         jTextFieldsForm[0].setText(supplierBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

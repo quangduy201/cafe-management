@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.StaffDAL;
 import com.cafe.DTO.Staff;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class StaffBLL extends Manager<Staff> {
     public StaffBLL() {
         try {
             staffDAL = new StaffDAL();
-            staffList = searchStaffs();
+            staffList = searchStaffs("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -62,6 +63,23 @@ public class StaffBLL extends Manager<Staff> {
         return staffDAL.searchStaffs(conditions);
     }
 
+    public List<Staff> findStaffs(String key, Object value) {
+        List<Staff> list = new ArrayList<>();
+        for (Staff staff : staffList) {
+            if (value instanceof Boolean) {
+                if (getValueByKey(staff, key) == value) {
+                    list.add(staff);
+                }
+            } else {
+                if (getValueByKey(staff, key).toString().toLowerCase().contains(value.toString().toLowerCase())) {
+                    list.add(staff);
+                }
+            }
+
+        }
+        return list;
+    }
+
     public List<Staff> findStaffsBy(Map<String, Object> conditions) {
         List<Staff> staffs = staffList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -70,20 +88,15 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("ST", 2, staffList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in StaffBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("ST", 2, searchStaffs());
     }
 
     @Override
     public Object getValueByKey(Staff staff, String key) {
         return switch (key) {
-            case "CATEGORY_ID" -> staff.getStaffID();
+            case "STAFF_ID" -> staff.getStaffID();
             case "NAME" -> staff.getName();
-            case "GENDER" -> staff.getGender();
+            case "GENDER" -> staff.isGender();
             case "DOB" -> staff.getDateOfBirth();
             case "ADDRESS" -> staff.getAddress();
             case "PHONE" -> staff.getPhone();

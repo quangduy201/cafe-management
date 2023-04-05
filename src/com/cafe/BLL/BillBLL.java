@@ -66,12 +66,7 @@ public class BillBLL extends Manager<Bill> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("BI", 4, billList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in BillBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("BI", 4, searchBills());
     }
 
     @Override

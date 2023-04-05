@@ -14,9 +14,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +35,9 @@ public class ProductGUI extends JPanel {
     private JLabel imgProduct;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbCategoryID;
+    private JComboBox<Object> cbbCategoryIDSearch;
     private JComboBox<Object> cbbSize;
+    private JComboBox<Object> cbbSizeSearch;
     private JTextField txtSearch;
     private JTextField jTextFieldsForm[];
     private JButton btChooseImg;
@@ -48,8 +48,10 @@ public class ProductGUI extends JPanel {
     private String chosenImg = null;
 
     public ProductGUI() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+//        setLayout(new BorderLayout(10, 10));
+//        setBackground(new Color(51, 51, 51));
+        setLayout(new BorderLayout(10,10));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
@@ -72,7 +74,9 @@ public class ProductGUI extends JPanel {
         imgProduct = new JLabel();
         cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 2).toArray());
         cbbCategoryID = new JComboBox<>(categoriesID.toArray());
+        cbbCategoryIDSearch = new JComboBox<>(categoriesID.toArray());
         cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
+        cbbSizeSearch = new JComboBox<>(new String[]{"null", "S", "M", "L"});
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[columnNames.size() - 4];
         btChooseImg = new JButton();
@@ -103,7 +107,12 @@ public class ProductGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-
+        cbbSearchFilter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectSearchFilter();
+            }
+        });
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -122,6 +131,22 @@ public class ProductGUI extends JPanel {
             }
         });
         search.add(txtSearch);
+        cbbCategoryIDSearch.setVisible(false);
+        cbbCategoryIDSearch.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                categoryIDSearch();
+            }
+        });
+        search.add(cbbCategoryIDSearch);
+        cbbSizeSearch.setVisible(false);
+        cbbSizeSearch.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                sizeSearch();
+            }
+        });
+        search.add(cbbSizeSearch);
 
         dataTable = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), getListSelectionListener());
         scrollPane = new JScrollPane(dataTable);
@@ -257,10 +282,48 @@ public class ProductGUI extends JPanel {
 
     }
 
+    private void categoryIDSearch() {
+        loadDataTable(productBLL.findProducts("CATEGORY_ID", Objects.requireNonNull(cbbCategoryIDSearch.getSelectedItem()).toString()));
+    }
+
+    private void sizeSearch() {
+        loadDataTable(productBLL.findProducts("SIZED", Objects.requireNonNull(cbbSizeSearch.getSelectedItem()).toString()));
+    }
+
+    private void selectSearchFilter() {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("CATEGORY_ID")) {
+            txtSearch.setVisible(false);
+            cbbSizeSearch.setVisible(false);
+            cbbCategoryIDSearch.setSelectedIndex(0);
+            cbbCategoryIDSearch.setVisible(true);
+            categoryIDSearch();
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SIZED")) {
+            txtSearch.setVisible(false);
+            cbbCategoryIDSearch.setVisible(false);
+            cbbSizeSearch.setSelectedIndex(0);
+            cbbSizeSearch.setVisible(true);
+            sizeSearch();
+        } else {
+            cbbSizeSearch.setVisible(false);
+            cbbCategoryIDSearch.setVisible(false);
+            txtSearch.setVisible(true);
+            searchProducts();
+        }
+    }
+
+    public void searchProducts() {
+        if (txtSearch.getText().isEmpty()) {
+            loadDataTable(productBLL.getProductList());
+        } else {
+            loadDataTable(productBLL.findProducts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+        }
+    }
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] product = (String[]) productBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] product = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(product[0]);
             jTextFieldsForm[1].setText(product[1]);
             cbbCategoryID.setSelectedItem(product[2]);
@@ -277,14 +340,6 @@ public class ProductGUI extends JPanel {
             btUpd.setEnabled(true);
             btDel.setEnabled(true);
         };
-    }
-
-    public void searchProducts() {
-        if (txtSearch.getText().isEmpty()) {
-            loadDataTable(productBLL.getProductList());
-        } else {
-            loadDataTable(productBLL.findProducts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
-        }
     }
 
     private void btnProductImageActionPerformed(java.awt.event.ActionEvent evt) {
@@ -353,7 +408,8 @@ public class ProductGUI extends JPanel {
             assert size != null;
             newProduct = new Product(productID, name, categoryID, size, cost, image, false);
             productBLL.updateProduct(newProduct);
-            refreshForm();
+            loadDataTable(productBLL.getProductList());
+
         }
     }
 

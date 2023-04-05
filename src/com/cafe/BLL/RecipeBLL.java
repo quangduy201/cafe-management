@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.RecipeDAL;
 import com.cafe.DTO.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class RecipeBLL extends Manager<Recipe> {
     public RecipeBLL() {
         try {
             recipeDAL = new RecipeDAL();
-            recipeList = searchRecipes();
+            recipeList = searchRecipes("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -45,16 +46,22 @@ public class RecipeBLL extends Manager<Recipe> {
     }
 
     public boolean updateRecipe(Recipe recipe) {
-        List<Recipe> recipes = findRecipesBy(Map.of("PRODUCT_ID", recipe.getProductID(), "INGREDIENT_ID", recipe.getIngredientID()));
-        Recipe recipeNeedsUpdating = recipes.get(0);
-        recipeNeedsUpdating.setMass(recipe.getMass());
-        recipeNeedsUpdating.setUnit(recipe.getUnit());
-        recipeNeedsUpdating.setDeleted(recipe.isDeleted());
+
         return recipeDAL.updateRecipe(recipe) != 0;
     }
 
     public List<Recipe> searchRecipes(String... conditions) {
         return recipeDAL.searchRecipes(conditions);
+    }
+
+    public List<Recipe> findRecipes(String key, String value) {
+        List<Recipe> list = new ArrayList<>();
+        for (Recipe recipe : recipeList) {
+            if (getValueByKey(recipe, key).toString().toLowerCase().contains(value.toLowerCase())) {
+                list.add(recipe);
+            }
+        }
+        return list;
     }
 
     public List<Recipe> findRecipesBy(Map<String, Object> conditions) {
@@ -64,9 +71,19 @@ public class RecipeBLL extends Manager<Recipe> {
         return recipes;
     }
 
+    public String getAutoID() {
+        try {
+            return getAutoID("RE", 3, searchRecipes());
+        } catch (Exception e) {
+            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
+        }
+        return "";
+    }
+
     @Override
     public Object getValueByKey(Recipe recipe, String key) {
         return switch (key) {
+            case "RECIPE_ID" -> recipe.getRecipeID();
             case "PRODUCT_ID" -> recipe.getProductID();
             case "INGREDIENT_ID" -> recipe.getIngredientID();
             case "MASS" -> recipe.getMass();

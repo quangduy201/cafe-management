@@ -9,14 +9,14 @@ import java.util.List;
 
 public class DiscountDAL extends Manager {
     public DiscountDAL() throws SQLException {
-        super("discount", new ArrayList<>(
+        super("discount",
             List.of("DISCOUNT_ID",
                 "DISCOUNT_PERCENT",
                 "START_DATE",
                 "END_DATE",
                 "STATUS",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Discount> convertToDiscounts(List<List<String>> data) {

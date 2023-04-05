@@ -5,7 +5,7 @@ import com.cafe.utils.Day;
 public class Staff {
     private String staffID;
     private String name;
-    private String gender; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
+    private boolean gender; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi gender thành kiểu String
     private Day dateOfBirth;
     private String address;
     private String phone;
@@ -17,7 +17,7 @@ public class Staff {
     public Staff() {
     }
 
-    public Staff(String staffID, String name, String gender, Day dateOfBirth, String address, String phone, String email, double salary, Day dateOfEntry, boolean deleted) {
+    public Staff(String staffID, String name, boolean gender, Day dateOfBirth, String address, String phone, String email, double salary, Day dateOfEntry, boolean deleted) {
         this.staffID = staffID;
         this.name = name;
         this.gender = gender;
@@ -46,11 +46,11 @@ public class Staff {
         this.name = name;
     }
 
-    public String getGender() {
+    public boolean isGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(boolean gender) {
         this.gender = gender;
     }
 
@@ -112,9 +112,10 @@ public class Staff {
 
     @Override
     public String toString() {
+        String gender1 = gender ? "Nam" : "Nữ";
         return staffID + " | " +
             name + " | " +
-            gender + " | " +
+            gender1 + " | " +
             dateOfBirth + " | " +
             address + " | " +
             phone + " | " +

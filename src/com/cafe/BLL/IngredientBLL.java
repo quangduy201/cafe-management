@@ -14,8 +14,7 @@ public class IngredientBLL extends Manager<Ingredient> {
     public IngredientBLL() {
         try {
             ingredientDAL = new IngredientDAL();
-            ingredientList = searchIngredients();
-            readIngredient();
+            ingredientList = searchIngredients("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -65,16 +64,6 @@ public class IngredientBLL extends Manager<Ingredient> {
         return this.ingredientList;
     }
 
-    public void readIngredient() {
-        List<Ingredient> list = new ArrayList<>();
-        for (Ingredient ingredient : ingredientList) {
-            if (!ingredient.isDeleted()) {
-                list.add(ingredient);
-            }
-        }
-        ingredientList = list;
-    }
-
     public List<Ingredient> findIngredients(String key, String value) {
         List<Ingredient> list = new ArrayList<>();
         for (Ingredient ingredient : ingredientList) {
@@ -93,12 +82,7 @@ public class IngredientBLL extends Manager<Ingredient> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("ING", 3, ingredientList);
-        } catch (Exception e) {
-            System.out.println("Error occurred in IngredientBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("ING", 3, searchIngredients());
     }
 
     @Override

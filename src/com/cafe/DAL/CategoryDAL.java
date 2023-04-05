@@ -8,12 +8,12 @@ import java.util.List;
 
 public class CategoryDAL extends Manager {
     public CategoryDAL() throws SQLException {
-        super("category", new ArrayList<>(
+        super("category",
             List.of("CATEGORY_ID",
                 "NAME",
                 "QUANTITY",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Category> convertToCategories(List<List<String>> data) {

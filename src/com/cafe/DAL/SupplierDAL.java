@@ -20,7 +20,6 @@ public class SupplierDAL extends Manager {
     }
 
     public List<Supplier> convertToSuppliers(List<List<String>> data) {
-
         return convert(data, row -> {
             row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Supplier(

@@ -43,7 +43,7 @@ public class WarehousesGUI extends JPanel {
 
     public WarehousesGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
@@ -297,7 +297,9 @@ public class WarehousesGUI extends JPanel {
 
     public ActionListener getListSelectionListener() {
         return e -> {
-            String[] ingredient = (String[]) ingredientBLL.getData()[dataTable.getSelectedRow()];
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
+            String[] ingredient = rowData.substring(1, rowData.length() - 1).split(", ");
             jTextFieldsForm[0].setText(ingredient[0]);
             jTextFieldsForm[1].setText(ingredient[1]);
             jTextFieldsForm[2].setText(ingredient[2]);
@@ -355,7 +357,7 @@ public class WarehousesGUI extends JPanel {
             supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
             newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
             ingredientBLL.updateIngredient(newIngredient);
-            refreshForm();
+            loadDataTable(ingredientBLL.getIngredientList());
         }
     }
 

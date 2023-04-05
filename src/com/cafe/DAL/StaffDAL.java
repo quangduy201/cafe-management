@@ -9,7 +9,7 @@ import java.util.List;
 
 public class StaffDAL extends Manager {
     public StaffDAL() throws SQLException {
-        super("staff", new ArrayList<>(
+        super("staff",
             List.of("STAFF_ID",
                 "NAME",
                 "GENDER",
@@ -20,16 +20,18 @@ public class StaffDAL extends Manager {
                 "SALARY",
                 "DOENTRY",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Staff> convertToStaffs(List<List<String>> data) {
         return convert(data, row -> {
+            row.set(2, row.get(2).equals("0") ? "false" : "true");
+            row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             try {
                 return new Staff(
                     row.get(0), // staffID
                     row.get(1), // name
-                    row.get(2), // gender
+                    Boolean.parseBoolean(row.get(2)), // gender
                     Day.parseDay(row.get(3)), // dateOfBirth
                     row.get(4), // address
                     row.get(5), // phone
@@ -48,7 +50,7 @@ public class StaffDAL extends Manager {
         try {
             return create(staff.getStaffID(),
                 staff.getName(),
-                staff.getGender(),
+                staff.isGender(),
                 staff.getDateOfBirth(),
                 staff.getAddress(),
                 staff.getPhone(),
@@ -68,7 +70,7 @@ public class StaffDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(staff.getStaffID());
             updateValues.add(staff.getName());
-            updateValues.add(staff.getGender());
+            updateValues.add(staff.isGender());
             updateValues.add(staff.getDateOfBirth());
             updateValues.add(staff.getAddress());
             updateValues.add(staff.getPhone());
