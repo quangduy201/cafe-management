@@ -60,8 +60,7 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public List<Product> searchProducts(String... conditions) {
-        this.productList = productDAL.searchProducts(conditions);
-        return this.productList;
+        return productDAL.searchProducts(conditions);
     }
 
     public List<Product> findProducts(String key, String value) {

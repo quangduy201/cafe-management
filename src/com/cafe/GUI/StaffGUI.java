@@ -408,7 +408,6 @@ public class StaffGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        staffBLL = new StaffBLL();
         loadDataTable(staffBLL.getStaffList());
         jTextFieldsForm[0].setText(staffBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

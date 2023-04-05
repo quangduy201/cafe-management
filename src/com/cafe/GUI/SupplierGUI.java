@@ -306,7 +306,6 @@ public class SupplierGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        supplierBLL = new SupplierBLL();
         loadDataTable(supplierBLL.getSupplierList());
         jTextFieldsForm[0].setText(supplierBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

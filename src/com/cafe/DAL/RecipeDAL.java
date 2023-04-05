@@ -9,7 +9,8 @@ import java.util.List;
 public class RecipeDAL extends Manager {
     public RecipeDAL() throws SQLException {
         super("recipe", new ArrayList<>(
-            List.of("PRODUCT_ID",
+            List.of("RECIPE_ID",
+                "PRODUCT_ID",
                 "INGREDIENT_ID",
                 "MASS",
                 "UNIT",
@@ -21,18 +22,20 @@ public class RecipeDAL extends Manager {
         return convert(data, row -> {
             row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Recipe(
-                row.get(0), // productID
-                row.get(1), // ingredientID
-                Double.parseDouble(row.get(2)), // mass
-                row.get(3), // unit
-                Boolean.parseBoolean(row.get(4)) // deleted
+                row.get(0), // recipeID
+                row.get(1), // productID
+                row.get(2), // ingredientID
+                Double.parseDouble(row.get(3)), // mass
+                row.get(4), // unit
+                Boolean.parseBoolean(row.get(5)) // deleted
             );
         });
     }
 
     public int addRecipe(Recipe recipe) {
         try {
-            return create(recipe.getProductID(),
+            return create(recipe.getRecipeID(),
+                recipe.getProductID(),
                 recipe.getIngredientID(),
                 recipe.getMass(),
                 recipe.getUnit(),
@@ -47,13 +50,13 @@ public class RecipeDAL extends Manager {
     public int updateRecipe(Recipe recipe) {
         try {
             List<Object> updateValues = new ArrayList<>();
+            updateValues.add(recipe.getRecipeID());
             updateValues.add(recipe.getProductID());
             updateValues.add(recipe.getIngredientID());
             updateValues.add(recipe.getMass());
             updateValues.add(recipe.getUnit());
             updateValues.add(recipe.isDeleted());
-            return update(updateValues, "PRODUCT_ID = '" + recipe.getProductID() + "'",
-                "INGREDIENT_ID = '" + recipe.getIngredientID() + "'");
+            return update(updateValues, "RECIPE_ID = '" + recipe.getRecipeID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in RecipeDAL.updateRecipe(): " + e.getMessage());
         }
@@ -79,4 +82,6 @@ public class RecipeDAL extends Manager {
         }
         return new ArrayList<>();
     }
+
+
 }

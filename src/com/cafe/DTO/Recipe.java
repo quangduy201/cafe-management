@@ -1,6 +1,7 @@
 package com.cafe.DTO;
 
 public class Recipe {
+    private String recipeID;
     private String productID;
     private String ingredientID;
     private double mass;
@@ -10,12 +11,21 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String productID, String ingredientID, double mass, String unit, boolean deleted) {
+    public Recipe(String recipeID, String productID, String ingredientID, double mass, String unit, boolean deleted) {
+        this.recipeID = recipeID;
         this.productID = productID;
         this.ingredientID = ingredientID;
         this.mass = mass;
         this.unit = unit;
         this.deleted = deleted;
+    }
+
+    public String getRecipeID() {
+        return recipeID;
+    }
+
+    public void setRecipeID(String recipeID) {
+        this.recipeID = recipeID;
     }
 
     public String getProductID() {
@@ -60,7 +70,8 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return productID + " | " +
+        return recipeID + " | " +
+            productID + " | " +
             ingredientID + " | " +
             mass + " | " +
             unit;

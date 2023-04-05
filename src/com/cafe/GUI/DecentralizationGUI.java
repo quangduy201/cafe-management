@@ -338,7 +338,6 @@ public class DecentralizationGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        decentralizationBLL = new DecentralizationBLL();
         loadDataTable(decentralizationBLL.getDecentralizationList());
         jTextFieldsForm[0].setText(decentralizationBLL.getAutoID());
         jTextFieldsForm[1].setText(null);

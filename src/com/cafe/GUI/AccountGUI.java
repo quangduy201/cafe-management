@@ -380,7 +380,6 @@ public class AccountGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        accountBLL = new AccountBLL();
         loadDataTable(accountBLL.getAccountList());
         jTextFieldsForm[0].setText(accountBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

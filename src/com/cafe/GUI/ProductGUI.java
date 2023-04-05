@@ -421,7 +421,6 @@ public class ProductGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        productBLL = new ProductBLL();
         loadDataTable(productBLL.getProductList());
         jTextFieldsForm[0].setText(productBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {
