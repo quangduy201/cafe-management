@@ -2,7 +2,6 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.RecipeDAL;
 import com.cafe.DTO.Recipe;
-import com.cafe.DTO.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +46,7 @@ public class RecipeBLL extends Manager<Recipe> {
     }
 
     public boolean updateRecipe(Recipe recipe) {
-        List<Recipe> recipes = findRecipesBy(Map.of("PRODUCT_ID", recipe.getProductID(), "INGREDIENT_ID", recipe.getIngredientID()));
-        Recipe recipeNeedsUpdating = recipes.get(0);
-        recipeNeedsUpdating.setMass(recipe.getMass());
-        recipeNeedsUpdating.setUnit(recipe.getUnit());
-        recipeNeedsUpdating.setDeleted(recipe.isDeleted());
+
         return recipeDAL.updateRecipe(recipe) != 0;
     }
 
@@ -76,9 +71,19 @@ public class RecipeBLL extends Manager<Recipe> {
         return recipes;
     }
 
+    public String getAutoID() {
+        try {
+            return getAutoID("RE", 3, searchRecipes());
+        } catch (Exception e) {
+            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
+        }
+        return "";
+    }
+
     @Override
     public Object getValueByKey(Recipe recipe, String key) {
         return switch (key) {
+            case "RECIPE_ID" -> recipe.getRecipeID();
             case "PRODUCT_ID" -> recipe.getProductID();
             case "INGREDIENT_ID" -> recipe.getIngredientID();
             case "MASS" -> recipe.getMass();

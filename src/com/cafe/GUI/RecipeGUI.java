@@ -3,7 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
 import com.cafe.BLL.RecipeBLL;
-import com.cafe.BLL.RecipeBLL;
+
 import com.cafe.DTO.Recipe;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -39,7 +39,7 @@ public class RecipeGUI extends JPanel {
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm;
+    private JTextField jTextFieldsForm[];
     private Button btAdd;
     private Button btUpd;
     private Button btRef;
@@ -69,7 +69,7 @@ public class RecipeGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(new String [] {columsName.get(2), columsName.get(0), columsName.get(1), columsName.get(3)});
+        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
         cbbProductID = new JComboBox<>(productsID.toArray());
         cbbProductIDSearch = new JComboBox<>(productsID.toArray());
         cbbIngredientID = new JComboBox<>(ingredientsID.toArray());
@@ -77,7 +77,7 @@ public class RecipeGUI extends JPanel {
         cbbUnit = new JComboBox<>(new String [] {"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String [] {"kg", "l", "bag"});
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField(20);
+        jTextFieldsForm = new JTextField [columsName.size()-4];
         btAdd = new Button();
         btUpd = new Button();
         btRef = new Button();
@@ -157,30 +157,40 @@ public class RecipeGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlRecipeConfiguration.setLayout(new GridLayout(4, 2, 20, 20));
+        pnlRecipeConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
         pnlRecipeConfiguration.setBackground(new Color(0xFFFFFF));
         pnlRecipeConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlRecipeConfiguration.setPreferredSize(new Dimension(635, 200));
+        pnlRecipeConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlRecipeConfiguration, BorderLayout.NORTH);
 
+        int index = 0;
         for (int i = 0; i < columsName.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
             jLabelsForm[i].setText(columsName.get(i) + ": ");
             pnlRecipeConfiguration.add(jLabelsForm[i]);
             switch (columsName.get(i)) {
+                case "RECIPE_ID" -> {
+                    jTextFieldsForm[index] = new JTextField(recipeBLL.getAutoID());
+                    jTextFieldsForm[index].setEnabled(false);
+                    jTextFieldsForm[index].setBorder(null);
+                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    pnlRecipeConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "PRODUCT_ID" -> pnlRecipeConfiguration.add(cbbProductID);
                 case "INGREDIENT_ID" -> pnlRecipeConfiguration.add(cbbIngredientID);
                 case "UNIT" -> pnlRecipeConfiguration.add(cbbUnit);
                 default -> {
-                    jTextFieldsForm = new JTextField();
-                    jTextFieldsForm.setText(null);
-                    pnlRecipeConfiguration.add(jTextFieldsForm);
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlRecipeConfiguration.add(jTextFieldsForm[index]);
+                    index++;
                 }
             }
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 350));
+        showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
@@ -297,10 +307,11 @@ public class RecipeGUI extends JPanel {
             DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
             String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
             String[] recipe = rowData.substring(1, rowData.length() - 1).split(", ");
-            cbbProductID.setSelectedItem(recipe[0]);
-            cbbIngredientID.setSelectedItem(recipe[1]);
-            jTextFieldsForm.setText(recipe[2]);
-            cbbUnit.setSelectedItem(recipe[3]);
+            jTextFieldsForm[0].setText(recipe[0]);
+            cbbProductID.setSelectedItem(recipe[1]);
+            cbbIngredientID.setSelectedItem(recipe[2]);
+            jTextFieldsForm[1].setText(recipe[3]);
+            cbbUnit.setSelectedItem(recipe[4]);
             btAdd.setEnabled(false);
             btUpd.setEnabled(true);
         };
@@ -323,15 +334,17 @@ public class RecipeGUI extends JPanel {
                 return;
             }
             Recipe newRecipe;
+            String recipeID;
             String productID;
             String ingredientID;
             double mass;
             String unit;
+            recipeID = jTextFieldsForm[0].getText();
             productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
             ingredientID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            mass = Double.parseDouble(jTextFieldsForm.getText());
+            mass = Double.parseDouble(jTextFieldsForm[1].getText());
             unit = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            newRecipe = new Recipe(productID, ingredientID, mass, unit, false);
+            newRecipe = new Recipe(recipeID, productID, ingredientID, mass, unit, false);
             recipeBLL.addRecipe(newRecipe);
             refreshForm();
         }
@@ -340,15 +353,18 @@ public class RecipeGUI extends JPanel {
     public void updateRecipe() {
         if (checkInput()) {
             Recipe newRecipe;
+            String recipeID;
             String productID;
             String ingredientID;
             double mass;
             String unit;
+            recipeID = jTextFieldsForm[0].getText();
             productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
             ingredientID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            mass = Double.parseDouble(jTextFieldsForm.getText());
+            mass = Double.parseDouble(jTextFieldsForm[1].getText());
             unit = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            newRecipe = new Recipe(productID, ingredientID, mass, unit, false);
+            newRecipe = new Recipe(recipeID, productID, ingredientID, mass, unit, false);
+            recipeBLL.addRecipe(newRecipe);
             recipeBLL.updateRecipe(newRecipe);
             loadDataTable(recipeBLL.getRecipeList());
         }
@@ -360,7 +376,8 @@ public class RecipeGUI extends JPanel {
         loadDataTable(recipeBLL.getRecipeList());
         cbbProductID.setSelectedItem(0);
         cbbIngredientID.setSelectedItem(0);
-        jTextFieldsForm.setText(null);
+        jTextFieldsForm[0].setText(null);
+        jTextFieldsForm[1].setText(null);
         cbbUnit.setSelectedItem(0);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
@@ -375,15 +392,17 @@ public class RecipeGUI extends JPanel {
     }
 
     public boolean checkInput() {
-        if (jTextFieldsForm.getText().isEmpty()) {
-            System.out.println(jTextFieldsForm.getText());
-            JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            return false;
+        for (JTextField textField : jTextFieldsForm) {
+            if (textField.getText().isEmpty()) {
+                System.out.println(textField.getText());
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                return false;
+            }
         }
         try {
-            Double.parseDouble(jTextFieldsForm.getText());
+            Double.parseDouble(jTextFieldsForm[1].getText());
         } catch (NumberFormatException exception) {
-            jTextFieldsForm.setText(null);
+            jTextFieldsForm[1].setText(null);
             JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
             return false;
         }
