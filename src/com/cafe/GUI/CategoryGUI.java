@@ -305,7 +305,6 @@ public class CategoryGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        categoryBLL = new CategoryBLL();
         loadDataTable(categoryBLL.getCategoryList());
         jTextFieldsForm[0].setText(categoryBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

@@ -357,7 +357,6 @@ public class RecipeGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        recipeBLL = new RecipeBLL();
         loadDataTable(recipeBLL.getRecipeList());
         cbbProductID.setSelectedItem(0);
         cbbIngredientID.setSelectedItem(0);

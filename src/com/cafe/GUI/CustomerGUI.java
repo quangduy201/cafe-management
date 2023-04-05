@@ -461,7 +461,6 @@ public class CustomerGUI extends JPanel {
     public void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        customerBLL = new CustomerBLL();
         loadDataTable(customerBLL.getCustomerList());
         jTextFieldsForm[0].setText(customerBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {
