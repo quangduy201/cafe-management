@@ -88,12 +88,7 @@ public class CustomerBLL extends Manager<Customer> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("CUS", 3, searchCustomers());
-        } catch (Exception e) {
-            System.out.println("Error occurred in CustomerBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("CUS", 3, searchCustomers());
     }
 
     @Override

@@ -81,12 +81,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("DE", 2, searchDecentralization());
-        } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("DE", 2, searchDecentralization());
     }
 
     @Override

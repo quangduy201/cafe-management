@@ -81,12 +81,7 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("AC", 3, searchAccounts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("AC", 3, searchAccounts());
     }
 
     @Override

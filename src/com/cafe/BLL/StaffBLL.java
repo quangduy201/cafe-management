@@ -88,12 +88,7 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("ST", 2, searchStaffs());
-        } catch (Exception e) {
-            System.out.println("Error occurred in StaffBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("ST", 2, searchStaffs());
     }
 
     @Override

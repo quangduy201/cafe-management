@@ -82,12 +82,7 @@ public class CategoryBLL extends Manager<Category> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("CA", 2, searchCategories());
-        } catch (Exception e) {
-            System.out.println("Error occurred in CategoryBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("CA", 2, searchCategories());
     }
 
     @Override

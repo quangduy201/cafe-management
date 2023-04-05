@@ -82,12 +82,7 @@ public class IngredientBLL extends Manager<Ingredient> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("ING", 3, searchIngredients());
-        } catch (Exception e) {
-            System.out.println("Error occurred in IngredientBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("ING", 3, searchIngredients());
     }
 
     @Override

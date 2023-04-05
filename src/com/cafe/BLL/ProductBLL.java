@@ -60,16 +60,19 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public List<Product> searchProducts(String... conditions) {
-        this.productList = productDAL.searchProducts(conditions);
-        return this.productList;
+        return productDAL.searchProducts(conditions);
     }
 
     public List<Product> findProducts(String key, String value) {
         List<Product> list = new ArrayList<>();
-        for (Product product : productList) {
-            if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase())) {
-                list.add(product);
-            }
+        if (key.equals("SIZED")) {
+            for (Product product : productList)
+                if (getValueByKey(product, key).toString().equals(value))
+                    list.add(product);
+        } else {
+            for (Product product : productList)
+                if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase()))
+                    list.add(product);
         }
         return list;
     }
@@ -82,12 +85,7 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public String getAutoID() {
-        try {
-            return getAutoID("PR", 3, searchProducts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in ProductBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("PR", 3, searchProducts());
     }
 
     @Override
