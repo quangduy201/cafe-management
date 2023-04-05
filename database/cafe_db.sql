@@ -82,6 +82,25 @@ INSERT INTO `bill` (`BILL_ID`, `CUSTOMER_ID`, `STAFF_ID`, `DOPURCHASE`, `TOTAL`,
 ('BI0009', 'CUS009', 'ST05', '2023-01-09', 277000, b'0'),
 ('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, b'0');
 
+--
+-- Triggers `bill`
+--
+DELIMITER $$
+CREATE TRIGGER `UpdateBill` AFTER UPDATE ON `bill`
+FOR EACH ROW BEGIN
+IF NEW.DELETED <> OLD.DELETED THEN
+	CREATE TEMPORARY TABLE my_temp_table ( INGREDIENT_ID VARCHAR(10) NOT NULL, MASS DOUBLE NOT NULL, PRIMARY KEY (INGREDIENT_ID) );
+	INSERT INTO my_temp_table (INGREDIENT_ID, MASS)
+    SELECT RE.INGREDIENT_ID, SUM(RE.MASS*BD.QUANTITY) FROM bill_details BD JOIN recipe RE ON BD.PRODUCT_ID = RE.PRODUCT_ID
+    WHERE BD.BILL_ID = NEW.BILL_ID
+    GROUP BY RE.INGREDIENT_ID;
+	UPDATE ingredient
+    SET ingredient.QUANTITY = ingredient.QUANTITY + (SELECT MASS FROM my_temp_table WHERE my_temp_table.INGREDIENT_ID = ingredient.INGREDIENT_ID)
+    WHERE ingredient.INGREDIENT_ID IN (SELECT INGREDIENT_ID FROM my_temp_table);
+END IF;
+END
+$$
+DELIMITER ;
 -- --------------------------------------------------------
 
 --
@@ -340,44 +359,44 @@ CREATE TABLE `ingredient` (
 --
 
 INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `SUPPLIER_ID`, `DELETED`) VALUES
-('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10.840000000000002, 'kg', 'SUP001', b'0'),
-('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10.94, 'l', 'SUP001', b'0'),
-('ING003', 'SỮA ĐẶC', 10.96, 'l', 'SUP001', b'0'),
-('ING004', 'ĐÁ', 5.700000000000001, 'bag', 'SUP001', b'0'),
-('ING005', 'NƯỚC', 999.3100000000001, 'l', 'SUP001', b'0'),
-('ING006', 'MUỐI', 5.996, 'kg', 'SUP001', b'0'),
-('ING007', 'ĐƯỜNG CÁT', 5.9, 'kg', 'SUP001', b'0'),
-('ING008', 'SYRUP HẠNH NHÂN', 5.98, 'l', 'SUP001', b'0'),
-('ING009', 'SYRUP ĐƯỜNG', 5.98, 'l', 'SUP001', b'0'),
-('ING010', 'SỮA TƯƠI MILKLAB', 5.85, 'l', 'SUP001', b'0'),
-('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10.95, 'kg', 'SUP001', b'0'),
-('ING012', 'THẠCH CAFE', 10.95, 'kg', 'SUP001', b'0'),
-('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUẤC', 6, 'l', 'SUP001', b'0'),
-('ING014', 'KEM SỮA', 6, 'l', 'SUP001', b'0'),
-('ING015', 'SỐT CHOCOLA', 6, 'l', 'SUP001', b'0'),
-('ING016', 'PATE', 2.985, 'kg', 'SUP002', b'0'),
-('ING017', 'TƯƠNG ỚT', 5.99, 'l', 'SUP002', b'0'),
-('ING018', 'CHẢ BÔNG', 2.97, 'kg', 'SUP002', b'0'),
-('ING019', 'CỦ CẢI MUỐI', 5.97, 'kg', 'SUP002', b'0'),
-('ING020', 'BÁNH MÌ QUE', 5.9, 'bag', 'SUP003', b'0'),
-('ING021', 'SỐT GÀ PHÔ MAI', 3, 'kg', 'SUP002', b'0'),
-('ING022', 'TRÀ Ô LONG', 11, 'kg', 'SUP001', b'0'),
-('ING023', 'HẠT SEN', 4, 'kg', 'SUP001', b'0'),
-('ING024', 'MILK FOAM', 6, 'l', 'SUP001', b'0'),
-('ING025', 'THẠCH CỦ NĂNG', 6, 'kg', 'SUP001', b'0'),
-('ING026', 'TRÀ ĐÀO', 10.92, 'kg', 'SUP001', b'0'),
-('ING027', 'SỮA RICH', 5.94, 'l', 'SUP001', b'0'),
-('ING028', 'THẠCH ĐÀO', 5.96, 'kg', 'SUP001', b'0'),
-('ING029', 'ĐÀO', 5.65, 'kg', 'SUP001', b'0'),
-('ING030', 'SẢ', 5.8, 'kg', 'SUP001', b'0'),
-('ING031', 'SYRUP ĐÀO', 5.95, '', 'SUP001', b'0'),
-('ING032', 'TRÀ ĐEN', 10.925, 'kg', 'SUP001', b'0'),
-('ING033', 'SYRUP VẢI NGÂM', 6, 'l', 'SUP001', b'0'),
-('ING034', 'THẠCH VẢI', 6, 'kg', 'SUP001', b'0'),
-('ING035', 'VẢI', 6, 'kg', 'SUP001', b'0'),
-('ING036', 'BỘT TRÀ XANH', 3, 'kg', 'SUP001', b'0'),
-('ING037', 'KEM BÉO RICH', 6, 'l', 'SUP001', b'0'),
-('ING038', 'ĐẬU ĐỎ', 6, 'kg', 'SUP001', b'0');
+('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10, 'kg', 'SUP001', b'0'),
+('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10, 'l', 'SUP001', b'0'),
+('ING003', 'SỮA ĐẶC', 10, 'l', 'SUP001', b'0'),
+('ING004', 'ĐÁ', 10, 'bag', 'SUP001', b'0'),
+('ING005', 'NƯỚC', 10, 'l', 'SUP001', b'0'),
+('ING006', 'MUỐI', 10, 'kg', 'SUP001', b'0'),
+('ING007', 'ĐƯỜNG CÁT', 10, 'kg', 'SUP001', b'0'),
+('ING008', 'SYRUP HẠNH NHÂN', 10, 'l', 'SUP001', b'0'),
+('ING009', 'SYRUP ĐƯỜNG', 10, 'l', 'SUP001', b'0'),
+('ING010', 'SỮA TƯƠI MILKLAB', 10, 'l', 'SUP001', b'0'),
+('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10, 'kg', 'SUP001', b'0'),
+('ING012', 'THẠCH CAFE', 10, 'kg', 'SUP001', b'0'),
+('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUẤC', 10, 'l', 'SUP001', b'0'),
+('ING014', 'KEM SỮA', 10, 'l', 'SUP001', b'0'),
+('ING015', 'SỐT CHOCOLA', 10, 'l', 'SUP001', b'0'),
+('ING016', 'PATE', 10, 'kg', 'SUP002', b'0'),
+('ING017', 'TƯƠNG ỚT', 10, 'l', 'SUP002', b'0'),
+('ING018', 'CHẢ BÔNG', 10, 'kg', 'SUP002', b'0'),
+('ING019', 'CỦ CẢI MUỐI', 10, 'kg', 'SUP002', b'0'),
+('ING020', 'BÁNH MÌ QUE', 10, 'bag', 'SUP003', b'0'),
+('ING021', 'SỐT GÀ PHÔ MAI', 10, 'kg', 'SUP002', b'0'),
+('ING022', 'TRÀ Ô LONG', 10, 'kg', 'SUP001', b'0'),
+('ING023', 'HẠT SEN', 10, 'kg', 'SUP001', b'0'),
+('ING024', 'MILK FOAM', 10, 'l', 'SUP001', b'0'),
+('ING025', 'THẠCH CỦ NĂNG', 10, 'kg', 'SUP001', b'0'),
+('ING026', 'TRÀ ĐÀO', 10, 'kg', 'SUP001', b'0'),
+('ING027', 'SỮA RICH', 10, 'l', 'SUP001', b'0'),
+('ING028', 'THẠCH ĐÀO', 10, 'kg', 'SUP001', b'0'),
+('ING029', 'ĐÀO', 10, 'kg', 'SUP001', b'0'),
+('ING030', 'SẢ', 10, 'kg', 'SUP001', b'0'),
+('ING031', 'SYRUP ĐÀO', 10, '', 'SUP001', b'0'),
+('ING032', 'TRÀ ĐEN', 10, 'kg', 'SUP001', b'0'),
+('ING033', 'SYRUP VẢI NGÂM', 10, 'l', 'SUP001', b'0'),
+('ING034', 'THẠCH VẢI', 10, 'kg', 'SUP001', b'0'),
+('ING035', 'VẢI', 10, 'kg', 'SUP001', b'0'),
+('ING036', 'BỘT TRÀ XANH', 10, 'kg', 'SUP001', b'0'),
+('ING037', 'KEM BÉO RICH', 10, 'l', 'SUP001', b'0'),
+('ING038', 'ĐẬU ĐỎ', 10, 'kg', 'SUP001', b'0');
 
 -- --------------------------------------------------------
 
