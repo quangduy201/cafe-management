@@ -8,13 +8,13 @@ import java.util.List;
 
 public class RecipeDAL extends Manager {
     public RecipeDAL() throws SQLException {
-        super("recipe", new ArrayList<>(
+        super("recipe",
             List.of("PRODUCT_ID",
                 "INGREDIENT_ID",
                 "MASS",
                 "UNIT",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Recipe> convertToRecipes(List<List<String>> data) {

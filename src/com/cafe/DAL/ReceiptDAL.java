@@ -9,13 +9,13 @@ import java.util.List;
 
 public class ReceiptDAL extends Manager {
     public ReceiptDAL() throws SQLException {
-        super("receipt", new ArrayList<>(
+        super("receipt",
             List.of("RECEIPT_ID",
                 "STAFF_ID",
                 "DOR",
                 "GRAND_TOTAL",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Receipt> convertToReceipts(List<List<String>> data) {

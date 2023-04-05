@@ -9,14 +9,14 @@ import java.util.List;
 
 public class BillDAL extends Manager {
     public BillDAL() throws SQLException {
-        super("bill", new ArrayList<>(
+        super("bill",
             List.of("BILL_ID",
                 "CUSTOMER_ID",
                 "STAFF_ID",
                 "DOPURCHASE",
                 "TOTAL",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Bill> convertToBills(List<List<String>> data) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class StaffDAL extends Manager {
     public StaffDAL() throws SQLException {
-        super("staff", new ArrayList<>(
+        super("staff",
             List.of("STAFF_ID",
                 "NAME",
                 "GENDER",
@@ -20,7 +20,7 @@ public class StaffDAL extends Manager {
                 "SALARY",
                 "DOENTRY",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Staff> convertToStaffs(List<List<String>> data) {

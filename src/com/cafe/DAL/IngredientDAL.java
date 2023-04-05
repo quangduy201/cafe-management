@@ -8,14 +8,14 @@ import java.util.List;
 
 public class IngredientDAL extends Manager {
     public IngredientDAL() throws SQLException {
-        super("ingredient", new ArrayList<>(
+        super("ingredient",
             List.of("INGREDIENT_ID",
                 "NAME",
                 "QUANTITY",
                 "UNIT",
                 "SUPPLIER_ID",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Ingredient> convertToIngredients(List<List<String>> data) {

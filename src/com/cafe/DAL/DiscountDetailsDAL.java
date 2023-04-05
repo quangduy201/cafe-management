@@ -8,10 +8,10 @@ import java.util.List;
 
 public class DiscountDetailsDAL extends Manager {
     public DiscountDetailsDAL() throws SQLException {
-        super("discount_details", new ArrayList<>(
+        super("discount_details",
             List.of("DISCOUNT_ID",
                 "PRODUCT_ID")
-        ));
+        );
     }
 
     public List<DiscountDetails> convertToDiscountDetails(List<List<String>> data) {

@@ -8,11 +8,11 @@ import java.util.List;
 
 public class BillDetailsDAL extends Manager {
     public BillDetailsDAL() throws SQLException {
-        super("bill_details", new ArrayList<>(
+        super("bill_details",
             List.of("BILL_ID",
                 "PRODUCT_ID",
                 "QUANTITY")
-        ));
+        );
     }
 
     public List<BillDetails> convertToBillDetails(List<List<String>> data) {
