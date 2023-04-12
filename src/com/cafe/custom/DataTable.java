@@ -1,17 +1,15 @@
 package com.cafe.custom;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.function.Function;
 
 public class DataTable extends JTable {
     private int lastSelectedRow = -1;
+
     public DataTable(Object[][] data, Object[] columnNames, ActionListener actionListener) {
         super(new DefaultTableModel(data, columnNames) {
             @Override
@@ -42,7 +40,7 @@ public class DataTable extends JTable {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (DataTable.super.getSelectedRow() == -1) {
+                if (getSelectedRow() == -1) {
                     lastSelectedRow = -1;
                 }
             }

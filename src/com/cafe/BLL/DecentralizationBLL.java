@@ -4,6 +4,7 @@ import com.cafe.DAL.DecentralizationDAL;
 import com.cafe.DTO.Decentralization;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,10 +42,6 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     }
 
     public boolean addDecentralization(Decentralization decentralization) {
-        if (getIndex(decentralization, "DECENTRALIZATION_NAME", decentralizationList) != -1) {
-            System.out.println("Can't add new decentralization. Name already exists.");
-            return false;
-        }
         decentralizationList.add(decentralization);
         return decentralizationDAL.addDecentralization(decentralization) != 0;
     }
@@ -73,11 +70,36 @@ public class DecentralizationBLL extends Manager<Decentralization> {
         return list;
     }
 
-    public List<Decentralization> findDecentralizationBy(Map<String, Object> conditions) {
+    public List<Decentralization> findDecentralizationsBy(Map<String, Object> conditions) {
         List<Decentralization> decentralizations = decentralizationList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
             decentralizations = findObjectsBy(entry.getKey(), entry.getValue(), decentralizations);
         return decentralizations;
+    }
+
+    public boolean exists(Decentralization decentralization) {
+        Map<String, Object> conditions = new HashMap<>(Map.of(
+            "IS_SALE", decentralization.getIsSale(),
+            "IS_PRODUCT", decentralization.getIsDecentralization(),
+            "IS_CATEGORY", decentralization.getIsCategory(),
+            "IS_RECIPE", decentralization.getIsRecipe(),
+            "IS_IMPORT", decentralization.getIsImport(),
+            "IS_BILL", decentralization.getIsBill(),
+            "IS_WAREHOUSES", decentralization.getIsWarehouses()
+        ));
+        conditions.putAll(Map.of(
+            "IS_ACCOUNT", decentralization.getIsAccount(),
+            "IS_STAFF", decentralization.getIsStaff(),
+            "IS_CUSTOMER", decentralization.getIsCustomer(),
+            "IS_DISCOUNT", decentralization.getIsDiscount(),
+            "IS_DECENTRALIZATION", decentralization.getIsDecentralization(),
+            "DECENTRALIZATION_NAME", decentralization.getDecentralizationName()
+        ));
+        return !findDecentralizationsBy(conditions).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findDecentralizationsBy(conditions).isEmpty();
     }
 
     public String getAutoID() {
@@ -104,5 +126,4 @@ public class DecentralizationBLL extends Manager<Decentralization> {
             default -> null;
         };
     }
-
 }

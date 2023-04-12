@@ -41,10 +41,6 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public boolean addProduct(Product product) {
-        if (getIndex(product, "NAME", productList) != -1) {
-            System.out.println("Can't add new product. Name already exists.");
-            return false;
-        }
         productList.add(product);
         return productDAL.addProduct(product) != 0;
     }
@@ -84,6 +80,20 @@ public class ProductBLL extends Manager<Product> {
         return products;
     }
 
+    public boolean exists(Product product) {
+        return !findProductsBy(Map.of(
+            "NAME", product.getName(),
+            "CATEGORY_ID", product.getCategoryID(),
+            "SIZED", product.getSized(),
+            "COST", product.getCost(),
+            "IMAGE", product.getImage()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findProductsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
         return getAutoID("PR", 3, searchProducts());
     }
@@ -100,5 +110,4 @@ public class ProductBLL extends Manager<Product> {
             default -> null;
         };
     }
-
 }

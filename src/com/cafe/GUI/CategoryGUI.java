@@ -1,7 +1,6 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
-import com.cafe.BLL.CategoryBLL;
 import com.cafe.DTO.Category;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -12,13 +11,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Vector;
 
 public class CategoryGUI extends JPanel {
     private CategoryBLL categoryBLL = new CategoryBLL();
@@ -31,10 +28,10 @@ public class CategoryGUI extends JPanel {
     private JPanel pnlCategoryConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
@@ -47,7 +44,7 @@ public class CategoryGUI extends JPanel {
     }
 
     public void initComponents() {
-        List<String> columsName = categoryBLL.getCategoryDAL().getColumnNames();
+        List<String> columnNames = categoryBLL.getCategoryDAL().getColumnNames();
         category = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -55,10 +52,10 @@ public class CategoryGUI extends JPanel {
         pnlCategoryConfiguration = new JPanel();
         showImg = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size() - 1];
+        jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -106,7 +103,7 @@ public class CategoryGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(categoryBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(categoryBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -116,17 +113,17 @@ public class CategoryGUI extends JPanel {
         pnlCategoryConfiguration.setPreferredSize(new Dimension(635, 150));
         roundPanel2.add(pnlCategoryConfiguration, BorderLayout.NORTH);
 
-        for (int i = 0; i < columsName.size() - 1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i) + ": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCategoryConfiguration.add(jLabelsForm[i]);
-            if ("CATEGORY_ID".equals(columsName.get(i))) {
+            if ("CATEGORY_ID".equals(columnNames.get(i))) {
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
-            } else if ("QUANTITY".equals(columsName.get(i))) {
+            } else if ("QUANTITY".equals(columnNames.get(i))) {
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setText("0");
@@ -228,23 +225,6 @@ public class CategoryGUI extends JPanel {
         mode.add(btRef);
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] category = rowData.substring(1, rowData.length() - 1).split(", ");
-            for (int i = 0; i < category.length; i++) {
-                if (i==2) {
-                    jTextFieldsForm[i].setEnabled(false);
-                }
-                jTextFieldsForm[i].setText(category[i]);
-            }
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
     public void searchCategories() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(categoryBLL.getCategoryList());
@@ -255,51 +235,50 @@ public class CategoryGUI extends JPanel {
 
     public void addCategory() {
         if (checkInput()) {
-            Category newCategory;
-            String categoryID = null;
-            String name = null;
-            int quantity = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> categoryID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> quantity = Integer.parseInt(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            newCategory = new Category(categoryID, name, quantity, false);
-            categoryBLL.addCategory(newCategory);
+            Category newCategory = getForm();
+            if (categoryBLL.exists(newCategory))
+                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (categoryBLL.exists(Map.of("NAME", newCategory.getName())))
+                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (categoryBLL.addCategory(newCategory))
+                JOptionPane.showMessageDialog(this, "Successfully added new category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new category!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateCategory() {
         if (checkInput()) {
-            Category newCategory;
-            String categoryID = null;
-            String name = null;
-            int quantity = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> categoryID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> quantity = Integer.parseInt(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            newCategory = new Category(categoryID, name, quantity, false);
-            categoryBLL.updateCategory(newCategory);
+            Category newCategory = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentName = dataTable.getValueAt(selectedRow, 1).toString();
+            boolean valueChanged = !newCategory.getName().equals(currentName);
+            if (categoryBLL.exists(newCategory))
+                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && categoryBLL.exists(Map.of("NAME", newCategory.getName())))
+                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (categoryBLL.updateCategory(newCategory))
+                JOptionPane.showMessageDialog(this, "Successfully updated category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update category!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(categoryBLL.getCategoryList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteCategory() {
-        Category category = new Category();
-        category.setCategoryID(jTextFieldsForm[0].getText());
-        categoryBLL.deleteCategory(category);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this category?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Category category = new Category();
+            category.setCategoryID(jTextFieldsForm[0].getText());
+            if (categoryBLL.deleteCategory(category))
+                JOptionPane.showMessageDialog(this, "Successfully deleted category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete category!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -308,7 +287,7 @@ public class CategoryGUI extends JPanel {
         loadDataTable(categoryBLL.getCategoryList());
         jTextFieldsForm[0].setText(categoryBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {
-            if (i==2) {
+            if (i == 2) {
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setText("0");
             } else {
@@ -318,6 +297,41 @@ public class CategoryGUI extends JPanel {
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
         btDel.setEnabled(false);
+    }
+
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] category = String.join(" | ", data).split(" \\| ");
+        for (int i = 0; i < category.length; i++) {
+            if (i == 2) {
+                jTextFieldsForm[i].setEnabled(false);
+            }
+            jTextFieldsForm[i].setText(category[i]);
+        }
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Category getForm() {
+        String categoryID = null;
+        String name = null;
+        int quantity = 0;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> categoryID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
+                case 2 -> quantity = Integer.parseInt(jTextFieldsForm[i].getText());
+                default -> {
+                }
+            }
+        }
+        return new Category(categoryID, name, quantity, false);
     }
 
     public void loadDataTable(List<Category> categoryList) {
@@ -331,10 +345,17 @@ public class CategoryGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
+        }
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
     }

@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class StaffGUI extends JPanel {
@@ -28,18 +29,19 @@ public class StaffGUI extends JPanel {
     private JPanel showImg;
     private JPanel mode;
     private JPanel radiusBtGender;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
     private JRadioButton rbFemale;
     private JRadioButton rbFemaleSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
-    private com.cafe.custom.Button btAdd;
-    private com.cafe.custom.Button btUpd;
-    private com.cafe.custom.Button btDel;
+    private JTextField[] jTextFieldsForm;
+    private Button btAdd;
+    private Button btUpd;
+    private Button btDel;
     private Button btRef;
+
     public StaffGUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -91,12 +93,7 @@ public class StaffGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
 
         radiusBtGender.setLayout(new FlowLayout());
@@ -109,18 +106,8 @@ public class StaffGUI extends JPanel {
         radiusBtGender.setBackground(null);
         rbMaleSearch.setBackground(null);
         rbFemaleSearch.setBackground(null);
-        rbMaleSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                genderSearch();
-            }
-        });
-        rbFemaleSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                genderSearch();
-            }
-        });
+        rbMaleSearch.addItemListener(e -> genderSearch());
+        rbFemaleSearch.addItemListener(e -> genderSearch());
         search.add(radiusBtGender);
 
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -141,7 +128,7 @@ public class StaffGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(staffBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(staffBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -211,11 +198,7 @@ public class StaffGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btAdd.isEnabled()) {
-                    try {
-                        addStaff();
-                    } catch (Exception ignored) {
-
-                    }
+                    addStaff();
                 }
             }
         });
@@ -235,10 +218,7 @@ public class StaffGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btUpd.isEnabled()) {
-                    try {
-                        updateStaff();
-                    } catch (Exception ignored) {
-                    }
+                    updateStaff();
                 }
             }
         });
@@ -297,31 +277,6 @@ public class StaffGUI extends JPanel {
     private void genderSearch() {
         boolean gender = rbMaleSearch.isSelected();
         loadDataTable(staffBLL.findStaffs("GENDER", gender));
-
-    }
-
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] staff = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(staff[0]);
-            jTextFieldsForm[1].setText(staff[1]);
-            if (staff[2].contains("Nam")) {
-                rbMale.setSelected(true);
-            } else {
-                rbFemale.setSelected(true);
-            }
-            jTextFieldsForm[2].setText(staff[3]);
-            jTextFieldsForm[3].setText(staff[4]);
-            jTextFieldsForm[4].setText(staff[5]);
-            jTextFieldsForm[5].setText(staff[6]);
-            jTextFieldsForm[6].setText(staff[7]);
-            jTextFieldsForm[7].setText(staff[8]);
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
     }
 
     public void searchStaffs() {
@@ -332,77 +287,64 @@ public class StaffGUI extends JPanel {
         }
     }
 
-    public void addStaff() throws Exception {
+    public void addStaff() {
         if (checkInput()) {
-            Staff newStaff;
-            String staffID = null;
-            String name = null;
-            boolean gender;
-            Day dateOfBirth = null;
-            String address = null;
-            String phone = null;
-            String email = null;
-            double salary = 0;
-            Day dateOfEntry = null;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> staffID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
-                    case 3 -> address = jTextFieldsForm[i].getText();
-                    case 4 -> phone = jTextFieldsForm[i].getText();
-                    case 5 -> email = jTextFieldsForm[i].getText();
-                    case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText());
-                    case 7 -> dateOfEntry = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
+            Staff newStaff = null;
+            try {
+                newStaff = getForm();
+            } catch (Exception ignored) {
+
             }
-            gender = rbMale.isSelected();
-            newStaff = new Staff(staffID, name, gender, dateOfBirth, address, phone, email, salary, dateOfEntry, false);
-            staffBLL.addStaff(newStaff);
+            assert newStaff != null;
+            if (staffBLL.exists(newStaff))
+                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (staffBLL.exists(Map.of("PHONE", newStaff.getPhone())))
+                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (staffBLL.addStaff(newStaff))
+                JOptionPane.showMessageDialog(this, "Successfully added new staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new staff!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
-    public void updateStaff() throws Exception {
+    public void updateStaff() {
         if (checkInput()) {
-            Staff newStaff;
-            String staffID = null;
-            String name = null;
-            boolean gender;
-            Day dateOfBirth = null;
-            String address = null;
-            String phone = null;
-            String email = null;
-            double salary = 0;
-            Day dateOfEntry = null;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> staffID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
-                    case 3 -> address = jTextFieldsForm[i].getText();
-                    case 4 -> phone = jTextFieldsForm[i].getText();
-                    case 5 -> email = jTextFieldsForm[i].getText();
-                    case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText());
-                    case 7 -> dateOfEntry = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
+            Staff newStaff = null;
+            try {
+                newStaff = getForm();
+            } catch (Exception ignored) {
+
             }
-            gender = rbMale.isSelected();
-            newStaff = new Staff(staffID, name, gender, dateOfBirth, address, phone, email, salary, dateOfEntry, false);
-            staffBLL.updateStaff(newStaff);
+            assert newStaff != null;
+            int selectedRow = dataTable.getSelectedRow();
+            String currentPhone = dataTable.getValueAt(selectedRow, 5).toString();
+            boolean valueChanged = !newStaff.getPhone().equals(currentPhone);
+            if (staffBLL.exists(newStaff))
+                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && staffBLL.exists(Map.of("PHONE", newStaff.getPhone())))
+                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (staffBLL.updateStaff(newStaff))
+                JOptionPane.showMessageDialog(this, "Successfully updated staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update staff!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(staffBLL.getStaffList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteStaff() {
-        Staff staff = new Staff();
-        staff.setStaffID(jTextFieldsForm[0].getText());
-        staffBLL.deleteStaff(staff);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this staff?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Staff staff = new Staff();
+            staff.setStaffID(jTextFieldsForm[0].getText());
+            if (staffBLL.deleteStaff(staff))
+                JOptionPane.showMessageDialog(this, "Successfully deleted staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete staff!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -419,6 +361,60 @@ public class StaffGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] staff = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(staff[0]);
+        jTextFieldsForm[1].setText(staff[1]);
+        if (staff[2].contains("Nam")) {
+            rbMale.setSelected(true);
+        } else {
+            rbFemale.setSelected(true);
+        }
+        jTextFieldsForm[2].setText(staff[3]);
+        jTextFieldsForm[3].setText(staff[4]);
+        jTextFieldsForm[4].setText(staff[5]);
+        jTextFieldsForm[5].setText(staff[6]);
+        jTextFieldsForm[6].setText(staff[7]);
+        jTextFieldsForm[7].setText(staff[8]);
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Staff getForm() throws Exception {
+        String staffID = null;
+        String name = null;
+        boolean gender;
+        Day dateOfBirth = null;
+        String address = null;
+        String phone = null;
+        String email = null;
+        double salary = 0;
+        Day dateOfEntry = null;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> staffID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
+                case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                case 3 -> address = jTextFieldsForm[i].getText();
+                case 4 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
+                case 5 -> email = jTextFieldsForm[i].getText();
+                case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 7 -> dateOfEntry = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                default -> {
+                }
+            }
+        }
+        gender = rbMale.isSelected();
+        return new Staff(staffID, name, gender, dateOfBirth, address, phone, email, salary, dateOfEntry, false);
+    }
+
     public void loadDataTable(List<Staff> staffList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -432,42 +428,68 @@ public class StaffGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
         }
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         try {
-            Day.parseDay(jTextFieldsForm[2].getText());
+            if (!jTextFieldsForm[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
+                // Date must follow yyyy-MM-dd or yyyy/MM/dd
+                throw new Exception();
+            }
+            Day.parseDay(jTextFieldsForm[2].getText().replaceAll("/", "-"));
         } catch (Exception exception) {
-            jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[3].getText().matches("^[^|]+$")) {
+            // Address can't contain "|"
+            jTextFieldsForm[3].requestFocusInWindow();
+            jTextFieldsForm[3].selectAll();
+            JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[4].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
+            jTextFieldsForm[4].requestFocusInWindow();
+            jTextFieldsForm[4].selectAll();
+            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[5].getText().matches("^\\w+@\\w+(\\.\\w+)+")) {
+            // Email must follow "username@domain.name"
+            jTextFieldsForm[5].requestFocusInWindow();
+            jTextFieldsForm[5].selectAll();
+            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"\nand can only contain alphabets, numbers and underscores", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[6].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Salary must be a double >= 0
+            jTextFieldsForm[6].requestFocusInWindow();
+            jTextFieldsForm[6].selectAll();
+            JOptionPane.showMessageDialog(this, "Salary must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            Integer.parseInt(jTextFieldsForm[4].getText());
+            if (!jTextFieldsForm[7].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
+                // Date must follow yyyy-MM-dd or yyyy/MM/dd
+                throw new Exception();
+            }
+            Day.parseDay(jTextFieldsForm[7].getText().replaceAll("/", "-"));
         } catch (Exception exception) {
-            jTextFieldsForm[4].setText(null);
-            JOptionPane.showMessageDialog(this, "invalided data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[5].getText().contains("@gmail.com")) {
-            jTextFieldsForm[5].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        try {
-            Double.parseDouble(jTextFieldsForm[6].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[6].setText(null);
-            JOptionPane.showMessageDialog(this, "invalided data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        try {
-            Day.parseDay(jTextFieldsForm[7].getText());
-        } catch (Exception exception) {
-            jTextFieldsForm[7].setText(null);
-            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            jTextFieldsForm[7].requestFocusInWindow();
+            jTextFieldsForm[7].selectAll();
+            JOptionPane.showMessageDialog(this, "Date of entry must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

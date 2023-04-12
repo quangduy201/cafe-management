@@ -46,7 +46,7 @@ public class RecipeBLL extends Manager<Recipe> {
     }
 
     public boolean updateRecipe(Recipe recipe) {
-
+        recipeList.set(getIndex(recipe, "RECIPE_ID", recipeList), recipe);
         return recipeDAL.updateRecipe(recipe) != 0;
     }
 
@@ -71,13 +71,21 @@ public class RecipeBLL extends Manager<Recipe> {
         return recipes;
     }
 
+    public boolean exists(Recipe recipe) {
+        return !findRecipesBy(Map.of(
+            "PRODUCT_ID", recipe.getProductID(),
+            "INGREDIENT_ID", recipe.getIngredientID(),
+            "MASS", recipe.getMass(),
+            "UNIT", recipe.getUnit()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findRecipesBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("RE", 3, searchRecipes());
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("RE", 3, searchRecipes());
     }
 
     @Override
