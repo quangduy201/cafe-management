@@ -72,7 +72,7 @@ public class HomeGUI extends JFrame {
 
     public static void main(String[] args) {
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + "dungboi" + "'", "PASSWD = '" + "123" + "'");
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + "dungboi" + "'", "PASSWD = '" + "123" + "'", "DELETED = 0");
         Account account = accountList.get(0);
         new HomeGUI(account).setVisible(true);
     }

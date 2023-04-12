@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class SupplierGUI extends JPanel {
@@ -28,10 +29,10 @@ public class SupplierGUI extends JPanel {
     private JPanel pnlSupplierConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
@@ -44,7 +45,7 @@ public class SupplierGUI extends JPanel {
     }
 
     public void initComponents() {
-        List<String> columsName = supplierBLL.getSupplierDAL().getColumnNames();
+        List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
         supplier = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -52,10 +53,10 @@ public class SupplierGUI extends JPanel {
         pnlSupplierConfiguration = new JPanel();
         showImg = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size() - 1];
+        jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -103,7 +104,7 @@ public class SupplierGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(supplierBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(supplierBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -113,11 +114,11 @@ public class SupplierGUI extends JPanel {
         pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
-        for (int i = 0; i < columsName.size() - 1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i) + ": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlSupplierConfiguration.add(jLabelsForm[i]);
-            if ("SUPPLIER_ID".equals(columsName.get(i))) {
+            if ("SUPPLIER_ID".equals(columnNames.get(i))) {
                 jTextFieldsForm[i] = new JTextField(supplierBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
@@ -217,21 +218,6 @@ public class SupplierGUI extends JPanel {
             }
         });
         mode.add(btRef);
-
-    }
-
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] supplier = rowData.substring(1, rowData.length() - 1).split(", ");
-            for (int i = 0; i < supplier.length; i++) {
-                jTextFieldsForm[i].setText(supplier[i]);
-            }
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
     }
 
     public void searchSuppliers() {
@@ -244,63 +230,50 @@ public class SupplierGUI extends JPanel {
 
     public void addSupplier() {
         if (checkInput()) {
-            Supplier newSupplier;
-            String supplierID = null;
-            String name = null;
-            String phone = null;
-            String address = null;
-            String email = null;
-            double price = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> supplierID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> phone = jTextFieldsForm[i].getText();
-                    case 3 -> address = jTextFieldsForm[i].getText();
-                    case 4 -> email = jTextFieldsForm[i].getText();
-                    case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
-            supplierBLL.addSupplier(newSupplier);
+            Supplier newSupplier = getForm();
+            if (supplierBLL.exists(newSupplier))
+                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
+                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (supplierBLL.addSupplier(newSupplier))
+                JOptionPane.showMessageDialog(this, "Successfully added new supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new supplier!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateSupplier() {
         if (checkInput()) {
-            Supplier newSupplier;
-            String supplierID = null;
-            String name = null;
-            String phone = null;
-            String address = null;
-            String email = null;
-            double price = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> supplierID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> phone = jTextFieldsForm[i].getText();
-                    case 3 -> address = jTextFieldsForm[i].getText();
-                    case 4 -> email = jTextFieldsForm[i].getText();
-                    case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
-            supplierBLL.updateSupplier(newSupplier);
+            Supplier newSupplier = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentPhone = dataTable.getValueAt(selectedRow, 2).toString();
+            boolean valueChanged = !newSupplier.getPhone().equals(currentPhone);
+            if (supplierBLL.exists(newSupplier))
+                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
+                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (supplierBLL.updateSupplier(newSupplier))
+                JOptionPane.showMessageDialog(this, "Successfully updated supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update supplier!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(supplierBLL.getSupplierList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteSupplier() {
-        Supplier supplier = new Supplier();
-        supplier.setSupplierID(jTextFieldsForm[0].getText());
-        supplierBLL.deleteSupplier(supplier);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this supplier?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Supplier supplier = new Supplier();
+            supplier.setSupplierID(jTextFieldsForm[0].getText());
+            if (supplierBLL.deleteSupplier(supplier))
+                JOptionPane.showMessageDialog(this, "Successfully deleted supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -316,6 +289,44 @@ public class SupplierGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] supplier = String.join(" | ", data).split(" \\| ");
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            jTextFieldsForm[i].setText(supplier[i]);
+        }
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Supplier getForm() {
+        String supplierID = null;
+        String name = null;
+        String phone = null;
+        String address = null;
+        String email = null;
+        double price = 0;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> supplierID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText();
+                case 2 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
+                case 3 -> address = jTextFieldsForm[i].getText();
+                case 4 -> email = jTextFieldsForm[i].getText();
+                case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
+                default -> {
+                }
+            }
+        }
+        return new Supplier(supplierID, name, phone, address, email, price, false);
+    }
+
     public void loadDataTable(List<Supplier> supplierList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -327,31 +338,46 @@ public class SupplierGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
         }
-        try {
-            Integer.parseInt(jTextFieldsForm[2].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[4].getText().contains("@gmail.com")) {
-            jTextFieldsForm[4].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[2].getText().matches("^(\\+?84|0)[235789]\\d{8,9}$")) {
+            // Phone must start with "0x", "+84x" or "84x" where "x" in {2, 3, 5, 7, 8, 9}
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            Double.parseDouble(jTextFieldsForm[5].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[5].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[3].getText().matches("^[^|]+$")) {
+            // Address can't contain "|"
+            jTextFieldsForm[3].requestFocusInWindow();
+            jTextFieldsForm[3].selectAll();
+            JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[4].getText().matches("^\\w+@\\w+(\\.\\w+)+")) {
+            // Email must follow "username@domain.name"
+            jTextFieldsForm[4].requestFocusInWindow();
+            jTextFieldsForm[4].selectAll();
+            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"\nand can only contain alphabets, numbers and underscores", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[5].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Price must be a double >= 0
+            jTextFieldsForm[5].requestFocusInWindow();
+            jTextFieldsForm[5].selectAll();
+            JOptionPane.showMessageDialog(this, "Price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
-
 }

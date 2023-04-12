@@ -1,7 +1,6 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDetailsDAL;
-import com.cafe.DTO.Discount;
 import com.cafe.DTO.DiscountDetails;
 
 import java.util.List;

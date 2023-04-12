@@ -36,7 +36,6 @@ public class Manager extends MySQL {
     public List<List<String>> read(String... conditions) throws SQLException {
         String query = "SELECT * FROM `" + tableName + "`";
 //        List<Object> values = new ArrayList<>();
-
         if (conditions != null && conditions.length > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
 //            values = Arrays.asList(conditions);
@@ -61,8 +60,7 @@ public class Manager extends MySQL {
             // only update the DELETED
             setClause = "DELETED = ?";
         } else {
-            List<String> columns = columnNames.subList(0, columnNames.size() - 1);
-            setClause = String.join(" = ?, ", columns) + " = ?";
+            setClause = String.join(" = ?, ", columnNames) + " = ?";
         }
 
         String query = "UPDATE `" + tableName + "` SET " + setClause;
