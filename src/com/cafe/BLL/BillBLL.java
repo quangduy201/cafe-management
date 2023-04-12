@@ -3,6 +3,7 @@ package com.cafe.BLL;
 import com.cafe.DAL.BillDAL;
 import com.cafe.DTO.Bill;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class BillBLL extends Manager<Bill> {
     public BillBLL() {
         try {
             billDAL = new BillDAL();
-            billList = searchBills();
+            billList = searchBills("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -58,11 +59,32 @@ public class BillBLL extends Manager<Bill> {
         return billDAL.searchBills(conditions);
     }
 
+    public List<Bill> findBills(String key, String value) {
+        List<Bill> list = new ArrayList<>();
+        for (Bill bill : billList)
+            if (getValueByKey(bill, key).toString().toLowerCase().contains(value.toLowerCase()))
+                list.add(bill);
+        return list;
+    }
+
     public List<Bill> findBillsBy(Map<String, Object> conditions) {
         List<Bill> bills = billList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
             bills = findObjectsBy(entry.getKey(), entry.getValue(), bills);
         return bills;
+    }
+
+    public boolean exists(Bill bill) {
+        return !findBillsBy(Map.of(
+            "CUSTOMER_ID", bill.getCustomerID(),
+            "STAFF_ID", bill.getStaffID(),
+            "DOPURCHASE", bill.getDateOfPurchase(),
+            "TOTAL", bill.getTotal()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findBillsBy(conditions).isEmpty();
     }
 
     public String getAutoID() {

@@ -2,7 +2,6 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.CategoryDAL;
 import com.cafe.DTO.Category;
-import com.cafe.DTO.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +41,6 @@ public class CategoryBLL extends Manager<Category> {
     }
 
     public boolean addCategory(Category category) {
-        if (getIndex(category, "NAME", categoryList) != -1) {
-            System.out.println("Can't add new category. Name already exists.");
-            return false;
-        }
         categoryList.add(category);
         return categoryDAL.addCategory(category) != 0;
     }
@@ -81,6 +76,17 @@ public class CategoryBLL extends Manager<Category> {
         return categories;
     }
 
+    public boolean exists(Category category) {
+        return !findCategoriesBy(Map.of(
+            "NAME", category.getName(),
+            "QUANTITY", category.getQuantity()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findCategoriesBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
         return getAutoID("CA", 2, searchCategories());
     }
@@ -93,12 +99,5 @@ public class CategoryBLL extends Manager<Category> {
             case "QUANTITY" -> category.getQuantity();
             default -> null;
         };
-    }
-
-    public static void main(String[] args) {
-        CategoryBLL categoryBLL = new CategoryBLL();
-        List<Category> categories = categoryBLL.findCategoriesBy(Map.of("QUANTITY", 15, "NAME", "TRÀ"));
-        for (Category category : categories)
-            System.out.println(category);
     }
 }

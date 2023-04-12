@@ -41,10 +41,6 @@ public class IngredientBLL extends Manager<Ingredient> {
     }
 
     public boolean addIngredient(Ingredient ingredient) {
-        if (getIndex(ingredient, "NAME", ingredientList) != -1) {
-            System.out.println("Can't add new ingredient. Name already exists.");
-            return false;
-        }
         ingredientList.add(ingredient);
         return ingredientDAL.addIngredient(ingredient) != 0;
     }
@@ -79,6 +75,19 @@ public class IngredientBLL extends Manager<Ingredient> {
         for (Map.Entry<String, Object> entry : conditions.entrySet())
             ingredients = findObjectsBy(entry.getKey(), entry.getValue(), ingredients);
         return ingredients;
+    }
+
+    public boolean exists(Ingredient ingredient) {
+        return !findIngredientsBy(Map.of(
+            "NAME", ingredient.getName(),
+            "QUANTITY", ingredient.getQuantity(),
+            "UNIT", ingredient.getUnit(),
+            "SUPPLIER_ID", ingredient.getSupplierID()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findIngredientsBy(conditions).isEmpty();
     }
 
     public String getAutoID() {
