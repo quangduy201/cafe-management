@@ -12,8 +12,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class CustomerGUI extends JPanel {
@@ -29,7 +31,7 @@ public class CustomerGUI extends JPanel {
     private JPanel mode;
     private JPanel radiusBtGender;
     private JPanel radiusBtMember;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
@@ -40,7 +42,7 @@ public class CustomerGUI extends JPanel {
     private JRadioButton rbNo;
     private JRadioButton rbNoSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
@@ -102,12 +104,7 @@ public class CustomerGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
 
         radiusBtGender.setLayout(new FlowLayout());
@@ -120,18 +117,8 @@ public class CustomerGUI extends JPanel {
         radiusBtGender.setBackground(null);
         rbMaleSearch.setBackground(null);
         rbFemaleSearch.setBackground(null);
-        rbMaleSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                genderSearch();
-            }
-        });
-        rbFemaleSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                genderSearch();
-            }
-        });
+        rbMaleSearch.addItemListener(e -> genderSearch());
+        rbFemaleSearch.addItemListener(e -> genderSearch());
         search.add(radiusBtGender);
 
         radiusBtMember.setLayout(new FlowLayout());
@@ -144,18 +131,8 @@ public class CustomerGUI extends JPanel {
         radiusBtMember.setBackground(null);
         rbYesSearch.setBackground(null);
         rbNoSearch.setBackground(null);
-        rbYesSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                membershipSearch();
-            }
-        });
-        rbNoSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                membershipSearch();
-            }
-        });
+        rbYesSearch.addItemListener(e -> membershipSearch());
+        rbNoSearch.addItemListener(e -> membershipSearch());
         search.add(radiusBtMember);
 
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
@@ -176,7 +153,7 @@ public class CustomerGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(customerBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(customerBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -258,11 +235,7 @@ public class CustomerGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btAdd.isEnabled()) {
-                    try {
-                        addCustomer();
-                    } catch (Exception ignored) {
-
-                    }
+                    addCustomer();
                 }
             }
         });
@@ -282,10 +255,7 @@ public class CustomerGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (btUpd.isEnabled()) {
-                    try {
-                        updateCustomer();
-                    } catch (Exception ignored) {
-                    }
+                    updateCustomer();
                 }
             }
         });
@@ -359,32 +329,6 @@ public class CustomerGUI extends JPanel {
         loadDataTable(customerBLL.findCustomers("MEMBERSHIP", member));
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] customer = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(customer[0]);
-            jTextFieldsForm[1].setText(customer[1]);
-            if (customer[2].contains("Nam")) {
-                rbMale.setSelected(true);
-            } else {
-                rbFemale.setSelected(true);
-            }
-            jTextFieldsForm[2].setText(customer[3]);
-            jTextFieldsForm[3].setText(customer[4]);
-            if (customer[5].contains("Có")) {
-                rbYes.setSelected(true);
-            } else {
-                rbNo.setSelected(true);
-            }
-            jTextFieldsForm[4].setText(customer[6]);
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
     public void searchCustomers() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(customerBLL.getCustomerList());
@@ -393,69 +337,64 @@ public class CustomerGUI extends JPanel {
         }
     }
 
-    public void addCustomer() throws Exception {
+    public void addCustomer() {
         if (checkInput()) {
-            Customer newCustomer;
-            String customerID = null;
-            String name = null;
-            boolean gender;
-            Day dateOfBirth = null;
-            String phone = null;
-            boolean membership;
-            Day dateOfSup = null;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> customerID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
-                    case 3 -> phone = jTextFieldsForm[i].getText();
-                    case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
+            Customer newCustomer = null;
+            try {
+                newCustomer = getForm();
+            } catch (Exception ignored) {
+
             }
-            gender = rbMale.isSelected();
-            membership = rbYes.isSelected();
-            newCustomer = new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
-            customerBLL.addCustomer(newCustomer);
+            assert newCustomer != null;
+            if (customerBLL.exists(newCustomer))
+                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
+                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (customerBLL.addCustomer(newCustomer))
+                JOptionPane.showMessageDialog(this, "Successfully added new customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new customer!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
-    public void updateCustomer() throws Exception {
+    public void updateCustomer() {
         if (checkInput()) {
-            Customer newCustomer;
-            String customerID = null;
-            String name = null;
-            boolean gender;
-            Day dateOfBirth = null;
-            String phone = null;
-            boolean membership;
-            Day dateOfSup = null;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> customerID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText());
-                    case 3 -> phone = jTextFieldsForm[i].getText();
-                    case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
+            Customer newCustomer = null;
+            try {
+                newCustomer = getForm();
+            } catch (Exception ignored) {
+
             }
-            gender = rbMale.isSelected();
-            membership = rbYes.isSelected();
-            newCustomer = new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
-            customerBLL.updateCustomer(newCustomer);
+            assert newCustomer != null;
+            int selectedRow = dataTable.getSelectedRow();
+            String currentPhone = dataTable.getValueAt(selectedRow, 4).toString();
+            boolean valueChanged = !newCustomer.getPhone().equals(currentPhone);
+            if (customerBLL.exists(newCustomer))
+                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
+                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (customerBLL.updateCustomer(newCustomer))
+                JOptionPane.showMessageDialog(this, "Successfully updated customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update customer!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(customerBLL.getCustomerList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteCustomer() {
-        Customer customer = new Customer();
-        customer.setCustomerID(jTextFieldsForm[0].getText());
-        customerBLL.deleteCustomer(customer);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this customer?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Customer customer = new Customer();
+            customer.setCustomerID(jTextFieldsForm[0].getText());
+            if (customerBLL.deleteCustomer(customer))
+                JOptionPane.showMessageDialog(this, "Successfully deleted customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete customer!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -473,6 +412,58 @@ public class CustomerGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] customer = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(customer[0]);
+        jTextFieldsForm[1].setText(customer[1]);
+        if (customer[2].contains("Nam")) {
+            rbMale.setSelected(true);
+        } else {
+            rbFemale.setSelected(true);
+        }
+        jTextFieldsForm[2].setText(customer[3]);
+        jTextFieldsForm[3].setText(customer[4]);
+        if (customer[5].contains("Có")) {
+            rbYes.setSelected(true);
+        } else {
+            rbNo.setSelected(true);
+        }
+        jTextFieldsForm[4].setText(customer[6]);
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Customer getForm() throws Exception {
+        String customerID = null;
+        String name = null;
+        boolean gender;
+        Day dateOfBirth = null;
+        String phone = null;
+        boolean membership;
+        Day dateOfSup = null;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> customerID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
+                case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                case 3 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
+                case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                default -> {
+                }
+            }
+        }
+        gender = rbMale.isSelected();
+        membership = rbYes.isSelected();
+        return new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
+    }
+
     public void loadDataTable(List<Customer> customerList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -488,30 +479,47 @@ public class CustomerGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
         }
-        try {
-            Day.parseDay(jTextFieldsForm[2].getText());
-        } catch (Exception exception) {
-            jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            Integer.parseInt(jTextFieldsForm[3].getText());
+            if (!jTextFieldsForm[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
+                // Date must follow yyyy-MM-dd or yyyy/MM/dd
+                throw new Exception();
+            }
+            Day.parseDay(jTextFieldsForm[2].getText().replaceAll("/", "-"));
         } catch (Exception exception) {
-            jTextFieldsForm[3].setText(null);
-            JOptionPane.showMessageDialog(this, "invalided data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
+            jTextFieldsForm[3].requestFocusInWindow();
+            jTextFieldsForm[3].selectAll();
+            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
-            Day.parseDay(jTextFieldsForm[4].getText());
+            if (!jTextFieldsForm[4].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
+                // Date must follow yyyy-MM-dd or yyyy/MM/dd
+                throw new Exception();
+            }
+            Day.parseDay(jTextFieldsForm[4].getText().replaceAll("/", "-"));
         } catch (Exception exception) {
-            jTextFieldsForm[4].setText(null);
-            JOptionPane.showMessageDialog(this, "yyyy-mm-dd", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            jTextFieldsForm[4].requestFocusInWindow();
+            jTextFieldsForm[4].selectAll();
+            JOptionPane.showMessageDialog(this, "Date of sign up must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
