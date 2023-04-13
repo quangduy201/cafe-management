@@ -19,6 +19,7 @@ import java.util.Objects;
 
 public class StaffGUI extends JPanel {
     private StaffBLL staffBLL = new StaffBLL();
+    private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel staff;
     private RoundPanel roundPanel1;
@@ -42,7 +43,8 @@ public class StaffGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    public StaffGUI() {
+    public StaffGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -72,11 +74,11 @@ public class StaffGUI extends JPanel {
         btRef = new Button();
 
         staff.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        staff.setBackground(new Color(51, 51, 51));
+        staff.setBackground(new Color(70, 67, 67));
         this.add(staff, BorderLayout.CENTER);
 
         roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(51, 51, 51));
+        roundPanel1.setBackground(new Color(70, 67, 67));
         roundPanel1.setPreferredSize(new Dimension(635, 680));
         roundPanel1.setAutoscrolls(true);
         roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
@@ -178,88 +180,97 @@ public class StaffGUI extends JPanel {
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 20, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(635, 130));
+            roundPanel2.add(mode, BorderLayout.SOUTH);
 
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addStaff();
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addStaff();
+                    }
                 }
-            }
-        });
-        mode.add(btAdd);
+            });
+            mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateStaff();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateStaff();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btUpd);
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(false);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteStaff();
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteStaff();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btDel);
+        }
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        } else {
+            dataTable.setRowSelectionInterval(0, 0);
+            fillForm();
+        }
     }
 
     private void selectSearchFilter() {
@@ -380,7 +391,7 @@ public class StaffGUI extends JPanel {
         jTextFieldsForm[3].setText(staff[4]);
         jTextFieldsForm[4].setText(staff[5]);
         jTextFieldsForm[5].setText(staff[6]);
-        jTextFieldsForm[6].setText(staff[7]);
+        jTextFieldsForm[6].setText(String.format("%.1f VND", Double.parseDouble(staff[7])));
         jTextFieldsForm[7].setText(staff[8]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
@@ -405,7 +416,7 @@ public class StaffGUI extends JPanel {
                 case 3 -> address = jTextFieldsForm[i].getText();
                 case 4 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
                 case 5 -> email = jTextFieldsForm[i].getText();
-                case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("(\\s|VND|VNĐ)", ""));
                 case 7 -> dateOfEntry = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
                 default -> {
                 }
@@ -466,14 +477,14 @@ public class StaffGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[5].getText().matches("^\\w+@\\w+(\\.\\w+)+")) {
+        if (!jTextFieldsForm[5].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
             // Email must follow "username@domain.name"
             jTextFieldsForm[5].requestFocusInWindow();
             jTextFieldsForm[5].selectAll();
-            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"\nand can only contain alphabets, numbers and underscores", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[6].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+        if (!jTextFieldsForm[6].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
             // Salary must be a double >= 0
             jTextFieldsForm[6].requestFocusInWindow();
             jTextFieldsForm[6].selectAll();

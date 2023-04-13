@@ -41,6 +41,7 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
+('AC000', 'admin', 'admin', 'DE00', 'ST00', b'0'),
 ('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
 ('AC010', 'zidan', '123', 'DE01', 'ST04', b'0'),
 ('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
@@ -222,6 +223,7 @@ CREATE TABLE `decentralization` (
   `IS_CATEGORY` int(1) DEFAULT NULL,
   `IS_RECIPE` int(1) DEFAULT NULL,
   `IS_IMPORT` int(1) DEFAULT NULL,
+  `IS_SUPPLIER` int(1) DEFAULT NULL,
   `IS_BILL` int(1) DEFAULT NULL,
   `IS_WAREHOUSES` int(1) DEFAULT NULL,
   `IS_ACCOUNT` int(1) DEFAULT NULL,
@@ -238,13 +240,14 @@ CREATE TABLE `decentralization` (
 -- Dumping data for table `decentralization`
 --
 
-INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_SALE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_RECIPE`, `IS_IMPORT`, `IS_BILL`, `IS_WAREHOUSES`, `IS_ACCOUNT`, `IS_STAFF`, `IS_CUSTOMER`, `IS_DISCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
-('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
-('DE02', 1, 2, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 'staffSale'),
-('DE03', 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 'staffWarehousing'),
-('DE04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
-('DE05', 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
-('DE06', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 'staffdiscount');
+INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_SALE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_RECIPE`, `IS_IMPORT`, `IS_SUPPLIER`, `IS_BILL`, `IS_WAREHOUSES`, `IS_ACCOUNT`, `IS_STAFF`, `IS_CUSTOMER`, `IS_DISCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
+('DE00', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'admin'),
+('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
+('DE02', 1, 2, 2, 0, 0, 1, 2, 0, 0, 0, 2, 0, 0, 'staffSale'),
+('DE03', 1, 0, 0, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 'staffWarehousing'),
+('DE04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
+('DE05', 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
+('DE06', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 'staffdiscount');
 
 -- --------------------------------------------------------
 
@@ -736,10 +739,11 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
-('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '0000-00-00', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '0000-00-00', b'0'),
-('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '0000-00-00', b'0'),
-('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '0000-00-00', b'0'),
+('ST00', 'ADMIN', b'0', '0100-01-01', '', '', '', 0, '0100-01-01', b'0'),
+('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '0100-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '0100-01-01', b'0'),
+('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '0100-01-01', b'0'),
+('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '0100-01-01', b'0'),
 ('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '2019-2-2', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
 ('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '2019-10-3', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
 ('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),

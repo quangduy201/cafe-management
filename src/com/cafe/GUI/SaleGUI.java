@@ -20,12 +20,14 @@ import static javax.swing.ScrollPaneConstants.UPPER_RIGHT_CORNER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class SaleGUI extends JPanel {
-
-    private CategoryBLL categoryBLL;
+    private int decentralizationMode;
     private ArrayList<String> NameList;
-    public SaleGUI() {
-        categoryBLL = new CategoryBLL();
+
+
+    public SaleGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         NameList = new ArrayList<>();
+        CategoryBLL categoryBLL = new CategoryBLL();
         for (Category category : categoryBLL.getCategoryList()) {
             NameList.add(category.getName());
         }
