@@ -194,6 +194,18 @@ INSERT INTO `category` (`CATEGORY_ID`, `NAME`, `QUANTITY`, `DELETED`) VALUES
 ('CA06', 'FREERE', 15, b'0'),
 ('CA07', 'TRÀ SỮA', 8, b'0');
 
+--
+-- Triggers `category`
+--
+DELIMITER $$
+CREATE TRIGGER `UpdateCategory` AFTER UPDATE ON `category`
+ FOR EACH ROW IF NEW.DELETED <> OLD.DELETED THEN
+	UPDATE product
+    SET product.DELETED =b'1'
+    WHERE product.CATEGORY_ID = OLD.CATEGORY_ID;
+END IF
+$$
+DELIMITER ;
 -- --------------------------------------------------------
 
 --
