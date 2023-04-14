@@ -1,26 +1,27 @@
 package com.cafe.GUI;
 
-import com.cafe.BLL.CategoryBLL;
-import com.cafe.BLL.ProductBLL;
-import com.cafe.DTO.Category;
-import com.cafe.DTO.Ingredient;
-import com.cafe.DTO.Product;
+import com.cafe.BLL.*;
+import com.cafe.DTO.*;
+import com.cafe.custom.*;
 import com.cafe.custom.Button;
-import com.cafe.custom.DetailBill;
-import com.cafe.custom.ProductPanel;
-import com.cafe.custom.RoundPanel;
+import com.cafe.utils.Day;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
+
+import static java.lang.System.exit;
 
 public class SaleGUI extends JPanel {
 
-//    private ArrayList<Product> listProduct = new ArrayList<Product>();
       private ArrayList<Product> listDetailBill = new ArrayList<Product>();
 
     public ArrayList<Product> getListDetailBill() {
@@ -45,6 +46,7 @@ public class SaleGUI extends JPanel {
     private Category categoryName;
     private ArrayList<String> NameList;
     private ArrayList<String> IdList;
+    private ArrayList<Product> listProduct = new ArrayList<Product>();
 
     public void setRoundPanel9(RoundPanel roundPanel9) {
         this.roundPanel9 = roundPanel9;
@@ -55,7 +57,7 @@ public class SaleGUI extends JPanel {
         return roundPanel9;
     }
 
-    public SaleGUI(){
+    public SaleGUI(String staffID){
         categoryBLL = new CategoryBLL();
         NameList = new ArrayList<>();
         for (Category category : categoryBLL.getCategoryList()) {
@@ -70,9 +72,8 @@ public class SaleGUI extends JPanel {
 
     private ProductBLL productBLL = new ProductBLL();
 
+    private ArrayList<Product> productlist = new ArrayList<>();
     public void initComponents(){
-        ProductBLL productBLL = new ProductBLL();
-        ArrayList<Product> productlist = new ArrayList<>();
         ArrayList<String> slproductname = new ArrayList<>();
         for (Product product : productBLL.getProductList()) {
             productlist.add(product);
@@ -84,26 +85,6 @@ public class SaleGUI extends JPanel {
             setProduct.add(a);
         }
 
-
-
-        frameProduct = new RoundPanel[setProduct.size()];
-        productPanel = new ProductPanel[setProduct.size()];
-        frameImg = new RoundPanel[setProduct.size()];
-        slCategorName = new JTextField[setProduct.size()];
-        originalIcon = new ImageIcon[setProduct.size()];
-        slProductImg = new JLabel[setProduct.size()];
-        slProductname1 = new JTextField[setProduct.size()];
-        slProductname2 = new JTextField[setProduct.size()];
-
-        for (int i = 0; i < setProduct.size(); i++) {
-            frameImg[i] = new RoundPanel();
-            slCategorName[i] = new JTextField();
-            slProductImg[i] = new JLabel();
-            slProductname1[i] = new JTextField();
-            slProductname2[i] = new JTextField();
-            frameProduct[i] = new RoundPanel();
-            productPanel[i] = new ProductPanel();
-        }
 
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -186,6 +167,11 @@ public class SaleGUI extends JPanel {
         jComboBox.setPreferredSize(new Dimension(120, 35));
         jComboBox.setBorder(null);
         jComboBox.setFocusable(false);
+        jComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PressJComboBox(evt);
+            }
+        });
         roundPanel6.add(jComboBox);
 
         roundPanel5.setLayout(new FlowLayout(FlowLayout.LEFT, 23, 5));
@@ -196,12 +182,24 @@ public class SaleGUI extends JPanel {
         search.setFont(new Font("Times New Roman", 0, 14));
         search.setPreferredSize(new Dimension(300, 35));
         search.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        search.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateFieldState();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateFieldState();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateFieldState();
+            }
+        });
         roundPanel5.add(search);
-//        jComboBox.addActionListener(new event.ActionListener() {
-//            public void actionPerformed(event.ActionEvent evt) {
-//                jComboBoxActionPerformed(evt);
-//            }
-//        });
 
         button1.setBackground(new Color(240, 240, 240));
         button1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -252,11 +250,6 @@ public class SaleGUI extends JPanel {
         search1.setFont(new Font("Times New Roman", 0, 14));
         search1.setPreferredSize(new Dimension(250, 35));
         search1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-        search1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                PressSearch1(evt);
-            }
-        });
         roundPanel7.add(search1, BorderLayout.WEST);
 
 
@@ -266,12 +259,12 @@ public class SaleGUI extends JPanel {
         button2.setIcon(new ImageIcon(("img/search.png")));
         button2.setFocusPainted(false);
         button2.setColor(new Color(240, 240, 240));
-        button2.setColorOver(new Color(0x544444));
-        button2.setColorOver(new Color(0x2F2424));
+        button2.setColorOver(new Color(0xA6A1A1));
+        button2.setColorOver(new Color(0x2F2F2F));
         button2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-
+                pressButton2();
             }
         });
 
@@ -283,8 +276,10 @@ public class SaleGUI extends JPanel {
         jlabel1.setText("Tên Khách Hàng: ");
         roundPanel8.add(jlabel1);
 
+
+
         txtname.setFont(new Font("Times New Roman", 0, 14));
-        txtname.setPreferredSize(new Dimension(250, 35));
+        txtname.setPreferredSize(new Dimension(210, 35));
         txtname.setBorder(BorderFactory.createEmptyBorder());
         txtname.setEditable(false);
         txtname.setBackground(new Color(240, 240, 240));
@@ -314,6 +309,23 @@ public class SaleGUI extends JPanel {
         jTextField2.setFont(new Font("Times New Roman", 0, 14));
         jTextField2.setPreferredSize(new Dimension(120, 25));
         jTextField2.setHorizontalAlignment(JTextField.RIGHT);
+        jTextField2.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                change();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                change();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                change();
+            }
+        });
         roundPanel13.add(jTextField2);
 
         jTextField3.setFont(new Font("Times New Roman", 0, 14));
@@ -335,6 +347,16 @@ public class SaleGUI extends JPanel {
         button3.setColorOver(new Color(0x5EFF00));
         button3.setColorClick(new Color(0x8AD242));
         button3.setText("Thanh Toán");
+        button3.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                try {
+                    pressButton3();
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
         roundPanel11.add(button3);
 
         button4.setPreferredSize(new Dimension(135, 40));
@@ -347,115 +369,184 @@ public class SaleGUI extends JPanel {
         button4.setColorOver(new Color(0xFF0000));
         button4.setColorClick(new Color(0xB65858));
         button4.setText("Hủy");
+        button4.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                pressButton4();
+            }
+        });
         roundPanel11.add(button4);
 
         int height = 256 * (int) ((setProduct.size() + 1) / 3);
+        pictureScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        pictureScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         roundPanel4.setLayout(new FlowLayout(FlowLayout.LEFT, 7, 5));
         roundPanel4.setPreferredSize(new Dimension(pictureScrollPane2.getWidth(), height));
         roundPanel4.setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel4.setAutoscrolls(true);
         roundPanel1.add(pictureScrollPane2);
 
-        String name1;
-        String name2;
         Set<String> checkproduct = new HashSet<String>();
         int i = 0;
         for (Product a : productlist) {
             if (!checkproduct.contains(a.getName())) {
                 checkproduct.add(a.getName());
-
-                roundPanel4.add(productPanel[i]);
-
-                productPanel[i].setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
-                productPanel[i].setPreferredSize(new Dimension(185, 250));
-                productPanel[i].setBackground(new Color(0xB65858));
-                productPanel[i].setColor(new Color(0xB65858));
-                productPanel[i].setColorOver(new Color(25, 25, 25));
-                productPanel[i].addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mousePressed(java.awt.event.MouseEvent evt) {
-                        if(newJFrame1 != null) {
-                            newJFrame1.dispose();
-                            newJFrame1 = new NewJFrame1(SaleGUI.this, a);
-                            newJFrame1.setVisible(true);
-                        }
-                       else{
-                            newJFrame1 = new NewJFrame1(SaleGUI.this, a);
-                            newJFrame1.setVisible(true);
-                        }
-                    }
-                });
-                productPanel[i].add(frameProduct[i]);
-
-                frameProduct[i].setPreferredSize(new Dimension(181, 246));
-//                frameProduct[i].setRadius(20);
-                frameProduct[i].setBackground(new Color(0xB65858));
-
-                categoryName = new CategoryBLL().searchCategories("CATEGORY_ID = '" + a.getCategoryID() + "'").get(0);
-
-                slCategorName[i].setFont(new java.awt.Font("Dialog", 0, 15));
-                slCategorName[i].setPreferredSize(new Dimension(120, 20));
-                slCategorName[i].setHorizontalAlignment(JTextField.CENTER);
-                slCategorName[i].setEditable(false);
-                slCategorName[i].setBorder(BorderFactory.createEmptyBorder());
-                slCategorName[i].setBackground(new Color(0xB65858));
-                slCategorName[i].setText(categoryName.getName());
-                frameProduct[i].add(slCategorName[i]);
-
-
-                frameImg[i].setPreferredSize(new Dimension(181, 165));
-                frameImg[i].setBackground(new Color(0xB65858));
-                frameProduct[i].add(frameImg[i]);
-
-                originalIcon[i] = new ImageIcon(a.getImage());
-                slProductImg[i].setIcon(new ImageIcon(originalIcon[i].getImage().getScaledInstance(181, 165, Image.SCALE_SMOOTH)));
-                frameImg[i].add(slProductImg[i]);
-
-                name1 = "";
-                name2 = "";
-                if (a.getName().length() > 15) {
-                    String[] listname = a.getName().split(" ");
-                    name1 = name1 + listname[0];
-                    for (int sl = 1; sl < listname.length - 1; sl++) {
-                        if ((name1 + " " + listname[sl]).length() < 15) {
-                            name1 = name1 + " " + listname[sl];
-                        } else {
-                            if (name2 == "") {
-                                name2 = name2 + listname[sl];
-                            } else name2 = name2 + " " + listname[sl];
-                        }
-                    }
-                } else name1 = name1 + a.getName();
-
-                slProductname1[i].setFont(new Font("Dialog", 0, 15));
-                slProductname1[i].setPreferredSize(new Dimension(150, 20));
-                slProductname1[i].setText(name1);
-                slProductname1[i].setEditable(false);
-                slProductname1[i].setBorder(BorderFactory.createEmptyBorder());
-                slProductname1[i].setBackground(new Color(0xB65858));
-                slProductname1[i].setHorizontalAlignment(JTextField.CENTER);
-                frameProduct[i].add(slProductname1[i]);
-
-                slProductname2[i].setFont(new Font("Dialog", 0, 15));
-                slProductname2[i].setPreferredSize(new Dimension(150, 20));
-                slProductname2[i].setText(name2);
-                slProductname2[i].setEditable(false);
-                slProductname2[i].setBorder(BorderFactory.createEmptyBorder());
-                slProductname2[i].setBackground(new Color(0xB65858));
-                slProductname2[i].setHorizontalAlignment(JTextField.CENTER);
-                frameProduct[i].add(slProductname2[i]);
-                i++;
+                listProduct.add(a);
+                PanelProduct(a);
             }
         }
+        roundPanel9.setAutoscrolls(true);
+    }
+    private String name1;
+
+    private BillBLL billBLL = new BillBLL();
+    private BillDetailsBLL billDetailsBLL = new BillDetailsBLL();
+    private String name2;
+    public void PanelProduct(Product a){
+
+        frameProduct = new RoundPanel();
+        productPanel = new ProductPanel();
+        frameImg = new RoundPanel();
+        slCategorName = new JTextField();
+        originalIcon = new ImageIcon();
+        slProductImg = new JLabel();
+        slProductname1 = new JTextField();
+        slProductname2 = new JTextField();
+        roundPanel4.add(productPanel);
+
+        productPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
+        productPanel.setPreferredSize(new Dimension(185, 250));
+        productPanel.setBackground(new Color(0xB65858));
+        productPanel.setColor(new Color(0xB65858));
+        productPanel.setColorOver(new Color(25, 25, 25));
+        productPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                if (newJFrame1 != null) {
+                    newJFrame1.dispose();
+                    newJFrame1 = new NewJFrame1(SaleGUI.this, a);
+                    newJFrame1.setVisible(true);
+                } else {
+                    newJFrame1 = new NewJFrame1(SaleGUI.this, a);
+                    newJFrame1.setVisible(true);
+                }
+            }
+        });
+        productPanel.add(frameProduct);
+
+        frameProduct.setPreferredSize(new Dimension(181, 246));
+//                frameProduct.setRadius(20);
+        frameProduct.setBackground(new Color(0xB65858));
+
+        categoryName = new CategoryBLL().searchCategories("CATEGORY_ID = '" + a.getCategoryID() + "'").get(0);
+
+        slCategorName.setFont(new java.awt.Font("Dialog", 0, 15));
+        slCategorName.setPreferredSize(new Dimension(120, 20));
+        slCategorName.setHorizontalAlignment(JTextField.CENTER);
+        slCategorName.setEditable(false);
+        slCategorName.setBorder(BorderFactory.createEmptyBorder());
+        slCategorName.setBackground(new Color(0xB65858));
+        slCategorName.setText(categoryName.getName());
+        frameProduct.add(slCategorName);
 
 
-          roundPanel9.setAutoscrolls(true);
+        frameImg.setPreferredSize(new Dimension(181, 165));
+        frameImg.setBackground(new Color(0xB65858));
+        frameProduct.add(frameImg);
+
+        originalIcon = new ImageIcon(a.getImage());
+        slProductImg.setIcon(new ImageIcon(originalIcon.getImage().getScaledInstance(181, 165, Image.SCALE_SMOOTH)));
+        frameImg.add(slProductImg);
+
+        name1 = "";
+        name2 = "";
+        if (a.getName().length() > 15) {
+            String[] listname = a.getName().split(" ");
+            name1 = name1 + listname[0];
+            for (int sl = 1; sl < listname.length - 1; sl++) {
+                if ((name1 + " " + listname[sl]).length() < 15) {
+                    name1 = name1 + " " + listname[sl];
+                } else {
+                    if (name2 == "") {
+                        name2 = name2 + listname[sl];
+                    } else name2 = name2 + " " + listname[sl];
+                }
+            }
+        } else name1 = name1 + a.getName();
+
+        slProductname1.setFont(new Font("Dialog", 0, 15));
+        slProductname1.setPreferredSize(new Dimension(150, 20));
+        slProductname1.setText(name1);
+        slProductname1.setEditable(false);
+        slProductname1.setBorder(BorderFactory.createEmptyBorder());
+        slProductname1.setBackground(new Color(0xB65858));
+        slProductname1.setHorizontalAlignment(JTextField.CENTER);
+        frameProduct.add(slProductname1);
+
+        slProductname2.setFont(new Font("Dialog", 0, 15));
+        slProductname2.setPreferredSize(new Dimension(150, 20));
+        slProductname2.setText(name2);
+        slProductname2.setEditable(false);
+        slProductname2.setBorder(BorderFactory.createEmptyBorder());
+        slProductname2.setBackground(new Color(0xB65858));
+        slProductname2.setHorizontalAlignment(JTextField.CENTER);
+        frameProduct.add(slProductname2);
+    }
+
+    public void pressButton3() throws Exception {
+        if(roundPanel4.getComponentCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Please select a product to pay", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (jTextField2.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "PEnter the amount received from the customer for payment", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            Bill bill = null;
+            BillDetails addbillDetails;
+            String ID = billBLL.getAutoID();
+            String customerid;
+            if(!jlabel1.getText().isEmpty()) {
+                customerid = this.customerID;
+            }
+            else  customerid = null;
+            for (int i = 0; i < listDetailBill.size(); i++) {
+                Product product = listDetailBill.get(i);
+                addbillDetails = null;
+                addbillDetails = new BillDetails(bill.getBillID(),product.getProductID(),listQuantityChoice.get(i));
+                billDetailsBLL.addBillDetails(addbillDetails);
+
+            }
+            LocalDate date = LocalDate.now();
+            String dateString = String.valueOf(date);
+            String[] dateArray = dateString.split("-");
+            String day = dateArray[2];
+            String month = dateArray[1];
+            String year = dateArray[0];
+            String staffID = "ST05";
+            Day Date =  Day.parseDay(year + '-' + month + '-' + day);
+//            Double total = Double.parseDouble(jTextField1.getText().replace(Character.toString('đ'),""));
+//            bill = new Bill(ID,customerid,staffID,Date,total,false);
 //
+//            if (billBLL.exists(bill))
+//                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//            else if (billBLL.exists(Map.of("BILL_ID", bill.getBillID())))
+//                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//            else if (billBLL.updateBill(bill))
+//                JOptionPane.showMessageDialog(this, "Successfully added new staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+//            else
+//                JOptionPane.showMessageDialog(this, "Failed to add new staff!", "Error", JOptionPane.ERROR_MESSAGE);
+//
+//            //billBLL.updateBill(bill);
+            JOptionPane.showMessageDialog(this, "Successfully updated bill!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
 
+    public void pressButton4() {
+
+    }
+
     public void addBill(ArrayList<Product> listDetailBill, ArrayList<Integer> listQuantityChoice) {
-          double totalPrice = 0;
-          for(int e = 0; e < listDetailBill.size();e++){
+        this.listDetailBill = listDetailBill;
+        double totalPrice = 0;
+        for(int e = 0; e < listDetailBill.size();e++){
             DetailBill detailBill = new DetailBill();
             detailBill.setData(listDetailBill.get(e), listQuantityChoice.get(e), e);
             Product product = listDetailBill.get(e);
@@ -475,6 +566,7 @@ public class SaleGUI extends JPanel {
                     if(JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION){
                         listDetailBill.remove(index);
                         listQuantityChoice.remove(index);
+                        jTextField3.setText(jTextField1.getText().replace(Character.toString('đ'), ""));
                         roundPanel9.removeAll();
                         roundPanel9.repaint();
                         roundPanel9.revalidate();
@@ -482,28 +574,135 @@ public class SaleGUI extends JPanel {
                     }
                 }
             });
-//
             totalPrice += product.getCost()*listQuantityChoice.get(e);
             roundPanel9.add(detailBill);
             roundPanel9.repaint();
             roundPanel9.revalidate();
-          }
+        }
         jTextField1.setText(String.valueOf(totalPrice) + "đ");
+        Double change = 0.0;
+        if(!jTextField2.getText().isEmpty())  change = totalPrice - Double.parseDouble(jTextField2.getText());
+        jTextField3.setText(String.valueOf(change) + "đ");
+
     }
 
-    public void PressSearch1(java.awt.event.ActionEvent evt) {
-        roundPanel9.removeAll();
+
+    private Category category;
+    public void PressJComboBox(java.awt.event.ActionEvent evt) {
+        roundPanel4.removeAll();
+        roundPanel4.repaint();
+        roundPanel4.validate();
         if(jComboBox.getSelectedItem().toString().equals("Tất cả")) {
-            list_Product = product_BUS.readProductOnBusiness();
-            set_Grid_Layout_for_Panel_And_Load_Product(list_Product);
+            Set<String> check = new HashSet<String>();
+            int i = 0;
+            for (Product a : listProduct) {
+                if (!check.contains(a.getName())) {
+                    check.add(a.getName());
+                    PanelProduct(a);
+                }
+            }
+            int height;
+            if(check.size() / 3 != (int) (check.size() / 3)) {
+                 height = 256 * ((int) ((check.size()) / 3) + 1);
+            }
+            else height = 256 * ((int) ((check.size()) / 3) + 1);
+            roundPanel4.setPreferredSize(new Dimension(pictureScrollPane2.getWidth(), height));
+
         }else {
             String categoryName = jComboBox.getSelectedItem().toString();
-            list_Product = productBUS.readProductByCategoryName(categoryName);
-            set_Grid_Layout_for_Panel_And_Load_Product(list_Product);
+            String categoryID = null;
+            for (Category category : categoryBLL.getCategoryList()) {
+                if(categoryName.equals(category.getName())) {
+                    categoryID = category.getCategoryID();
+                    break;
+                }
+            }
+            Set<String> check = new HashSet<String>();
+            for (Product a : listProduct) {
+                if (!check.contains(a.getName()) && a.getCategoryID().equals(categoryID)) {
+                    check.add(a.getName());
+                    PanelProduct(a);
+                }
+            }
+            int height;
+            if(check.size() / 3 != (int) (check.size() / 3)) {
+                height = 256 * ((int) ((check.size()) / 3) + 1);
+            }
+            else height = 256 * ((int) ((check.size()) / 3) + 1);
+            roundPanel4.setPreferredSize(new Dimension(pictureScrollPane2.getWidth(), height));
         }
     }
 
 
+    public void updateFieldState() {
+        if (search.getText().isEmpty()) {
+            roundPanel4.removeAll();
+            roundPanel4.repaint();
+            roundPanel4.validate();
+            Set<String> checkproduct = new HashSet<String>();
+            for (Product a : listProduct) {
+                if (!checkproduct.contains(a.getName())) {
+                    checkproduct.add(a.getName());
+                    PanelProduct(a);
+                }
+            }
+        } else {
+            roundPanel4.removeAll();
+            roundPanel4.repaint();
+            roundPanel4.validate();
+            Set<String> checkproduct = new HashSet<String>();
+            for (Product a : listProduct) {
+                if (!checkproduct.contains(a.getName()) && a.getName().toLowerCase().contains(search.getText().toLowerCase())) {
+                    checkproduct.add(a.getName());
+                    PanelProduct(a);
+                }
+            }
+        }
+    }
+
+    private CustomerBLL customerBLL;
+    private String customerID;
+
+    public void change() {
+        if(!jTextField2.getText().isEmpty()) {
+            Double change = Double.parseDouble(jTextField1.getText().replace(Character.toString('đ'), ""))  -  Double.parseDouble(jTextField2.getText());
+            jTextField3.setText(String.valueOf(change) + 'đ');
+        }
+        else {
+            jTextField3.setText("0đ");
+        }
+    }
+    public void pressButton2() {
+        if (!search1.getText().isEmpty()) {
+            if (!search1.getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+                // Cost must be a double >= 0.0
+                search1.requestFocusInWindow();
+                search1.selectAll();
+                JOptionPane.showMessageDialog(this, "Phone number is a sequence of non-negative integers", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                customerBLL = new CustomerBLL();
+                boolean signal = false;
+                for (Customer customer : customerBLL.getCustomerList()) {
+                    if(customer.getPhone().equals(search1.getText())) {
+                        txtname.setText(customer.getName());
+                        this.customerID = customer.getCustomerID();
+                        signal = true;
+                    }
+                }
+                if(!signal) {
+                    if(JOptionPane.showConfirmDialog(null, "Does not exist in the system, do you want to add a new one?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION){
+                        txtname.setText("");
+                        new FrameCustomer().setVisible(true);
+                    }
+                    else {
+
+                    }
+                }
+            }
+        }
+        else JOptionPane.showMessageDialog(this, "Please enter information in the search box", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     private JComboBox<String> jComboBox;
     private JTextField search;
     private JTextField search1;
@@ -516,17 +715,14 @@ public class SaleGUI extends JPanel {
     private JTextField jTextField6;
 
 
-    private ProductPanel productPanel[];
-    private RoundPanel frameProduct[];
-
-    private ImageIcon originalIcon[];
-    private RoundPanel frameImg[];
-    private JTextField slCategorName[];
-
-    private JLabel slProductImg[];
-
-    private JTextField slProductname1[];
-    private JTextField slProductname2[];
+    private ProductPanel productPanel;
+    private RoundPanel frameProduct;
+    private ImageIcon originalIcon;
+    private RoundPanel frameImg;
+    private JTextField slCategorName;
+    private JLabel slProductImg;
+    private JTextField slProductname1;
+    private JTextField slProductname2;
 
 
     private RoundPanel frame_Img[];

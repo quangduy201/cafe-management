@@ -362,7 +362,7 @@ public class HomeGUI extends JFrame {
     private void roundPanel1MouseClicked() {
 //        roundPanel[1].setBackground(new Color(35, 166, 97))
         Active(roundPanel[1]);
-        OpenChildForm(new SaleGUI());
+        OpenChildForm(new SaleGUI(account.getStaffID()));
     }
 
     private void roundPanel2MouseClicked() {
