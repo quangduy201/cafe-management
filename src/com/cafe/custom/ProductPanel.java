@@ -8,10 +8,10 @@ import java.awt.event.MouseEvent;
 public class ProductPanel extends JPanel{
     public ProductPanel() {
         setOpaque(false);
-        addMouseListener(new MouseAdapter(){
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered (MouseEvent e) {
-                if(pressover != true) {
+                if(!pressover) {
                     setBackground(colorOver);
                     over = true;
                 }
@@ -19,7 +19,7 @@ public class ProductPanel extends JPanel{
 
             @Override
             public void mouseExited (MouseEvent e) {
-                if(pressover != true) {
+                if(!pressover) {
                     setBackground(color);
                     over = false;
                 }
@@ -27,7 +27,7 @@ public class ProductPanel extends JPanel{
 
             @Override
             public void mouseReleased (MouseEvent e) {
-                if(pressover != true) {
+                if(!pressover) {
                     if (over) {
                         setBackground(colorOver);
                     } else {
