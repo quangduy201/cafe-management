@@ -197,7 +197,8 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
-('CUS001', 'NGUYỄN VĂN NAM ', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
+('CUS000', 'VÃNG LAI', b'1', '0100-01-01', '', b'0', '0100-01-01', b'0'),
+('CUS001', 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
 ('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
 ('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
 ('CUS004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
@@ -640,6 +641,7 @@ INSERT INTO `recipe` (`RECIPE_ID`, `PRODUCT_ID`, `INGREDIENT_ID`, `MASS`, `UNIT`
 ('RE003', 'PR001', 'ING003', 0.01, 'l', b'0'),
 ('RE004', 'PR001', 'ING004', 0.02, 'bag', b'0'),
 ('RE005', 'PR001', 'ING005', 0.13, 'l', b'0'),
+
 ('RE006', 'PR004', 'ING001', 0.02, 'kg', b'0'),
 ('RE007', 'PR004', 'ING004', 0.02, 'bag', b'0'),
 ('RE008', 'PR004', 'ING005', 0.13, 'l', b'0'),

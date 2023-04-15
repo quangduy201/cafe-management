@@ -57,7 +57,9 @@ public class SaleGUI extends JPanel {
         return roundPanel9;
     }
 
+    private String staffID;
     public SaleGUI(String staffID){
+        this.staffID = staffID;
         categoryBLL = new CategoryBLL();
         NameList = new ArrayList<>();
         for (Category category : categoryBLL.getCategoryList()) {
@@ -73,6 +75,9 @@ public class SaleGUI extends JPanel {
     private ProductBLL productBLL = new ProductBLL();
 
     private ArrayList<Product> productlist = new ArrayList<>();
+
+    private JLabel idcustomer;
+    private JTextField txtid;
     public void initComponents(){
         ArrayList<String> slproductname = new ArrayList<>();
         for (Product product : productBLL.getProductList()) {
@@ -104,6 +109,9 @@ public class SaleGUI extends JPanel {
 
         pictureScrollPane = new JScrollPane(roundPanel9);
         pictureScrollPane2 = new JScrollPane(roundPanel4);
+
+        idcustomer = new JLabel();
+        txtid = new JTextField();
 
         jlabel1 = new JLabel();
         jlabel2 = new JLabel();
@@ -216,12 +224,31 @@ public class SaleGUI extends JPanel {
         roundPanel8.setPreferredSize(new Dimension(350, 35));
         roundPanel2.add(roundPanel8);
 
-        pictureScrollPane.setPreferredSize(new Dimension(350, 400));
+        roundPanel15.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        roundPanel15.setPreferredSize(new Dimension(350, 35));
+        roundPanel2.add(roundPanel15);
+
+        idcustomer.setFont(new Font("Times New Roman", 0, 14));
+        idcustomer.setPreferredSize(new Dimension(110, 35));
+        idcustomer.setText("ID Nhân viên: ");
+        roundPanel15.add(idcustomer);
+
+        txtid.setFont(new Font("Times New Roman", 0, 14));
+        txtid.setPreferredSize(new Dimension(210, 35));
+        txtid.setBorder(BorderFactory.createEmptyBorder());
+        txtid.setEditable(false);
+        txtid.setText(staffID);
+        txtid.setBackground(new Color(240, 240, 240));
+        roundPanel15.add(txtid);
+
+        pictureScrollPane.setPreferredSize(new Dimension(350, 355));
+        pictureScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         roundPanel9.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
         roundPanel9.setBackground(new Color(240, 240, 240));
         roundPanel9.setBorder(BorderFactory.createLineBorder(Color.black));
-        roundPanel9.setPreferredSize(new Dimension(pictureScrollPane.getWidth(), 400));
+        roundPanel9.setPreferredSize(new Dimension(pictureScrollPane.getWidth(), 355));
         roundPanel2.add(pictureScrollPane);
+
 //        pictureScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 //        pictureScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -276,14 +303,13 @@ public class SaleGUI extends JPanel {
         jlabel1.setText("Tên Khách Hàng: ");
         roundPanel8.add(jlabel1);
 
-
-
         txtname.setFont(new Font("Times New Roman", 0, 14));
         txtname.setPreferredSize(new Dimension(210, 35));
         txtname.setBorder(BorderFactory.createEmptyBorder());
         txtname.setEditable(false);
         txtname.setBackground(new Color(240, 240, 240));
         roundPanel8.add(txtname);
+
 
         jlabel2.setFont(new Font("Times New Roman", 0, 14));
         jlabel2.setText("Tổng tiền: ");
@@ -385,6 +411,8 @@ public class SaleGUI extends JPanel {
         roundPanel4.setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel4.setAutoscrolls(true);
         roundPanel1.add(pictureScrollPane2);
+
+
 
         Set<String> checkproduct = new HashSet<String>();
         int i = 0;
@@ -502,49 +530,60 @@ public class SaleGUI extends JPanel {
             BillDetails addbillDetails;
             String ID = billBLL.getAutoID();
             String customerid;
-            if(!jlabel1.getText().isEmpty()) {
+            if(!txtname.getText().isEmpty()) {
                 customerid = this.customerID;
             }
-            else  customerid = null;
-            for (int i = 0; i < listDetailBill.size(); i++) {
-                Product product = listDetailBill.get(i);
-                addbillDetails = null;
-                addbillDetails = new BillDetails(bill.getBillID(),product.getProductID(),listQuantityChoice.get(i));
-                billDetailsBLL.addBillDetails(addbillDetails);
+            else  customerid = "CUS000";
 
-            }
             LocalDate date = LocalDate.now();
             String dateString = String.valueOf(date);
             String[] dateArray = dateString.split("-");
             String day = dateArray[2];
             String month = dateArray[1];
             String year = dateArray[0];
-            String staffID = "ST05";
+            String staffID = this.staffID;
             Day Date =  Day.parseDay(year + '-' + month + '-' + day);
-//            Double total = Double.parseDouble(jTextField1.getText().replace(Character.toString('đ'),""));
-//            bill = new Bill(ID,customerid,staffID,Date,total,false);
-//
-//            if (billBLL.exists(bill))
-//                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
-//            else if (billBLL.exists(Map.of("BILL_ID", bill.getBillID())))
-//                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
-//            else if (billBLL.updateBill(bill))
-//                JOptionPane.showMessageDialog(this, "Successfully added new staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-//            else
-//                JOptionPane.showMessageDialog(this, "Failed to add new staff!", "Error", JOptionPane.ERROR_MESSAGE);
-//
-//            //billBLL.updateBill(bill);
-            JOptionPane.showMessageDialog(this, "Successfully updated bill!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            Double total = Double.parseDouble(jTextField1.getText().replace(Character.toString('đ'),""));
+            bill = new Bill(ID,customerid,staffID,Date,total,false);
+
+            if (billBLL.exists(bill))
+                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (billBLL.exists(Map.of("BILL_ID", bill.getBillID())))
+                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (billBLL.addBill(bill))
+                JOptionPane.showMessageDialog(this, "Successfully added new bill!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new bill!", "Error", JOptionPane.ERROR_MESSAGE);
+
+//            billBLL.updateBill(bill);
+            for (int i = 0; i < listDetailBill.size(); i++) {
+                Product product = listDetailBill.get(i);
+                addbillDetails = null;
+                addbillDetails = new BillDetails(ID,product.getProductID(),listQuantityChoice.get(i));
+                billDetailsBLL.addBillDetails(addbillDetails);
+
+            }
         }
     }
 
 
     public void pressButton4() {
-
+        search1.setText("");
+        txtname.setText("");
+        roundPanel9.removeAll();
+        roundPanel9.repaint();
+        roundPanel9.revalidate();
+        jTextField1.setText("0đ");
+        jTextField2.setText("");
+        jTextField3.setText("0đ");
     }
 
     public void addBill(ArrayList<Product> listDetailBill, ArrayList<Integer> listQuantityChoice) {
         this.listDetailBill = listDetailBill;
+        if(this.listDetailBill.size() >= 5) {
+            int tall =  75 * this.listDetailBill.size();
+            roundPanel9.setPreferredSize(new Dimension(pictureScrollPane.getWidth(),tall));
+        }
         double totalPrice = 0;
         for(int e = 0; e < listDetailBill.size();e++){
             DetailBill detailBill = new DetailBill();
