@@ -1,7 +1,5 @@
 package com.cafe.utils;
 
-import java.util.Scanner;
-
 public class Day {
     private int date, month, year;
 
@@ -14,30 +12,6 @@ public class Day {
     public Day(int date, int month, int year) {
         this.date = date;
         this.month = month;
-        this.year = year;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
         this.year = year;
     }
 
@@ -55,7 +29,7 @@ public class Day {
     }
 
     public static boolean isValidDay(int date, int month, int year) {
-        return year > 1930 && year <= 2030 &&
+        return year >= 100 && year <= 2030 &&
             month > 0 && month <= 12 &&
             date > 0 && date <= numOfDays(month, year);
     }
@@ -103,26 +77,6 @@ public class Day {
         return days;
     }
 
-    public static Day inputDay(String message) {
-        Scanner sc = new Scanner(System.in);
-        Day day = new Day();
-        boolean hasError;
-        do {
-            hasError = false;
-            System.out.print(message);
-            String input = sc.nextLine();
-            String[] splitInput = input.split("-");
-            try {
-                day.setDate(Integer.parseInt(splitInput[0]));
-                day.setMonth(Integer.parseInt(splitInput[1]));
-                day.setYear(Integer.parseInt(splitInput[2]));
-            } catch (Exception e) {
-                hasError = true;
-            }
-        } while (hasError || !Day.isValidDay(day));
-        return day;
-    }
-
     public static Day parseDay(String str) throws Exception {
         String[] temp = str.split("-");
         int date, month, year;
@@ -130,12 +84,36 @@ public class Day {
             year = Integer.parseInt(temp[0]);
             month = Integer.parseInt(temp[1]);
             date = Integer.parseInt(temp[2]);
-//            if (!Day.isValidDay(date, month, year))
-//                throw new Exception();
+            if (!Day.isValidDay(date, month, year))
+                throw new Exception();
         } catch (Exception e) {
             throw new Exception();
         }
         return new Day(date, month, year);
+    }
+
+    public int getDate() {
+        return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     @Override
@@ -151,7 +129,10 @@ public class Day {
     @Override
     public String toString() {
         // dd-MM-yyyy
-        return year + "-" +
+        String yearString = String.valueOf(year);
+        int count = 4 - yearString.length();
+        yearString = "0".repeat(count) + yearString;
+        return yearString + "-" +
             ((month < 10) ? "0" : "") + month + "-" +
             ((date < 10) ? "0" : "") + date;
     }

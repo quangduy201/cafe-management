@@ -21,8 +21,7 @@ import java.util.List;
 import static java.lang.System.exit;
 
 public class SaleGUI extends JPanel {
-
-      private ArrayList<Product> listDetailBill = new ArrayList<Product>();
+      private ArrayList<Product> listDetailBill = new ArrayList<>();
 
     public ArrayList<Product> getListDetailBill() {
         return listDetailBill;
@@ -62,6 +61,7 @@ public class SaleGUI extends JPanel {
         this.staffID = staffID;
         categoryBLL = new CategoryBLL();
         NameList = new ArrayList<>();
+        CategoryBLL categoryBLL = new CategoryBLL();
         for (Category category : categoryBLL.getCategoryList()) {
             NameList.add(category.getName());
         }

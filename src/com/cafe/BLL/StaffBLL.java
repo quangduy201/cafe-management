@@ -14,7 +14,7 @@ public class StaffBLL extends Manager<Staff> {
     public StaffBLL() {
         try {
             staffDAL = new StaffDAL();
-            staffList = searchStaffs("DELETED = 0");
+            staffList = searchStaffs("DELETED = 0", "STAFF_ID != 'ST00'");
         } catch (Exception ignored) {
 
         }
@@ -101,7 +101,7 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public String getAutoID() {
-        return getAutoID("ST", 2, searchStaffs());
+        return getAutoID("ST", 2, searchStaffs("STAFF_ID != 'ST00'"));
     }
 
     @Override

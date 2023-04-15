@@ -22,6 +22,7 @@ import java.util.Objects;
 
 public class WarehousesGUI extends JPanel {
     private IngredientBLL ingredientBLL = new IngredientBLL();
+    private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel wareHouses;
     private RoundPanel roundPanel1;
@@ -44,7 +45,8 @@ public class WarehousesGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    public WarehousesGUI() {
+    public WarehousesGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -53,10 +55,8 @@ public class WarehousesGUI extends JPanel {
     public void initComponents() {
         List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
         SupplierBLL supplierBLL = new SupplierBLL();
-        List<String> suppliersID = new ArrayList<>();
-        for (Supplier supplier : supplierBLL.getSupplierList()) {
-            suppliersID.add(supplierBLL.getValueByKey(supplier, "SUPPLIER_ID").toString());
-        }
+        List<Object> suppliersID = supplierBLL.getObjectsProperty("SUPPLIER_ID", supplierBLL.getSupplierList());
+
         wareHouses = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -78,11 +78,11 @@ public class WarehousesGUI extends JPanel {
         btRef = new Button();
 
         wareHouses.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        wareHouses.setBackground(new Color(51, 51, 51));
+        wareHouses.setBackground(new Color(70, 67, 67));
         this.add(wareHouses, BorderLayout.CENTER);
 
         roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(51, 51, 51));
+        roundPanel1.setBackground(new Color(70, 67, 67));
         roundPanel1.setPreferredSize(new Dimension(635, 680));
         roundPanel1.setAutoscrolls(true);
         roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
@@ -162,88 +162,97 @@ public class WarehousesGUI extends JPanel {
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 20, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(635, 130));
+            roundPanel2.add(mode, BorderLayout.SOUTH);
 
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addIngredient();
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addIngredient();
+                    }
                 }
-            }
-        });
-        mode.add(btAdd);
+            });
+            mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateIngredient();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateIngredient();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btUpd);
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(false);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteIngredient();
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteIngredient();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btDel);
+        }
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        } else {
+            dataTable.setRowSelectionInterval(0, 0);
+            fillForm();
+        }
     }
 
     private void unitSearch() {
@@ -334,7 +343,6 @@ public class WarehousesGUI extends JPanel {
     private void refreshForm() {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
-        ingredientBLL = new IngredientBLL();
         loadDataTable(ingredientBLL.getIngredientList());
         jTextFieldsForm[0].setText(ingredientBLL.getAutoID());
         for (int i = 1; i < jTextFieldsForm.length; i++) {

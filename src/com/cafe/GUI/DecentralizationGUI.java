@@ -20,6 +20,7 @@ import java.util.Objects;
 
 public class DecentralizationGUI extends JPanel {
     private DecentralizationBLL decentralizationBLL = new DecentralizationBLL();
+    private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel decentralization;
     private RoundPanel roundPanel1;
@@ -39,7 +40,8 @@ public class DecentralizationGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    public DecentralizationGUI() {
+    public DecentralizationGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -56,7 +58,7 @@ public class DecentralizationGUI extends JPanel {
         jLabelsForm = new JLabel[columnNames.size() - 1];
         cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         jComboBoxForm = new JComboBox[columnNames.size() - 3];
-        jComboBoxSearch = new JComboBox<>(new String[]{"Không", "Xem", "Sửa", "Xem và sửa"});
+        jComboBoxSearch = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[2];
         btAdd = new Button();
@@ -65,11 +67,11 @@ public class DecentralizationGUI extends JPanel {
         btRef = new Button();
 
         decentralization.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        decentralization.setBackground(new Color(51, 51, 51));
+        decentralization.setBackground(new Color(70, 67, 67));
         this.add(decentralization, BorderLayout.CENTER);
 
         roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(51, 51, 51));
+        roundPanel1.setBackground(new Color(70, 67, 67));
         roundPanel1.setPreferredSize(new Dimension(635, 680));
         roundPanel1.setAutoscrolls(true);
         roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
@@ -115,7 +117,7 @@ public class DecentralizationGUI extends JPanel {
 
         JScrollPane jScrollPane = new JScrollPane(pnlDecentralizationConfiguration);
         jScrollPane.setPreferredSize(new Dimension(600, 550));
-        pnlDecentralizationConfiguration.setLayout(new GridLayout(14, 2, 20, 20));
+        pnlDecentralizationConfiguration.setLayout(new GridLayout(15, 2, 20, 20));
         pnlDecentralizationConfiguration.setBackground(new Color(0xFFFFFF));
         pnlDecentralizationConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlDecentralizationConfiguration.setPreferredSize(new Dimension(jScrollPane.getViewport().getWidth(), 700));
@@ -143,7 +145,7 @@ public class DecentralizationGUI extends JPanel {
                     index1++;
                 }
                 default -> {
-                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Sửa", "Xem và sửa"});
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
                     jComboBoxForm[index2].setSelectedIndex(0);
                     pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
                     index2++;
@@ -151,88 +153,98 @@ public class DecentralizationGUI extends JPanel {
             }
         }
 
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 20, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(635, 130));
+            roundPanel2.add(mode, BorderLayout.SOUTH);
 
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addDecentralization();
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addDecentralization();
+                    }
                 }
-            }
-        });
-        mode.add(btAdd);
+            });
+            mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateDecentralization();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateDecentralization();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btUpd);
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(false);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteDecentralization();
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteDecentralization();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btDel);
+        }
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        } else {
+            jScrollPane.setPreferredSize(new Dimension(600, 676));
+            dataTable.setRowSelectionInterval(0, 0);
+            fillForm();
+        }
     }
 
     private void comboboxSearch() {
@@ -240,8 +252,8 @@ public class DecentralizationGUI extends JPanel {
         switch (Objects.requireNonNull(jComboBoxSearch.getSelectedItem()).toString()) {
             case "Không" -> value = "0";
             case "Xem" -> value = "1";
-            case "Sửa" -> value = "2";
-            case "Xem và sửa" -> value = "3";
+            case "Thêm" -> value = "2";
+            case "Sửa và xóa" -> value = "3";
             default -> {
             }
         }
@@ -344,7 +356,7 @@ public class DecentralizationGUI extends JPanel {
         jTextFieldsForm[1].setText(decentralization[decentralization.length - 1]);
         int index = 0;
         for (int i = 1; i < decentralization.length - 1; i++) {
-            jComboBoxForm[index].setSelectedItem(decentralization[i]);
+            jComboBoxForm[index].setSelectedItem(parse(decentralization[i]));
             index++;
         }
         btAdd.setEnabled(false);
@@ -364,12 +376,12 @@ public class DecentralizationGUI extends JPanel {
         return new Decentralization(decentralizationID, args, decentralizationName, false);
     }
 
-    public String parse(int n) {
-        return switch (n) {
-            case 0 -> "Không";
-            case 1 -> "Xem";
-            case 2 -> "Sửa";
-            case 3 -> "Xem và sửa";
+    public String parse(String mode) {
+        return switch (mode) {
+            case "0" -> "Không";
+            case "1" -> "Xem";
+            case "2" -> "Thêm";
+            case "3" -> "Sửa và xóa";
             default -> null;
         };
     }
@@ -380,18 +392,19 @@ public class DecentralizationGUI extends JPanel {
         for (Decentralization decentralization : decentralizationList) {
             List<Object> objects = new ArrayList<>();
             objects.add(decentralization.getDecentralizationID());
-            objects.add(parse(decentralization.getIsSale()));
-            objects.add(parse(decentralization.getIsProduct()));
-            objects.add(parse(decentralization.getIsCategory()));
-            objects.add(parse(decentralization.getIsRecipe()));
-            objects.add(parse(decentralization.getIsImport()));
-            objects.add(parse(decentralization.getIsBill()));
-            objects.add(parse(decentralization.getIsWarehouses()));
-            objects.add(parse(decentralization.getIsAccount()));
-            objects.add(parse(decentralization.getIsStaff()));
-            objects.add(parse(decentralization.getIsCustomer()));
-            objects.add(parse(decentralization.getIsDiscount()));
-            objects.add(parse(decentralization.getIsDecentralization()));
+            objects.add(decentralization.getIsSale());
+            objects.add(decentralization.getIsProduct());
+            objects.add(decentralization.getIsCategory());
+            objects.add(decentralization.getIsRecipe());
+            objects.add(decentralization.getIsImport());
+            objects.add(decentralization.getIsSupplier());
+            objects.add(decentralization.getIsBill());
+            objects.add(decentralization.getIsWarehouses());
+            objects.add(decentralization.getIsAccount());
+            objects.add(decentralization.getIsStaff());
+            objects.add(decentralization.getIsCustomer());
+            objects.add(decentralization.getIsDiscount());
+            objects.add(decentralization.getIsDecentralization());
             objects.add(decentralization.getDecentralizationName());
             model.addRow(objects.toArray());
         }
