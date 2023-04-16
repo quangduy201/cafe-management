@@ -12,13 +12,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
-
-import static java.lang.System.exit;
 
 public class SaleGUI extends JPanel {
       private ArrayList<Product> listDetailBill = new ArrayList<>();
@@ -51,7 +46,7 @@ public class SaleGUI extends JPanel {
         this.roundPanel9 = roundPanel9;
     }
 
-    private NewJFrame1 newJFrame1;
+    private ProductDetailsGUI productDetailsGUI;
     public RoundPanel getRoundPanel9() {
         return roundPanel9;
     }
@@ -449,13 +444,13 @@ public class SaleGUI extends JPanel {
         productPanel.setColorOver(new Color(25, 25, 25));
         productPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                if (newJFrame1 != null) {
-                    newJFrame1.dispose();
-                    newJFrame1 = new NewJFrame1(SaleGUI.this, a);
-                    newJFrame1.setVisible(true);
+                if (productDetailsGUI != null) {
+                    productDetailsGUI.dispose();
+                    productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, a);
+                    productDetailsGUI.setVisible(true);
                 } else {
-                    newJFrame1 = new NewJFrame1(SaleGUI.this, a);
-                    newJFrame1.setVisible(true);
+                    productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, a);
+                    productDetailsGUI.setVisible(true);
                 }
             }
         });
@@ -544,7 +539,9 @@ public class SaleGUI extends JPanel {
             String staffID = this.staffID;
             Day Date =  Day.parseDay(year + '-' + month + '-' + day);
             Double total = Double.parseDouble(jTextField1.getText().replace(Character.toString('đ'),""));
-            bill = new Bill(ID,customerid,staffID,Date,total,false);
+            Double received = Double.parseDouble(jTextField2.getText().replace(Character.toString('đ'),""));
+            Double excess = Double.parseDouble(jTextField3.getText().replace(Character.toString('đ'),""));
+            bill = new Bill(ID,customerid,staffID,Date,total,received,excess,false);
 
             if (billBLL.exists(bill))
                 JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -556,10 +553,14 @@ public class SaleGUI extends JPanel {
                 JOptionPane.showMessageDialog(this, "Failed to add new bill!", "Error", JOptionPane.ERROR_MESSAGE);
 
 //            billBLL.updateBill(bill);
+            Double billDetail_total;
+            Double billDetail_percent;
             for (int i = 0; i < listDetailBill.size(); i++) {
                 Product product = listDetailBill.get(i);
                 addbillDetails = null;
-                addbillDetails = new BillDetails(ID,product.getProductID(),listQuantityChoice.get(i));
+                billDetail_total = product.getCost();
+                billDetail_percent = 0.0;
+                addbillDetails = new BillDetails(ID,product.getProductID(),listQuantityChoice.get(i),billDetail_total,billDetail_percent);
                 billDetailsBLL.addBillDetails(addbillDetails);
 
             }
@@ -595,7 +596,7 @@ public class SaleGUI extends JPanel {
             detailBill.getPaymentFrame().addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new NewJFrame1( SaleGUI.this, product, listQuantityChoice.get(index)).setVisible(true);
+                    new ProductDetailsGUI( SaleGUI.this, product, listQuantityChoice.get(index)).setVisible(true);
                 }
             });
 

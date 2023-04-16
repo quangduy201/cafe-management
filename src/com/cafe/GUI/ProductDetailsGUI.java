@@ -1,6 +1,5 @@
 package com.cafe.GUI;
 
-import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.BLL.ProductBLL;
 import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
@@ -11,10 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.RoundRectangle2D;
-import java.util.ArrayList;
 import java.util.Vector;
 
-public class NewJFrame1 extends JFrame {
+public class ProductDetailsGUI extends JFrame {
 
     private  Vector comboBoxItems;
 
@@ -40,7 +38,7 @@ public class NewJFrame1 extends JFrame {
 
     private Product newProduct;
     private int index;
-    public NewJFrame1(SaleGUI saleGUI, Product product) {
+    public ProductDetailsGUI(SaleGUI saleGUI, Product product) {
         this.newProduct = product;
         this.saleGUI = saleGUI;
         initComponents();
@@ -59,7 +57,7 @@ public class NewJFrame1 extends JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
     }
 
-    public NewJFrame1(SaleGUI saleGUI, Product product, int index) {
+    public ProductDetailsGUI(SaleGUI saleGUI, Product product, int index) {
         this.newProduct = product;
         this.saleGUI = saleGUI;
         this.index = index;
@@ -390,6 +388,6 @@ public class NewJFrame1 extends JFrame {
 
 
 //    public static void main(String[] arg) {
-//        new NewJFrame1().setVisible(true);
+//        new ProductDetailsGUI().setVisible(true);
 //    }
 }

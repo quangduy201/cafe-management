@@ -20,14 +20,13 @@ public class BillGUI extends JPanel {
 
     private JScrollPane jScrollPane[];
 
+
     private Button button[];
     public void initComponents() {
         roundPanel = new RoundPanel[20];
         label = new JLabel[20];
         button = new Button[3];
         jScrollPane = new JScrollPane[2];
-        jScrollPane[0] = new JScrollPane();
-        jScrollPane[1] = new JScrollPane();
         button[0] = new Button();
         button[1] = new Button();
         button[2] = new Button();
@@ -39,6 +38,9 @@ public class BillGUI extends JPanel {
         roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER,20,0));
         roundPanel[0].setBackground(new Color(70, 67, 67));
         this.add(roundPanel[0],BorderLayout.CENTER);
+
+        jScrollPane[0] = new JScrollPane(roundPanel[16]);
+        jScrollPane[1] = new JScrollPane();
 
         roundPanel[1].setLayout(new FlowLayout(FlowLayout.CENTER,0,20));
         roundPanel[1].setPreferredSize(new Dimension(560, 670));
@@ -89,7 +91,6 @@ public class BillGUI extends JPanel {
         roundPanel[2].add(roundPanel[10]);
 
         roundPanel[11].setPreferredSize(new Dimension(410, 370));
-        roundPanel[11].setBackground(new Color(255, 0, 0));
         roundPanel[11].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[11]);
 
@@ -117,13 +118,6 @@ public class BillGUI extends JPanel {
         label[0].setAutoscrolls(true);
         roundPanel[3].add(label[0]);
 
-//        pictureScrollPane.setPreferredSize(new Dimension(350, 355));
-//        pictureScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//        roundPanel9.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-//        roundPanel9.setBackground(new Color(240, 240, 240));
-//        roundPanel9.setBorder(BorderFactory.createLineBorder(Color.black));
-//        roundPanel9.setPreferredSize(new Dimension(pictureScrollPane.getWidth(), 355));
-//        roundPanel2.add(pictureScrollPane);
 
         roundPanel[15].setLayout(new BorderLayout(5,0));
         roundPanel[15].setBackground(new Color(70, 67, 67));
@@ -146,7 +140,7 @@ public class BillGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 try {
-                    pressadd();
+                    pressSale();
                 } catch (Exception ignored) {
 
                 }
@@ -163,12 +157,12 @@ public class BillGUI extends JPanel {
         button[1].setColorOver(new Color(0x5EFF00));
         button[1].setColorClick(new Color(0x8AD242));
         button[1].setBorderColor(new Color(70, 67, 67));
-        button[1].setText("Thêm");
+        button[1].setText("Nhập");
         button[1].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 try {
-                    pressimporting();
+                    pressImport();
                 } catch (Exception ignored) {
 
                 }
@@ -192,7 +186,7 @@ public class BillGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 try {
-                    pressExxcel();
+                    pressExcel();
                 } catch (Exception ignored) {
 
                 }
@@ -202,75 +196,90 @@ public class BillGUI extends JPanel {
 
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 30));
         label[1].setHorizontalAlignment(JLabel.CENTER);
-        label[1].setText("Hóa Đơn");
+        label[1].setText("HÓA ĐƠN");
         label[1].setPreferredSize(new Dimension(400, 40));
         label[1].setAutoscrolls(true);
         roundPanel[6].add(label[1]);
 
         label[2].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[2].setHorizontalAlignment(JLabel.LEFT);
-        label[2].setText("BILL_ID:");
-        label[2].setPreferredSize(new Dimension(130, 30));
+        label[2].setText("Mã hóa đơn:");
+        label[2].setPreferredSize(new Dimension(110, 30));
         label[2].setAutoscrolls(true);
         roundPanel[7].add(label[2]);
 
         label[3].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[3].setHorizontalAlignment(JLabel.LEFT);
-        label[3].setPreferredSize(new Dimension(250, 30));
+        label[3].setPreferredSize(new Dimension(130, 30));
         label[3].setAutoscrolls(true);
         roundPanel[7].add(label[3]);
 
+
+        label[8].setFont(new Font("Times New Roman", Font.BOLD, 14));
+        label[8].setHorizontalAlignment(JLabel.LEFT);
+        label[8].setText("Ngày:");
+        label[8].setPreferredSize(new Dimension(50, 30));
+        label[8].setAutoscrolls(true);
+        roundPanel[7].add(label[8]);
+
+        label[9].setFont(new Font("Times New Roman", Font.BOLD, 14));
+        label[9].setHorizontalAlignment(JLabel.LEFT);
+        label[9].setPreferredSize(new Dimension(90, 30));
+        label[9].setAutoscrolls(true);
+        roundPanel[7].add(label[9]);
+
         label[4].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[4].setHorizontalAlignment(JLabel.LEFT);
-        label[4].setText("Tên Khách Hàng:");
-        label[4].setPreferredSize(new Dimension(130, 30));
+        label[4].setText("Tên khách hàng:");
+        label[4].setPreferredSize(new Dimension(110, 30));
         label[4].setAutoscrolls(true);
         roundPanel[8].add(label[4]);
 
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[5].setHorizontalAlignment(JLabel.LEFT);
-        label[5].setPreferredSize(new Dimension(250, 30));
+        label[5].setPreferredSize(new Dimension(130, 30));
         label[5].setAutoscrolls(true);
         roundPanel[8].add(label[5]);
 
         label[6].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[6].setHorizontalAlignment(JLabel.LEFT);
-        label[6].setText("STAFF_ID:");
-        label[6].setPreferredSize(new Dimension(130, 30));
+        label[6].setText("Mã nhân viên:");
+        label[6].setPreferredSize(new Dimension(90, 30));
         label[6].setAutoscrolls(true);
-        roundPanel[9].add(label[6]);
+        roundPanel[8].add(label[6]);
 
         label[7].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[7].setHorizontalAlignment(JLabel.LEFT);
-        label[7].setPreferredSize(new Dimension(250, 30));
+        label[7].setPreferredSize(new Dimension(50, 30));
         label[7].setAutoscrolls(true);
-        roundPanel[9].add(label[7]);
+        roundPanel[8].add(label[7]);
 
-        label[8].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        label[8].setHorizontalAlignment(JLabel.LEFT);
-        label[8].setText("Thời Gian:");
-        label[8].setPreferredSize(new Dimension(130, 30));
-        label[8].setAutoscrolls(true);
-        roundPanel[10].add(label[8]);
 
-        label[9].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        label[9].setHorizontalAlignment(JLabel.LEFT);
-        label[9].setPreferredSize(new Dimension(250, 30));
-        label[9].setAutoscrolls(true);
-        roundPanel[10].add(label[9]);
+        jScrollPane[0].setPreferredSize(new Dimension(400, 360));
+        jScrollPane[0].setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jScrollPane[0].setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane[0].setBorder(BorderFactory.createEmptyBorder());
+        roundPanel[16].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        roundPanel[16].setBackground(new Color(240, 240, 240));
+        roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 350));
+        roundPanel[11].add(jScrollPane[0]);
 
+        roundPanel[17].setPreferredSize(new Dimension(410, 30));
+        roundPanel[17].setBackground(new Color(255, 0, 0));
+        roundPanel[17].setAutoscrolls(true);
+        roundPanel[2].add(roundPanel[17]);
     }
 
 
-    public void pressadd() {
+    public void pressSale() {
 
     }
 
-    public void pressimporting() {
+    public void pressImport() {
 
     }
 
-    public void pressExxcel() {
+    public void pressExcel() {
 
     }
 }

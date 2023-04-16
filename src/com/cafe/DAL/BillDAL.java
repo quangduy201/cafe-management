@@ -15,6 +15,8 @@ public class BillDAL extends Manager {
                 "STAFF_ID",
                 "DOPURCHASE",
                 "TOTAL",
+                "RECEIVED",
+                "EXCESS",
                 "DELETED")
         );
     }
@@ -28,7 +30,9 @@ public class BillDAL extends Manager {
                     row.get(2), // staffID
                     Day.parseDay(row.get(3)), // dateOfPurchase
                     Double.parseDouble(row.get(4)), // total
-                    Boolean.parseBoolean(row.get(5)) // deleted
+                    Double.parseDouble(row.get(5)),
+                    Double.parseDouble(row.get(6)),
+                    Boolean.parseBoolean(row.get(7)) // deleted
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in BillDAL.convertToBills(): " + e.getMessage());
@@ -44,6 +48,8 @@ public class BillDAL extends Manager {
                 bill.getStaffID(),
                 bill.getDateOfPurchase(),
                 bill.getTotal(),
+                bill.getReceived(),
+                bill.getExcess(),
                 false
             ); // bill khi tạo mặc định total, deleted = 0
         } catch (Exception e) {
@@ -60,6 +66,8 @@ public class BillDAL extends Manager {
             updateValues.add(bill.getStaffID());
             updateValues.add(bill.getDateOfPurchase());
             updateValues.add(bill.getTotal());
+            updateValues.add(bill.getReceived());
+            updateValues.add(bill.getExcess());
             updateValues.add(bill.isDeleted());
             return update(updateValues, "BILL_ID = '" + bill.getBillID() + "'");
         } catch (Exception e) {
