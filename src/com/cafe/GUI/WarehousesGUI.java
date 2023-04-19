@@ -129,31 +129,33 @@ public class WarehousesGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
+        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
+        int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
             jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlSupplierConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
-                    jTextFieldsForm[i] = new JTextField(ingredientBLL.getAutoID());
-                    jTextFieldsForm[i].setEnabled(false);
+                    jTextFieldsForm[index] = new JTextField(ingredientBLL.getAutoID());
+                    jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[i].setBorder(null);
                     jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
-                    pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+                    pnlSupplierConfiguration.add(jTextFieldsForm[index]);
+                    index++;
                 }
                 case "UNIT" -> pnlSupplierConfiguration.add(cbbUnit);
-//                case "UNIT_PRICE" -> pnlSupplierConfiguration.add(cbbUnit);
                 case "SUPPLIER_ID" -> pnlSupplierConfiguration.add(cbbSupplierID);
                 default -> {
-                    jTextFieldsForm[i] = new JTextField();
-                    jTextFieldsForm[i].setText(null);
-                    pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlSupplierConfiguration.add(jTextFieldsForm[index]);
+                    index++;
                 }
             }
         }
@@ -401,7 +403,7 @@ public class WarehousesGUI extends JPanel {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Ingredient ingredient : ingredientList) {
-            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getSupplierID()});
+            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
         }
     }
 

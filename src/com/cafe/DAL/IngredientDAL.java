@@ -13,8 +13,8 @@ public class IngredientDAL extends Manager {
                 "NAME",
                 "QUANTITY",
                 "UNIT",
-                "SUPPLIER_ID",
                 "UNIT_PRICE",
+                "SUPPLIER_ID",
                 "DELETED")
         );
     }
@@ -28,7 +28,7 @@ public class IngredientDAL extends Manager {
                 Double.parseDouble(row.get(2)), // quantity
                 row.get(3), // unit
                 Double.parseDouble(row.get(4)), // unitPrice
-                row.get(4), // supplierID
+                row.get(5), // supplierID
                 Boolean.parseBoolean(row.get(6)) // deleted
             );
         });
