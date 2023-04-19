@@ -26,7 +26,7 @@ public class ReceiptDAL extends Manager {
                     row.get(1), // staffID
                     Day.parseDay(row.get(2)),// dor
                     Double.parseDouble(row.get(3)), // grandTotal
-                    Boolean.parseBoolean(row.get(5)) // deleted
+                    Boolean.parseBoolean(row.get(4)) // deleted
                 );
             } catch (Exception e) {
                 System.out.println("Error occurred in ReceiptDAL.convertToReceipts(): " + e.getMessage());

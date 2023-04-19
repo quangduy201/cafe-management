@@ -19,6 +19,7 @@ public class RoundPanel extends JPanel {
     public void setBorderColor(Color borderColor) {
         this.borderColor = borderColor;
     }
+
     @Override
     public void paint(Graphics graphics) {
         Graphics2D g2 = (Graphics2D) graphics.create();

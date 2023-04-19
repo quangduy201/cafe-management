@@ -148,6 +148,7 @@ public class WarehousesGUI extends JPanel {
                     pnlSupplierConfiguration.add(jTextFieldsForm[i]);
                 }
                 case "UNIT" -> pnlSupplierConfiguration.add(cbbUnit);
+//                case "UNIT_PRICE" -> pnlSupplierConfiguration.add(cbbUnit);
                 case "SUPPLIER_ID" -> pnlSupplierConfiguration.add(cbbSupplierID);
                 default -> {
                     jTextFieldsForm[i] = new JTextField();
@@ -367,7 +368,8 @@ public class WarehousesGUI extends JPanel {
         jTextFieldsForm[1].setText(ingredient[1]);
         jTextFieldsForm[2].setText(ingredient[2]);
         cbbUnit.setSelectedItem(ingredient[3]);
-        cbbSupplierID.setSelectedItem(ingredient[4]);
+        jTextFieldsForm[3].setText(ingredient[4]);
+        cbbSupplierID.setSelectedItem(ingredient[5]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -378,19 +380,21 @@ public class WarehousesGUI extends JPanel {
         String name = null;
         double quantity = 0;
         String unit;
+        double unitPrice = 0;
         String supplierID;
         for (int i = 0; i < jTextFieldsForm.length; i++) {
             switch (i) {
                 case 0 -> ingredientID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
                 case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 3 -> unitPrice = Double.parseDouble(jTextFieldsForm[i].getText());
                 default -> {
                 }
             }
         }
         unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
         supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
-        return new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
+        return new Ingredient(ingredientID, name, quantity, unit, unitPrice, supplierID, false);
     }
 
     private void loadDataTable(List<Ingredient> ingredientList) {
@@ -421,6 +425,13 @@ public class WarehousesGUI extends JPanel {
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
             JOptionPane.showMessageDialog(this, "Quantity must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[3].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Unit price must be a double >= 0.0
+            jTextFieldsForm[3].requestFocusInWindow();
+            jTextFieldsForm[3].selectAll();
+            JOptionPane.showMessageDialog(this, "Unit price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

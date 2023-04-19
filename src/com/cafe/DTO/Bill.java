@@ -98,8 +98,8 @@ public class Bill {
             customerID + " | " +
             staffID + " | " +
             dateOfPurchase + " | " +
+            total + " | " +
             received + " | " +
-            excess + " | " +
-            total;
+            excess;
     }
 }

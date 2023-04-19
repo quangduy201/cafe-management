@@ -1,16 +1,14 @@
 package com.cafe.custom;
 
-import com.cafe.DTO.Product;
-import com.cafe.GUI.SaleGUI;
+import com.cafe.BLL.*;
+import com.cafe.DTO.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.Map;
 
-public class DetailBill extends RoundPanel {
-    public DetailBill() {
+public class BillDetailPanel extends RoundPanel {
+    public BillDetailPanel() {
         initComponents();
     }
 
@@ -32,6 +30,8 @@ public class DetailBill extends RoundPanel {
         frame_name = new RoundPanel();
         frame_price = new RoundPanel();
         payment_img = new Button();
+        ingredientname = new JLabel();
+        ingredientname1 = new JLabel();
 
 
         this.setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
@@ -60,7 +60,7 @@ public class DetailBill extends RoundPanel {
 
         payment_name.setText("Tên sp:");
         payment_name.setPreferredSize(new Dimension(50, 30));
-        payment_name.setHorizontalAlignment(JLabel.CENTER);
+        payment_name.setHorizontalAlignment(JLabel.LEFT);
         payment_name.setFont(new Font("Times New Roman", Font.BOLD, 15));
         frame_name.add(payment_name);
 
@@ -70,12 +70,12 @@ public class DetailBill extends RoundPanel {
         frame_name.add(payment_name1);
 
         payment_size.setText("Size: ");
-        payment_size.setPreferredSize(new Dimension(40, 30));
+        payment_size.setPreferredSize(new Dimension(35, 30));
         payment_size.setHorizontalAlignment(JLabel.LEFT);
         payment_size.setFont(new Font("Times New Roman", Font.BOLD, 15));
         frame_name.add(payment_size);
 
-        payment_size1.setPreferredSize(new Dimension(30, 30));
+        payment_size1.setPreferredSize(new Dimension(35, 30));
         payment_size1.setHorizontalAlignment(JLabel.LEFT);
         payment_size1.setFont(new Font("Times New Roman", Font.BOLD, 15));
         frame_name.add(payment_size1);
@@ -101,7 +101,7 @@ public class DetailBill extends RoundPanel {
 
 
         payment_price1.setPreferredSize(new Dimension(110, 40));
-        payment_price1.setHorizontalAlignment(JLabel.LEFT);
+        payment_price1.setHorizontalAlignment(JLabel.CENTER);
         payment_price1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
         frame_price.add(payment_price1);
 
@@ -114,7 +114,20 @@ public class DetailBill extends RoundPanel {
         payment_img.setColor(new Color(0xFF0000));
         payment_img.setColorOver(new Color(0x000000));
         frame_price.add(payment_img);
+
+        ingredientname.setText("Nhà cung cấp:");
+        ingredientname.setPreferredSize(new Dimension(90, 30));
+        ingredientname.setHorizontalAlignment(JLabel.LEFT);
+        ingredientname.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+
+
+        ingredientname1.setPreferredSize(new Dimension(100, 30));
+        ingredientname1.setHorizontalAlignment(JLabel.LEFT);
+        ingredientname1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
     }
+
+    private JLabel ingredientname;
+    private JLabel ingredientname1;
 
     public Button getPayment_img() {
         return payment_img;
@@ -131,6 +144,60 @@ public class DetailBill extends RoundPanel {
         payment_quantity1.setText(String.valueOf(quantity));
         int total = quantity * (int) Math.round(data.getCost());
         payment_price1.setText(String.valueOf(total)  + "đ");
+        this.index = index;
+    }
+
+    public void setbill(BillDetails billDetails) {
+        this.setPreferredSize(new Dimension(340,75));
+        paymentFrame.setPreferredSize(new Dimension(340, 75));
+        Product data = new ProductBLL()
+            .findProductsBy(Map.of("PRODUCT_ID", billDetails.getProductID()))
+            .get(0);
+        payment_name1.setText(data.getName());
+        payment_size1.setText(data.getSized());
+        payment_quantity1.setText(String.valueOf(billDetails.getQuantity()));
+        int total = billDetails.getQuantity() * (int) Math.round(data.getCost());
+        payment_price1.setText(String.valueOf(total)  + "đ");
+        frame_price.remove(payment_img);
+        this.index = index;
+    }
+
+    public void setreceipt(ReceiptDetails receiptDetails) {
+        this.setPreferredSize(new Dimension(340,80));
+        paymentFrame.setPreferredSize(new Dimension(340, 80));
+        payment_name.setText("Tên nl:");
+        payment_name1.setPreferredSize(new Dimension(270, 30));
+        frame_name.remove(payment_size);
+        frame_name.remove(payment_size1);
+        frame_name.remove(payment_size1);
+        frame_price.remove(payment_img);
+        payment_quantity.setText("Số lượng:");
+        payment_price.setText("Giá tiền:");
+        paymentFrame.add(ingredientname);
+        paymentFrame.add(ingredientname1);
+
+        frame_price.setPreferredSize(new Dimension(340, 30));
+        frame_name.setPreferredSize(new Dimension(340, 20));
+        payment_quantity1.setPreferredSize(new Dimension(100, 40));
+        payment_price.setPreferredSize(new Dimension(55, 40));
+        payment_price1.setPreferredSize(new Dimension(60, 40));
+
+
+        ReceiptDetails data = new ReceiptDetailsBLL()
+            .findReceiptDetailsBy(Map.of("RECEIPT_ID", receiptDetails.getReceiptID()))
+            .get(0);
+        Ingredient ingredient = new IngredientBLL()
+            .findIngredientsBy(Map.of("INGREDIENT_ID", data.getIngredientID()))
+            .get(0);
+        Supplier supplier = new SupplierBLL()
+            .findSuppliersBy(Map.of("SUPPLIER_ID", data.getSupplierID()))
+            .get(0);
+
+        payment_name1.setText(ingredient.getName());
+        payment_quantity1.setText(String.valueOf(data.getQuantity()) + ingredient.getUnit());
+        payment_price1.setText(String.valueOf(data.getQuantity() * ingredient.getUnitPrice()));
+        ingredientname1.setText(supplier.getName());
+        Double total = ingredient.getQuantity() * Math.round(data.getQuantity());
         this.index = index;
     }
 

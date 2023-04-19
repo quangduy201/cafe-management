@@ -1,5 +1,9 @@
 package com.cafe.utils;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+
 public class Day {
     private int date, month, year;
 
@@ -13,6 +17,13 @@ public class Day {
         this.date = date;
         this.month = month;
         this.year = year;
+    }
+
+    public Day(Date date) {
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        this.date =  localDate.getDayOfMonth();
+        this.month = localDate.getMonthValue();
+        this.year = localDate.getYear();
     }
 
     public static boolean isLeapYear(int year) {
@@ -76,6 +87,27 @@ public class Day {
         }
         return days;
     }
+
+    public boolean compareDates(Day day) {
+        if (this.year > day.getYear()) {
+            return true;
+        } else if (this.year < day.getYear()) {
+            return false;
+        } else {
+            if (this.month > day.getMonth()) {
+                return true;
+            } else if (this.month < day.getMonth()) {
+                return false;
+            } else {
+                if (this.date> day.getDate()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
 
     public static Day parseDay(String str) throws Exception {
         String[] temp = str.split("-");

@@ -14,6 +14,7 @@ public class IngredientDAL extends Manager {
                 "QUANTITY",
                 "UNIT",
                 "SUPPLIER_ID",
+                "UNIT_PRICE",
                 "DELETED")
         );
     }
@@ -26,8 +27,9 @@ public class IngredientDAL extends Manager {
                 row.get(1), // name
                 Double.parseDouble(row.get(2)), // quantity
                 row.get(3), // unit
+                Double.parseDouble(row.get(4)), // unitPrice
                 row.get(4), // supplierID
-                Boolean.parseBoolean(row.get(5)) // deleted
+                Boolean.parseBoolean(row.get(6)) // deleted
             );
         });
     }
@@ -38,6 +40,7 @@ public class IngredientDAL extends Manager {
                 ingredient.getName(),
                 ingredient.getQuantity(),
                 ingredient.getUnit(),
+                ingredient.getUnitPrice(),
                 ingredient.getSupplierID(),
                 false
             ); // ingredient khi tạo mặc định deleted = 0
@@ -54,6 +57,7 @@ public class IngredientDAL extends Manager {
             updateValues.add(ingredient.getName());
             updateValues.add(ingredient.getQuantity());
             updateValues.add(ingredient.getUnit());
+            updateValues.add(ingredient.getUnitPrice());
             updateValues.add(ingredient.getSupplierID());
             updateValues.add(ingredient.isDeleted());
             return update(updateValues, "INGREDIENT_ID = '" + ingredient.getIngredientID() + "'");

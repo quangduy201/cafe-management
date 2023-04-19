@@ -233,6 +233,7 @@ public class SaleGUI extends JPanel {
         txtid.setBorder(BorderFactory.createEmptyBorder());
         txtid.setEditable(false);
         txtid.setText(staffID);
+        txtid.setFocusable(false);
         txtid.setBackground(new Color(240, 240, 240));
         roundPanel15.add(txtid);
 
@@ -301,10 +302,8 @@ public class SaleGUI extends JPanel {
         txtname.setFont(new Font("Times New Roman", 0, 14));
         txtname.setPreferredSize(new Dimension(210, 35));
         txtname.setBorder(BorderFactory.createEmptyBorder());
-        txtname.setEditable(false);
         txtname.setBackground(new Color(240, 240, 240));
         roundPanel8.add(txtname);
-
 
         jlabel2.setFont(new Font("Times New Roman", 0, 14));
         jlabel2.setText("Tổng tiền: ");
@@ -325,6 +324,7 @@ public class SaleGUI extends JPanel {
         jTextField1.setBackground(new Color(240, 240, 240));
         jTextField1.setHorizontalAlignment(JTextField.RIGHT);
         jTextField1.setText("0đ");
+        jTextField1.setFocusable(false);
         roundPanel12.add(jTextField1);
 
         jTextField2.setFont(new Font("Times New Roman", 0, 14));
@@ -355,6 +355,7 @@ public class SaleGUI extends JPanel {
         jTextField3.setBorder(BorderFactory.createEmptyBorder());
         jTextField3.setHorizontalAlignment(JTextField.RIGHT);
         jTextField3.setEditable(false);
+        jTextField3.setFocusable(false);
         jTextField3.setText("0đ");
         roundPanel14.add(jTextField3);
 
@@ -466,6 +467,7 @@ public class SaleGUI extends JPanel {
         slCategorName.setPreferredSize(new Dimension(120, 20));
         slCategorName.setHorizontalAlignment(JTextField.CENTER);
         slCategorName.setEditable(false);
+        slCategorName.setFocusable(false);
         slCategorName.setBorder(BorderFactory.createEmptyBorder());
         slCategorName.setBackground(new Color(0xB65858));
         slCategorName.setText(categoryName.getName());
@@ -500,6 +502,7 @@ public class SaleGUI extends JPanel {
         slProductname1.setPreferredSize(new Dimension(150, 20));
         slProductname1.setText(name1);
         slProductname1.setEditable(false);
+        slProductname1.setFocusable(false);
         slProductname1.setBorder(BorderFactory.createEmptyBorder());
         slProductname1.setBackground(new Color(0xB65858));
         slProductname1.setHorizontalAlignment(JTextField.CENTER);
@@ -509,6 +512,7 @@ public class SaleGUI extends JPanel {
         slProductname2.setPreferredSize(new Dimension(150, 20));
         slProductname2.setText(name2);
         slProductname2.setEditable(false);
+        slProductname2.setFocusable(false);
         slProductname2.setBorder(BorderFactory.createEmptyBorder());
         slProductname2.setBackground(new Color(0xB65858));
         slProductname2.setHorizontalAlignment(JTextField.CENTER);
@@ -587,20 +591,20 @@ public class SaleGUI extends JPanel {
         }
         double totalPrice = 0;
         for(int e = 0; e < listDetailBill.size();e++){
-            DetailBill detailBill = new DetailBill();
-            detailBill.setData(listDetailBill.get(e), listQuantityChoice.get(e), e);
+            BillDetailPanel billDetailPanel = new BillDetailPanel();
+            billDetailPanel.setData(listDetailBill.get(e), listQuantityChoice.get(e), e);
             Product product = listDetailBill.get(e);
 
             int index = e;
 
-            detailBill.getPaymentFrame().addMouseListener(new MouseAdapter(){
+            billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent e) {
                     new ProductDetailsGUI( SaleGUI.this, product, listQuantityChoice.get(index)).setVisible(true);
                 }
             });
 
-            detailBill.getPayment_img().addMouseListener(new MouseAdapter(){
+            billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter(){
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if(JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION){
@@ -615,7 +619,7 @@ public class SaleGUI extends JPanel {
                 }
             });
             totalPrice += product.getCost()*listQuantityChoice.get(e);
-            roundPanel9.add(detailBill);
+            roundPanel9.add(billDetailPanel);
             roundPanel9.repaint();
             roundPanel9.revalidate();
         }

@@ -82,6 +82,7 @@ public class IngredientBLL extends Manager<Ingredient> {
             "NAME", ingredient.getName(),
             "QUANTITY", ingredient.getQuantity(),
             "UNIT", ingredient.getUnit(),
+            "UNIT_PRICE", ingredient.getUnitPrice(),
             "SUPPLIER_ID", ingredient.getSupplierID()
         )).isEmpty();
     }
@@ -101,6 +102,7 @@ public class IngredientBLL extends Manager<Ingredient> {
             case "NAME" -> ingredient.getName();
             case "QUANTITY" -> ingredient.getQuantity();
             case "UNIT" -> ingredient.getUnit();
+            case "UNIT_PRICE" -> ingredient.getUnitPrice();
             case "SUPPLIER_ID" -> ingredient.getSupplierID();
             default -> null;
         };

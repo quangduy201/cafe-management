@@ -5,19 +5,31 @@ public class Ingredient {
     private String name;
     private double quantity;
     private String unit;
+
+    private Double unitPrice;
     private String supplierID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Ingredient() {
     }
 
-    public Ingredient(String ingredientID, String name, double quantity, String unit, String supplierID, boolean deleted) {
+    public Ingredient(String ingredientID, String name, double quantity, String unit, Double unitPrice, String supplierID, boolean deleted) {
         this.ingredientID = ingredientID;
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
         this.supplierID = supplierID;
+        this.unitPrice = unitPrice;
         this.deleted = deleted;
+    }
+
+    public Double getUnitPrice() {
+
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getIngredientID() {
@@ -74,6 +86,7 @@ public class Ingredient {
             name + " | " +
             quantity + " | " +
             unit + " | " +
+            unitPrice + " | " +
             supplierID;
     }
 }
