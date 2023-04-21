@@ -330,7 +330,7 @@ public class HomeGUI extends JFrame {
             case 4 -> new RecipeGUI(decentralization.getIsRecipe());
 //            case 5 -> new ImportGUI(decentralization.getIsImport());
 //            TODO: khi nào có Nhà cung cấp thì đổi lại case 6, uncomment case 5 và tăng các case bên dưới lên 1 đơn vị
-            case 5 -> new SupplierGUI(decentralization.getIsSupplier());
+            case 5 -> new IngredientGUI(decentralization.getIsSupplier(), account.getStaffID());
             case 6 -> new BillGUI();
             case 7 -> new WarehousesGUI(decentralization.getIsWarehouses());
             case 8 -> new StatisticGUI();

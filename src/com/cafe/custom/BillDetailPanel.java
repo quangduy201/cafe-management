@@ -121,7 +121,7 @@ public class BillDetailPanel extends RoundPanel {
         ingredientname.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 
 
-        ingredientname1.setPreferredSize(new Dimension(100, 30));
+        ingredientname1.setPreferredSize(new Dimension(180, 30));
         ingredientname1.setHorizontalAlignment(JLabel.LEFT);
         ingredientname1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
     }
@@ -176,6 +176,7 @@ public class BillDetailPanel extends RoundPanel {
         paymentFrame.add(ingredientname);
         paymentFrame.add(ingredientname1);
 
+
         frame_price.setPreferredSize(new Dimension(340, 30));
         frame_name.setPreferredSize(new Dimension(340, 20));
         payment_quantity1.setPreferredSize(new Dimension(100, 40));
@@ -194,11 +195,42 @@ public class BillDetailPanel extends RoundPanel {
             .get(0);
 
         payment_name1.setText(ingredient.getName());
-        payment_quantity1.setText(String.valueOf(data.getQuantity()) + ingredient.getUnit());
+        payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
         payment_price1.setText(String.valueOf(data.getQuantity() * ingredient.getUnitPrice()));
         ingredientname1.setText(supplier.getName());
-        Double total = ingredient.getQuantity() * Math.round(data.getQuantity());
-        this.index = index;
+    }
+
+    public void setIngredient(Ingredient ingredient, int index) {
+        this.setPreferredSize(new Dimension(340,85));
+        paymentFrame.setPreferredSize(new Dimension(340, 85));
+        payment_name.setText("Tên nl:");
+        payment_name.setPreferredSize(new Dimension(50, 25));
+        payment_name1.setPreferredSize(new Dimension(270, 25));
+        frame_name.remove(payment_size);
+        frame_name.remove(payment_size1);
+        frame_name.remove(payment_size1);
+        frame_price.remove(payment_img);
+        payment_quantity.setText("Số lượng:");
+        payment_price.setText("Giá tiền:");
+        paymentFrame.add(ingredientname);
+        paymentFrame.add(ingredientname1);
+        paymentFrame.add(payment_img);
+
+
+        frame_price.setPreferredSize(new Dimension(340, 30));
+        frame_name.setPreferredSize(new Dimension(340, 20));
+        payment_quantity1.setPreferredSize(new Dimension(100, 40));
+        payment_price.setPreferredSize(new Dimension(55, 40));
+        payment_price1.setPreferredSize(new Dimension(60, 40));
+
+        Supplier supplier = new SupplierBLL()
+            .findSuppliersBy(Map.of("SUPPLIER_ID", ingredient.getSupplierID()))
+            .get(0);
+
+        payment_name1.setText(ingredient.getName());
+        payment_quantity1.setText(index + ingredient.getUnit());
+        payment_price1.setText(String.valueOf(index * ingredient.getUnitPrice()));
+        ingredientname1.setText(supplier.getName());
     }
 
 

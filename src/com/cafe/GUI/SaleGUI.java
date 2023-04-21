@@ -302,6 +302,8 @@ public class SaleGUI extends JPanel {
         txtname.setFont(new Font("Times New Roman", 0, 14));
         txtname.setPreferredSize(new Dimension(210, 35));
         txtname.setBorder(BorderFactory.createEmptyBorder());
+        txtname.setEditable(false);
+        txtname.setFocusable(false);
         txtname.setBackground(new Color(240, 240, 240));
         roundPanel8.add(txtname);
 
