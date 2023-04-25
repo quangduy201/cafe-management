@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.DTO.Category;
 import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -14,11 +15,11 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 public class ProductGUI extends JPanel {
     private ProductBLL productBLL = new ProductBLL();
@@ -31,7 +32,7 @@ public class ProductGUI extends JPanel {
     private JPanel pnlProductConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JLabel imgProduct;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbCategoryID;
@@ -39,7 +40,7 @@ public class ProductGUI extends JPanel {
     private JComboBox<Object> cbbSize;
     private JComboBox<Object> cbbSizeSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private JButton btChooseImg;
     private Button btAdd;
     private Button btUpd;
@@ -49,7 +50,7 @@ public class ProductGUI extends JPanel {
 
     public ProductGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
@@ -57,8 +58,8 @@ public class ProductGUI extends JPanel {
         List<String> columnNames = productBLL.getProductDAL().getColumnNames();
         CategoryBLL categoryBLL = new CategoryBLL();
         List<String> categoriesID = new ArrayList<>();
-        for (int i = 0; i < categoryBLL.getCategoryList().size(); i++) {
-            categoriesID.add(categoryBLL.getValueByKey(categoryBLL.getCategoryList().get(i), "CATEGORY_ID").toString());
+        for (Category category : categoryBLL.getCategoryList()) {
+            categoriesID.add(categoryBLL.getValueByKey(category, "CATEGORY_ID").toString());
         }
 
         product = new RoundPanel();
@@ -105,12 +106,7 @@ public class ProductGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -130,23 +126,13 @@ public class ProductGUI extends JPanel {
         });
         search.add(txtSearch);
         cbbCategoryIDSearch.setVisible(false);
-        cbbCategoryIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                categoryIDSearch();
-            }
-        });
+        cbbCategoryIDSearch.addItemListener(e -> categoryIDSearch());
         search.add(cbbCategoryIDSearch);
         cbbSizeSearch.setVisible(false);
-        cbbSizeSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                sizeSearch();
-            }
-        });
+        cbbSizeSearch.addItemListener(e -> sizeSearch());
         search.add(cbbSizeSearch);
 
-        dataTable = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), getListSelectionListener());
+        dataTable = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -277,7 +263,6 @@ public class ProductGUI extends JPanel {
             }
         });
         mode.add(btRef);
-
     }
 
     private void categoryIDSearch() {
@@ -317,29 +302,6 @@ public class ProductGUI extends JPanel {
         }
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] product = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(product[0]);
-            jTextFieldsForm[1].setText(product[1]);
-            cbbCategoryID.setSelectedItem(product[2]);
-            cbbSize.setSelectedItem(product[3]);
-            jTextFieldsForm[2].setText(product[4]);
-            for (Product product1 : productBLL.getProductList()) {
-                if (product1.getProductID().equals(product[0])) {
-                    chosenImg = product1.getImage();
-                    break;
-                }
-            }
-            imgProduct.setIcon(new ImageIcon(chosenImg));
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
     private void btnProductImageActionPerformed(java.awt.event.ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.removeChoosableFileFilter(fc.getFileFilter());
@@ -356,66 +318,52 @@ public class ProductGUI extends JPanel {
 
     public void addProduct() {
         if (checkInput()) {
-            Product newProduct;
-            String productID = null;
-            String name = null;
-            String categoryID;
-            String size;
-            String image;
-            double cost = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> productID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            categoryID = Objects.requireNonNull(cbbCategoryID.getSelectedItem()).toString();
-            size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
-            image = chosenImg;
-            assert size != null;
-            newProduct = new Product(productID, name, categoryID, size, cost, image, false);
-            productBLL.addProduct(newProduct);
+            Product newProduct = getForm();
+            if (productBLL.exists(newProduct))
+                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
+                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (productBLL.addProduct(newProduct))
+                JOptionPane.showMessageDialog(this, "Successfully added new product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new product!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateProduct() {
         if (checkInput()) {
-            Product newProduct;
-            String productID = null;
-            String name = null;
-            String categoryID;
-            String size;
-            String image;
-            double cost = 0;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> productID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            categoryID = Objects.requireNonNull(cbbCategoryID.getSelectedItem()).toString();
-            size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
-            image = chosenImg;
-            assert size != null;
-            newProduct = new Product(productID, name, categoryID, size, cost, image, false);
-            productBLL.updateProduct(newProduct);
+            Product newProduct = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentName = dataTable.getValueAt(selectedRow, 1).toString();
+            String currentCategoryID = dataTable.getValueAt(selectedRow, 2).toString();
+            String currentSized = dataTable.getValueAt(selectedRow, 3).toString();
+            boolean valueChanged = !newProduct.getName().equals(currentName) || !newProduct.getCategoryID().equals(currentCategoryID) || !newProduct.getSized().equals(currentSized);
+            if (productBLL.exists(newProduct))
+                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
+                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (productBLL.updateProduct(newProduct))
+                JOptionPane.showMessageDialog(this, "Successfully updated product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update product!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(productBLL.getProductList());
-
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteProduct() {
-        Product product = new Product();
-        product.setProductID(jTextFieldsForm[0].getText());
-        productBLL.deleteProduct(product);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this product?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Product product = new Product();
+            product.setProductID(jTextFieldsForm[0].getText());
+            if (productBLL.deleteProduct(product))
+                JOptionPane.showMessageDialog(this, "Successfully deleted product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete product!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -435,6 +383,53 @@ public class ProductGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] product = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(product[0]);
+        jTextFieldsForm[1].setText(product[1]);
+        cbbCategoryID.setSelectedItem(product[2]);
+        cbbSize.setSelectedItem(product[3]);
+        jTextFieldsForm[2].setText(product[4]);
+        for (Product product1 : productBLL.getProductList()) {
+            if (product1.getProductID().equals(product[0])) {
+                chosenImg = product1.getImage();
+                break;
+            }
+        }
+        imgProduct.setIcon(new ImageIcon(chosenImg));
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Product getForm() {
+        String productID = null;
+        String name = null;
+        String categoryID;
+        String size;
+        String image;
+        double cost = 0;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> productID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
+                case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText());
+                default -> {
+                }
+            }
+        }
+        categoryID = Objects.requireNonNull(cbbCategoryID.getSelectedItem()).toString();
+        size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
+        image = chosenImg;
+        return new Product(productID, name, categoryID, size, cost, image, false);
+    }
+
     public void loadDataTable(List<Product> productList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -446,20 +441,28 @@ public class ProductGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
         }
-        if (chosenImg == null) {
-            JOptionPane.showMessageDialog(this, "Please choose image product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            Double.parseDouble(jTextFieldsForm[2].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Cost must be a double >= 0.0
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Cost must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (chosenImg == null) {
+            JOptionPane.showMessageDialog(this, "Image can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            btChooseImg.doClick();
             return false;
         }
         return true;

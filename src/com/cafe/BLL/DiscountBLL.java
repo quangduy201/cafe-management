@@ -58,20 +58,29 @@ public class DiscountBLL extends Manager<Discount> {
         return discountDAL.searchDiscounts(conditions);
     }
 
-    public List<Discount> findDiscountBy(Map<String, Object> conditions) {
+    public List<Discount> findDiscountsBy(Map<String, Object> conditions) {
         List<Discount> discounts = discountList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
             discounts = findObjectsBy(entry.getKey(), entry.getValue(), discounts);
         return discounts;
     }
 
+    public boolean exists(Discount discount) {
+        return !findDiscountsBy(Map.of(
+            "CATEGORY_ID", discount.getDiscountID(),
+            "DISCOUNT_PERCENT", discount.getDiscountPercent(),
+            "START_DATE", discount.getStartDay(),
+            "END_DATE", discount.getEndDay(),
+            "STATUS", discount.getStatus()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findDiscountsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("DIS", 3, searchDiscounts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in DiscountBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("DIS", 3, searchDiscounts());
     }
 
     @Override

@@ -8,14 +8,14 @@ import java.util.List;
 
 public class RecipeDAL extends Manager {
     public RecipeDAL() throws SQLException {
-        super("recipe", new ArrayList<>(
+        super("recipe",
             List.of("RECIPE_ID",
                 "PRODUCT_ID",
                 "INGREDIENT_ID",
                 "MASS",
                 "UNIT",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Recipe> convertToRecipes(List<List<String>> data) {
@@ -82,6 +82,4 @@ public class RecipeDAL extends Manager {
         }
         return new ArrayList<>();
     }
-
-
 }

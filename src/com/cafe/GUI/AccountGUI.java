@@ -4,6 +4,8 @@ import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
+import com.cafe.DTO.Decentralization;
+import com.cafe.DTO.Staff;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
@@ -13,9 +15,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class AccountGUI extends JPanel {
@@ -29,35 +33,36 @@ public class AccountGUI extends JPanel {
     private JPanel pnlAccountConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbDecentralizationID;
     private JComboBox<Object> cbbDecentralizationIDSearch;
     private JComboBox<Object> cbbStaffID;
     private JComboBox<Object> cbbStaffIDSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
     private Button btRef;
+
     public AccountGUI() {
-        setLayout(new BorderLayout(10,10));
-        setBackground(new Color(51,51,51));
+        setLayout(new BorderLayout(10, 10));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
     public void initComponents() {
-        List<String> columsName = accountBLL.getAccountDAL().getColumnNames();
+        List<String> columnNames = accountBLL.getAccountDAL().getColumnNames();
         DecentralizationBLL decentralizationBLL = new DecentralizationBLL();
         StaffBLL staffBLL = new StaffBLL();
         List<String> decentralizationsID = new ArrayList<>();
         List<String> staffsID = new ArrayList<>();
-        for (int i = 0; i < decentralizationBLL.getDecentralizationList().size(); i++) {
-            decentralizationsID.add(decentralizationBLL.getValueByKey(decentralizationBLL.getDecentralizationList().get(i), "DECENTRALIZATION_ID").toString());
+        for (Decentralization decentralization : decentralizationBLL.getDecentralizationList()) {
+            decentralizationsID.add(decentralizationBLL.getValueByKey(decentralization, "DECENTRALIZATION_ID").toString());
         }
-        for (int i = 0; i < staffBLL.getStaffList().size(); i++) {
-            staffsID.add(staffBLL.getValueByKey(staffBLL.getStaffList().get(i), "STAFF_ID").toString());
+        for (Staff staff : staffBLL.getStaffList()) {
+            staffsID.add(staffBLL.getValueByKey(staff, "STAFF_ID").toString());
         }
 
         account = new RoundPanel();
@@ -67,14 +72,14 @@ public class AccountGUI extends JPanel {
         pnlAccountConfiguration = new JPanel();
         showImg = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         cbbDecentralizationID = new JComboBox<>(decentralizationsID.toArray());
         cbbDecentralizationIDSearch = new JComboBox<>(decentralizationsID.toArray());
         cbbStaffID = new JComboBox<>(staffsID.toArray());
         cbbStaffIDSearch = new JComboBox<>(staffsID.toArray());
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columsName.size() - 3];
+        jTextFieldsForm = new JTextField[columnNames.size() - 3];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -103,12 +108,7 @@ public class AccountGUI extends JPanel {
         roundPanel1.add(search, BorderLayout.NORTH);
 
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -128,23 +128,13 @@ public class AccountGUI extends JPanel {
         });
         search.add(txtSearch);
         cbbDecentralizationIDSearch.setVisible(false);
-        cbbDecentralizationIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                decentralizationIDSearch();
-            }
-        });
+        cbbDecentralizationIDSearch.addItemListener(e -> decentralizationIDSearch());
         search.add(cbbDecentralizationIDSearch);
         cbbStaffIDSearch.setVisible(false);
-        cbbStaffIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                staffIDSearch();
-            }
-        });
+        cbbStaffIDSearch.addItemListener(e -> staffIDSearch());
         search.add(cbbStaffIDSearch);
 
-        dataTable = new DataTable(accountBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(accountBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -154,11 +144,11 @@ public class AccountGUI extends JPanel {
         pnlAccountConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlAccountConfiguration, BorderLayout.NORTH);
 
-        for (int i = 0; i < columsName.size() - 1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i) + ": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlAccountConfiguration.add(jLabelsForm[i]);
-            switch (columsName.get(i)) {
+            switch (columnNames.get(i)) {
                 case "ACCOUNT_ID" -> {
                     jTextFieldsForm[i] = new JTextField(accountBLL.getAutoID());
                     jTextFieldsForm[i].setEnabled(false);
@@ -304,77 +294,52 @@ public class AccountGUI extends JPanel {
         }
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] account = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(account[0]);
-            jTextFieldsForm[1].setText(account[1]);
-            jTextFieldsForm[2].setText(account[2]);
-            cbbDecentralizationID.setSelectedItem(account[3]);
-            cbbStaffID.setSelectedItem(account[4]);
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
     public void addAccount() {
         if (checkInput()) {
-            Account newAccount;
-            String accountID = null;
-            String username = null;
-            String password = null;
-            String decentralizationID;
-            String staffID;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> accountID = jTextFieldsForm[i].getText();
-                    case 1 -> username = jTextFieldsForm[i].getText();
-                    case 2 -> password = jTextFieldsForm[i].getText();
-                    default -> {
-                    }
-                }
-            }
-            decentralizationID = Objects.requireNonNull(cbbDecentralizationID.getSelectedItem()).toString();
-            staffID = Objects.requireNonNull(cbbStaffID.getSelectedItem()).toString();
-            newAccount = new Account(accountID, username, password, decentralizationID, staffID, false);
-            accountBLL.addAccount(newAccount);
+            Account newAccount = getForm();
+            if (accountBLL.exists(newAccount))
+                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
+                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (accountBLL.addAccount(newAccount))
+                JOptionPane.showMessageDialog(this, "Successfully added new account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new account!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateAccount() {
         if (checkInput()) {
-            Account newAccount;
-            String accountID = null;
-            String username = null;
-            String password = null;
-            String decentralizationID;
-            String staffID;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> accountID = jTextFieldsForm[i].getText();
-                    case 1 -> username = jTextFieldsForm[i].getText();
-                    case 2 -> password = jTextFieldsForm[i].getText();
-                    default -> {
-                    }
-                }
-            }
-            decentralizationID = Objects.requireNonNull(cbbDecentralizationID.getSelectedItem()).toString();
-            staffID = Objects.requireNonNull(cbbStaffID.getSelectedItem()).toString();
-            newAccount = new Account(accountID, username, password, decentralizationID, staffID, false);
-            accountBLL.updateAccount(newAccount);
+            Account newAccount = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentUsername = dataTable.getValueAt(selectedRow, 1).toString();
+            boolean valueChanged = !newAccount.getUsername().equals(currentUsername);
+            if (accountBLL.exists(newAccount))
+                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
+                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (accountBLL.updateAccount(newAccount))
+                JOptionPane.showMessageDialog(this, "Successfully updated account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update account!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(accountBLL.getAccountList());
+            dataTable.changeSelection(selectedRow, 0, true, false);
+            fillForm();
         }
     }
 
     private void deleteAccount() {
-        Account account = new Account();
-        account.setAccountID(jTextFieldsForm[0].getText());
-        accountBLL.deleteAccount(account);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this account?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Account account = new Account();
+            account.setAccountID(jTextFieldsForm[0].getText());
+            if (accountBLL.deleteAccount(account))
+                JOptionPane.showMessageDialog(this, "Successfully deleted account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete account!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -392,6 +357,44 @@ public class AccountGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] account = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(account[0]);
+        jTextFieldsForm[1].setText(account[1]);
+        jTextFieldsForm[2].setText(account[2]);
+        cbbDecentralizationID.setSelectedItem(account[3]);
+        cbbStaffID.setSelectedItem(account[4]);
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Account getForm() {
+        String accountID = null;
+        String username = null;
+        String password = null;
+        String decentralizationID;
+        String staffID;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> accountID = jTextFieldsForm[i].getText();
+                case 1 -> username = jTextFieldsForm[i].getText();
+                case 2 -> password = jTextFieldsForm[i].getText();
+                default -> {
+                }
+            }
+        }
+        decentralizationID = Objects.requireNonNull(cbbDecentralizationID.getSelectedItem()).toString();
+        staffID = Objects.requireNonNull(cbbStaffID.getSelectedItem()).toString();
+        return new Account(accountID, username, password, decentralizationID, staffID, false);
+    }
+
     public void loadDataTable(List<Account> accountList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -403,10 +406,25 @@ public class AccountGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
+        }
+        if (!jTextFieldsForm[1].getText().matches("^[^\\s|]{3,32}$")) {
+            // Username can't contain " " or "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Username can't contain \" \" or \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[2].getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\s|]{3,32}$")) {
+            // Password can't contain " " or "|"
+            // Password must contain at lease 1 lower-case, 1 upper-case and 1 number
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Password can't contain \" \" or \"|\"\nPassword must contain at least 1 lower-case, 1 upper-case and 1 number", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
     }

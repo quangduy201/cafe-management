@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CustomerDAL extends Manager {
     public CustomerDAL() throws SQLException {
-        super("customer", new ArrayList<>(
+        super("customer",
             List.of("CUSTOMER_ID",
                 "NAME",
                 "GENDER",
@@ -18,7 +18,7 @@ public class CustomerDAL extends Manager {
                 "MEMBERSHIP",
                 "DOSUP",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Customer> convertToCustomers(List<List<String>> data) {

@@ -8,14 +8,14 @@ import java.util.List;
 
 public class AccountDAL extends Manager {
     public AccountDAL() throws SQLException {
-        super("account", new ArrayList<>(
+        super("account",
             List.of("ACCOUNT_ID",
                 "USERNAME",
                 "PASSWD",
                 "DECENTRALIZATION_ID",
                 "STAFF_ID",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Account> convertToAccounts(List<List<String>> data) {

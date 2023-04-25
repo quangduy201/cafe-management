@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ProductDAL extends Manager {
     public ProductDAL() throws SQLException {
-        super("product", new ArrayList<>(
+        super("product",
             List.of("PRODUCT_ID",
                 "NAME",
                 "CATEGORY_ID",
@@ -16,7 +16,7 @@ public class ProductDAL extends Manager {
                 "COST",
                 "IMAGE",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Product> convertToProducts(List<List<String>> data) {

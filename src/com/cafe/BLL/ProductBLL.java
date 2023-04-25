@@ -41,10 +41,6 @@ public class ProductBLL extends Manager<Product> {
     }
 
     public boolean addProduct(Product product) {
-        if (getIndex(product, "NAME", productList) != -1) {
-            System.out.println("Can't add new product. Name already exists.");
-            return false;
-        }
         productList.add(product);
         return productDAL.addProduct(product) != 0;
     }
@@ -65,10 +61,14 @@ public class ProductBLL extends Manager<Product> {
 
     public List<Product> findProducts(String key, String value) {
         List<Product> list = new ArrayList<>();
-        for (Product product : productList) {
-            if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase())) {
-                list.add(product);
-            }
+        if (key.equals("SIZED")) {
+            for (Product product : productList)
+                if (getValueByKey(product, key).toString().equals(value))
+                    list.add(product);
+        } else {
+            for (Product product : productList)
+                if (getValueByKey(product, key).toString().toLowerCase().contains(value.toLowerCase()))
+                    list.add(product);
         }
         return list;
     }
@@ -80,13 +80,22 @@ public class ProductBLL extends Manager<Product> {
         return products;
     }
 
+    public boolean exists(Product product) {
+        return !findProductsBy(Map.of(
+            "NAME", product.getName(),
+            "CATEGORY_ID", product.getCategoryID(),
+            "SIZED", product.getSized(),
+            "COST", product.getCost(),
+            "IMAGE", product.getImage()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findProductsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("PR", 3, searchProducts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in ProductBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("PR", 3, searchProducts());
     }
 
     @Override
@@ -101,5 +110,4 @@ public class ProductBLL extends Manager<Product> {
             default -> null;
         };
     }
-
 }

@@ -13,7 +13,7 @@ public class ReceiptBLL extends Manager<Receipt> {
     public ReceiptBLL() {
         try {
             receiptDAL = new ReceiptDAL();
-            receiptList = searchReceipts();
+            receiptList = searchReceipts("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -65,19 +65,26 @@ public class ReceiptBLL extends Manager<Receipt> {
         return receipts;
     }
 
+    public boolean exists(Receipt receipt) {
+        return !findReceiptsBy(Map.of(
+            "STAFF_ID", receipt.getStaffID(),
+            "DOR", receipt.getDor(),
+            "GRAND_TOTAL", receipt.getGrandTotal()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findReceiptsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("REC", 3, searchReceipts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in ReceiptBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("REC", 3, searchReceipts());
     }
 
     @Override
     public Object getValueByKey(Receipt receipt, String key) {
         return switch (key) {
-            case "CATEGORY_ID" -> receipt.getReceiptID();
+            case "RECEIPT_ID" -> receipt.getReceiptID();
             case "STAFF_ID" -> receipt.getStaffID();
             case "DOR" -> receipt.getDor();
             case "GRAND_TOTAL" -> receipt.getGrandTotal();

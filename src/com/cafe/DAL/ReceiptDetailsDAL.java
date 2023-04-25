@@ -8,12 +8,12 @@ import java.util.List;
 
 public class ReceiptDetailsDAL extends Manager {
     public ReceiptDetailsDAL() throws SQLException {
-        super("receipt_details", new ArrayList<>(
+        super("receipt_details",
             List.of("RECEIPT_ID",
                 "INGREDIENT_ID",
                 "QUANTITY",
                 "SUPPLIER_ID")
-        ));
+        );
     }
 
     public List<ReceiptDetails> convertToReceiptDetails(List<List<String>> data) {

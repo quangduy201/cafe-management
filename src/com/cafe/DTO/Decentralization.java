@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Decentralization {
+    public static final int NONE = 0;
+    public static final int VIEW = 1;
+    public static final int EDIT = 2;
+    public static final int ALL = 3;
+    private final List<Integer> array = new ArrayList<>();
     private String decentralizationID;
     private int isSale;
     private int isProduct;
@@ -17,17 +22,8 @@ public class Decentralization {
     private int isCustomer;
     private int isDiscount;
     private int isDecentralization;
-    private String DecentralizationName;
+    private String decentralizationName;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
-    private final List<Integer> array = new ArrayList<>();
-    public static final int NONE = 0;
-    public static final int VIEW = 1;
-    public static final int EDIT = 2;
-    public static final int ALL = 3;
-
-//    public Decentralization(String s, int i, int parseInt, int anInt, int i1, int parseInt1, int anInt1, int i2, int parseInt2, int anInt2, int i3, int parseInt3, int anInt3, String s1, boolean b) {
-//    }
-
 
     public Decentralization() {
 
@@ -47,44 +43,44 @@ public class Decentralization {
         this.isCustomer = isCustomer;
         this.isDiscount = isDiscount;
         this.isDecentralization = isDecentralization;
-        this.DecentralizationName = DecentralizationName;
-        this.deleted = deleted;
-        setArray();
-    }
-    public Decentralization(String decentralizationID, List<String> agrs, String DecentralizationName, boolean deleted) {
-        this.decentralizationID = decentralizationID;
-        for (int i = 0; i<agrs.size(); i++) {
-            int value = 0;
-            switch (agrs.get(i)){
-                case "Không" -> value = NONE;
-                case "Xem" -> value = VIEW;
-                case "Sửa" -> value = EDIT;
-                case "Xem và sửa" -> value = ALL;
-                default -> {}
-            }
-            switch (i) {
-                case 0 -> this.isSale = 0;
-                case 1 -> this.isProduct = 0;
-                case 2 -> this.isCategory = 0;
-                case 3 -> this.isRecipe = 0;
-                case 4 -> this.isImport = 0;
-                case 5 -> this.isBill = 0;
-                case 6 -> this.isWarehouses = 0;
-                case 7 -> this.isAccount = 0;
-                case 8 -> this.isStaff = 0;
-                case 9 -> this.isCustomer = 0;
-                case 10 -> this.isDiscount = 0;
-                case 11 -> this.isDecentralization = 0;
-                default -> {
-                }
-            }
-        }
-        this.DecentralizationName = DecentralizationName;
+        this.decentralizationName = DecentralizationName;
         this.deleted = deleted;
         setArray();
     }
 
-    public void setArray(){
+    public Decentralization(String decentralizationID, List<String> args, String decentralizationName, boolean deleted) {
+        this.decentralizationID = decentralizationID;
+        for (int i = 0; i < args.size(); i++) {
+            int value = switch (args.get(i)) {
+                case "Không" -> NONE;
+                case "Xem" -> VIEW;
+                case "Sửa" -> EDIT;
+                case "Xem và sửa" -> ALL;
+                default -> -1;
+            };
+            switch (i) {
+                case 0 -> this.isSale = value;
+                case 1 -> this.isProduct = value;
+                case 2 -> this.isCategory = value;
+                case 3 -> this.isRecipe = value;
+                case 4 -> this.isImport = value;
+                case 5 -> this.isBill = value;
+                case 6 -> this.isWarehouses = value;
+                case 7 -> this.isAccount = value;
+                case 8 -> this.isStaff = value;
+                case 9 -> this.isCustomer = value;
+                case 10 -> this.isDiscount = value;
+                case 11 -> this.isDecentralization = value;
+                default -> {
+                }
+            }
+        }
+        this.decentralizationName = decentralizationName;
+        this.deleted = deleted;
+        setArray();
+    }
+
+    public void setArray() {
         array.add(this.isSale);
         array.add(this.isProduct);
         array.add(this.isCategory);
@@ -98,6 +94,7 @@ public class Decentralization {
         array.add(this.isDiscount);
         array.add(this.isDecentralization);
     }
+
     public String getDecentralizationID() {
         return decentralizationID;
     }
@@ -202,6 +199,14 @@ public class Decentralization {
         this.isDecentralization = isDecentralization;
     }
 
+    public String getDecentralizationName() {
+        return decentralizationName;
+    }
+
+    public void setDecentralizationName(String decentralizationName) {
+        this.decentralizationName = decentralizationName;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -209,40 +214,19 @@ public class Decentralization {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-    //            isSale
-//            isProduct
-
-    public String getDecentralizationName() {
-        return DecentralizationName;
-    }
-
-    public void setDecentralizationName(String decentralizationName) {
-        DecentralizationName = decentralizationName;
-    }
-//            isCategory
-//            isRecipe
-//            isImport
-//            isBill
-//            isWarehouses
-//            isAccount
-//            isStaff
-//            isCustomer
-//            isDiscount
-//            isDecentralization
-
 
     @Override
     public String toString() {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         for (int i : array) {
-            switch (i){
-                case NONE -> string += "Không | ";
-                case VIEW -> string += "Xem | ";
-                case EDIT -> string += "Sửa | ";
-                case ALL -> string += "Xem và sửa | ";
-                default -> {}
-            }
+            string.append(switch (i) {
+                case NONE -> "Không | ";
+                case VIEW -> "Xem | ";
+                case EDIT -> "Sửa | ";
+                case ALL -> "Xem và sửa | ";
+                default -> "";
+            });
         }
-        return decentralizationID + " | " + string + DecentralizationName;
+        return decentralizationID + " | " + string + decentralizationName;
     }
 }

@@ -41,10 +41,6 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public boolean addAccount(Account account) {
-        if (getIndex(account, "USERNAME", accountList) != -1) {
-            System.out.println("Can't add new account. Username already exists.");
-            return false;
-        }
         accountList.add(account);
         return accountDAL.addAccount(account) != 0;
     }
@@ -80,13 +76,21 @@ public class AccountBLL extends Manager<Account> {
         return accounts;
     }
 
+    public boolean exists(Account account) {
+        return !findAccountsBy(Map.of(
+            "USERNAME", account.getUsername(),
+            "PASSWD", account.getPassword(),
+            "DECENTRALIZATION_ID", account.getDecentralizationID(),
+            "STAFF_ID", account.getStaffID()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findAccountsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("AC", 3, searchAccounts());
-        } catch (Exception e) {
-            System.out.println("Error occurred in AccountDAL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("AC", 3, searchAccounts());
     }
 
     @Override

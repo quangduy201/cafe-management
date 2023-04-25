@@ -41,10 +41,6 @@ public class CustomerBLL extends Manager<Customer> {
     }
 
     public boolean addCustomer(Customer customer) {
-        if (getIndex(customer, "PHONE", customerList) != -1) {
-            System.out.println("Can't add new customer. Phone already exists.");
-            return false;
-        }
         customerList.add(customer);
         return customerDAL.addCustomer(customer) != 0;
     }
@@ -80,20 +76,30 @@ public class CustomerBLL extends Manager<Customer> {
         return list;
     }
 
-    public List<Customer> findCustomerBy(Map<String, Object> conditions) {
+    public List<Customer> findCustomersBy(Map<String, Object> conditions) {
         List<Customer> customers = customerList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
             customers = findObjectsBy(entry.getKey(), entry.getValue(), customers);
         return customers;
     }
 
+    public boolean exists(Customer customer) {
+        return !findCustomersBy(Map.of(
+            "NAME", customer.getName(),
+            "GENDER", customer.isGender(),
+            "DOB", customer.getDateOfBirth(),
+            "PHONE", customer.getPhone(),
+            "MEMBERSHIP", customer.isMembership(),
+            "DOSUP", customer.getDateOfSup()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findCustomersBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("CUS", 3, searchCustomers());
-        } catch (Exception e) {
-            System.out.println("Error occurred in CustomerBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("CUS", 3, searchCustomers());
     }
 
     @Override

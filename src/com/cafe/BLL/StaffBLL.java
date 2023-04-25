@@ -41,10 +41,6 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public boolean addStaff(Staff staff) {
-        if (getIndex(staff, "PHONE", staffList) != -1) {
-            System.out.println("Can't add new staff. Phone already exists.");
-            return false;
-        }
         staffList.add(staff);
         return staffDAL.addStaff(staff) != 0;
     }
@@ -87,13 +83,25 @@ public class StaffBLL extends Manager<Staff> {
         return staffs;
     }
 
+    public boolean exists(Staff staff) {
+        return !findStaffsBy(Map.of(
+            "NAME", staff.getName(),
+            "GENDER", staff.isGender(),
+            "DOB", staff.getDateOfBirth(),
+            "ADDRESS", staff.getAddress(),
+            "PHONE", staff.getPhone(),
+            "EMAIL", staff.getEmail(),
+            "SALARY", staff.getSalary(),
+            "DOENTRY", staff.getDateOfEntry()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findStaffsBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("ST", 2, searchStaffs());
-        } catch (Exception e) {
-            System.out.println("Error occurred in StaffBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("ST", 2, searchStaffs());
     }
 
     @Override

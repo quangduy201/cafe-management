@@ -3,6 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
@@ -12,9 +13,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class WarehousesGUI extends JPanel {
@@ -28,22 +31,22 @@ public class WarehousesGUI extends JPanel {
     private JPanel pnlSupplierConfiguration;
     private JPanel mode;
     private JPanel showImg;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbSupplierID;
     private JComboBox<Object> cbbSupplierIDSearch;
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
-    private com.cafe.custom.Button btAdd;
-    private com.cafe.custom.Button btUpd;
-    private com.cafe.custom.Button btDel;
+    private JTextField[] jTextFieldsForm;
+    private Button btAdd;
+    private Button btUpd;
+    private Button btDel;
     private Button btRef;
 
     public WarehousesGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
@@ -51,8 +54,8 @@ public class WarehousesGUI extends JPanel {
         List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
         SupplierBLL supplierBLL = new SupplierBLL();
         List<String> suppliersID = new ArrayList<>();
-        for (int i = 0; i < supplierBLL.getSupplierList().size(); i++) {
-            suppliersID.add(supplierBLL.getValueByKey(supplierBLL.getSupplierList().get(i), "SUPPLIER_ID").toString());
+        for (Supplier supplier : supplierBLL.getSupplierList()) {
+            suppliersID.add(supplierBLL.getValueByKey(supplier, "SUPPLIER_ID").toString());
         }
         wareHouses = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -96,12 +99,7 @@ public class WarehousesGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -121,23 +119,13 @@ public class WarehousesGUI extends JPanel {
         });
         search.add(txtSearch);
         cbbSupplierIDSearch.setVisible(false);
-        cbbSupplierIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                supplierIDSearch();
-            }
-        });
+        cbbSupplierIDSearch.addItemListener(e -> supplierIDSearch());
         search.add(cbbSupplierIDSearch);
         cbbUnitSearch.setVisible(false);
-        cbbUnitSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                uniSearch();
-            }
-        });
+        cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(ingredientBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -258,7 +246,7 @@ public class WarehousesGUI extends JPanel {
         mode.add(btRef);
     }
 
-    private void uniSearch() {
+    private void unitSearch() {
         loadDataTable(ingredientBLL.findIngredients("UNIT", Objects.requireNonNull(cbbUnitSearch.getSelectedItem()).toString()));
     }
 
@@ -272,7 +260,7 @@ public class WarehousesGUI extends JPanel {
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
-            uniSearch();
+            unitSearch();
         } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SUPPLIER_ID")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
@@ -295,77 +283,52 @@ public class WarehousesGUI extends JPanel {
         }
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] ingredient = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(ingredient[0]);
-            jTextFieldsForm[1].setText(ingredient[1]);
-            jTextFieldsForm[2].setText(ingredient[2]);
-            cbbUnit.setSelectedItem(ingredient[3]);
-            cbbSupplierID.setSelectedItem(ingredient[4]);
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
     private void addIngredient() {
         if (checkInput()) {
-            Ingredient newIngredient;
-            String ingredientID = null;
-            String name = null;
-            double quantity = 0;
-            String unit;
-            String supplierID;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> ingredientID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
-            supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
-            newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
-            ingredientBLL.addIngredient(newIngredient);
+            Ingredient newIngredient = getForm();
+            if (ingredientBLL.exists(newIngredient))
+                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
+                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (ingredientBLL.addIngredient(newIngredient))
+                JOptionPane.showMessageDialog(this, "Successfully added new ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     private void updateIngredient() {
         if (checkInput()) {
-            Ingredient newIngredient;
-            String ingredientID = null;
-            String name = null;
-            double quantity = 0;
-            String unit;
-            String supplierID;
-            for (int i = 0; i < jTextFieldsForm.length; i++) {
-                switch (i) {
-                    case 0 -> ingredientID = jTextFieldsForm[i].getText();
-                    case 1 -> name = jTextFieldsForm[i].getText();
-                    case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                    default -> {
-                    }
-                }
-            }
-            unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
-            supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
-            newIngredient = new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
-            ingredientBLL.updateIngredient(newIngredient);
+            Ingredient newIngredient = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentName = dataTable.getValueAt(selectedRow, 1).toString();
+            boolean valueChanged = !newIngredient.getName().equals(currentName);
+            if (ingredientBLL.exists(newIngredient))
+                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
+                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (ingredientBLL.updateIngredient(newIngredient))
+                JOptionPane.showMessageDialog(this, "Successfully updated ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(ingredientBLL.getIngredientList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteIngredient() {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setIngredientID(jTextFieldsForm[0].getText());
-        ingredientBLL.deleteIngredient(ingredient);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this ingredient?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Ingredient ingredient = new Ingredient();
+            ingredient.setIngredientID(jTextFieldsForm[0].getText());
+            if (ingredientBLL.deleteIngredient(ingredient))
+                JOptionPane.showMessageDialog(this, "Successfully deleted ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     private void refreshForm() {
@@ -384,6 +347,44 @@ public class WarehousesGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] ingredient = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(ingredient[0]);
+        jTextFieldsForm[1].setText(ingredient[1]);
+        jTextFieldsForm[2].setText(ingredient[2]);
+        cbbUnit.setSelectedItem(ingredient[3]);
+        cbbSupplierID.setSelectedItem(ingredient[4]);
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
+    }
+
+    public Ingredient getForm() {
+        String ingredientID = null;
+        String name = null;
+        double quantity = 0;
+        String unit;
+        String supplierID;
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
+            switch (i) {
+                case 0 -> ingredientID = jTextFieldsForm[i].getText();
+                case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
+                case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
+                default -> {
+                }
+            }
+        }
+        unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
+        supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
+        return new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
+    }
+
     private void loadDataTable(List<Ingredient> ingredientList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -396,15 +397,22 @@ public class WarehousesGUI extends JPanel {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
-        try {
-            Double.parseDouble(jTextFieldsForm[2].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[2].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Quantity must be a double >= 0.0
+            jTextFieldsForm[2].requestFocusInWindow();
+            jTextFieldsForm[2].selectAll();
+            JOptionPane.showMessageDialog(this, "Quantity must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

@@ -4,6 +4,8 @@ import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
 import com.cafe.BLL.RecipeBLL;
 
+import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Product;
 import com.cafe.DTO.Recipe;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -17,6 +19,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class RecipeGUI extends JPanel {
@@ -30,7 +33,7 @@ public class RecipeGUI extends JPanel {
     private JPanel pnlRecipeConfiguration;
     private JPanel showImg;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbProductID;
     private JComboBox<Object> cbbProductIDSearch;
@@ -39,27 +42,28 @@ public class RecipeGUI extends JPanel {
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
+    private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
     private Button btRef;
+
     public RecipeGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
     public void initComponents() {
-        List<String> columsName = recipeBLL.getRecipeDAL().getColumnNames();
+        List<String> columnNames = recipeBLL.getRecipeDAL().getColumnNames();
         ProductBLL productBLL = new ProductBLL();
         IngredientBLL ingredientBLL = new IngredientBLL();
         List<String> productsID = new ArrayList<>();
         List<String> ingredientsID = new ArrayList<>();
-        for (int i = 0; i < productBLL.getProductList().size(); i++) {
-            productsID.add(productBLL.getValueByKey(productBLL.getProductList().get(i), "PRODUCT_ID").toString());
+        for (Product product : productBLL.getProductList()) {
+            productsID.add(productBLL.getValueByKey(product, "PRODUCT_ID").toString());
         }
-        for (int i = 0; i < ingredientBLL.getIngredientList().size(); i++) {
-            ingredientsID.add(ingredientBLL.getValueByKey(ingredientBLL.getIngredientList().get(i), "INGREDIENT_ID").toString());
+        for (Ingredient ingredient : ingredientBLL.getIngredientList()) {
+            ingredientsID.add(ingredientBLL.getValueByKey(ingredient, "INGREDIENT_ID").toString());
         }
         recipe = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -68,8 +72,8 @@ public class RecipeGUI extends JPanel {
         pnlRecipeConfiguration = new JPanel();
         showImg = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
         cbbProductID = new JComboBox<>(productsID.toArray());
         cbbProductIDSearch = new JComboBox<>(productsID.toArray());
         cbbIngredientID = new JComboBox<>(ingredientsID.toArray());
@@ -77,7 +81,7 @@ public class RecipeGUI extends JPanel {
         cbbUnit = new JComboBox<>(new String [] {"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String [] {"kg", "l", "bag"});
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField [columsName.size()-4];
+        jTextFieldsForm = new JTextField [columnNames.size()-4];
         btAdd = new Button();
         btUpd = new Button();
         btRef = new Button();
@@ -104,12 +108,7 @@ public class RecipeGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -129,31 +128,16 @@ public class RecipeGUI extends JPanel {
         });
         search.add(txtSearch);
         cbbProductIDSearch.setVisible(false);
-        cbbProductIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                productIDSearch();
-            }
-        });
+        cbbProductIDSearch.addItemListener(e -> productIDSearch());
         search.add(cbbProductIDSearch);
         cbbIngredientIDSearch.setVisible(false);
-        cbbIngredientIDSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                ingredientIDSearch();
-            }
-        });
+        cbbIngredientIDSearch.addItemListener(e -> ingredientIDSearch());
         search.add(cbbIngredientIDSearch);
         cbbUnitSearch.setVisible(false);
-        cbbUnitSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                uniSearch();
-            }
-        });
+        cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(recipeBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(recipeBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -164,11 +148,11 @@ public class RecipeGUI extends JPanel {
         roundPanel2.add(pnlRecipeConfiguration, BorderLayout.NORTH);
 
         int index = 0;
-        for (int i = 0; i < columsName.size() - 1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i) + ": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlRecipeConfiguration.add(jLabelsForm[i]);
-            switch (columsName.get(i)) {
+            switch (columnNames.get(i)) {
                 case "RECIPE_ID" -> {
                     jTextFieldsForm[index] = new JTextField(recipeBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
@@ -256,11 +240,9 @@ public class RecipeGUI extends JPanel {
             }
         });
         mode.add(btRef);
-
     }
 
-
-    private void uniSearch() {
+    private void unitSearch() {
         loadDataTable(recipeBLL.findRecipes("UNIT", Objects.requireNonNull(cbbUnitSearch.getSelectedItem()).toString()));
     }
 
@@ -278,7 +260,7 @@ public class RecipeGUI extends JPanel {
             cbbProductIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
-            uniSearch();
+            unitSearch();
         } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("INGREDIENT_ID")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
@@ -302,21 +284,6 @@ public class RecipeGUI extends JPanel {
         }
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] recipe = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(recipe[0]);
-            cbbProductID.setSelectedItem(recipe[1]);
-            cbbIngredientID.setSelectedItem(recipe[2]);
-            jTextFieldsForm[1].setText(recipe[3]);
-            cbbUnit.setSelectedItem(recipe[4]);
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-        };
-    }
-
     public void searchRecipes() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(recipeBLL.getRecipeList());
@@ -327,46 +294,37 @@ public class RecipeGUI extends JPanel {
 
     public void addRecipe() {
         if (checkInput()) {
-            List<Recipe> list = recipeBLL.searchRecipes("PRODUCT_ID = '" + Objects.requireNonNull(cbbProductID.getSelectedItem()).toString() + "'",
-                "INGREDIENT_ID = '" + Objects.requireNonNull(cbbIngredientID.getSelectedItem()).toString() + "'");
-            if (list.size()!=0) {
-                JOptionPane.showMessageDialog(this, "PRODUCT_ID and INGREDIENT_ID exists!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            Recipe newRecipe;
-            String recipeID;
-            String productID;
-            String ingredientID;
-            double mass;
-            String unit;
-            recipeID = jTextFieldsForm[0].getText();
-            productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            ingredientID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            mass = Double.parseDouble(jTextFieldsForm[1].getText());
-            unit = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            newRecipe = new Recipe(recipeID, productID, ingredientID, mass, unit, false);
-            recipeBLL.addRecipe(newRecipe);
+            Recipe newRecipe = getForm();
+            if (recipeBLL.exists(newRecipe))
+                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (recipeBLL.exists(Map.of("PRODUCT_ID", newRecipe.getProductID(), "INGREDIENT_ID", newRecipe.getIngredientID())))
+                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (recipeBLL.addRecipe(newRecipe))
+                JOptionPane.showMessageDialog(this, "Successfully added new recipe!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new recipe!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateRecipe() {
         if (checkInput()) {
-            Recipe newRecipe;
-            String recipeID;
-            String productID;
-            String ingredientID;
-            double mass;
-            String unit;
-            recipeID = jTextFieldsForm[0].getText();
-            productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            ingredientID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            mass = Double.parseDouble(jTextFieldsForm[1].getText());
-            unit = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-            newRecipe = new Recipe(recipeID, productID, ingredientID, mass, unit, false);
-            recipeBLL.addRecipe(newRecipe);
-            recipeBLL.updateRecipe(newRecipe);
+            Recipe newRecipe = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentProductID = dataTable.getValueAt(selectedRow, 1).toString();
+            String currentIngredientID = dataTable.getValueAt(selectedRow, 2).toString();
+            boolean valueChanged = !newRecipe.getProductID().equals(currentProductID) || !newRecipe.getIngredientID().equals(currentIngredientID);
+            if (recipeBLL.exists(newRecipe))
+                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && recipeBLL.exists(Map.of("PRODUCT_ID", newRecipe.getProductID(), "INGREDIENT_ID", newRecipe.getIngredientID())))
+                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (recipeBLL.updateRecipe(newRecipe))
+                JOptionPane.showMessageDialog(this, "Successfully updated recipe!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update recipe!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(recipeBLL.getRecipeList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
@@ -374,36 +332,67 @@ public class RecipeGUI extends JPanel {
         cbbSearchFilter.setSelectedIndex(0);
         txtSearch.setText(null);
         loadDataTable(recipeBLL.getRecipeList());
+        jTextFieldsForm[0].setText(recipeBLL.getAutoID());
+        jTextFieldsForm[1].setText(null);
         cbbProductID.setSelectedItem(0);
         cbbIngredientID.setSelectedItem(0);
-        jTextFieldsForm[0].setText(null);
-        jTextFieldsForm[1].setText(null);
         cbbUnit.setSelectedItem(0);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
+    }
+
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        String[] recipe = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(recipe[0]);
+        cbbProductID.setSelectedItem(recipe[1]);
+        cbbIngredientID.setSelectedItem(recipe[2]);
+        jTextFieldsForm[1].setText(recipe[3]);
+        cbbUnit.setSelectedItem(recipe[4]);
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+    }
+
+    public Recipe getForm() {
+        String recipeID;
+        String productID;
+        String ingredientID;
+        double mass;
+        String unit;
+        recipeID = jTextFieldsForm[0].getText();
+        productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
+        ingredientID = Objects.requireNonNull(cbbIngredientID.getSelectedItem()).toString();
+        mass = Double.parseDouble(jTextFieldsForm[1].getText());
+        unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
+        return new Recipe(recipeID, productID, ingredientID, mass, unit, false);
     }
 
     public void loadDataTable(List<Recipe> recipeList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Recipe recipe : recipeList) {
-            model.addRow(new Object[]{recipe.getProductID(), recipe.getIngredientID(), recipe.getMass(), recipe.getUnit()});
+            model.addRow(new Object[]{recipe.getRecipeID(), recipe.getProductID(), recipe.getIngredientID(), recipe.getMass(), recipe.getUnit()});
         }
     }
 
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
         }
-        try {
-            Double.parseDouble(jTextFieldsForm[1].getText());
-        } catch (NumberFormatException exception) {
-            jTextFieldsForm[1].setText(null);
-            JOptionPane.showMessageDialog(this, "Invalid data input!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        if (!jTextFieldsForm[1].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Mass must be a double >= 0.0
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Mass must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

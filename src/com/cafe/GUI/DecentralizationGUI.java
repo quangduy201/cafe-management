@@ -11,9 +11,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class DecentralizationGUI extends JPanel {
@@ -26,34 +28,35 @@ public class DecentralizationGUI extends JPanel {
     private JScrollPane scrollPane;
     private JPanel pnlDecentralizationConfiguration;
     private JPanel mode;
-    private JLabel jLabelsForm[];
+    private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object> jComboBoxForm[];
+    private JComboBox<Object>[] jComboBoxForm;
     private JComboBox<Object> jComboBoxSearch;
     private JTextField txtSearch;
-    private JTextField jTextFieldsForm[];
-    private com.cafe.custom.Button btAdd;
-    private com.cafe.custom.Button btUpd;
-    private com.cafe.custom.Button btDel;
+    private JTextField[] jTextFieldsForm;
+    private Button btAdd;
+    private Button btUpd;
+    private Button btDel;
     private Button btRef;
+
     public DecentralizationGUI() {
         setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
+        setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
     public void initComponents() {
-        List<String> columsName = decentralizationBLL.getDecentralizationDAL().getColumnNames();
+        List<String> columnNames = decentralizationBLL.getDecentralizationDAL().getColumnNames();
         decentralization = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
         search = new RoundPanel();
         pnlDecentralizationConfiguration = new JPanel();
         mode = new JPanel();
-        jLabelsForm = new JLabel[columsName.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columsName.subList(0, columsName.size() - 1).toArray());
-        jComboBoxForm = new JComboBox[columsName.size()-3];
-        jComboBoxSearch = new JComboBox<>(new String [] {"Không", "Xem", "Sửa", "Xem và sửa"});
+        jLabelsForm = new JLabel[columnNames.size() - 1];
+        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        jComboBoxForm = new JComboBox[columnNames.size() - 3];
+        jComboBoxSearch = new JComboBox<>(new String[]{"Không", "Xem", "Sửa", "Xem và sửa"});
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[2];
         btAdd = new Button();
@@ -83,12 +86,7 @@ public class DecentralizationGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSearchFilter();
-            }
-        });
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -108,15 +106,10 @@ public class DecentralizationGUI extends JPanel {
         });
         search.add(txtSearch);
         jComboBoxSearch.setVisible(false);
-        jComboBoxSearch.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                comboboxSearch();
-            }
-        });
+        jComboBoxSearch.addItemListener(e -> comboboxSearch());
         search.add(jComboBoxSearch);
 
-        dataTable = new DataTable(decentralizationBLL.getData(), columsName.subList(0, columsName.size() - 1).toArray(), getListSelectionListener());
+        dataTable = new DataTable(decentralizationBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -130,11 +123,11 @@ public class DecentralizationGUI extends JPanel {
 
         int index1 = 0;
         int index2 = 0;
-        for (int i = 0; i < columsName.size() - 1; i++) {
+        for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columsName.get(i) + ": ");
+            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlDecentralizationConfiguration.add(jLabelsForm[i]);
-            switch (columsName.get(i)) {
+            switch (columnNames.get(i)) {
                 case "DECENTRALIZATION_ID" -> {
                     jTextFieldsForm[index1] = new JTextField(decentralizationBLL.getAutoID());
                     jTextFieldsForm[index1].setEnabled(false);
@@ -150,7 +143,7 @@ public class DecentralizationGUI extends JPanel {
                     index1++;
                 }
                 default -> {
-                    jComboBoxForm[index2] = new JComboBox<>(new String [] {"Không", "Xem", "Sửa", "Xem và sửa"});
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Sửa", "Xem và sửa"});
                     jComboBoxForm[index2].setSelectedIndex(0);
                     pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
                     index2++;
@@ -244,18 +237,19 @@ public class DecentralizationGUI extends JPanel {
 
     private void comboboxSearch() {
         String value = null;
-        switch (Objects.requireNonNull(jComboBoxSearch.getSelectedItem()).toString()){
+        switch (Objects.requireNonNull(jComboBoxSearch.getSelectedItem()).toString()) {
             case "Không" -> value = "0";
             case "Xem" -> value = "1";
             case "Sửa" -> value = "2";
             case "Xem và sửa" -> value = "3";
-            default -> {}
+            default -> {
+            }
         }
         loadDataTable(decentralizationBLL.findDecentralizations(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), value));
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_ID") ||Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_NAME")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_ID") || Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_NAME")) {
             jComboBoxSearch.setVisible(false);
             txtSearch.setVisible(true);
             searchDecentralizations();
@@ -275,64 +269,53 @@ public class DecentralizationGUI extends JPanel {
         }
     }
 
-    public ActionListener getListSelectionListener() {
-        return e -> {
-            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-            String rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toString();
-            String[] decentralization = rowData.substring(1, rowData.length() - 1).split(", ");
-            jTextFieldsForm[0].setText(decentralization[0]);
-            jTextFieldsForm[1].setText(decentralization[decentralization.length-1]);
-            int index = 0;
-            for (int i = 1; i < decentralization.length-1; i++) {
-                jComboBoxForm[index].setSelectedItem(decentralization[i]);
-                index++;
-            }
-            btAdd.setEnabled(false);
-            btUpd.setEnabled(true);
-            btDel.setEnabled(true);
-        };
-    }
-
-
     public void addDecentralization() {
         if (checkInput()) {
-            Decentralization newDecentralization;
-            String decentralizationID;
-            List<String> args = new ArrayList<>();
-            String DecentralizationName;
-            decentralizationID = jTextFieldsForm[0].getText();
-            DecentralizationName = jTextFieldsForm[1].getText();
-            for (JComboBox<Object> objectJComboBox : jComboBoxForm) {
-                args.add(Objects.requireNonNull(objectJComboBox.getSelectedItem()).toString());
-            }
-            newDecentralization = new Decentralization(decentralizationID, args, DecentralizationName, false);
-            decentralizationBLL.addDecentralization(newDecentralization);
+            Decentralization newDecentralization = getForm();
+            if (decentralizationBLL.exists(newDecentralization))
+                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (decentralizationBLL.exists(Map.of("DECENTRALIZATION_NAME", newDecentralization.getDecentralizationName())))
+                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (decentralizationBLL.addDecentralization(newDecentralization))
+                JOptionPane.showMessageDialog(this, "Successfully added new decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
 
     public void updateDecentralization() {
         if (checkInput()) {
-            Decentralization newDecentralization;
-            String decentralizationID;
-            List<String> args = new ArrayList<>();
-            String DecentralizationName;
-            decentralizationID = jTextFieldsForm[0].getText();
-            DecentralizationName = jTextFieldsForm[1].getText();
-            for (JComboBox<Object> objectJComboBox : jComboBoxForm) {
-                args.add(Objects.requireNonNull(objectJComboBox.getSelectedItem()).toString());
-            }
-            newDecentralization = new Decentralization(decentralizationID, args, DecentralizationName, false);
-            decentralizationBLL.updateDecentralization(newDecentralization);
+            Decentralization newDecentralization = getForm();
+            int selectedRow = dataTable.getSelectedRow();
+            String currentDecentralizationName = dataTable.getValueAt(selectedRow, 13).toString();
+            boolean valueChanged = !newDecentralization.getDecentralizationName().equals(currentDecentralizationName);
+            valueChanged |= !newDecentralization.getDecentralizationName().equals(dataTable.getValueAt(selectedRow, 13).toString());
+            if (decentralizationBLL.exists(newDecentralization))
+                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (valueChanged && decentralizationBLL.exists(Map.of("DECENTRALIZATION_NAME", newDecentralization.getDecentralizationName())))
+                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+            else if (decentralizationBLL.updateDecentralization(newDecentralization))
+                JOptionPane.showMessageDialog(this, "Successfully updated decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
             loadDataTable(decentralizationBLL.getDecentralizationList());
+            dataTable.setRowSelectionInterval(selectedRow, selectedRow);
+            fillForm();
         }
     }
 
     private void deleteDecentralization() {
-        Decentralization decentralization = new Decentralization();
-        decentralization.setDecentralizationID(jTextFieldsForm[0].getText());
-        decentralizationBLL.deleteDecentralization(decentralization);
-        refreshForm();
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this decentralization?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Decentralization decentralization = new Decentralization();
+            decentralization.setDecentralizationID(jTextFieldsForm[0].getText());
+            if (decentralizationBLL.deleteDecentralization(decentralization))
+                JOptionPane.showMessageDialog(this, "Successfully deleted decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
     }
 
     public void refreshForm() {
@@ -349,16 +332,48 @@ public class DecentralizationGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
-    public String parse(int n) {
-        switch (n){
-            case 0 : return "Không";
-            case 1 : return "Xem";
-            case 2 : return "Sửa";
-            case 3 : return "Xem và sửa";
-            default : {}
+    public void fillForm() {
+        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
         }
-        return null;
+        String[] decentralization = String.join(" | ", data).split(" \\| ");
+        jTextFieldsForm[0].setText(decentralization[0]);
+        jTextFieldsForm[1].setText(decentralization[decentralization.length - 1]);
+        int index = 0;
+        for (int i = 1; i < decentralization.length - 1; i++) {
+            jComboBoxForm[index].setSelectedItem(decentralization[i]);
+            index++;
+        }
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
     }
+
+    public Decentralization getForm() {
+        String decentralizationID;
+        List<String> args = new ArrayList<>();
+        String decentralizationName;
+        decentralizationID = jTextFieldsForm[0].getText();
+        decentralizationName = jTextFieldsForm[1].getText();
+        for (JComboBox<Object> objectJComboBox : jComboBoxForm) {
+            args.add(Objects.requireNonNull(objectJComboBox.getSelectedItem()).toString());
+        }
+        return new Decentralization(decentralizationID, args, decentralizationName, false);
+    }
+
+    public String parse(int n) {
+        return switch (n) {
+            case 0 -> "Không";
+            case 1 -> "Xem";
+            case 2 -> "Sửa";
+            case 3 -> "Xem và sửa";
+            default -> null;
+        };
+    }
+
     public void loadDataTable(List<Decentralization> decentralizationList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -385,10 +400,17 @@ public class DecentralizationGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
                 return false;
             }
+        }
+        if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
+            // Name can't contain "|"
+            jTextFieldsForm[1].requestFocusInWindow();
+            jTextFieldsForm[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
         return true;
     }

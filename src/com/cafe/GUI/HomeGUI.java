@@ -73,7 +73,7 @@ public class HomeGUI extends JFrame {
 
     public static void main(String[] args) {
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + "dungboi" + "'", "PASSWD = '" + "123" + "'");
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + "dungboi" + "'", "PASSWD = '" + "123" + "'", "DELETED = 0");
         Account account = accountList.get(0);
         new HomeGUI(account).setVisible(true);
     }
@@ -106,11 +106,13 @@ public class HomeGUI extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setBackground(new Color(35, 166, 97));
+//        setBackground(new Color(35, 166, 97));
 
         home.setLayout(new BorderLayout(10, 10));
-        home.setBackground(new Color(35, 166, 97));
+//        home.setBackground(new Color(35, 166, 97));
+
         setContentPane(home);
+/*
 //        header2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
 //            public void mouseDragged(java.awt.event.MouseEvent evt) {
 //                header2MouseDragged(evt);
@@ -121,45 +123,48 @@ public class HomeGUI extends JFrame {
 //                header2MousePressed(evt);
 //            }
 //        });
+ */
         north.setLayout(null);
         north.setPreferredSize(new Dimension(1300, 50));
-        north.setBackground(new Color(51, 51, 51));
+        north.setBackground(new Color(35, 166, 97));
         home.add(north, BorderLayout.NORTH);
 
         center.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         center.setPreferredSize(new Dimension(1350, 710));
-        center.setBackground(new Color(35, 166, 97));
+//        center.setBackground(new Color(35, 166, 97));
+        center.setBackground(new Color(240,240,240));
         home.add(center, BorderLayout.CENTER);
 
         west.setLayout(new BorderLayout(0, 10));
         west.setPreferredSize(new Dimension(300, 700));
-        west.setBackground(new Color(35, 166, 97));
+//        west.setBackground(new Color(35, 166, 97));
+        west.setBackground(new Color(240,240,240));
         center.add(west);
 
         east.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         east.setPreferredSize(new Dimension(1020, 700));
-        east.setBackground(new Color(51, 51, 51));
+        east.setBackground(new Color(70, 67, 67));
         east.setAlignmentX(Component.CENTER_ALIGNMENT);
         center.add(east);
 
 
         info.setLayout(null);
         info.setPreferredSize(new Dimension(300, 80));
-        info.setBackground(new Color(51, 51, 51));
+        info.setBackground(new Color(79, 194, 53));
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(info, BorderLayout.NORTH);
 
 
-        fram_cate.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 25));
+        fram_cate.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         fram_cate.setPreferredSize(new Dimension(300, 600));
-        fram_cate.setBackground(new Color(51, 51, 51));
+        fram_cate.setBackground(new Color(79, 194, 53));
         fram_cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(fram_cate, BorderLayout.CENTER);
 
 
-        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 3));
-        cate.setPreferredSize(new Dimension(280, 560));
-        cate.setBackground(new Color(51, 51, 51));
+        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        cate.setPreferredSize(new Dimension(280, 590));
+        cate.setBackground(new Color(79, 194, 53));
         cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         fram_cate.add(cate);
 
@@ -227,7 +232,7 @@ public class HomeGUI extends JFrame {
             if (mang[i] != 0) {
                 roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
                 roundPanel[i].setPreferredSize(new Dimension(270, 40));
-                roundPanel[i].setBackground(new Color(51, 51, 51));
+                roundPanel[i].setBackground(new Color(240, 240, 240));
                 roundPanel[i].setAutoscrolls(true);
                 cate.add(roundPanel[i]);
             }
@@ -316,7 +321,7 @@ public class HomeGUI extends JFrame {
 
         for (int i = 1; i < imageAvatar.length - 1; i++) {
             if (mang[i] != 0) {
-                imageAvatar[i].setForeground(new Color(255, 255, 255));
+                imageAvatar[i].setForeground(new Color(225, 200, 73, 255));
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
                 imageAvatar[i].setIcon(new javax.swing.ImageIcon(("img/0" + i + ".png")));
@@ -324,7 +329,7 @@ public class HomeGUI extends JFrame {
 
                 jLabel[i].setBackground(new Color(51, 51, 51));
                 jLabel[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
-                jLabel[i].setForeground(new Color(255, 255, 255));
+                jLabel[i].setForeground(new Color(25,25,25));
                 jLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
                 jLabel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
                 roundPanel[i].add(jLabel[i]);
@@ -348,100 +353,114 @@ public class HomeGUI extends JFrame {
         jLabel[13].setText("Phân quyền");
 
 
+        // 55,55,55
         function.setPreferredSize(new Dimension(1005, 680));
-        function.setBackground(new Color(51, 51, 51));
+        function.setBackground(new Color(70, 67, 67));
         pack();
         setLocationRelativeTo(null);
     }
 
     private void roundPanel1MouseClicked() {
-        roundPanel[1].setBackground(new Color(35, 166, 97));
+//        roundPanel[1].setBackground(new Color(35, 166, 97));
+        roundPanel[1].setBackground(new Color(68, 150, 60));
         Active(roundPanel[1]);
         OpenChildForm(new SaleGUI());
     }
 
     private void roundPanel2MouseClicked() {
-        roundPanel[2].setBackground(new Color(35, 166, 97));
+//        roundPanel[2].setBackground(new Color(35, 166, 97));
+        roundPanel[2].setBackground(new Color(68, 150, 60));
         Active(roundPanel[2]);
         OpenChildForm(new ProductGUI());
     }
 
     private void roundPanel3MouseClicked() {
-        roundPanel[3].setBackground(new Color(35, 166, 97));
+//        roundPanel[3].setBackground(new Color(35, 166, 97));
+        roundPanel[3].setBackground(new Color(68, 150, 60));
         Active(roundPanel[3]);
         OpenChildForm(new CategoryGUI());
     }
 
     private void roundPanel4MouseClicked() {
-        roundPanel[4].setBackground(new Color(25, 25, 25));
+        roundPanel[4].setBackground(new Color(68, 150, 60));
         Active(roundPanel[4]);
         OpenChildForm(new RecipeGUI());
     }
 
     private void roundPanel5MouseClicked() {
-        roundPanel[5].setBackground(new Color(35, 166, 97));
+//        roundPanel[5].setBackground(new Color(35, 166, 97));
+        roundPanel[5].setBackground(new Color(68, 150, 60));
         Active(roundPanel[5]);
 //        OpenChildForm(new ImportGUI());
         OpenChildForm(new SupplierGUI());
     }
 
     private void roundPanel6MouseClicked() {
-        roundPanel[6].setBackground(new Color(35, 166, 97));
+//        roundPanel[6].setBackground(new Color(35, 166, 97));
+        roundPanel[6].setBackground(new Color(68, 150, 60));
         Active(roundPanel[6]);
         OpenChildForm(new BillGUI());
     }
 
     private void roundPanel7MouseClicked() {
-        roundPanel[7].setBackground(new Color(35, 166, 97));
+//        roundPanel[7].setBackground(new Color(35, 166, 97));
+        roundPanel[7].setBackground(new Color(68, 150, 60));
         Active(roundPanel[7]);
         OpenChildForm(new WarehousesGUI());
     }
 
     private void roundPanel8MouseClicked() {
-        roundPanel[8].setBackground(new Color(35, 166, 97));
+//        roundPanel[8].setBackground(new Color(35, 166, 97));
+        roundPanel[8].setBackground(new Color(68, 150, 60));
         Active(roundPanel[8]);
         OpenChildForm(new StatisticGUI());
     }
 
     private void roundPanel9MouseClicked() {
-        roundPanel[9].setBackground(new Color(35, 166, 97));
+//        roundPanel[9].setBackground(new Color(35, 166, 97));
+        roundPanel[9].setBackground(new Color(68, 150, 60));
         Active(roundPanel[9]);
         OpenChildForm(new AccountGUI());
     }
 
     private void roundPanel10MouseClicked() {
-        roundPanel[10].setBackground(new Color(35, 166, 97));
+//        roundPanel[10].setBackground(new Color(35, 166, 97));
+        roundPanel[10].setBackground(new Color(68, 150, 60));
         Active(roundPanel[10]);
         OpenChildForm(new StaffGUI());
     }
 
     private void roundPanel11MouseClicked() {
-        roundPanel[11].setBackground(new Color(35, 166, 97));
+//        roundPanel[11].setBackground(new Color(35, 166, 97));
+        roundPanel[11].setBackground(new Color(68, 150, 60));
         Active(roundPanel[11]);
         OpenChildForm(new CustomerGUI());
     }
 
     private void roundPanel12MouseClicked() {
-        roundPanel[12].setBackground(new Color(35, 166, 97));
+//        roundPanel[12].setBackground(new Color(35, 166, 97));
+        roundPanel[12].setBackground(new Color(68, 150, 60));
         Active(roundPanel[12]);
         OpenChildForm(new DiscountGUI());
     }
 
     private void roundPanel13MouseClicked() {
-        roundPanel[13].setBackground(new Color(35, 166, 97));
+//        roundPanel[13].setBackground(new Color(35, 166, 97));
+        roundPanel[13].setBackground(new Color(68, 150, 60));
         Active(roundPanel[13]);
         OpenChildForm(new DecentralizationGUI());
     }
 
     private void Disable() {
         if (currentBtn != null)
-            currentBtn.setBackground(new Color(51, 51, 51));
+            currentBtn.setBackground(new Color(240,240,240));
     }
 
     private void Active(JPanel btn) {
         Disable();
         currentBtn = btn;
-        currentBtn.setBackground(new Color(35, 166, 97));
+//        currentBtn.setBackground(new Color(35, 166, 97));
+        currentBtn.setBackground(new Color(68, 150, 60));
     }
 
     private void OpenChildForm(JPanel panel) {

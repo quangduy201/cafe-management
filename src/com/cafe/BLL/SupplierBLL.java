@@ -40,12 +40,7 @@ public class SupplierBLL extends Manager<Supplier> {
         return getData(supplierList);
     }
 
-    //    public boolean addSupplier(Supplier supplier) {
     public boolean addSupplier(Supplier supplier) {
-        if (searchSuppliers("PHONE = '" + supplier.getPhone() + "'").size() != 0) {
-            System.out.println("Can't add new supplier. Phone already exists.");
-            return false;
-        }
         supplierList.add(supplier);
         return supplierDAL.addSupplier(supplier) != 0;
     }
@@ -61,8 +56,7 @@ public class SupplierBLL extends Manager<Supplier> {
     }
 
     public List<Supplier> searchSuppliers(String... conditions) {
-        this.supplierList = supplierDAL.searchSuppliers(conditions);
-        return this.supplierList;
+        return supplierDAL.searchSuppliers(conditions);
     }
 
     public List<Supplier> findSuppliers(String key, String value) {
@@ -82,13 +76,22 @@ public class SupplierBLL extends Manager<Supplier> {
         return suppliers;
     }
 
+    public boolean exists(Supplier supplier) {
+        return !findSuppliersBy(Map.of(
+            "NAME", supplier.getName(),
+            "PHONE", supplier.getPhone(),
+            "ADDRESS", supplier.getAddress(),
+            "EMAIL", supplier.getEmail(),
+            "PRICE", supplier.getPrice()
+        )).isEmpty();
+    }
+
+    public boolean exists(Map<String, Object> conditions) {
+        return !findSuppliersBy(conditions).isEmpty();
+    }
+
     public String getAutoID() {
-        try {
-            return getAutoID("SUP", 3, searchSuppliers());
-        } catch (Exception e) {
-            System.out.println("Error occurred in SupplierBLL.getAutoID(): " + e.getMessage());
-        }
-        return "";
+        return getAutoID("SUP", 3, searchSuppliers());
     }
 
     @Override
@@ -102,5 +105,4 @@ public class SupplierBLL extends Manager<Supplier> {
             default -> null;
         };
     }
-
 }

@@ -138,26 +138,21 @@ public class Day {
         return new Day(date, month, year);
     }
 
-    public boolean equals(Day day) {
-        if (getDate() == day.getDate() && getMonth() == day.getMonth() && getYear() == day.getYear()) {
-            return true;
-        }
-        return false;
+    @Override
+    public boolean equals(Object object) {
+        Day day = (Day) object;
+        return getDate() == day.getDate() && getMonth() == day.getMonth() && getYear() == day.getYear();
     }
 
     public boolean compare(Day day1, Day day2) {
-        if (getDate() >= day1.getDate() && getMonth() >= day1.getMonth() && getYear() >= day1.getYear() && getDate() <= day2.getDate() && getMonth() <= day2.getMonth() && getYear() <= day2.getYear()) {
-            return true;
-        }
-        return false;
+        return getDate() >= day1.getDate() && getMonth() >= day1.getMonth() && getYear() >= day1.getYear() && getDate() <= day2.getDate() && getMonth() <= day2.getMonth() && getYear() <= day2.getYear();
     }
 
     @Override
     public String toString() {
-        // dd/mm/yyyy
+        // dd-MM-yyyy
         return year + "-" +
             ((month < 10) ? "0" : "") + month + "-" +
             ((date < 10) ? "0" : "") + date;
     }
 }
-

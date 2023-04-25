@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DecentralizationDAL extends Manager {
     public DecentralizationDAL() throws SQLException {
-        super("decentralization", new ArrayList<>(
+        super("decentralization",
             List.of("DECENTRALIZATION_ID",
                 "IS_SALE",
                 "IS_PRODUCT",
@@ -24,7 +24,7 @@ public class DecentralizationDAL extends Manager {
                 "IS_DECENTRALIZE",
                 "DECENTRALIZATION_NAME",
                 "DELETED")
-        ));
+        );
     }
 
     public List<Decentralization> convertToDecentralization(List<List<String>> data) {
