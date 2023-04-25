@@ -81,8 +81,7 @@ public class SupplierBLL extends Manager<Supplier> {
             "NAME", supplier.getName(),
             "PHONE", supplier.getPhone(),
             "ADDRESS", supplier.getAddress(),
-            "EMAIL", supplier.getEmail(),
-            "PRICE", supplier.getPrice()
+            "EMAIL", supplier.getEmail()
         )).isEmpty();
     }
 

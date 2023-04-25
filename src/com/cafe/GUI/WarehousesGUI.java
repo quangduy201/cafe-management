@@ -28,7 +28,7 @@ public class WarehousesGUI extends JPanel {
     private RoundPanel roundPanel2;
     private RoundPanel search;
     private JScrollPane scrollPane;
-    private JPanel pnlSupplierConfiguration;
+    private JPanel pnlIngredientConfiguration;
     private JPanel mode;
     private JPanel showImg;
     private JLabel[] jLabelsForm;
@@ -61,7 +61,7 @@ public class WarehousesGUI extends JPanel {
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
         search = new RoundPanel();
-        pnlSupplierConfiguration = new JPanel();
+        pnlIngredientConfiguration = new JPanel();
         mode = new JPanel();
         showImg = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
@@ -129,36 +129,39 @@ public class WarehousesGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
-        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
-        pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
-        roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
+        pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
+        pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
+        pnlIngredientConfiguration.setPreferredSize(new Dimension(635, 300));
+        roundPanel2.add(pnlIngredientConfiguration, BorderLayout.NORTH);
 
+        int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
             jLabelsForm[i].setText(columnNames.get(i) + ": ");
-            pnlSupplierConfiguration.add(jLabelsForm[i]);
+            pnlIngredientConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
-                    jTextFieldsForm[i] = new JTextField(ingredientBLL.getAutoID());
-                    jTextFieldsForm[i].setEnabled(false);
-                    jTextFieldsForm[i].setBorder(null);
-                    jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
-                    pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+                    jTextFieldsForm[index] = new JTextField(ingredientBLL.getAutoID());
+                    jTextFieldsForm[index].setEnabled(false);
+                    jTextFieldsForm[index].setBorder(null);
+                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
                 }
-                case "UNIT" -> pnlSupplierConfiguration.add(cbbUnit);
-                case "SUPPLIER_ID" -> pnlSupplierConfiguration.add(cbbSupplierID);
+                case "UNIT" -> pnlIngredientConfiguration.add(cbbUnit);
+                case "SUPPLIER_ID" -> pnlIngredientConfiguration.add(cbbSupplierID);
                 default -> {
-                    jTextFieldsForm[i] = new JTextField();
-                    jTextFieldsForm[i].setText(null);
-                    pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
                 }
             }
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 300));
+        showImg.setPreferredSize(new Dimension(635, 250));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
@@ -255,7 +258,7 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
             txtSearch.setVisible(false);
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
@@ -359,7 +362,8 @@ public class WarehousesGUI extends JPanel {
         jTextFieldsForm[1].setText(ingredient[1]);
         jTextFieldsForm[2].setText(ingredient[2]);
         cbbUnit.setSelectedItem(ingredient[3]);
-        cbbSupplierID.setSelectedItem(ingredient[4]);
+        jTextFieldsForm[3].setText(ingredient[4]);
+        cbbSupplierID.setSelectedItem(ingredient[5]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -370,26 +374,28 @@ public class WarehousesGUI extends JPanel {
         String name = null;
         double quantity = 0;
         String unit;
+        double unit_price = 0;
         String supplierID;
         for (int i = 0; i < jTextFieldsForm.length; i++) {
             switch (i) {
                 case 0 -> ingredientID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
                 case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 3 -> unit_price = Double.parseDouble(jTextFieldsForm[i].getText());
                 default -> {
                 }
             }
         }
         unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
         supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
-        return new Ingredient(ingredientID, name, quantity, unit, supplierID, false);
+        return new Ingredient(ingredientID, name, quantity, unit, unit_price, supplierID, false);
     }
 
     private void loadDataTable(List<Ingredient> ingredientList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Ingredient ingredient : ingredientList) {
-            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getSupplierID()});
+            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getUnit_price(), ingredient.getSupplierID()});
         }
     }
 
@@ -415,6 +421,14 @@ public class WarehousesGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Quantity must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (!jTextFieldsForm[3].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
+            // Cost must be a double >= 0.0
+            jTextFieldsForm[3].requestFocusInWindow();
+            jTextFieldsForm[3].selectAll();
+            JOptionPane.showMessageDialog(this, "Unit_Price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
 }

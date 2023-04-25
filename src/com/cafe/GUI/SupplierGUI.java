@@ -108,10 +108,10 @@ public class SupplierGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
+        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
@@ -132,7 +132,7 @@ public class SupplierGUI extends JPanel {
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 250));
+        showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
