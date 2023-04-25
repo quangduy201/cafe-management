@@ -369,44 +369,44 @@ CREATE TABLE `ingredient` (
 --
 
 INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `UNIT_PRICE`, `SUPPLIER_ID`, `DELETED`) VALUES
-('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10.840000000000002, 'kg', 30000, 'SUP001', b'0'),
-('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10.94, 'l', 30000, 'SUP001', b'0'),
-('ING003', 'SỮA ĐẶC', 10.96, 'l', 30000, 'SUP001', b'0'),
-('ING004', 'ĐÁ', 5.700000000000001, 'bag', 30000, 'SUP001', b'0'),
-('ING005', 'NƯỚC', 999.3100000000001, 'l', 30000, 'SUP001', b'0'),
-('ING006', 'MUỐI', 5.996, 'kg', 30000, 'SUP001', b'0'),
-('ING007', 'ĐƯỜNG CÁT', 5.9, 'kg', 30000, 'SUP001', b'0'),
-('ING008', 'SYRUP HẠNH NHÂN', 5.98, 'l', 30000, 'SUP001', b'0'),
-('ING009', 'SYRUP ĐƯỜNG', 5.98, 'l', 30000, 'SUP001', b'0'),
-('ING010', 'SỮA TƯƠI MILKLAB', 5.85, 'l', 30000, 'SUP001', b'0'),
-('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10.95, 'kg', 30000, 'SUP001', b'0'),
-('ING012', 'THẠCH CAFE', 10.95, 'kg', 30000, 'SUP001', b'0'),
-('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUỐC', 6, 'l', 30000, 'SUP001', b'0'),
-('ING014', 'KEM SỮA', 6, 'l', 30000, 'SUP001', b'0'),
-('ING015', 'SỐT CHOCOLA', 6, 'l', 30000, 'SUP001', b'0'),
-('ING016', 'PATE', 2.985, 'kg', 30000, 'SUP002', b'0'),
-('ING017', 'TƯƠNG ỚT', 5.99, 'l', 30000, 'SUP002', b'0'),
-('ING018', 'CHÀ BÔNG', 2.97, 'kg', 30000, 'SUP002', b'0'),
-('ING019', 'CỦ CẢI MUỐI', 5.97, 'kg', 30000, 'SUP002', b'0'),
-('ING020', 'BÁNH MÌ QUE', 5.9, 'bag', 30000, 'SUP003', b'0'),
-('ING021', 'SỐT GÀ PHÔ MAI', 3, 'kg', 30000, 'SUP002', b'0'),
-('ING022', 'TRÀ Ô LONG', 11, 'kg', 30000, 'SUP001', b'0'),
-('ING023', 'HẠT SEN', 4, 'kg', 30000, 'SUP001', b'0'),
-('ING024', 'MILK FOAM', 6, 'l', 30000, 'SUP001', b'0'),
-('ING025', 'THẠCH CỦ NĂNG', 6, 'kg', 30000, 'SUP001', b'0'),
-('ING026', 'TRÀ ĐÀO', 10.92, 'kg', 30000, 'SUP001', b'0'),
-('ING027', 'SỮA RICH', 5.94, 'l', 30000, 'SUP001', b'0'),
-('ING028', 'THẠCH ĐÀO', 5.96, 'kg', 30000, 'SUP001', b'0'),
-('ING029', 'ĐÀO', 5.65, 'kg', 30000, 'SUP001', b'0'),
-('ING030', 'SẢ', 5.8, 'kg', 30000, 'SUP001', b'0'),
-('ING031', 'SYRUP ĐÀO', 5.95, 'l', 30000, 'SUP001', b'0'),
-('ING032', 'TRÀ ĐEN', 10.925, 'kg', 30000, 'SUP001', b'0'),
-('ING033', 'SYRUP VẢI NGÂM', 6, 'l', 30000, 'SUP001', b'0'),
-('ING034', 'THẠCH VẢI', 6, 'kg', 30000, 'SUP001', b'0'),
-('ING035', 'VẢI', 6, 'kg', 30000, 'SUP001', b'0'),
-('ING036', 'BỘT TRÀ XANH', 3, 'kg', 30000, 'SUP001', b'0'),
-('ING037', 'KEM BÉO RICH', 6, 'l', 30000, 'SUP001', b'0'),
-('ING038', 'ĐẬU ĐỎ', 6, 'kg', 30000, 'SUP001', b'0');
+('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
+('ING003', 'SỮA ĐẶC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING004', 'ĐÁ', 10, 'bag', 30000, 'SUP001', b'0'),
+('ING005', 'NƯỚC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING006', 'MUỐI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING007', 'ĐƯỜNG CÁT', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING008', 'SYRUP HẠNH NHÂN', 10, 'l', 30000, 'SUP001', b'0'),
+('ING009', 'SYRUP ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
+('ING010', 'SỮA TƯƠI MILKLAB', 10, 'l', 30000, 'SUP001', b'0'),
+('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING012', 'THẠCH CAFE', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUỐC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING014', 'KEM SỮA', 10, 'l', 30000, 'SUP001', b'0'),
+('ING015', 'SỐT CHOCOLA', 10, 'l', 30000, 'SUP001', b'0'),
+('ING016', 'PATE', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING017', 'TƯƠNG ỚT', 10, 'l', 30000, 'SUP002', b'0'),
+('ING018', 'CHÀ BÔNG', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING019', 'CỦ CẢI MUỐI', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING020', 'BÁNH MÌ QUE', 10, 'bag', 30000, 'SUP003', b'0'),
+('ING021', 'SỐT GÀ PHÔ MAI', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING022', 'TRÀ Ô LONG', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING023', 'HẠT SEN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING024', 'MILK FOAM', 10, 'l', 30000, 'SUP001', b'0'),
+('ING025', 'THẠCH CỦ NĂNG', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING026', 'TRÀ ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING027', 'SỮA RICH', 10, 'l', 30000, 'SUP001', b'0'),
+('ING028', 'THẠCH ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING029', 'ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING030', 'SẢ', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING031', 'SYRUP ĐÀO', 10, 'l', 30000, 'SUP001', b'0'),
+('ING032', 'TRÀ ĐEN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING033', 'SYRUP VẢI NGÂM', 10, 'l', 30000, 'SUP001', b'0'),
+('ING034', 'THẠCH VẢI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING035', 'VẢI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING036', 'BỘT TRÀ XANH', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING037', 'KEM BÉO RICH', 10, 'l', 30000, 'SUP001', b'0'),
+('ING038', 'ĐẬU ĐỎ', 10, 'kg', 30000, 'SUP001', b'0');
 
 -- --------------------------------------------------------
 
@@ -579,7 +579,7 @@ UPDATE ingredient
 SET ingredient.QUANTITY = ingredient.QUANTITY + NEW.QUANTITY
 WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID;
 UPDATE receipt
-SET receipt.GRAND_TOTAL = receipt.GRAND_TOTAL + (SELECT supplier.PRICE FROM supplier WHERE supplier.SUPPLIER_ID = NEW.SUPPLIER_ID) * NEW.QUANTITY
+SET receipt.GRAND_TOTAL = receipt.GRAND_TOTAL + (SELECT ingredient.UNIT_PRICE FROM ingredient WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID) * NEW.QUANTITY
 WHERE receipt.RECEIPT_ID = NEW.RECEIPT_ID;
 END
 $$
@@ -596,7 +596,7 @@ CREATE TABLE `receipt` (
   `STAFF_ID` varchar(10) NOT NULL,
   `DOR` date DEFAULT NULL,
   `GRAND_TOTAL` double DEFAULT 0,
-  `SUPPLIER_ID` varchar(10) NOT NULL
+  `SUPPLIER_ID` varchar(10) NOT NULL,
   `DELETED` bit(1) NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -957,9 +957,7 @@ ALTER TABLE `product`
 --
 ALTER TABLE `receipt_details`
   ADD CONSTRAINT `FK_INGRED` FOREIGN KEY (`INGREDIENT_ID`) REFERENCES `ingredient` (`INGREDIENT_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `receipt` (`RECEIPT_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_SUP` FOREIGN KEY (`SUPPLIER_ID`) REFERENCES `supplier` (`SUPPLIER_ID`) ON UPDATE CASCADE;
-
+  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `receipt` (`RECEIPT_ID`) ON UPDATE CASCADE;
 --
 -- Constraints for table `receipt`
 --

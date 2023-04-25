@@ -67,6 +67,8 @@ public class MySQL {
                 stringValue = "'" + value + "'";
             } else if (value instanceof Boolean) {
                 stringValue = (boolean) value ? "1" : "0";
+            } else if (value instanceof Integer || value instanceof Double || value instanceof Float) {
+                stringValue = value.toString();
             } else {
                 stringValue = "'" + value.toString() + "'";
             }
