@@ -277,7 +277,6 @@ public class SupplierGUI extends JPanel {
             String phone = null;
             String address = null;
             String email = null;
-            double price = 0;
             for (int i = 0; i < jTextFieldsForm.length; i++) {
                 switch (i) {
                     case 0 -> supplierID = jTextFieldsForm[i].getText();
@@ -285,12 +284,11 @@ public class SupplierGUI extends JPanel {
                     case 2 -> phone = jTextFieldsForm[i].getText();
                     case 3 -> address = jTextFieldsForm[i].getText();
                     case 4 -> email = jTextFieldsForm[i].getText();
-                    case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
                     default -> {
                     }
                 }
             }
-            newSupplier = new Supplier(supplierID, name, phone, address, email, price, false);
+            newSupplier = new Supplier(supplierID, name, phone, address, email, false);
             supplierBLL.updateSupplier(newSupplier);
             loadDataTable(supplierBLL.getSupplierList());
         }

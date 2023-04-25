@@ -99,7 +99,6 @@ public class SupplierBLL extends Manager<Supplier> {
             case "PHONE" -> supplier.getPhone();
             case "ADDRESS" -> supplier.getAddress();
             case "EMAIL" -> supplier.getEmail();
-            case "PRICE" -> supplier.getPrice();
             default -> null;
         };
     }
