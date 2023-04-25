@@ -69,7 +69,8 @@ public class ReceiptBLL extends Manager<Receipt> {
         return !findReceiptsBy(Map.of(
             "STAFF_ID", receipt.getStaffID(),
             "DOR", receipt.getDor(),
-            "GRAND_TOTAL", receipt.getGrandTotal()
+            "GRAND_TOTAL", receipt.getGrandTotal(),
+            "SUPPLIER_ID", receipt.getSupplierID()
         )).isEmpty();
     }
 
@@ -88,6 +89,7 @@ public class ReceiptBLL extends Manager<Receipt> {
             case "STAFF_ID" -> receipt.getStaffID();
             case "DOR" -> receipt.getDor();
             case "GRAND_TOTAL" -> receipt.getGrandTotal();
+            case "SUPPLIER_ID" -> receipt.getSupplierID();
             default -> null;
         };
     }

@@ -14,6 +14,7 @@ public class ReceiptDAL extends Manager {
                 "STAFF_ID",
                 "DOR",
                 "GRAND_TOTAL",
+                "SUPPLIER_ID",
                 "DELETED")
         );
     }
@@ -26,6 +27,7 @@ public class ReceiptDAL extends Manager {
                     row.get(1), // staffID
                     Day.parseDay(row.get(2)),// dor
                     Double.parseDouble(row.get(3)), // grandTotal
+                    row.get(3), // supplierID
                     Boolean.parseBoolean(row.get(5)) // deleted
                 );
             } catch (Exception e) {
@@ -41,6 +43,7 @@ public class ReceiptDAL extends Manager {
                 receipt.getStaffID(),
                 receipt.getDor(),
                 receipt.getGrandTotal(),
+                receipt.getSupplierID(),
                 false
             ); // receipt khi tạo mặc định deleted = 0
         } catch (Exception e) {
@@ -56,6 +59,7 @@ public class ReceiptDAL extends Manager {
             updateValues.add(receipt.getStaffID());
             updateValues.add(receipt.getDor());
             updateValues.add(receipt.getGrandTotal());
+            updateValues.add(receipt.getSupplierID());
             updateValues.add(receipt.isDeleted());
             return update(updateValues, "RECEIPT_ID = '" + receipt.getReceiptID() + "'");
         } catch (Exception e) {
