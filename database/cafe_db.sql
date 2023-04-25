@@ -41,6 +41,7 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
+('AC000', 'admin', 'admin', 'DE00', 'ST00', b'0'),
 ('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
 ('AC010', 'zidan', '123', 'DE01', 'ST04', b'0'),
 ('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
@@ -63,6 +64,8 @@ CREATE TABLE `bill` (
   `STAFF_ID` varchar(10) DEFAULT NULL,
   `DOPURCHASE` date DEFAULT NULL,
   `TOTAL` double DEFAULT 0,
+  `RECEIVED` double DEFAULT 0,
+  `EXCESS` double DEFAULT 0,
   `DELETED` bit(1) DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -70,17 +73,17 @@ CREATE TABLE `bill` (
 -- Dumping data for table `bill`
 --
 
-INSERT INTO `bill` (`BILL_ID`, `CUSTOMER_ID`, `STAFF_ID`, `DOPURCHASE`, `TOTAL`, `DELETED`) VALUES
-('BI0001', 'CUS001', 'ST05', '2020-09-08', 239000, b'0'),
-('BI0002', 'CUS002', 'ST05', '2021-02-07', 195000, b'0'),
-('BI0003', 'CUS003', 'ST05', '2021-05-06', 110000, b'0'),
-('BI0004', 'CUS004', 'ST05', '2021-08-03', 175000, b'0'),
-('BI0005', 'CUS005', 'ST05', '2022-03-19', 173000, b'0'),
-('BI0006', 'CUS006', 'ST05', '2022-03-28', 109000, b'0'),
-('BI0007', 'CUS007', 'ST05', '2022-05-05', 135000, b'0'),
-('BI0008', 'CUS008', 'ST05', '2022-09-08', 90000, b'0'),
-('BI0009', 'CUS009', 'ST05', '2023-01-09', 277000, b'0'),
-('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, b'0');
+INSERT INTO `bill` (`BILL_ID`, `CUSTOMER_ID`, `STAFF_ID`, `DOPURCHASE`, `TOTAL`, `RECEIVED`, `EXCESS`, `DELETED`) VALUES
+('BI0001', 'CUS001', 'ST05', '2020-09-08', 239000, 300000, -61000, b'0'),
+('BI0002', 'CUS002', 'ST05', '2021-02-07', 195000, 300000, -105000, b'0'),
+('BI0003', 'CUS003', 'ST05', '2021-05-06', 110000, 300000, -190000, b'0'),
+('BI0004', 'CUS004', 'ST05', '2021-08-03', 175000, 300000, -125000, b'0'),
+('BI0005', 'CUS005', 'ST05', '2022-03-19', 173000, 300000, -127000, b'0'),
+('BI0006', 'CUS006', 'ST05', '2022-03-28', 109000, 300000, -191000, b'0'),
+('BI0007', 'CUS007', 'ST05', '2022-05-05', 135000, 300000, -165000, b'0'),
+('BI0008', 'CUS008', 'ST05', '2022-09-08', 90000, 300000, -210000, b'0'),
+('BI0009', 'CUS009', 'ST05', '2023-01-09', 277000, 300000, -23000, b'0'),
+('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, 300000, -93000, b'0');
 
 --
 -- Triggers `bill`
@@ -101,6 +104,7 @@ END IF;
 END
 $$
 DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -110,35 +114,37 @@ DELIMITER ;
 CREATE TABLE `bill_details` (
   `BILL_ID` varchar(10) NOT NULL,
   `PRODUCT_ID` varchar(10) NOT NULL,
-  `QUANTITY` int(11) DEFAULT 0
+  `QUANTITY` int(11) DEFAULT 0,
+  `TOTAL` double DEFAULT 0,
+  `PERCENT`double DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `bill_details`
 --
 
-INSERT INTO `bill_details` (`BILL_ID`, `PRODUCT_ID`, `QUANTITY`) VALUES
-('BI0001', 'PR001', 3),
-('BI0001', 'PR004', 2),
-('BI0001', 'PR009', 1),
-('BI0001', 'PR011', 1),
-('BI0002', 'PR023', 2),
-('BI0002', 'PR035', 1),
-('BI0003', 'PR046', 2),
-('BI0004', 'PR025', 2),
-('BI0004', 'PR050', 1),
-('BI0005', 'PR001', 1),
-('BI0005', 'PR010', 2),
-('BI0005', 'PR060', 1),
-('BI0006', 'PR019', 1),
-('BI0006', 'PR024', 2),
-('BI0007', 'PR027', 3),
-('BI0008', 'PR018', 1),
-('BI0008', 'PR038', 1),
-('BI0009', 'PR027', 2),
-('BI0009', 'PR051', 1),
-('BI0009', 'PR063', 2),
-('BI0010', 'PR045', 3);
+INSERT INTO `bill_details` (`BILL_ID`, `PRODUCT_ID`, `QUANTITY`, `TOTAL`, `PERCENT`) VALUES
+('BI0001', 'PR001', 3, 87000, 0),
+('BI0001', 'PR004', 2, 58000, 0),
+('BI0001', 'PR009', 1, 45000, 0),
+('BI0001', 'PR011', 1, 49000, 0),
+('BI0002', 'PR023', 2, 130000, 0),
+('BI0002', 'PR035', 1, 65000, 0),
+('BI0003', 'PR046', 2, 110000, 0),
+('BI0004', 'PR025', 2, 110000, 0),
+('BI0004', 'PR050', 1, 65000, 0),
+('BI0005', 'PR001', 1, 29000, 0),
+('BI0005', 'PR010', 2, 90000, 0),
+('BI0005', 'PR060', 1, 54000, 0),
+('BI0006', 'PR019', 1, 19000, 0),
+('BI0006', 'PR024', 2, 90000, 0),
+('BI0007', 'PR027', 3, 135000, 0),
+('BI0008', 'PR018', 1, 55000, 0),
+('BI0008', 'PR038', 1, 35000, 0),
+('BI0009', 'PR027', 2, 90000, 0),
+('BI0009', 'PR051', 1, 69000, 0),
+('BI0009', 'PR063', 2, 59000, 0),
+('BI0010', 'PR045', 3, 207000, 0);
 
 --
 -- Triggers `bill_details`
@@ -194,18 +200,6 @@ INSERT INTO `category` (`CATEGORY_ID`, `NAME`, `QUANTITY`, `DELETED`) VALUES
 ('CA06', 'FREERE', 15, b'0'),
 ('CA07', 'TRÀ SỮA', 8, b'0');
 
---
--- Triggers `category`
---
-DELIMITER $$
-CREATE TRIGGER `UpdateCategory` AFTER UPDATE ON `category`
- FOR EACH ROW IF NEW.DELETED <> OLD.DELETED THEN
-	UPDATE product
-    SET product.DELETED =b'1'
-    WHERE product.CATEGORY_ID = OLD.CATEGORY_ID;
-END IF
-$$
-DELIMITER ;
 -- --------------------------------------------------------
 
 --
@@ -228,7 +222,8 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
-('CUS001', 'NGUYỄN VĂN NAM ', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
+('CUS000', 'VÃNG LAI', b'1', '0100-01-01', '', b'0', '0100-01-01', b'0'),
+('CUS001', 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
 ('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
 ('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
 ('CUS004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
@@ -253,6 +248,7 @@ CREATE TABLE `decentralization` (
   `IS_CATEGORY` int(1) DEFAULT NULL,
   `IS_RECIPE` int(1) DEFAULT NULL,
   `IS_IMPORT` int(1) DEFAULT NULL,
+  `IS_SUPPLIER` int(1) DEFAULT NULL,
   `IS_BILL` int(1) DEFAULT NULL,
   `IS_WAREHOUSES` int(1) DEFAULT NULL,
   `IS_ACCOUNT` int(1) DEFAULT NULL,
@@ -269,13 +265,14 @@ CREATE TABLE `decentralization` (
 -- Dumping data for table `decentralization`
 --
 
-INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_SALE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_RECIPE`, `IS_IMPORT`, `IS_BILL`, `IS_WAREHOUSES`, `IS_ACCOUNT`, `IS_STAFF`, `IS_CUSTOMER`, `IS_DISCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
-('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
-('DE02', 1, 2, 2, 0, 0, 2, 0, 0, 0, 2, 0, 0, 'staffSale'),
-('DE03', 1, 0, 0, 0, 2, 0, 2, 0, 0, 0, 0, 0, 'staffWarehousing'),
-('DE04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
-('DE05', 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
-('DE06', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 'staffdiscount');
+INSERT INTO `decentralization` (`DECENTRALIZATION_ID`, `IS_SALE`, `IS_PRODUCT`, `IS_CATEGORY`, `IS_RECIPE`, `IS_IMPORT`, `IS_SUPPLIER`, `IS_BILL`, `IS_WAREHOUSES`, `IS_ACCOUNT`, `IS_STAFF`, `IS_CUSTOMER`, `IS_DISCOUNT`, `IS_DECENTRALIZE`, `DECENTRALIZATION_NAME`) VALUES
+('DE00', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'admin'),
+('DE01', 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 'manager'),
+('DE02', 1, 2, 2, 0, 0, 1, 2, 0, 0, 0, 2, 0, 0, 'staffSale'),
+('DE03', 1, 0, 0, 0, 2, 2, 0, 2, 0, 0, 0, 0, 0, 'staffWarehousing'),
+('DE04', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'staffService'),
+('DE05', 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'bartender'),
+('DE06', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 'staffdiscount');
 
 -- --------------------------------------------------------
 
@@ -362,6 +359,7 @@ CREATE TABLE `ingredient` (
   `NAME` varchar(100) DEFAULT NULL,
   `QUANTITY` double DEFAULT 0,
   `UNIT` varchar(10) DEFAULT NULL,
+  `UNIT_PRICE` double DEFAULT 0,
   `SUPPLIER_ID` varchar(10) DEFAULT NULL,
   `DELETED` bit(1) DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -370,45 +368,45 @@ CREATE TABLE `ingredient` (
 -- Dumping data for table `ingredient`
 --
 
-INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `SUPPLIER_ID`, `DELETED`) VALUES
-('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10, 'kg', 'SUP001', b'0'),
-('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10, 'l', 'SUP001', b'0'),
-('ING003', 'SỮA ĐẶC', 10, 'l', 'SUP001', b'0'),
-('ING004', 'ĐÁ', 10, 'bag', 'SUP001', b'0'),
-('ING005', 'NƯỚC', 10, 'l', 'SUP001', b'0'),
-('ING006', 'MUỐI', 10, 'kg', 'SUP001', b'0'),
-('ING007', 'ĐƯỜNG CÁT', 10, 'kg', 'SUP001', b'0'),
-('ING008', 'SYRUP HẠNH NHÂN', 10, 'l', 'SUP001', b'0'),
-('ING009', 'SYRUP ĐƯỜNG', 10, 'l', 'SUP001', b'0'),
-('ING010', 'SỮA TƯƠI MILKLAB', 10, 'l', 'SUP001', b'0'),
-('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10, 'kg', 'SUP001', b'0'),
-('ING012', 'THẠCH CAFE', 10, 'kg', 'SUP001', b'0'),
-('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUẤC', 10, 'l', 'SUP001', b'0'),
-('ING014', 'KEM SỮA', 10, 'l', 'SUP001', b'0'),
-('ING015', 'SỐT CHOCOLA', 10, 'l', 'SUP001', b'0'),
-('ING016', 'PATE', 10, 'kg', 'SUP002', b'0'),
-('ING017', 'TƯƠNG ỚT', 10, 'l', 'SUP002', b'0'),
-('ING018', 'CHẢ BÔNG', 10, 'kg', 'SUP002', b'0'),
-('ING019', 'CỦ CẢI MUỐI', 10, 'kg', 'SUP002', b'0'),
-('ING020', 'BÁNH MÌ QUE', 10, 'bag', 'SUP003', b'0'),
-('ING021', 'SỐT GÀ PHÔ MAI', 10, 'kg', 'SUP002', b'0'),
-('ING022', 'TRÀ Ô LONG', 10, 'kg', 'SUP001', b'0'),
-('ING023', 'HẠT SEN', 10, 'kg', 'SUP001', b'0'),
-('ING024', 'MILK FOAM', 10, 'l', 'SUP001', b'0'),
-('ING025', 'THẠCH CỦ NĂNG', 10, 'kg', 'SUP001', b'0'),
-('ING026', 'TRÀ ĐÀO', 10, 'kg', 'SUP001', b'0'),
-('ING027', 'SỮA RICH', 10, 'l', 'SUP001', b'0'),
-('ING028', 'THẠCH ĐÀO', 10, 'kg', 'SUP001', b'0'),
-('ING029', 'ĐÀO', 10, 'kg', 'SUP001', b'0'),
-('ING030', 'SẢ', 10, 'kg', 'SUP001', b'0'),
-('ING031', 'SYRUP ĐÀO', 10, '', 'SUP001', b'0'),
-('ING032', 'TRÀ ĐEN', 10, 'kg', 'SUP001', b'0'),
-('ING033', 'SYRUP VẢI NGÂM', 10, 'l', 'SUP001', b'0'),
-('ING034', 'THẠCH VẢI', 10, 'kg', 'SUP001', b'0'),
-('ING035', 'VẢI', 10, 'kg', 'SUP001', b'0'),
-('ING036', 'BỘT TRÀ XANH', 10, 'kg', 'SUP001', b'0'),
-('ING037', 'KEM BÉO RICH', 10, 'l', 'SUP001', b'0'),
-('ING038', 'ĐẬU ĐỎ', 10, 'kg', 'SUP001', b'0');
+INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `UNIT_PRICE`, `SUPPLIER_ID`, `DELETED`) VALUES
+('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
+('ING003', 'SỮA ĐẶC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING004', 'ĐÁ', 10, 'bag', 30000, 'SUP001', b'0'),
+('ING005', 'NƯỚC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING006', 'MUỐI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING007', 'ĐƯỜNG CÁT', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING008', 'SYRUP HẠNH NHÂN', 10, 'l', 30000, 'SUP001', b'0'),
+('ING009', 'SYRUP ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
+('ING010', 'SỮA TƯƠI MILKLAB', 10, 'l', 30000, 'SUP001', b'0'),
+('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING012', 'THẠCH CAFE', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUỐC', 10, 'l', 30000, 'SUP001', b'0'),
+('ING014', 'KEM SỮA', 10, 'l', 30000, 'SUP001', b'0'),
+('ING015', 'SỐT CHOCOLA', 10, 'l', 30000, 'SUP001', b'0'),
+('ING016', 'PATE', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING017', 'TƯƠNG ỚT', 10, 'l', 30000, 'SUP002', b'0'),
+('ING018', 'CHÀ BÔNG', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING019', 'CỦ CẢI MUỐI', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING020', 'BÁNH MÌ QUE', 10, 'bag', 30000, 'SUP003', b'0'),
+('ING021', 'SỐT GÀ PHÔ MAI', 10, 'kg', 30000, 'SUP002', b'0'),
+('ING022', 'TRÀ Ô LONG', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING023', 'HẠT SEN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING024', 'MILK FOAM', 10, 'l', 30000, 'SUP001', b'0'),
+('ING025', 'THẠCH CỦ NĂNG', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING026', 'TRÀ ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING027', 'SỮA RICH', 10, 'l', 30000, 'SUP001', b'0'),
+('ING028', 'THẠCH ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING029', 'ĐÀO', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING030', 'SẢ', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING031', 'SYRUP ĐÀO', 10, 'l', 30000, 'SUP001', b'0'),
+('ING032', 'TRÀ ĐEN', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING033', 'SYRUP VẢI NGÂM', 10, 'l', 30000, 'SUP001', b'0'),
+('ING034', 'THẠCH VẢI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING035', 'VẢI', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING036', 'BỘT TRÀ XANH', 10, 'kg', 30000, 'SUP001', b'0'),
+('ING037', 'KEM BÉO RICH', 10, 'l', 30000, 'SUP001', b'0'),
+('ING038', 'ĐẬU ĐỎ', 10, 'kg', 30000, 'SUP001', b'0');
 
 -- --------------------------------------------------------
 
@@ -525,53 +523,52 @@ DELIMITER ;
 CREATE TABLE `receipt_details` (
   `RECEIPT_ID` varchar(10) NOT NULL,
   `INGREDIENT_ID` varchar(10) NOT NULL,
-  `QUANTITY` double DEFAULT 0,
-  `SUPPLIER_ID` varchar(10) NOT NULL
+  `QUANTITY` double DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `receipt_details`
 --
 
-INSERT INTO `receipt_details` (`RECEIPT_ID`, `INGREDIENT_ID`, `QUANTITY`, `SUPPLIER_ID`) VALUES
-('REC001', 'ING001', 10, 'SUP001'),
-('REC002', 'ING002', 10, 'SUP001'),
-('REC003', 'ING003', 10, 'SUP001'),
-('REC004', 'ING004', 5, 'SUP001'),
-('REC005', 'ING005', 1000, 'SUP001'),
-('REC006', 'ING006', 5, 'SUP001'),
-('REC007', 'ING007', 5, 'SUP001'),
-('REC008', 'ING008', 5, 'SUP001'),
-('REC009', 'ING009', 5, 'SUP001'),
-('REC010', 'ING010', 5, 'SUP001'),
-('REC011', 'ING011', 10, 'SUP001'),
-('REC012', 'ING012', 10, 'SUP001'),
-('REC013', 'ING013', 5, 'SUP001'),
-('REC014', 'ING014', 5, 'SUP001'),
-('REC015', 'ING015', 5, 'SUP001'),
-('REC016', 'ING016', 2, 'SUP002'),
-('REC017', 'ING017', 5, 'SUP002'),
-('REC018', 'ING018', 2, 'SUP002'),
-('REC019', 'ING019', 5, 'SUP002'),
-('REC020', 'ING020', 5, 'SUP003'),
-('REC021', 'ING021', 2, 'SUP002'),
-('REC022', 'ING022', 10, 'SUP001'),
-('REC023', 'ING023', 3, 'SUP001'),
-('REC024', 'ING024', 5, 'SUP001'),
-('REC025', 'ING025', 5, 'SUP001'),
-('REC026', 'ING026', 10, 'SUP001'),
-('REC027', 'ING027', 5, 'SUP001'),
-('REC028', 'ING028', 5, 'SUP001'),
-('REC029', 'ING029', 5, 'SUP001'),
-('REC030', 'ING030', 5, 'SUP001'),
-('REC031', 'ING031', 5, 'SUP001'),
-('REC032', 'ING032', 10, 'SUP001'),
-('REC033', 'ING033', 5, 'SUP001'),
-('REC034', 'ING034', 5, 'SUP001'),
-('REC035', 'ING035', 5, 'SUP001'),
-('REC036', 'ING036', 2, 'SUP001'),
-('REC037', 'ING037', 5, 'SUP001'),
-('REC038', 'ING038', 5, 'SUP001');
+INSERT INTO `receipt_details` (`RECEIPT_ID`, `INGREDIENT_ID`, `QUANTITY`) VALUES
+('REC001', 'ING001', 10),
+('REC002', 'ING002', 10),
+('REC003', 'ING003', 10),
+('REC004', 'ING004', 5),
+('REC005', 'ING005', 1000),
+('REC006', 'ING006', 5),
+('REC007', 'ING007', 5),
+('REC008', 'ING008', 5),
+('REC009', 'ING009', 5),
+('REC010', 'ING010', 5),
+('REC011', 'ING011', 10),
+('REC012', 'ING012', 10),
+('REC013', 'ING013', 5),
+('REC014', 'ING014', 5),
+('REC015', 'ING015', 5),
+('REC016', 'ING016', 2),
+('REC017', 'ING017', 5),
+('REC018', 'ING018', 2),
+('REC019', 'ING019', 5),
+('REC020', 'ING020', 5),
+('REC021', 'ING021', 2),
+('REC022', 'ING022', 10),
+('REC023', 'ING023', 3),
+('REC024', 'ING024', 5),
+('REC025', 'ING025', 5),
+('REC026', 'ING026', 10),
+('REC027', 'ING027', 5),
+('REC028', 'ING028', 5),
+('REC029', 'ING029', 5),
+('REC030', 'ING030', 5),
+('REC031', 'ING031', 5),
+('REC032', 'ING032', 10),
+('REC033', 'ING033', 5),
+('REC034', 'ING034', 5),
+('REC035', 'ING035', 5),
+('REC036', 'ING036', 2),
+('REC037', 'ING037', 5),
+('REC038', 'ING038', 5);
 
 --
 -- Triggers `receipt_details`
@@ -582,7 +579,7 @@ UPDATE ingredient
 SET ingredient.QUANTITY = ingredient.QUANTITY + NEW.QUANTITY
 WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID;
 UPDATE receipt
-SET receipt.GRAND_TOTAL = receipt.GRAND_TOTAL + (SELECT supplier.PRICE FROM supplier WHERE supplier.SUPPLIER_ID = NEW.SUPPLIER_ID) * NEW.QUANTITY
+SET receipt.GRAND_TOTAL = receipt.GRAND_TOTAL + (SELECT ingredient.UNIT_PRICE FROM ingredient WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID) * NEW.QUANTITY
 WHERE receipt.RECEIPT_ID = NEW.RECEIPT_ID;
 END
 $$
@@ -599,6 +596,7 @@ CREATE TABLE `receipt` (
   `STAFF_ID` varchar(10) NOT NULL,
   `DOR` date DEFAULT NULL,
   `GRAND_TOTAL` double DEFAULT 0,
+  `SUPPLIER_ID` varchar(10) NOT NULL,
   `DELETED` bit(1) NOT NULL DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -606,45 +604,45 @@ CREATE TABLE `receipt` (
 -- Dumping data for table `receipt`
 --
 
-INSERT INTO `receipt` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `DELETED`) VALUES
-('REC001', 'ST06', '2023-03-01', 1500000, b'0'),
-('REC002', 'ST06', '2023-01-01', 1500000, b'0'),
-('REC003', 'ST06', '2023-02-01', 1500000, b'0'),
-('REC004', 'ST06', '2023-01-01', 750000, b'0'),
-('REC005', 'ST06', '2022-03-01', 150000000, b'0'),
-('REC006', 'ST06', '2022-04-01', 750000, b'0'),
-('REC007', 'ST06', '2022-06-01', 750000, b'0'),
-('REC008', 'ST06', '2022-03-01', 750000, b'0'),
-('REC009', 'ST06', '2022-03-01', 750000, b'0'),
-('REC010', 'ST06', '2022-03-01', 750000, b'0'),
-('REC011', 'ST06', '2022-02-01', 1500000, b'0'),
-('REC012', 'ST06', '2022-02-01', 1500000, b'0'),
-('REC013', 'ST06', '2022-02-01', 750000, b'0'),
-('REC014', 'ST06', '2022-02-01', 750000, b'0'),
-('REC015', 'ST06', '2022-03-01', 750000, b'0'),
-('REC016', 'ST06', '2022-03-01', 300000, b'0'),
-('REC017', 'ST06', '2021-03-01', 750000, b'0'),
-('REC018', 'ST06', '2021-03-01', 300000, b'0'),
-('REC019', 'ST06', '2021-07-01', 750000, b'0'),
-('REC020', 'ST06', '2021-07-01', 750000, b'0'),
-('REC021', 'ST06', '2021-07-01', 300000, b'0'),
-('REC022', 'ST06', '2021-07-01', 1500000, b'0'),
-('REC023', 'ST06', '2021-09-01', 450000, b'0'),
-('REC024', 'ST06', '2021-09-01', 750000, b'0'),
-('REC025', 'ST06', '2021-09-01', 750000, b'0'),
-('REC026', 'ST06', '2021-09-01', 1500000, b'0'),
-('REC027', 'ST06', '2021-05-01', 750000, b'0'),
-('REC028', 'ST06', '2021-05-01', 750000, b'0'),
-('REC029', 'ST06', '2021-05-01', 750000, b'0'),
-('REC030', 'ST06', '2022-05-01', 750000, b'0'),
-('REC031', 'ST06', '2022-02-01', 750000, b'0'),
-('REC032', 'ST06', '2022-02-01', 1500000, b'0'),
-('REC033', 'ST06', '2022-02-01', 750000, b'0'),
-('REC034', 'ST06', '2022-02-01', 750000, b'0'),
-('REC035', 'ST06', '2022-01-01', 750000, b'0'),
-('REC036', 'ST06', '2022-01-01', 300000, b'0'),
-('REC037', 'ST06', '2022-01-01', 750000, b'0'),
-('REC038', 'ST06', '2022-01-01', 750000, b'0');
+INSERT INTO `receipt` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `SUPPLIER_ID`, `DELETED`) VALUES
+('REC001', 'ST06', '2023-03-01', 1500000, 'SUP001', b'0'),
+('REC002', 'ST06', '2023-01-01', 1500000, 'SUP001', b'0'),
+('REC003', 'ST06', '2023-02-01', 1500000, 'SUP001', b'0'),
+('REC004', 'ST06', '2023-01-01', 750000, 'SUP001', b'0'),
+('REC005', 'ST06', '2022-03-01', 1500000, 'SUP001', b'0'),
+('REC006', 'ST06', '2022-04-01', 750000, 'SUP001', b'0'),
+('REC007', 'ST06', '2022-06-01', 750000, 'SUP001', b'0'),
+('REC008', 'ST06', '2022-03-01', 750000, 'SUP001', b'0'),
+('REC009', 'ST06', '2022-03-01', 750000, 'SUP001', b'0'),
+('REC010', 'ST06', '2022-03-01', 750000, 'SUP001', b'0'),
+('REC011', 'ST06', '2022-02-01', 1500000, 'SUP001', b'0'),
+('REC012', 'ST06', '2022-02-01', 1500000, 'SUP001', b'0'),
+('REC013', 'ST06', '2022-02-01', 750000, 'SUP001', b'0'),
+('REC014', 'ST06', '2022-02-01', 750000, 'SUP001', b'0'),
+('REC015', 'ST06', '2022-03-01', 750000, 'SUP001', b'0'),
+('REC016', 'ST06', '2022-03-01', 300000, 'SUP002', b'0'),
+('REC017', 'ST06', '2021-03-01', 750000, 'SUP002', b'0'),
+('REC018', 'ST06', '2021-03-01', 300000, 'SUP002', b'0'),
+('REC019', 'ST06', '2021-07-01', 750000, 'SUP002', b'0'),
+('REC020', 'ST06', '2021-07-01', 750000, 'SUP003', b'0'),
+('REC021', 'ST06', '2021-07-01', 300000, 'SUP002', b'0'),
+('REC022', 'ST06', '2021-07-01', 1500000, 'SUP001', b'0'),
+('REC023', 'ST06', '2021-09-01', 450000, 'SUP001', b'0'),
+('REC024', 'ST06', '2021-09-01', 750000, 'SUP001', b'0'),
+('REC025', 'ST06', '2021-09-01', 750000, 'SUP001', b'0'),
+('REC026', 'ST06', '2021-09-01', 1500000, 'SUP001', b'0'),
+('REC027', 'ST06', '2021-05-01', 750000, 'SUP001', b'0'),
+('REC028', 'ST06', '2021-05-01', 750000, 'SUP001', b'0'),
+('REC029', 'ST06', '2021-05-01', 750000, 'SUP001', b'0'),
+('REC030', 'ST06', '2022-05-01', 750000, 'SUP001', b'0'),
+('REC031', 'ST06', '2022-02-01', 750000, 'SUP001', b'0'),
+('REC032', 'ST06', '2022-02-01', 1500000, 'SUP001', b'0'),
+('REC033', 'ST06', '2022-02-01', 750000, 'SUP001', b'0'),
+('REC034', 'ST06', '2022-02-01', 750000, 'SUP001', b'0'),
+('REC035', 'ST06', '2022-01-01', 750000, 'SUP001', b'0'),
+('REC036', 'ST06', '2022-01-01', 300000, 'SUP001', b'0'),
+('REC037', 'ST06', '2022-01-01', 750000, 'SUP001', b'0'),
+('REC038', 'ST06', '2022-01-01', 750000, 'SUP001', b'0');
 
 -- --------------------------------------------------------
 
@@ -767,10 +765,11 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
-('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '0000-00-00', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '0000-00-00', b'0'),
-('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '0000-00-00', b'0'),
-('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '0000-00-00', b'0'),
+('ST00', 'ADMIN', b'0', '0100-01-01', '', '', '', 0, '0100-01-01', b'0'),
+('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '0100-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '0100-01-01', b'0'),
+('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '0100-01-01', b'0'),
+('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '0100-01-01', b'0'),
 ('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '2019-2-2', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
 ('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '2019-10-3', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
 ('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
@@ -879,15 +878,15 @@ ALTER TABLE `product`
 --
 ALTER TABLE `receipt_details`
   ADD PRIMARY KEY (`RECEIPT_ID`,`INGREDIENT_ID`),
-  ADD KEY `FK_INGRED` (`INGREDIENT_ID`),
-  ADD KEY `FK_SUP` (`SUPPLIER_ID`);
+  ADD KEY `FK_INGRED` (`INGREDIENT_ID`);
 
 --
 -- Indexes for table `receipt`
 --
 ALTER TABLE `receipt`
   ADD PRIMARY KEY (`RECEIPT_ID`),
-  ADD KEY `FK_STAF` (`STAFF_ID`);
+  ADD KEY `FK_STAF` (`STAFF_ID`),
+  ADD KEY `FK_SUP` (`SUPPLIER_ID`);
 
 --
 -- Indexes for table `recipe`
@@ -957,9 +956,7 @@ ALTER TABLE `product`
 --
 ALTER TABLE `receipt_details`
   ADD CONSTRAINT `FK_INGRED` FOREIGN KEY (`INGREDIENT_ID`) REFERENCES `ingredient` (`INGREDIENT_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `receipt` (`RECEIPT_ID`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_SUP` FOREIGN KEY (`SUPPLIER_ID`) REFERENCES `supplier` (`SUPPLIER_ID`) ON UPDATE CASCADE;
-
+  ADD CONSTRAINT `FK_RECEIPT` FOREIGN KEY (`RECEIPT_ID`) REFERENCES `receipt` (`RECEIPT_ID`) ON UPDATE CASCADE;
 --
 -- Constraints for table `receipt`
 --
