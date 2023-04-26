@@ -248,7 +248,7 @@ public class LoginGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             Account account = accountList.get(0);
-            JOptionPane.showMessageDialog(this, "Login successful!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
             new HomeGUI(account).setVisible(true);
             dispose();
         }

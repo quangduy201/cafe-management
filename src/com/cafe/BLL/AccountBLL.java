@@ -14,7 +14,7 @@ public class AccountBLL extends Manager<Account> {
     public AccountBLL() {
         try {
             accountDAL = new AccountDAL();
-            accountList = searchAccounts("DELETED = 0");
+            accountList = searchAccounts("DELETED = 0", "ACCOUNT_ID != 'AC000'");
         } catch (Exception ignored) {
 
         }
@@ -86,11 +86,14 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public boolean exists(Map<String, Object> conditions) {
+        if (conditions.containsKey("USERNAME") && conditions.get("USERNAME").equals("admin")) {
+            return true;
+        }
         return !findAccountsBy(conditions).isEmpty();
     }
 
     public String getAutoID() {
-        return getAutoID("AC", 3, searchAccounts());
+        return getAutoID("AC", 3, searchAccounts("ACCOUNT_ID != 'AC000'"));
     }
 
     @Override

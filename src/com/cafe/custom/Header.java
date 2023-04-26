@@ -7,7 +7,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 public class Header extends JPanel {
-
     public Header() {
         initComponents();
         setOpaque(false);

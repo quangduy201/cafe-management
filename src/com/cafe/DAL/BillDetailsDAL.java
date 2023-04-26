@@ -11,7 +11,9 @@ public class BillDetailsDAL extends Manager {
         super("bill_details",
             List.of("BILL_ID",
                 "PRODUCT_ID",
-                "QUANTITY")
+                "QUANTITY",
+                "TOTAL",
+                "PERCENT")
         );
     }
 
@@ -19,7 +21,9 @@ public class BillDetailsDAL extends Manager {
         return convert(data, row -> new BillDetails(
             row.get(0), // billID
             row.get(1), // productID
-            Integer.parseInt(row.get(2)) // quantity
+            Integer.parseInt(row.get(2)), // quantity
+            Double.parseDouble(row.get(2)),
+            Double.parseDouble(row.get(3))
         ));
     }
 
@@ -27,7 +31,9 @@ public class BillDetailsDAL extends Manager {
         try {
             return create(billDetails.getBillID(),
                 billDetails.getProductID(),
-                billDetails.getQuantity()
+                billDetails.getQuantity(),
+                billDetails.getTotal(),
+                billDetails.getPercent()
             );
         } catch (Exception e) {
             System.out.println("Error occurred in BillDetailsDAL.addBillDetails(): " + e.getMessage());

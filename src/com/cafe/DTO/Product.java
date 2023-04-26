@@ -54,7 +54,7 @@ public class Product {
         this.sized = sized;
     }
 
-    public double getCost() {
+    public Double getCost() {
         return cost;
     }
 
@@ -84,6 +84,7 @@ public class Product {
             name + " | " +
             categoryID + " | " +
             sized + " | " +
-            cost;
+            cost + " | " +
+            image;
     }
 }

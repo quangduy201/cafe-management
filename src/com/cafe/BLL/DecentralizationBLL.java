@@ -15,7 +15,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     public DecentralizationBLL() {
         try {
             decentralizationDAL = new DecentralizationDAL();
-            decentralizationList = searchDecentralization("DELETED = 0");
+            decentralizationList = searchDecentralization("DELETED = 0", "DECENTRALIZATION_ID != 'DE00'");
         } catch (Exception ignored) {
 
         }
@@ -80,30 +80,34 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     public boolean exists(Decentralization decentralization) {
         Map<String, Object> conditions = new HashMap<>(Map.of(
             "IS_SALE", decentralization.getIsSale(),
-            "IS_PRODUCT", decentralization.getIsDecentralization(),
+            "IS_PRODUCT", decentralization.getIsProduct(),
             "IS_CATEGORY", decentralization.getIsCategory(),
             "IS_RECIPE", decentralization.getIsRecipe(),
             "IS_IMPORT", decentralization.getIsImport(),
-            "IS_BILL", decentralization.getIsBill(),
-            "IS_WAREHOUSES", decentralization.getIsWarehouses()
+            "IS_SUPPLIER", decentralization.getIsSupplier(),
+            "IS_BILL", decentralization.getIsBill()
         ));
         conditions.putAll(Map.of(
+            "IS_WAREHOUSES", decentralization.getIsWarehouses(),
             "IS_ACCOUNT", decentralization.getIsAccount(),
             "IS_STAFF", decentralization.getIsStaff(),
             "IS_CUSTOMER", decentralization.getIsCustomer(),
             "IS_DISCOUNT", decentralization.getIsDiscount(),
-            "IS_DECENTRALIZATION", decentralization.getIsDecentralization(),
+            "IS_DECENTRALIZE", decentralization.getIsDecentralization(),
             "DECENTRALIZATION_NAME", decentralization.getDecentralizationName()
         ));
         return !findDecentralizationsBy(conditions).isEmpty();
     }
 
     public boolean exists(Map<String, Object> conditions) {
+        if (conditions.containsKey("DECENTRALIZATION_NAME") && conditions.get("DECENTRALIZATION_NAME").equals("admin")) {
+            return true;
+        }
         return !findDecentralizationsBy(conditions).isEmpty();
     }
 
     public String getAutoID() {
-        return getAutoID("DE", 2, searchDecentralization());
+        return getAutoID("DE", 2, searchDecentralization("DECENTRALIZATION_ID != 'DE00'"));
     }
 
     @Override
@@ -115,13 +119,14 @@ public class DecentralizationBLL extends Manager<Decentralization> {
             case "IS_CATEGORY" -> decentralization.getIsCategory();
             case "IS_RECIPE" -> decentralization.getIsRecipe();
             case "IS_IMPORT" -> decentralization.getIsImport();
+            case "IS_SUPPLIER" -> decentralization.getIsSupplier();
             case "IS_BILL" -> decentralization.getIsBill();
             case "IS_WAREHOUSES" -> decentralization.getIsWarehouses();
             case "IS_ACCOUNT" -> decentralization.getIsAccount();
             case "IS_STAFF" -> decentralization.getIsStaff();
             case "IS_CUSTOMER" -> decentralization.getIsCustomer();
             case "IS_DISCOUNT" -> decentralization.getIsDiscount();
-            case "IS_DECENTRALIZATION" -> decentralization.getIsDecentralization();
+            case "IS_DECENTRALIZE" -> decentralization.getIsDecentralization();
             case "DECENTRALIZATION_NAME" -> decentralization.getDecentralizationName();
             default -> null;
         };

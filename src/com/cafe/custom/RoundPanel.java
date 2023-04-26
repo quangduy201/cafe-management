@@ -2,11 +2,22 @@ package com.cafe.custom;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RoundPanel extends JPanel {
 
     public RoundPanel() {
         setOpaque(false);
+    }
+    private Color borderColor;
+
+    public Color getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(Color borderColor) {
+        this.borderColor = borderColor;
     }
 
     @Override

@@ -15,6 +15,7 @@ public class Decentralization {
     private int isCategory;
     private int isRecipe;
     private int isImport;
+    private int isSupplier;
     private int isBill;
     private int isWarehouses;
     private int isAccount;
@@ -29,13 +30,14 @@ public class Decentralization {
 
     }
 
-    public Decentralization(String decentralizationID, int isSale, int isProduct, int isCategory, int isRecipe, int isImport, int isBill, int isWarehouses, int isAccount, int isStaff, int isCustomer, int isDiscount, int isDecentralization, String DecentralizationName, boolean deleted) {
+    public Decentralization(String decentralizationID, int isSale, int isProduct, int isCategory, int isRecipe, int isImport, int isSupplier, int isBill, int isWarehouses, int isAccount, int isStaff, int isCustomer, int isDiscount, int isDecentralization, String DecentralizationName, boolean deleted) {
         this.decentralizationID = decentralizationID;
         this.isSale = isSale;
         this.isProduct = isProduct;
         this.isCategory = isCategory;
         this.isRecipe = isRecipe;
         this.isImport = isImport;
+        this.isSupplier = isSupplier;
         this.isBill = isBill;
         this.isWarehouses = isWarehouses;
         this.isAccount = isAccount;
@@ -54,8 +56,8 @@ public class Decentralization {
             int value = switch (args.get(i)) {
                 case "Không" -> NONE;
                 case "Xem" -> VIEW;
-                case "Sửa" -> EDIT;
-                case "Xem và sửa" -> ALL;
+                case "Thêm" -> EDIT;
+                case "Sửa và xóa" -> ALL;
                 default -> -1;
             };
             switch (i) {
@@ -64,13 +66,14 @@ public class Decentralization {
                 case 2 -> this.isCategory = value;
                 case 3 -> this.isRecipe = value;
                 case 4 -> this.isImport = value;
-                case 5 -> this.isBill = value;
-                case 6 -> this.isWarehouses = value;
-                case 7 -> this.isAccount = value;
-                case 8 -> this.isStaff = value;
-                case 9 -> this.isCustomer = value;
-                case 10 -> this.isDiscount = value;
-                case 11 -> this.isDecentralization = value;
+                case 5 -> this.isSupplier = value;
+                case 6 -> this.isBill = value;
+                case 7 -> this.isWarehouses = value;
+                case 8 -> this.isAccount = value;
+                case 9 -> this.isStaff = value;
+                case 10 -> this.isCustomer = value;
+                case 11 -> this.isDiscount = value;
+                case 12 -> this.isDecentralization = value;
                 default -> {
                 }
             }
@@ -86,6 +89,7 @@ public class Decentralization {
         array.add(this.isCategory);
         array.add(this.isRecipe);
         array.add(this.isImport);
+        array.add(this.isSupplier);
         array.add(this.isBill);
         array.add(this.isWarehouses);
         array.add(this.isAccount);
@@ -141,6 +145,14 @@ public class Decentralization {
 
     public void setIsImport(int isImport) {
         this.isImport = isImport;
+    }
+
+    public int getIsSupplier() {
+        return isSupplier;
+    }
+
+    public void setIsSupplier(int isSupplier) {
+        this.isSupplier = isSupplier;
     }
 
     public int getIsBill() {
@@ -217,16 +229,20 @@ public class Decentralization {
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder();
-        for (int i : array) {
-            string.append(switch (i) {
-                case NONE -> "Không | ";
-                case VIEW -> "Xem | ";
-                case EDIT -> "Sửa | ";
-                case ALL -> "Xem và sửa | ";
-                default -> "";
-            });
-        }
-        return decentralizationID + " | " + string + decentralizationName;
+        return decentralizationID + " | " +
+            isSale + " | " +
+            isProduct + " | " +
+            isCategory + " | " +
+            isRecipe + " | " +
+            isImport + " | " +
+            isSupplier + " | " +
+            isBill + " | " +
+            isWarehouses + " | " +
+            isAccount + " | " +
+            isStaff + " | " +
+            isCustomer + " | " +
+            isDiscount + " | " +
+            isDecentralization + " | " +
+            decentralizationName;
     }
 }

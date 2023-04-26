@@ -20,15 +20,16 @@ import java.util.Objects;
 
 public class SupplierGUI extends JPanel {
     private SupplierBLL supplierBLL = new SupplierBLL();
+    private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel supplier;
     private RoundPanel roundPanel1;
     private RoundPanel roundPanel2;
     private RoundPanel search;
     private JScrollPane scrollPane;
-    private JPanel pnlSupplierConfiguration;
+    private RoundPanel pnlSupplierConfiguration;
     private JPanel showImg;
-    private JPanel mode;
+    private RoundPanel mode;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JTextField txtSearch;
@@ -38,54 +39,85 @@ public class SupplierGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    public SupplierGUI() {
+    private Button btsupplier;
+    private Button btrecipe;
+
+    private RoundPanel roundPanel[];
+
+    public SupplierGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(51, 51, 51));
         initComponents();
     }
 
     public void initComponents() {
-        List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
         supplier = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
+        roundPanel = new RoundPanel[10];
+        for (int i = 0;  i < roundPanel.length; i++) {
+            roundPanel[i] = new RoundPanel();
+        }
+        List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
         search = new RoundPanel();
-        pnlSupplierConfiguration = new JPanel();
+        pnlSupplierConfiguration = new RoundPanel();
         showImg = new JPanel();
-        mode = new JPanel();
+        mode = new RoundPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
         cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
-        txtSearch = new JTextField(20);
+        txtSearch = new JTextField();
         jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
         btRef = new Button();
+        btsupplier =  new Button();
+        btrecipe = new Button();
 
         supplier.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        supplier.setBackground(new Color(51, 51, 51));
+        supplier.setBackground(new Color(70, 67, 67));
         this.add(supplier, BorderLayout.CENTER);
 
-        roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(51, 51, 51));
-        roundPanel1.setPreferredSize(new Dimension(635, 680));
+        roundPanel1.setBackground(new Color(255, 255, 255));
+        roundPanel1.setPreferredSize(new Dimension(635, 670));
         roundPanel1.setAutoscrolls(true);
-        roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
         supplier.add(roundPanel1);
+
+        roundPanel[0].setLayout(new BorderLayout(10,0));
+        roundPanel[0].setBackground(new Color(255, 255, 255));
+        roundPanel[0].setPreferredSize(new Dimension(620, 40));
+        roundPanel[0].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[0]);
+
+        roundPanel[1].setBackground(new Color(255, 255, 255));
+        roundPanel[1].setPreferredSize(new Dimension(635, 50));
+        roundPanel[1].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[1]);
+
+        roundPanel[2].setLayout(new BorderLayout(0, 10));
+        roundPanel[2].setBackground(new Color(255, 255, 255));
+        roundPanel[2].setPreferredSize(new Dimension(620, 560));
+        roundPanel[2].add(new JScrollPane(dataTable), BorderLayout.CENTER);
+        roundPanel[2].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[2]);
+
 
         roundPanel2.setLayout(new BorderLayout());
         roundPanel2.setBackground(new Color(0xFFFFFF));
-        roundPanel2.setPreferredSize(new Dimension(350, 680));
+        roundPanel2.setPreferredSize(new Dimension(350, 670));
         roundPanel2.setAutoscrolls(true);
         supplier.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
         search.setBackground(new Color(0xFFFFFF));
-        search.setPreferredSize(new Dimension(635, 35));
-        roundPanel1.add(search, BorderLayout.NORTH);
+        search.setPreferredSize(new Dimension(635, 40));
+        roundPanel[1].add(search, BorderLayout.NORTH);
 
-
+        cbbSearchFilter.setPreferredSize(new Dimension(120,30));
         search.add(cbbSearchFilter);
+
+        txtSearch.setPreferredSize(new Dimension(200,30));
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -106,12 +138,56 @@ public class SupplierGUI extends JPanel {
 
         dataTable = new DataTable(supplierBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
-        roundPanel1.add(scrollPane);
+        roundPanel[2].add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        btsupplier.setPreferredSize(new Dimension(120, 40));
+        btsupplier.setBorderPainted(false);
+        btsupplier.setRadius(15);
+        btsupplier.setFocusPainted(false);
+        btsupplier.setFont(new Font("Times New Roman", 0, 14));
+        btsupplier.setColor(new Color(0x70E149));
+        btsupplier.setColorOver(new Color(0x5EFF00));
+        btsupplier.setColorClick(new Color(0x8AD242));
+        btsupplier.setBorderColor(new Color(70, 67, 67));
+        btsupplier.setText("Nhập Hàng");
+        btsupplier.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                try {
+
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+        roundPanel[0].add(btsupplier,BorderLayout.WEST);
+
+        btrecipe.setPreferredSize(new Dimension(120, 40));
+        btrecipe.setBorderPainted(false);
+        btrecipe.setRadius(15);
+        btrecipe.setFocusPainted(false);
+        btrecipe.setFont(new Font("Times New Roman", 0, 14));
+        btrecipe.setColor(new Color(0x70E149));
+        btrecipe.setColorOver(new Color(0x5EFF00));
+        btrecipe.setColorClick(new Color(0x8AD242));
+        btrecipe.setBorderColor(new Color(70, 67, 67));
+        btrecipe.setText("Nhà Cung Cấp");
+        btrecipe.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                try {
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+        roundPanel[0].add(btrecipe,BorderLayout.EAST);
+
+
+        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
+        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
@@ -132,94 +208,103 @@ public class SupplierGUI extends JPanel {
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 250));
+//        showImg.setPreferredSize(new Dimension(635, 100)); // TODO:
+        showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
-        roundPanel2.add(showImg, BorderLayout.CENTER);
+     //   roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 20, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(635, 130));
+            roundPanel2.add(mode, BorderLayout.SOUTH);
 
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addSupplier();
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addSupplier();
+                    }
                 }
-            }
-        });
-        mode.add(btAdd);
+            });
+            mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateSupplier();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateSupplier();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btUpd);
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(false);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteSupplier();
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteSupplier();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btDel);
+        }
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        } else {
+            dataTable.setRowSelectionInterval(0, 0);
+            fillForm();
+        }
     }
-
     public void searchSuppliers() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(supplierBLL.getSupplierList());
@@ -319,19 +404,19 @@ public class SupplierGUI extends JPanel {
                 case 2 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
                 case 3 -> address = jTextFieldsForm[i].getText();
                 case 4 -> email = jTextFieldsForm[i].getText();
-                case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 5 -> price = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("(\\s|VND|VNĐ)", ""));
                 default -> {
                 }
             }
         }
-        return new Supplier(supplierID, name, phone, address, email, price, false);
+        return new Supplier(supplierID, name, phone, address, email, false);
     }
 
     public void loadDataTable(List<Supplier> supplierList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Supplier supplier : supplierList) {
-            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail(), supplier.getPrice()});
+            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail()});
         }
     }
 
@@ -364,20 +449,14 @@ public class SupplierGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[4].getText().matches("^\\w+@\\w+(\\.\\w+)+")) {
+        if (!jTextFieldsForm[4].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
             // Email must follow "username@domain.name"
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"\nand can only contain alphabets, numbers and underscores", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[5].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
-            // Price must be a double >= 0
-            jTextFieldsForm[5].requestFocusInWindow();
-            jTextFieldsForm[5].selectAll();
-            JOptionPane.showMessageDialog(this, "Price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
+
 }

@@ -11,8 +11,7 @@ public class ReceiptDetailsDAL extends Manager {
         super("receipt_details",
             List.of("RECEIPT_ID",
                 "INGREDIENT_ID",
-                "QUANTITY",
-                "SUPPLIER_ID")
+                "QUANTITY")
         );
     }
 
@@ -20,8 +19,7 @@ public class ReceiptDetailsDAL extends Manager {
         return convert(data, row -> new ReceiptDetails(
             row.get(0), // receiptDetailsID
             row.get(1), // ingredientID
-            Double.parseDouble(row.get(2)), // quantity
-            row.get(3) // supplierID
+            Double.parseDouble(row.get(2)) // quantity
         ));
     }
 
@@ -29,8 +27,7 @@ public class ReceiptDetailsDAL extends Manager {
         try {
             return create(receiptDetails.getReceiptID(),
                 receiptDetails.getIngredientID(),
-                receiptDetails.getQuantity(),
-                receiptDetails.getSupplierID()
+                receiptDetails.getQuantity()
             );
         } catch (Exception e) {
             System.out.println("Error occurred in ReceiptDetailsDAL.addReceiptDetails(): " + e.getMessage());

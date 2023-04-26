@@ -15,6 +15,7 @@ public class DecentralizationDAL extends Manager {
                 "IS_CATEGORY",
                 "IS_RECIPE",
                 "IS_IMPORT",
+                "IS_SUPPLIER",
                 "IS_BILL",
                 "IS_WAREHOUSES",
                 "IS_ACCOUNT",
@@ -37,15 +38,16 @@ public class DecentralizationDAL extends Manager {
                 Integer.parseInt(row.get(3)), // isCategory
                 Integer.parseInt(row.get(4)), // isRecipe
                 Integer.parseInt(row.get(5)), // isImport
-                Integer.parseInt(row.get(6)), // isBill
-                Integer.parseInt(row.get(7)), // isWarehouses
-                Integer.parseInt(row.get(8)), // isAccount
-                Integer.parseInt(row.get(9)), // isStaff
-                Integer.parseInt(row.get(10)), // isCustomer
-                Integer.parseInt(row.get(11)), // isDiscount
-                Integer.parseInt(row.get(12)), // isDecentralization
-                row.get(13), // decentralizationName
-                Boolean.parseBoolean(row.get(14)) // deleted
+                Integer.parseInt(row.get(6)), // isSupplier
+                Integer.parseInt(row.get(7)), // isBill
+                Integer.parseInt(row.get(8)), // isWarehouses
+                Integer.parseInt(row.get(9)), // isAccount
+                Integer.parseInt(row.get(10)), // isStaff
+                Integer.parseInt(row.get(11)), // isCustomer
+                Integer.parseInt(row.get(12)), // isDiscount
+                Integer.parseInt(row.get(13)), // isDecentralization
+                row.get(14), // decentralizationName
+                Boolean.parseBoolean(row.get(15)) // deleted
             );
         });
     }
@@ -58,6 +60,7 @@ public class DecentralizationDAL extends Manager {
                 Decentralization.getIsCategory(),
                 Decentralization.getIsRecipe(),
                 Decentralization.getIsImport(),
+                Decentralization.getIsSupplier(),
                 Decentralization.getIsBill(),
                 Decentralization.getIsWarehouses(),
                 Decentralization.getIsAccount(),
@@ -83,6 +86,7 @@ public class DecentralizationDAL extends Manager {
             updateValues.add(decentralization.getIsCategory());
             updateValues.add(decentralization.getIsRecipe());
             updateValues.add(decentralization.getIsImport());
+            updateValues.add(decentralization.getIsSupplier());
             updateValues.add(decentralization.getIsBill());
             updateValues.add(decentralization.getIsWarehouses());
             updateValues.add(decentralization.getIsAccount());

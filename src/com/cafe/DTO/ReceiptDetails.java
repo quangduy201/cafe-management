@@ -4,16 +4,13 @@ public class ReceiptDetails {
     private String receiptID;
     private String ingredientID;
     private double quantity;
-    private String supplierID;
-
     public ReceiptDetails() {
     }
 
-    public ReceiptDetails(String receiptID, String ingredientID, double quantity, String supplierID) {
+    public ReceiptDetails(String receiptID, String ingredientID, double quantity) {
         this.receiptID = receiptID;
         this.ingredientID = ingredientID;
         this.quantity = quantity;
-        this.supplierID = supplierID;
     }
 
     public String getReceiptID() {
@@ -40,19 +37,10 @@ public class ReceiptDetails {
         this.quantity = quantity;
     }
 
-    public String getSupplierID() {
-        return supplierID;
-    }
-
-    public void setSupplierID(String supplierID) {
-        this.supplierID = supplierID;
-    }
-
     @Override
     public String toString() {
         return receiptID + " | " +
             ingredientID + " | " +
-            quantity + " | " +
-            supplierID;
+            quantity;
     }
 }

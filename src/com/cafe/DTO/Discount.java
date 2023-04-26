@@ -73,9 +73,9 @@ public class Discount {
     @Override
     public String toString() {
         return discountID + " | " +
-            status + " | " +
             discountPercent + " | " +
             startDay + " | " +
-            endDay;
+            endDay + " | " +
+            status;
     }
 }

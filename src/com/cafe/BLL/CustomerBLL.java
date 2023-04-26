@@ -14,7 +14,7 @@ public class CustomerBLL extends Manager<Customer> {
     public CustomerBLL() {
         try {
             customerDAL = new CustomerDAL();
-            customerList = searchCustomers("DELETED = 0");
+            customerList = searchCustomers("DELETED = 0", "CUSTOMER_ID != 'CUS000'");
         } catch (Exception ignored) {
 
         }
@@ -99,7 +99,7 @@ public class CustomerBLL extends Manager<Customer> {
     }
 
     public String getAutoID() {
-        return getAutoID("CUS", 3, searchCustomers());
+        return getAutoID("CUS", 3, searchCustomers("CUSTOMER_ID != 'CUS000'"));
     }
 
     @Override

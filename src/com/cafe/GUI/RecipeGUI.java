@@ -24,6 +24,7 @@ import java.util.Objects;
 
 public class RecipeGUI extends JPanel {
     private RecipeBLL recipeBLL = new RecipeBLL();
+    private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel recipe;
     private RoundPanel roundPanel1;
@@ -47,7 +48,8 @@ public class RecipeGUI extends JPanel {
     private Button btUpd;
     private Button btRef;
 
-    public RecipeGUI() {
+    public RecipeGUI(int decentralizationMode) {
+        this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -57,14 +59,9 @@ public class RecipeGUI extends JPanel {
         List<String> columnNames = recipeBLL.getRecipeDAL().getColumnNames();
         ProductBLL productBLL = new ProductBLL();
         IngredientBLL ingredientBLL = new IngredientBLL();
-        List<String> productsID = new ArrayList<>();
-        List<String> ingredientsID = new ArrayList<>();
-        for (Product product : productBLL.getProductList()) {
-            productsID.add(productBLL.getValueByKey(product, "PRODUCT_ID").toString());
-        }
-        for (Ingredient ingredient : ingredientBLL.getIngredientList()) {
-            ingredientsID.add(ingredientBLL.getValueByKey(ingredient, "INGREDIENT_ID").toString());
-        }
+        List<Object> productsID = productBLL.getObjectsProperty("PRODUCT_ID", productBLL.getProductList());
+        List<Object> ingredientsID = ingredientBLL.getObjectsProperty("INGREDIENT_ID", ingredientBLL.getIngredientList());
+
         recipe = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -87,11 +84,11 @@ public class RecipeGUI extends JPanel {
         btRef = new Button();
 
         recipe.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        recipe.setBackground(new Color(51, 51, 51));
+        recipe.setBackground(new Color(70, 67, 67));
         this.add(recipe, BorderLayout.CENTER);
 
         roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(51, 51, 51));
+        roundPanel1.setBackground(new Color(70, 67, 67));
         roundPanel1.setPreferredSize(new Dimension(635, 680));
         roundPanel1.setAutoscrolls(true);
         roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
