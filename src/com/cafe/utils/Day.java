@@ -21,7 +21,7 @@ public class Day {
 
     public Day(Date date) {
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
-        this.date =  localDate.getDayOfMonth();
+        this.date = localDate.getDayOfMonth();
         this.month = localDate.getMonthValue();
         this.year = localDate.getYear();
     }
@@ -52,62 +52,15 @@ public class Day {
     }
 
     public static int calculateDays(Day day1, Day day2) {
+        Day start = day1.compareDates(day2) ? day2 : day1;
+        Day end = day1.compareDates(day2) ? day1 : day2;
         int days = 0;
-        Day temp1, temp2;
-        /*
-         *      temp1 là ngày nhỏ hơn temp2 (ngày nhỏ hơn sẽ gán vào temp1)
-         * nếu day1.year < day2.year thì gán day1 vào temp1 và ngược lại
-         * nếu day1.year = day2.year thì xét tháng:
-         * nếu day1.month < day2.month thì gán day1 vào temp1 và ngược lại
-         * nếu day1.month = day2.month thì xét ngày:
-         * nếu day1.date = day2.date thì gán day1 vào temp1 và ngược lại
-         */
-        if (day1.year < day2.year ||
-            day1.year == day2.year && day1.month < day2.month ||
-            day1.year == day2.year && day1.month == day2.month && day1.date < day2.date) {
-            temp1 = new Day(day1.date, day1.month, day1.year);
-            temp2 = new Day(day2.date, day2.month, day2.year);
-        } else {
-            temp1 = new Day(day2.date, day2.month, day2.year);
-            temp2 = new Day(day1.date, day1.month, day1.year);
-        }
-        while (temp1.year <= temp2.year) {
-            if (temp1.year == temp2.year && temp1.month == temp2.month) {
-                days += temp2.date - temp1.date;
-                break;
-            } else {
-                days += numOfDays(temp1.month, temp2.year) - temp1.date;
-                temp1.month++;
-                temp1.date = 0;
-                if (temp1.month > 12) {
-                    temp1.year++;
-                    temp1.month = 1;
-                }
-            }
+        while (end.compareDates(start)) {
+            days++;
+            start = start.nextDate();
         }
         return days;
     }
-
-    public boolean compareDates(Day day) {
-        if (this.year > day.getYear()) {
-            return true;
-        } else if (this.year < day.getYear()) {
-            return false;
-        } else {
-            if (this.month > day.getMonth()) {
-                return true;
-            } else if (this.month < day.getMonth()) {
-                return false;
-            } else {
-                if (this.date> day.getDate()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-    }
-
 
     public static Day parseDay(String str) throws Exception {
         String[] temp = str.split("-");
@@ -151,21 +104,47 @@ public class Day {
     @Override
     public boolean equals(Object object) {
         Day day = (Day) object;
-        return getDate() == day.getDate() && getMonth() == day.getMonth() && getYear() == day.getYear();
+        return year == day.getYear() && month == day.getMonth() && date == day.getDate();
     }
 
-    public boolean compare(Day day1, Day day2) {
-        return getDate() >= day1.getDate() && getMonth() >= day1.getMonth() && getYear() >= day1.getYear() && getDate() <= day2.getDate() && getMonth() <= day2.getMonth() && getYear() <= day2.getYear();
+    public boolean isBetween(Day day1, Day day2) {
+        return year >= day1.getYear() && month >= day1.getMonth() && date >= day1.getDate()
+            && year <= day2.getYear() && month <= day2.getMonth() && date <= day2.getDate();
+    }
+
+    public boolean compareDates(Day day) {
+        if (this.year != day.getYear()) {
+            return this.year > day.getYear();
+        } else if (this.month != day.getMonth()) {
+            return this.month > day.getMonth();
+        } else {
+            return this.date > day.getDate();
+        }
+    }
+
+    public Day nextDate() {
+        if (this.date == numOfDays(this.month, this.year)) {
+            if (this.month == 12)
+                return new Day(1, 1, this.year + 1);
+            else
+                return new Day(1, this.month + 1, this.year);
+        } else
+            return new Day(this.date + 1, this.month, this.year);
+    }
+
+    public Day previousDate() {
+        if (this.date == 1) {
+            if (this.month == 1)
+                return new Day(31, 12, this.year - 1);
+            else
+                return new Day(numOfDays(this.month - 1, this.year), this.month - 1, this.year);
+        } else
+            return new Day(this.date - 1, this.month, this.year);
     }
 
     @Override
     public String toString() {
-        // dd-MM-yyyy
-        String yearString = String.valueOf(year);
-        int count = 4 - yearString.length();
-        yearString = "0".repeat(count) + yearString;
-        return yearString + "-" +
-            ((month < 10) ? "0" : "") + month + "-" +
-            ((date < 10) ? "0" : "") + date;
+        // yyyy-MM-dd
+        return String.format("%04d-%02d-%02d", year, month, date);
     }
 }
