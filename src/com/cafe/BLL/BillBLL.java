@@ -79,7 +79,9 @@ public class BillBLL extends Manager<Bill> {
             "CUSTOMER_ID", bill.getCustomerID(),
             "STAFF_ID", bill.getStaffID(),
             "DOPURCHASE", bill.getDateOfPurchase(),
-            "TOTAL", bill.getTotal()
+            "TOTAL", bill.getTotal(),
+            "RECEIVED", bill.getReceived(),
+            "EXCESS", bill.getExcess()
         )).isEmpty();
     }
 
@@ -99,6 +101,8 @@ public class BillBLL extends Manager<Bill> {
             case "STAFF_ID" -> bill.getStaffID();
             case "DOPURCHASE" -> bill.getDateOfPurchase();
             case "TOTAL" -> bill.getTotal();
+            case "RECEIVED" -> bill.getReceived();
+            case "EXCESS" -> bill.getExcess();
             default -> null;
         };
     }

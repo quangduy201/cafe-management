@@ -6,11 +6,14 @@ import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Staff;
+import com.cafe.custom.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -22,7 +25,7 @@ public class HomeGUI extends JFrame {
     private Account account;
     private Staff staff;
     private Decentralization decentralization;
-    private int[] mang = new int[14];
+    private int[] mang = new int[15];
     private RoundPanel home;
     private Header north;
     private JPanel center;
@@ -32,14 +35,18 @@ public class HomeGUI extends JFrame {
     private RoundPanel cate_frame;
     private RoundPanel cate;
     private RoundPanel function;
-    private JPanel currentBtn;
+    private ProductPanel currentBtn;
     private Button exit;
     private Button minimize;
     private JLabel lbName;
     private JLabel lbRole;
     private JLabel lbTime;
     private JLabel[] jLabel = new JLabel[15];
-    private RoundPanel[] roundPanel = new RoundPanel[15];
+    private RoundPanel[] rpContent = new RoundPanel[15];
+    private int numberContent;
+    private int addContent;
+    private JLabel[]  labelName = new JLabel[15];
+    private ProductPanel[] roundPanel = new ProductPanel[15];
     private ImageAvatar[] imageAvatar = new ImageAvatar[15];
     private ToggleSwitch themeButton;
 
@@ -71,18 +78,19 @@ public class HomeGUI extends JFrame {
 //            mang[i] = Integer.parseInt(decentralizationString[i]);
 //        }
         mang[1] = decentralization.getIsSale();
-        mang[2] = decentralization.getIsProduct();
-        mang[3] = decentralization.getIsCategory();
-        mang[4] = decentralization.getIsRecipe();
-        mang[5] = decentralization.getIsImport();
-        mang[6] = decentralization.getIsBill();
-        mang[7] = decentralization.getIsWarehouses();
-        mang[8] = decentralization.getIsDecentralization();
-        mang[9] = decentralization.getIsAccount();
-        mang[10] = decentralization.getIsStaff();
-        mang[11] = decentralization.getIsCustomer();
-        mang[12] = decentralization.getIsDiscount();
+        mang[2] = decentralization.getIsImport();
+        mang[3] = decentralization.getIsBill();
+        mang[4] = decentralization.getIsWarehouses();
+        mang[5] = decentralization.getIsProduct();
+        mang[6] = decentralization.getIsCategory();
+        mang[7] = decentralization.getIsRecipe();
+        mang[8] = decentralization.getIsDiscount();
+        mang[9] = decentralization.getIsDecentralization();//
+        mang[10] = decentralization.getIsCustomer();
+        mang[11] = decentralization.getIsStaff();
+        mang[12] = decentralization.getIsAccount();
         mang[13] = decentralization.getIsDecentralization();
+        mang[14] = decentralization.getIsSupplier();
     }
 
     private void initComponents() {
@@ -106,9 +114,14 @@ public class HomeGUI extends JFrame {
         function = new RoundPanel();
 
         for (int i = 0; i < roundPanel.length; i++) {
-            roundPanel[i] = new RoundPanel();
+            roundPanel[i] = new ProductPanel();
             imageAvatar[i] = new ImageAvatar();
             jLabel[i] = new JLabel();
+        }
+
+        for (int i = 0; i < rpContent.length; i++) {
+            rpContent[i] = new RoundPanel();
+            labelName[i] = new JLabel();
         }
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -215,12 +228,12 @@ public class HomeGUI extends JFrame {
         cate_frame.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(cate_frame, BorderLayout.CENTER);
 
-        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+//        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         cate.setPreferredSize(new Dimension(280, 590));
         cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         cate_frame.add(cate);
 
-        for (int i = 1; i < roundPanel.length - 1; i++) {
+        for (int i = 1; i < 5; i++) {
             if (mang[i] != 0) {
                 roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
                 roundPanel[i].setPreferredSize(new Dimension(270, 40));
@@ -237,7 +250,177 @@ public class HomeGUI extends JFrame {
             }
         }
 
-        for (int i = 1; i < imageAvatar.length - 1; i++) {
+
+        rpContent[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        rpContent[0].setPreferredSize(new Dimension(270, 40));
+        rpContent[0].setAutoscrolls(true);
+        rpContent[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cate.add(rpContent[0]);
+
+        rpContent[2].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        rpContent[2].setPreferredSize(new Dimension(270, 40));
+        rpContent[2].setAutoscrolls(true);
+        rpContent[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[2].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (numberContent != -1) {
+                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
+                }
+                if (rpContent[0].getHeight() == 40) {
+                    pressdelay(0, rpContent[0].getHeight(), 27, 5);
+                    numberContent = 0;
+                    addContent = -27;
+                } else {
+                    pressdelay(0, rpContent[0].getHeight(), -27, 5);
+                    numberContent = -1;
+                }
+            }
+        });
+        rpContent[0].add(rpContent[2]);
+
+        labelName[0].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        labelName[0].setText("-----*Quản lý sản phẩm*-----");
+        labelName[0].setHorizontalAlignment(SwingConstants.CENTER);
+        labelName[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[2].add(labelName[0]);
+
+        rpContent[3].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+        rpContent[3].setPreferredSize(new Dimension(270, 135));
+        rpContent[3].setAutoscrolls(true);
+        rpContent[3].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[0].add(rpContent[3]);
+
+        for (int i = 5; i < 8; i++) {
+            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+            roundPanel[i].setPreferredSize(new Dimension(210, 40));
+            roundPanel[i].setAutoscrolls(true);
+            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            roundPanel[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanelMousePressed(index);
+                }
+            });
+            rpContent[3].add(roundPanel[i]);
+        }
+
+
+
+        rpContent[4].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        rpContent[4].setPreferredSize(new Dimension(270, 40));
+        rpContent[4].setAutoscrolls(true);
+        rpContent[4].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cate.add(rpContent[4]);
+
+        rpContent[5].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        rpContent[5].setPreferredSize(new Dimension(270, 40));
+        rpContent[5].setAutoscrolls(true);
+        rpContent[5].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[5].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (numberContent != -1) {
+                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
+                }
+                if (rpContent[4].getHeight() == 40) {
+                    pressdelay(4, rpContent[4].getHeight(), 18, 5);
+                    numberContent = 4;
+                    addContent = -18;
+                } else {
+                    pressdelay(4, rpContent[4].getHeight(), -18, 5);
+                    numberContent = -1;
+                }
+            }
+        });
+        rpContent[4].add(rpContent[5]);
+
+        labelName[1].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        labelName[1].setText("-----*Quản lý số liệu*-----");
+        labelName[1].setHorizontalAlignment(SwingConstants.CENTER);
+        labelName[1].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[5].add(labelName[1]);
+
+        rpContent[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+        rpContent[6].setPreferredSize(new Dimension(270, 90));
+        rpContent[6].setAutoscrolls(true);
+        rpContent[6].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[4].add(rpContent[6]);
+
+        for (int i = 8; i < 10; i++) {
+            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+            roundPanel[i].setPreferredSize(new Dimension(210, 40));
+            roundPanel[i].setAutoscrolls(true);
+            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            roundPanel[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanelMousePressed(index);
+                }
+            });
+            rpContent[6].add(roundPanel[i]);
+        }
+
+
+
+        rpContent[7].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        rpContent[7].setPreferredSize(new Dimension(270, 40));
+        rpContent[7].setAutoscrolls(true);
+        rpContent[7].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cate.add(rpContent[7]);
+
+        rpContent[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        rpContent[8].setPreferredSize(new Dimension(270, 40));
+        rpContent[8].setAutoscrolls(true);
+        rpContent[8].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[8].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (numberContent != -1) {
+                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
+                }
+                if (rpContent[7].getHeight() == 40) {
+                    pressdelay(7, rpContent[7].getHeight(), 45, 5);
+                    numberContent = 7;
+                    addContent = -45;
+                } else {
+                    pressdelay(7, rpContent[7].getHeight(), -45, 5);
+                    numberContent = -1;
+                }
+            }
+        });
+        rpContent[7].add(rpContent[8]);
+
+        labelName[2].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        labelName[2].setText("-----*Quản lý thông tin*-----");
+        labelName[2].setHorizontalAlignment(SwingConstants.CENTER);
+        labelName[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[8].add(labelName[2]);
+
+        rpContent[9].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+        rpContent[9].setPreferredSize(new Dimension(270, 225));
+        rpContent[9].setAutoscrolls(true);
+        rpContent[9].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[7].add(rpContent[9]);
+
+        for (int i = 10; i < 15; i++) {
+            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+            roundPanel[i].setPreferredSize(new Dimension(210, 40));
+            roundPanel[i].setAutoscrolls(true);
+            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            roundPanel[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanelMousePressed(index);
+                }
+            });
+            rpContent[9].add(roundPanel[i]);
+        }
+
+        for (int i = 1; i < roundPanel.length; i++) {
             if (mang[i] != 0) {
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
@@ -252,20 +435,23 @@ public class HomeGUI extends JFrame {
         }
 
         jLabel[1].setText("Bán hàng");
-        jLabel[2].setText("Sản phẩm");
-        jLabel[3].setText("Loại sản phẩm");
-        jLabel[4].setText("Công thức");
-        jLabel[5].setText("Nhập hàng");
-//        TODO: khi nào có nhà cung cấp thì sửa lại chỗ này
-//        jLabel[6].setText("Nhà cung cấp");
-        jLabel[6].setText("Hóa đơn");
-        jLabel[7].setText("Nhà kho");
-        jLabel[8].setText("Thống kê");
-        jLabel[9].setText("Tài khoản");
-        jLabel[10].setText("Nhân viên");
-        jLabel[11].setText("Khách hàng");
-        jLabel[12].setText("Giảm giá");
+        jLabel[2].setText("Nhập hàng");
+        jLabel[3].setText("Hóa đơn");
+        jLabel[4].setText("Nhà kho");
+
+        jLabel[5].setText("Sản phẩm");
+        jLabel[6].setText("Loại sản phẩm");
+        jLabel[7].setText("Công thức");
+
+        jLabel[8].setText("Giảm giá");
+        jLabel[9].setText("Thống kê");
+
+        jLabel[10].setText("Khách hàng");
+        jLabel[11].setText("Nhân viên");
+        jLabel[12].setText("Tài khoản");
         jLabel[13].setText("Phân quyền");
+        jLabel[14].setText("Nhà cung cấp");
+
 
         // home.center.east
         function.setPreferredSize(new Dimension(1005, 680));
@@ -276,7 +462,7 @@ public class HomeGUI extends JFrame {
     }
 
     private void changeTheme() {
-        Color roundPanelBG, imageAvatarFG, labelBG, labelFG, currentBtnBG;
+        Color roundPanelBG, roundPanelColor, roundPanelColorOver, imageAvatarFG, labelBG, labelFG, currentBtnBG;
         if (themeButton.isSelected()) {
             home.setBackground(new Color(240, 240, 240));
             north.setBackground(new Color(35, 166, 97));
@@ -286,7 +472,15 @@ public class HomeGUI extends JFrame {
             info.setBackground(new Color(79, 194, 53));
             cate_frame.setBackground(new Color(79, 194, 53));
             cate.setBackground(new Color(79, 194, 53));
+            rpContent[0].setBackground(new Color(79, 194, 53));
+            rpContent[3].setBackground(new Color(79, 194, 53));
+            rpContent[4].setBackground(new Color(79, 194, 53));
+            rpContent[6].setBackground(new Color(79, 194, 53));
+            rpContent[7].setBackground(new Color(79, 194, 53));
+            rpContent[9].setBackground(new Color(79, 194, 53));
             roundPanelBG = new Color(240, 240, 240);
+            roundPanelColor = new Color(240, 240, 240);
+            roundPanelColorOver = new Color(68, 150, 60);
             imageAvatarFG = new Color(225, 200, 73, 255);
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(25, 25, 25);
@@ -301,6 +495,8 @@ public class HomeGUI extends JFrame {
             cate_frame.setBackground(new Color(70, 67, 67));
             cate.setBackground(new Color(70, 67, 67));
             roundPanelBG = new Color(70, 67, 67);
+            roundPanelColor = new Color(70, 67, 67);
+            roundPanelColorOver = new Color(35, 166, 97);
             imageAvatarFG = new Color(240, 240, 240, 255);
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(240, 240, 240);
@@ -308,6 +504,8 @@ public class HomeGUI extends JFrame {
         }
         for (int i = 1; i < jLabel.length; i++) {
             roundPanel[i].setBackground(roundPanelBG);
+            roundPanel[i].setColor(roundPanelColor);
+            roundPanel[i].setColorOver(roundPanelColorOver);
             imageAvatar[i].setForeground(imageAvatarFG);
             jLabel[i].setBackground(labelBG);
             jLabel[i].setForeground(labelFG);
@@ -319,21 +517,20 @@ public class HomeGUI extends JFrame {
     private void roundPanelMousePressed(int index) {
         Active(roundPanel[index]);
         JPanel panel = switch (index) {
-            case 1 -> new SaleGUI(decentralization.getIsSale());
-            case 2 -> new ProductGUI(decentralization.getIsProduct());
-            case 3 -> new CategoryGUI(decentralization.getIsCategory());
-            case 4 -> new RecipeGUI(decentralization.getIsRecipe());
-//            case 5 -> new ImportGUI(decentralization.getIsImport());
-//            TODO: khi nào có Nhà cung cấp thì đổi lại case 6, uncomment case 5 và tăng các case bên dưới lên 1 đơn vị
-            case 5 -> new SupplierGUI(decentralization.getIsSupplier());
-            case 6 -> new BillGUI(decentralization.getIsBill());
-            case 7 -> new WarehousesGUI(decentralization.getIsWarehouses());
-            case 8 -> new StatisticGUI();
-            case 9 -> new AccountGUI(decentralization.getIsAccount());
-            case 10 -> new StaffGUI(decentralization.getIsStaff());
-            case 11 -> new CustomerGUI(decentralization.getIsCustomer());
-            case 12 -> new DiscountGUI(decentralization.getIsDiscount());
+            case 1 -> new SaleGUI(account.getStaffID());
+            case 2 -> new IngredientGUI(decentralization.getIsSupplier(), account.getStaffID());
+            case 3 -> new BillGUI();
+            case 4 -> new WarehousesGUI(decentralization.getIsWarehouses());
+            case 5 -> new ProductGUI(decentralization.getIsProduct());
+            case 6 -> new CategoryGUI(decentralization.getIsDecentralization());
+            case 7 -> new RecipeGUI(decentralization.getIsRecipe());
+            case 8 -> new DiscountGUI(decentralization.getIsDiscount());
+            case 9 -> new StatisticGUI(decentralization.getIsDecentralization());
+            case 10 -> new CustomerGUI(decentralization.getIsCustomer());
+            case 11 -> new StaffGUI(decentralization.getIsStaff());
+            case 12 -> new AccountGUI(decentralization.getIsAccount());
             case 13 -> new DecentralizationGUI(decentralization.getIsDecentralization());
+            case 14 -> new SupplierGUI(decentralization.getIsSupplier());
             default -> null;
         };
         OpenChildForm(panel);
@@ -341,16 +538,19 @@ public class HomeGUI extends JFrame {
 
     private void Disable() {
         if (currentBtn != null) {
-            if (themeButton.isSelected())
+            currentBtn.setPressover(false);
+            if (themeButton.isSelected()) {
                 currentBtn.setBackground(new Color(240, 240, 240));
-            else
+            } else {
                 currentBtn.setBackground(new Color(70, 67, 67));
+            }
         }
     }
 
-    private void Active(JPanel btn) {
+    private void Active(ProductPanel btn) {
         Disable();
         currentBtn = btn;
+        currentBtn.setPressover(true);
         if (themeButton.isSelected())
             currentBtn.setBackground(new Color(68, 150, 60));
         else
@@ -390,5 +590,22 @@ public class HomeGUI extends JFrame {
             }
         });
         thread.start();
+    }
+
+    public void pressdelay(int index, int height, int add, int number) {
+        Timer timer = new Timer(1, new ActionListener() {
+            private int counter = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter ++;
+                rpContent[index].setPreferredSize(new Dimension(270, height + counter * add));
+                rpContent[index].revalidate();
+                rpContent[index].repaint();
+                if (counter == number) {
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+        });
+        timer.start();
     }
 }

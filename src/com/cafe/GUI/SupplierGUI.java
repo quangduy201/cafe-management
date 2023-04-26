@@ -27,9 +27,9 @@ public class SupplierGUI extends JPanel {
     private RoundPanel roundPanel2;
     private RoundPanel search;
     private JScrollPane scrollPane;
-    private JPanel pnlSupplierConfiguration;
+    private RoundPanel pnlSupplierConfiguration;
     private JPanel showImg;
-    private JPanel mode;
+    private RoundPanel mode;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
     private JTextField txtSearch;
@@ -39,6 +39,11 @@ public class SupplierGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
+    private Button btsupplier;
+    private Button btrecipe;
+
+    private RoundPanel roundPanel[];
+
     public SupplierGUI(int decentralizationMode) {
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
@@ -47,47 +52,72 @@ public class SupplierGUI extends JPanel {
     }
 
     public void initComponents() {
-        List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
         supplier = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
+        roundPanel = new RoundPanel[10];
+        for (int i = 0;  i < roundPanel.length; i++) {
+            roundPanel[i] = new RoundPanel();
+        }
+        List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
         search = new RoundPanel();
-        pnlSupplierConfiguration = new JPanel();
+        pnlSupplierConfiguration = new RoundPanel();
         showImg = new JPanel();
-        mode = new JPanel();
+        mode = new RoundPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
         cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
-        txtSearch = new JTextField(20);
+        txtSearch = new JTextField();
         jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
         btRef = new Button();
+        btsupplier =  new Button();
+        btrecipe = new Button();
 
         supplier.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         supplier.setBackground(new Color(70, 67, 67));
         this.add(supplier, BorderLayout.CENTER);
 
-        roundPanel1.setLayout(new BorderLayout(0, 10));
-        roundPanel1.setBackground(new Color(70, 67, 67));
-        roundPanel1.setPreferredSize(new Dimension(635, 680));
+        roundPanel1.setBackground(new Color(255, 255, 255));
+        roundPanel1.setPreferredSize(new Dimension(635, 670));
         roundPanel1.setAutoscrolls(true);
-        roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
         supplier.add(roundPanel1);
+
+        roundPanel[0].setLayout(new BorderLayout(10,0));
+        roundPanel[0].setBackground(new Color(255, 255, 255));
+        roundPanel[0].setPreferredSize(new Dimension(620, 40));
+        roundPanel[0].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[0]);
+
+        roundPanel[1].setBackground(new Color(255, 255, 255));
+        roundPanel[1].setPreferredSize(new Dimension(635, 50));
+        roundPanel[1].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[1]);
+
+        roundPanel[2].setLayout(new BorderLayout(0, 10));
+        roundPanel[2].setBackground(new Color(255, 255, 255));
+        roundPanel[2].setPreferredSize(new Dimension(620, 560));
+        roundPanel[2].add(new JScrollPane(dataTable), BorderLayout.CENTER);
+        roundPanel[2].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[2]);
+
 
         roundPanel2.setLayout(new BorderLayout());
         roundPanel2.setBackground(new Color(0xFFFFFF));
-        roundPanel2.setPreferredSize(new Dimension(350, 680));
+        roundPanel2.setPreferredSize(new Dimension(350, 670));
         roundPanel2.setAutoscrolls(true);
         supplier.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
         search.setBackground(new Color(0xFFFFFF));
-        search.setPreferredSize(new Dimension(635, 35));
-        roundPanel1.add(search, BorderLayout.NORTH);
+        search.setPreferredSize(new Dimension(635, 40));
+        roundPanel[1].add(search, BorderLayout.NORTH);
 
-
+        cbbSearchFilter.setPreferredSize(new Dimension(120,30));
         search.add(cbbSearchFilter);
+
+        txtSearch.setPreferredSize(new Dimension(200,30));
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -108,7 +138,51 @@ public class SupplierGUI extends JPanel {
 
         dataTable = new DataTable(supplierBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
-        roundPanel1.add(scrollPane);
+        roundPanel[2].add(scrollPane);
+
+        btsupplier.setPreferredSize(new Dimension(120, 40));
+        btsupplier.setBorderPainted(false);
+        btsupplier.setRadius(15);
+        btsupplier.setFocusPainted(false);
+        btsupplier.setFont(new Font("Times New Roman", 0, 14));
+        btsupplier.setColor(new Color(0x70E149));
+        btsupplier.setColorOver(new Color(0x5EFF00));
+        btsupplier.setColorClick(new Color(0x8AD242));
+        btsupplier.setBorderColor(new Color(70, 67, 67));
+        btsupplier.setText("Nhập Hàng");
+        btsupplier.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                try {
+
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+        roundPanel[0].add(btsupplier,BorderLayout.WEST);
+
+        btrecipe.setPreferredSize(new Dimension(120, 40));
+        btrecipe.setBorderPainted(false);
+        btrecipe.setRadius(15);
+        btrecipe.setFocusPainted(false);
+        btrecipe.setFont(new Font("Times New Roman", 0, 14));
+        btrecipe.setColor(new Color(0x70E149));
+        btrecipe.setColorOver(new Color(0x5EFF00));
+        btrecipe.setColorClick(new Color(0x8AD242));
+        btrecipe.setBorderColor(new Color(70, 67, 67));
+        btrecipe.setText("Nhà Cung Cấp");
+        btrecipe.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                try {
+                } catch (Exception ignored) {
+
+                }
+            }
+        });
+        roundPanel[0].add(btrecipe,BorderLayout.EAST);
+
 
         pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
@@ -134,9 +208,9 @@ public class SupplierGUI extends JPanel {
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 250));
+        showImg.setPreferredSize(new Dimension(635, 100));
         showImg.setBackground(new Color(0xFFFFFF));
-        roundPanel2.add(showImg, BorderLayout.CENTER);
+     //   roundPanel2.add(showImg, BorderLayout.CENTER);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
@@ -230,7 +304,6 @@ public class SupplierGUI extends JPanel {
             fillForm();
         }
     }
-
     public void searchSuppliers() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(supplierBLL.getSupplierList());
@@ -392,4 +465,5 @@ public class SupplierGUI extends JPanel {
         }
         return true;
     }
+
 }

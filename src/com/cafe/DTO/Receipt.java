@@ -62,9 +62,9 @@ public class Receipt {
 
     @Override
     public String toString() {
-        return receiptID + "  | " +
-            staffID + "  | " +
-            dor + "  | " +
+        return receiptID + " | " +
+            staffID + " | " +
+            dor + " | " +
             grandTotal;
     }
 }
