@@ -578,6 +578,6 @@ public class IngredientGUI extends JPanel {
             data[i] = rowData[i].toString();
         }
         label[7].setText(data[1]);
-        loadDataTable1(supplierBLL.findSuppliers("SUPPLIER_ID", data[0]));
+        loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", data[0]));
     }
 }
