@@ -12,6 +12,8 @@ import com.cafe.custom.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -40,6 +42,9 @@ public class HomeGUI extends JFrame {
     private JLabel lbRole;
     private JLabel lbTime;
     private JLabel[] jLabel = new JLabel[15];
+    private RoundPanel[] rpContent = new RoundPanel[5];
+    private RoundPanel pressRoundPanel = null;
+    private JLabel[]  labelName = new JLabel[5];
     private ProductPanel[] roundPanel = new ProductPanel[15];
     private ImageAvatar[] imageAvatar = new ImageAvatar[15];
     private ToggleSwitch themeButton;
@@ -110,6 +115,11 @@ public class HomeGUI extends JFrame {
             roundPanel[i] = new ProductPanel();
             imageAvatar[i] = new ImageAvatar();
             jLabel[i] = new JLabel();
+        }
+
+        for (int i = 0; i < rpContent.length; i++) {
+            rpContent[i] = new RoundPanel();
+            labelName[i] = new JLabel();
         }
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -216,12 +226,12 @@ public class HomeGUI extends JFrame {
         cate_frame.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(cate_frame, BorderLayout.CENTER);
 
-        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+//        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
         cate.setPreferredSize(new Dimension(280, 590));
         cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         cate_frame.add(cate);
 
-        for (int i = 1; i < roundPanel.length - 1; i++) {
+        for (int i = 1; i < 5; i++) {
             if (mang[i] != 0) {
                 roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
                 roundPanel[i].setPreferredSize(new Dimension(270, 40));
@@ -236,6 +246,82 @@ public class HomeGUI extends JFrame {
                 });
                 cate.add(roundPanel[i]);
             }
+        }
+
+
+        rpContent[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        rpContent[0].setPreferredSize(new Dimension(270, 40));
+        rpContent[0].setAutoscrolls(true);
+        rpContent[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cate.add(rpContent[0]);
+
+        rpContent[2].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        rpContent[2].setPreferredSize(new Dimension(270, 40));
+        rpContent[2].setAutoscrolls(true);
+        rpContent[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[2].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+//                System.out.println(pressRoundPanel);
+//                if (pressRoundPanel != null) {
+//                    pressRoundPanel
+//                }
+                if (rpContent[0].getHeight() == 40) {
+                    pressdelay(0, rpContent[0].getHeight(), 27, 5);
+                } else {
+                    pressdelay(0, rpContent[0].getHeight(), -27, 5);
+                }
+            }
+        });
+        rpContent[0].add(rpContent[2]);
+
+        labelName[0].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+        labelName[0].setText("-----*Quản lý sản phẩm*-----");
+        labelName[0].setHorizontalAlignment(SwingConstants.CENTER);
+        labelName[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[2].add(labelName[0]);
+
+        rpContent[3].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+        rpContent[3].setPreferredSize(new Dimension(270, 135));
+        rpContent[3].setAutoscrolls(true);
+        rpContent[3].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rpContent[0].add(rpContent[3]);
+
+        for (int i = 5; i < 8; i++) {
+            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+            roundPanel[i].setPreferredSize(new Dimension(210, 40));
+            roundPanel[i].setAutoscrolls(true);
+            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            roundPanel[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanelMousePressed(index);
+                }
+            });
+            rpContent[3].add(roundPanel[i]);
+        }
+
+        rpContent[1].setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        rpContent[1].setPreferredSize(new Dimension(270, 100));
+        jLabel[5].setText("Sản phẩm");
+        rpContent[1].setAutoscrolls(true);
+        rpContent[1].setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cate.add(rpContent[1]);
+
+        for (int i = 8; i < 10; i++) {
+            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
+            roundPanel[i].setPreferredSize(new Dimension(270, 40));
+            roundPanel[i].setAutoscrolls(true);
+            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            int index = i;
+            roundPanel[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanelMousePressed(index);
+                }
+            });
+            rpContent[1].add(roundPanel[i]);
         }
 
         for (int i = 1; i < imageAvatar.length - 1; i++) {
@@ -253,18 +339,23 @@ public class HomeGUI extends JFrame {
         }
 
         jLabel[1].setText("Bán hàng");
-        jLabel[2].setText("Sản phẩm");
-        jLabel[3].setText("Loại sản phẩm");
-        jLabel[4].setText("Công thức");
-        jLabel[5].setText("Nhập hàng");
-        jLabel[6].setText("Hóa đơn");
-        jLabel[7].setText("Nhà kho");
-        jLabel[8].setText("Thống kê");
-        jLabel[9].setText("Tài khoản");
-        jLabel[10].setText("Nhân viên");
-        jLabel[11].setText("Khách hàng");
-        jLabel[12].setText("Giảm giá");
+        jLabel[2].setText("Nhập hàng");
+        jLabel[3].setText("Hóa đơn");
+        jLabel[4].setText("Nhà kho");
+
+        jLabel[5].setText("Sản phẩm");
+        jLabel[6].setText("Loại sản phẩm");
+        jLabel[7].setText("Công thức");
+
+        jLabel[8].setText("Giảm giá");
+        jLabel[9].setText("Thống kê");
+
+        jLabel[10].setText("Khách hàng");
+        jLabel[11].setText("Nhân viên");
+        jLabel[12].setText("Tài khoản");
         jLabel[13].setText("Phân quyền");
+//        jLabel[14].setText("Nhà cung cấp");
+
 
         // home.center.east
         function.setPreferredSize(new Dimension(1005, 680));
@@ -285,6 +376,8 @@ public class HomeGUI extends JFrame {
             info.setBackground(new Color(79, 194, 53));
             cate_frame.setBackground(new Color(79, 194, 53));
             cate.setBackground(new Color(79, 194, 53));
+            rpContent[0].setBackground(new Color(79, 194, 53));
+            rpContent[3].setBackground(new Color(79, 194, 53));
             roundPanelBG = new Color(240, 240, 240);
             roundPanelColor = new Color(240, 240, 240);
             roundPanelColorOver = new Color(68, 150, 60);
@@ -398,5 +491,22 @@ public class HomeGUI extends JFrame {
             }
         });
         thread.start();
+    }
+
+    public void pressdelay(int index, int height, int add, int number) {
+        Timer timer = new Timer(1, new ActionListener() {
+            private int counter = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                counter ++;
+                rpContent[index].setPreferredSize(new Dimension(270, height + counter * add));
+                rpContent[index].revalidate();
+                rpContent[index].repaint();
+                if (counter == number) {
+                    ((Timer) e.getSource()).stop();
+                }
+            }
+        });
+        timer.start();
     }
 }

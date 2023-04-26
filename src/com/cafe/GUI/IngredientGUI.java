@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ReceiptBLL;
+import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.custom.*;
 import com.cafe.custom.Button;
@@ -42,19 +43,24 @@ public class IngredientGUI extends JPanel {
     }
 
     private IngredientBLL ingredientBLL = new IngredientBLL();
+    private SupplierBLL supplierBLL = new SupplierBLL();
     private int decentralizationMode;
     private DataTable dataTable;
+    private DataTable dataTable1;
     private RoundPanel ingredient;
     private RoundPanel roundPanel1;
     private RoundPanel roundPanel2;
     private RoundPanel search;
+    private RoundPanel search1;
     private JScrollPane scrollPane;
     private RoundPanel pnlIngredientConfiguration;
     private JPanel showImg;
     private RoundPanel mode;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
+    private JComboBox<Object> cbbSearchSupplier;
     private JTextField txtSearch;
+    private JTextField txtSearch1;
     private JTextField[] jTextFieldsForm;
     private Button btAdd;
     private Button btUpd;
@@ -81,7 +87,8 @@ public class IngredientGUI extends JPanel {
         initComponents();
     }
 
-    private   ReceiptBLL receiptBLL = new ReceiptBLL();
+    private ReceiptBLL receiptBLL = new ReceiptBLL();
+
     public void initComponents() {
         ingredient = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -92,19 +99,23 @@ public class IngredientGUI extends JPanel {
             roundPanel[i] = new RoundPanel();
             label[i] = new JLabel();
         }
-        java.util.List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
+        List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
+        List<String> columnName1 = supplierBLL.getSupplierDAL().getColumnNames();
         List<String> result = new ArrayList<>();
         List<String> sublist2 = columnNames.subList(0, 2);
         result.addAll(sublist2);
         List<String> sublist1 = columnNames.subList(3, columnNames.size() - 1);
         result.addAll(sublist1);
         search = new RoundPanel();
+        search1 = new RoundPanel();
         pnlIngredientConfiguration = new RoundPanel();
         showImg = new JPanel();
         mode = new RoundPanel();
         jLabelsForm = new JLabel[result.size() - 1];
         cbbSearchFilter = new JComboBox<>(result.subList(0, result.size()).toArray());
+        cbbSearchSupplier = new JComboBox<>(columnName1.subList(0, columnNames.size() - 1).toArray());
         txtSearch = new JTextField();
+        txtSearch1 = new JTextField();
         jTextFieldsForm = new JTextField[result.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
@@ -131,6 +142,18 @@ public class IngredientGUI extends JPanel {
         roundPanel[0].setAutoscrolls(true);
         roundPanel1.add(roundPanel[0]);
 
+        roundPanel[11].setBackground(new Color(255, 255, 255));
+        roundPanel[11].setPreferredSize(new Dimension(635, 50));
+        roundPanel[11].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[11]);
+
+        roundPanel[12].setLayout(new BorderLayout(0, 10));
+        roundPanel[12].setBackground(new Color(255, 255, 255));
+        roundPanel[12].setPreferredSize(new Dimension(620, 100));
+        roundPanel[12].add(new JScrollPane(dataTable1), BorderLayout.CENTER);
+        roundPanel[12].setAutoscrolls(true);
+        roundPanel1.add(roundPanel[12]);
+
         roundPanel[1].setBackground(new Color(255, 255, 255));
         roundPanel[1].setPreferredSize(new Dimension(635, 50));
         roundPanel[1].setAutoscrolls(true);
@@ -138,7 +161,7 @@ public class IngredientGUI extends JPanel {
 
         roundPanel[2].setLayout(new BorderLayout(0, 10));
         roundPanel[2].setBackground(new Color(255, 255, 255));
-        roundPanel[2].setPreferredSize(new Dimension(620, 560));
+        roundPanel[2].setPreferredSize(new Dimension(620, 400));
         roundPanel[2].add(new JScrollPane(dataTable), BorderLayout.CENTER);
         roundPanel[2].setAutoscrolls(true);
         roundPanel1.add(roundPanel[2]);
@@ -160,6 +183,33 @@ public class IngredientGUI extends JPanel {
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
+                searchIngredient();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                searchIngredient();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                searchIngredient();
+            }
+        });
+        search.add(txtSearch);
+
+        search1.setLayout(new FlowLayout());
+        search1.setBackground(new Color(0xFFFFFF));
+        search1.setPreferredSize(new Dimension(635, 40));
+        roundPanel[11].add(search1, BorderLayout.NORTH);
+
+        cbbSearchSupplier.setPreferredSize(new Dimension(120, 30));
+        search1.add(cbbSearchSupplier);
+
+        txtSearch1.setPreferredSize(new Dimension(200, 30));
+        txtSearch1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
                 searchSuppliers();
             }
 
@@ -173,7 +223,7 @@ public class IngredientGUI extends JPanel {
                 searchSuppliers();
             }
         });
-        search.add(txtSearch);
+        search1.add(txtSearch1);
 
         dataTable = new DataTable(null, result.toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
@@ -182,6 +232,10 @@ public class IngredientGUI extends JPanel {
         for (Ingredient ingredient : ingredientBLL.getIngredientList()) {
             model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
         }
+
+        dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnNames.size() - 1).toArray(), e -> fillForm1());
+        scrollPane = new JScrollPane(dataTable1);
+        roundPanel[12].add(scrollPane);
 
         roundPanel[3].setPreferredSize(new Dimension(350, 50));
         roundPanel[3].setAutoscrolls(true);
@@ -195,7 +249,7 @@ public class IngredientGUI extends JPanel {
         roundPanel[5].setAutoscrolls(true);
         roundPanel2.add(roundPanel[5]);
 
-        roundPanel[6].setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+        roundPanel[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         roundPanel[6].setPreferredSize(new Dimension(330, 30));
         roundPanel[6].setAutoscrolls(true);
         roundPanel2.add(roundPanel[6]);
@@ -232,7 +286,7 @@ public class IngredientGUI extends JPanel {
         label[3].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[3].setHorizontalAlignment(JLabel.LEFT);
         label[3].setText(receiptBLL.getAutoID());
-        label[3].setPreferredSize(new Dimension(90, 30));
+        label[3].setPreferredSize(new Dimension(80, 30));
         label[3].setAutoscrolls(true);
         roundPanel[8].add(label[3]);
 
@@ -260,17 +314,30 @@ public class IngredientGUI extends JPanel {
 
         label[6].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[6].setHorizontalAlignment(JLabel.LEFT);
-        label[6].setText("Mã nhân viên:");
+        label[6].setText("Nhà cung cấp:");
         label[6].setPreferredSize(new Dimension(100, 30));
         label[6].setAutoscrolls(true);
         roundPanel[9].add(label[6]);
 
         label[7].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[7].setHorizontalAlignment(JLabel.LEFT);
-        label[7].setText(staffid);
         label[7].setPreferredSize(new Dimension(80, 30));
         label[7].setAutoscrolls(true);
         roundPanel[9].add(label[7]);
+
+        label[10].setFont(new Font("Times New Roman", Font.BOLD, 14));
+        label[10].setHorizontalAlignment(JLabel.LEFT);
+        label[10].setText("Mã nhân viên:");
+        label[10].setPreferredSize(new Dimension(90, 30));
+        label[10].setAutoscrolls(true);
+        roundPanel[9].add(label[10]);
+
+        label[11].setFont(new Font("Times New Roman", Font.BOLD, 14));
+        label[11].setHorizontalAlignment(JLabel.LEFT);
+        label[11].setText(staffid);
+        label[11].setPreferredSize(new Dimension(40, 30));
+        label[11].setAutoscrolls(true);
+        roundPanel[9].add(label[11]);
 
         label[8].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[8].setHorizontalAlignment(JLabel.LEFT);
@@ -357,7 +424,7 @@ public class IngredientGUI extends JPanel {
                 }
             }
         });
-        roundPanel[7].add(btImport,BorderLayout.WEST);
+        roundPanel[7].add(btImport, BorderLayout.WEST);
 
         btCancel.setPreferredSize(new Dimension(135, 40));
         btCancel.setBorderPainted(false);
@@ -375,12 +442,12 @@ public class IngredientGUI extends JPanel {
                 pressCacel();
             }
         });
-        roundPanel[7].add(btCancel,BorderLayout.EAST);
+        roundPanel[7].add(btCancel, BorderLayout.EAST);
 
 
         ingredientscrollPane.setPreferredSize(new Dimension(340, 420));
         ingredientscrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        roundPanel[10].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        roundPanel[10].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         roundPanel[10].setBackground(new Color(240, 240, 240));
         roundPanel[10].setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), 420));
@@ -388,11 +455,19 @@ public class IngredientGUI extends JPanel {
 
     }
 
-    public void searchSuppliers() {
+    public void searchIngredient() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
             loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+        }
+    }
+
+    public void searchSuppliers() {
+        if (txtSearch1.getText().isEmpty()) {
+            loadDataTable1(supplierBLL.getSupplierList());
+        } else {
+            loadDataTable1(supplierBLL.findSuppliers(Objects.requireNonNull(cbbSearchSupplier.getSelectedItem()).toString(), txtSearch1.getText()));
         }
     }
 
@@ -401,6 +476,14 @@ public class IngredientGUI extends JPanel {
         model.setRowCount(0);
         for (Ingredient ingredient : ingredientList) {
             model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
+        }
+    }
+
+    public void loadDataTable1(List<Supplier> supplierList) {
+        DefaultTableModel model = (DefaultTableModel) dataTable1.getModel();
+        model.setRowCount(0);
+        for (Supplier supplier : supplierList) {
+            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail(), supplier.getPrice()});
         }
     }
 
@@ -421,12 +504,12 @@ public class IngredientGUI extends JPanel {
 
     public void addIngredient(ArrayList<Ingredient> listIngredientArray, ArrayList<Integer> listQuantityChoice) {
         this.receiptDetails = listIngredientArray;
-        if(this.receiptDetails.size() > 5) {
-            int tall =  80 * this.receiptDetails.size();
-            roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(),tall));
+        if (this.receiptDetails.size() > 5) {
+            int tall = 80 * this.receiptDetails.size();
+            roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
         double totalPrice = 0;
-        for(int e = 0; e < listIngredientArray.size();e++){
+        for (int e = 0; e < listIngredientArray.size(); e++) {
             int vt = e;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
             billDetailPanel.setIngredient(receiptDetails.get(e), listQuantityChoice.get(e));
@@ -440,17 +523,17 @@ public class IngredientGUI extends JPanel {
 
             int index = listQuantityChoice.get(e);
 
-            billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter(){
+            billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new FrameIngredient( IngredientGUI.this, a, index).setVisible(true);
+                    new FrameIngredient(IngredientGUI.this, a, index).setVisible(true);
                 }
             });
 
-            billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter(){
+            billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if(JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION){
+                    if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
                         listIngredientArray.remove(vt);
                         listQuantityChoice.remove(vt);
                         roundPanel[10].removeAll();
@@ -460,14 +543,16 @@ public class IngredientGUI extends JPanel {
                     }
                 }
             });
-            totalPrice += ingredient.getUnitPrice()*listQuantityChoice.get(e);
+            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(e);
             roundPanel[10].add(billDetailPanel);
             roundPanel[10].repaint();
             roundPanel[10].revalidate();
         }
-        label[9].setText(totalPrice+ "đ");
+        label[9].setText(totalPrice + "đ");
     }
+
     private FrameIngredient frameIngredient;
+
     public void fillForm() {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
@@ -483,5 +568,16 @@ public class IngredientGUI extends JPanel {
             frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
             frameIngredient.setVisible(true);
         }
+    }
+
+    public void fillForm1() {
+        DefaultTableModel model = (DefaultTableModel) dataTable1.getModel();
+        Object[] rowData = model.getDataVector().elementAt(dataTable1.getSelectedRow()).toArray();
+        String[] data = new String[rowData.length];
+        for (int i = 0; i < rowData.length; i++) {
+            data[i] = rowData[i].toString();
+        }
+        label[7].setText(data[1]);
+        loadDataTable1(supplierBLL.findSuppliers("SUPPLIER_ID", data[0]));
     }
 }
