@@ -2,21 +2,18 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.DiscountBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
-import com.cafe.custom.Button;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,42 +21,40 @@ import java.util.List;
 import java.util.Vector;
 
 public class DiscountGUI extends JPanel {
+    private DiscountBLL discountBLL = new DiscountBLL();
+    private ProductBLL productBLL = new ProductBLL();
     private int decentralizationMode;
-
-    private RoundPanel roundPanel[];
-    private JLabel label[];
-    private JTextField jTextFields[];
-    private DataTable dataTable[];
     private JPanel discount;
-
-    private com.toedter.calendar.JDateChooser jDateChooser1;
-    private com.toedter.calendar.JDateChooser jDateChooser2;
-
+    private RoundPanel[] roundPanel;
+    private JLabel[] label;
+    private JTextField[] jTextFields;
+    private DataTable[] dataTable;
+    private JDateChooser jDateChooser1;
+    private JDateChooser jDateChooser2;
     private JTextField DateTextField1;
     private JTextField DateTextField2;
     private JComboBox<String> jComboBox;
-
     private RoundPanel mode;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
     private Button btRef;
-
     private JTextField search1;
     private JTextField search2;
     private Button btSearch1;
     private Button btSearch2;
-
     private JComboBox<String> jComboBox1;
     private JComboBox<String> jComboBox2;
-
     private JLabel labelimg;
+    private JScrollPane scrollPane1;
+    private JScrollPane scrollPane2;
     public DiscountGUI(int decentralizationMode) {
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
+
     public void initComponents() {
         jComboBox = new JComboBox<>();
         roundPanel = new RoundPanel[15];
@@ -68,16 +63,16 @@ public class DiscountGUI extends JPanel {
         dataTable = new DataTable[2];
         discount = new JPanel();
         labelimg = new JLabel();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
-        jDateChooser2 = new com.toedter.calendar.JDateChooser();
-        DateTextField1 = ((JTextField)jDateChooser1.getDateEditor().getUiComponent());
-        DateTextField2 = ((JTextField)jDateChooser2.getDateEditor().getUiComponent());
+        jDateChooser1 = new JDateChooser();
+        jDateChooser2 = new JDateChooser();
+        DateTextField1 = ((JTextField) jDateChooser1.getDateEditor().getUiComponent());
+        DateTextField2 = ((JTextField) jDateChooser2.getDateEditor().getUiComponent());
         search1 = new JTextField();
         search2 = new JTextField();
         btSearch1 = new Button();
         btSearch2 = new Button();
-        jComboBox1 = new JComboBox<String>();
-        jComboBox2 = new JComboBox<String>();
+        jComboBox1 = new JComboBox<>();
+        jComboBox2 = new JComboBox<>();
 
         mode = new RoundPanel();
         btAdd = new Button();
@@ -95,19 +90,19 @@ public class DiscountGUI extends JPanel {
         for (int i = 0; i < label.length; i++) {
             label[i] = new JLabel();
             jTextFields[i] = new JTextField();
-         }
+        }
 
-        discount.setLayout(new BorderLayout( 10, 10));
+        discount.setLayout(new BorderLayout(10, 10));
         discount.setBackground(new Color(70, 67, 67));
         this.add(discount, BorderLayout.CENTER);
 
-        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[0].setBackground(new Color(255, 255, 255));
         roundPanel[0].setPreferredSize(new Dimension(380, 670));
         roundPanel[0].setAutoscrolls(true);
         discount.add(roundPanel[0], BorderLayout.WEST);
 
-        roundPanel[1].setLayout(new BorderLayout(0,10));
+        roundPanel[1].setLayout(new BorderLayout(0, 10));
         roundPanel[1].setBackground(new Color(70, 67, 67));
         roundPanel[1].setPreferredSize(new Dimension(600, 670));
         roundPanel[1].setAutoscrolls(true);
@@ -116,51 +111,51 @@ public class DiscountGUI extends JPanel {
         roundPanel[2].setBackground(new Color(255, 255, 255));
         roundPanel[2].setPreferredSize(new Dimension(600, 310));
         roundPanel[2].setAutoscrolls(true);
-        roundPanel[1].add(roundPanel[2],BorderLayout.NORTH);
+        roundPanel[1].add(roundPanel[2], BorderLayout.NORTH);
 
         roundPanel[3].setBackground(new Color(255, 255, 255));
         roundPanel[3].setPreferredSize(new Dimension(600, 350));
         roundPanel[3].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[3], BorderLayout.CENTER);
 
-        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER,0,20));
+        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
         roundPanel[4].setBackground(new Color(255, 255, 255));
         roundPanel[4].setPreferredSize(new Dimension(380, 200));
         roundPanel[4].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[4]);
 
-        roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER,0,15));
+        roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
         roundPanel[5].setBackground(new Color(255, 255, 255));
         roundPanel[5].setPreferredSize(new Dimension(380, 340));
         roundPanel[5].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[5]);
 
-        roundPanel[6].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        roundPanel[6].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[6].setBackground(new Color(255, 255, 255));
         roundPanel[6].setPreferredSize(new Dimension(380, 130));
         roundPanel[6].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[6]);
 
-        roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         roundPanel[7].setBackground(new Color(255, 255, 255));
         roundPanel[7].setPreferredSize(new Dimension(600, 40));
         roundPanel[7].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[7]);
 
-        roundPanel[8].setLayout(new BorderLayout(0,0));
+        roundPanel[8].setLayout(new BorderLayout(0, 0));
 //        roundPanel[8].setBackground(new Color(182, 24, 24));
         roundPanel[8].setPreferredSize(new Dimension(590, 255));
         roundPanel[8].setAutoscrolls(true);
         roundPanel[8].add(new JScrollPane(dataTable[0]), BorderLayout.CENTER);
         roundPanel[2].add(roundPanel[8]);
 
-        roundPanel[9].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
-       // roundPanel[9].setBackground(new Color(182, 24, 24));
+        roundPanel[9].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        // roundPanel[9].setBackground(new Color(182, 24, 24));
         roundPanel[9].setPreferredSize(new Dimension(600, 40));
         roundPanel[9].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[9]);
 
-        roundPanel[10].setLayout(new BorderLayout(0,0));
+        roundPanel[10].setLayout(new BorderLayout(0, 0));
 //        roundPanel[10].setBackground(new Color(182, 24, 24));
         roundPanel[10].setPreferredSize(new Dimension(590, 295));
         roundPanel[10].add(new JScrollPane(dataTable[1]), BorderLayout.CENTER);
@@ -200,7 +195,6 @@ public class DiscountGUI extends JPanel {
         jTextFields[0].setAutoscrolls(true);
         roundPanel[5].add(jTextFields[0]);
 
-
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 15));
         label[1].setHorizontalAlignment(JLabel.LEFT);
         label[1].setPreferredSize(new Dimension(130, 40));
@@ -221,25 +215,17 @@ public class DiscountGUI extends JPanel {
         roundPanel[5].add(label[2]);
 
         DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser1.setPreferredSize(new Dimension(200,30));
-        jDateChooser1.addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        DateTextField1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String dateString = DateTextField1.getText();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                format.setLenient(false);
-                try {
-                    Date date = format.parse(dateString);
-                    jDateChooser1.setDate(date);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        jDateChooser1.setPreferredSize(new Dimension(200, 30));
+        jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
+        DateTextField1.addActionListener(e -> {
+            String dateString = DateTextField1.getText();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(dateString);
+                jDateChooser1.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[5].add(jDateChooser1);
@@ -251,25 +237,17 @@ public class DiscountGUI extends JPanel {
         roundPanel[5].add(label[3]);
 
         DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser2.setPreferredSize(new Dimension(200,30));
-        jDateChooser2.addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        DateTextField2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String dateString = DateTextField2.getText();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                format.setLenient(false);
-                try {
-                    Date date = format.parse(dateString);
-                    jDateChooser2.setDate(date);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        jDateChooser2.setPreferredSize(new Dimension(200, 30));
+        jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
+        DateTextField2.addActionListener(e -> {
+            String dateString = DateTextField2.getText();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(dateString);
+                jDateChooser2.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[5].add(jDateChooser2);
@@ -382,7 +360,7 @@ public class DiscountGUI extends JPanel {
         mode.add(btRef);
 
 
-        roundPanel[11].setLayout(new FlowLayout(FlowLayout.LEFT,20,0));
+        roundPanel[11].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
         roundPanel[11].setPreferredSize(new Dimension(440, 35));
         roundPanel[11].setAutoscrolls(true);
         roundPanel[7].add(roundPanel[11]);
@@ -431,7 +409,7 @@ public class DiscountGUI extends JPanel {
         jComboBox1.addActionListener(evt -> pressComboBox1());
         roundPanel[7].add(jComboBox1);
 
-        roundPanel[12].setLayout(new FlowLayout(FlowLayout.LEFT,20,0));
+        roundPanel[12].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
         roundPanel[12].setPreferredSize(new Dimension(440, 35));
         roundPanel[12].setAutoscrolls(true);
         roundPanel[9].add(roundPanel[12]);
@@ -477,8 +455,6 @@ public class DiscountGUI extends JPanel {
         jComboBox2.addActionListener(evt -> pressComboBox2());
         roundPanel[9].add(jComboBox2);
 
-        discountBLL = new DiscountBLL();
-        productBLL = new ProductBLL();
         scrollPane1 = new JScrollPane();
         scrollPane2 = new JScrollPane();
 
@@ -491,14 +467,7 @@ public class DiscountGUI extends JPanel {
         dataTable[1] = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), e -> fillForm2());
         scrollPane2 = new JScrollPane(dataTable[1]);
         roundPanel[10].add(scrollPane2);
-
     }
-
-    private DiscountBLL discountBLL;
-    private ProductBLL productBLL;
-    private JScrollPane scrollPane1;
-
-    private JScrollPane scrollPane2;
 
     public void fillForm1() {
         DefaultTableModel model = (DefaultTableModel) dataTable[0].getModel();

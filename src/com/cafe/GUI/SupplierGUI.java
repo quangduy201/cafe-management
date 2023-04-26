@@ -456,13 +456,6 @@ public class SupplierGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[5].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
-            // Price must be a double >= 0
-            jTextFieldsForm[5].requestFocusInWindow();
-            jTextFieldsForm[5].selectAll();
-            JOptionPane.showMessageDialog(this, "Price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
         return true;
     }
 
