@@ -86,7 +86,7 @@ public class DiscountBLL extends Manager<Discount> {
     @Override
     public Object getValueByKey(Discount discount, String key) {
         return switch (key) {
-            case "CATEGORY_ID" -> discount.getDiscountID();
+            case "DISCOUNT_ID" -> discount.getDiscountID();
             case "DISCOUNT_PERCENT" -> discount.getDiscountPercent();
             case "START_DATE" -> discount.getStartDay();
             case "END_DATE" -> discount.getEndDay();
