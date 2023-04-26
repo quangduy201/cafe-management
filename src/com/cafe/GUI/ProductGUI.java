@@ -149,8 +149,8 @@ public class ProductGUI extends JPanel {
                 case "PRODUCT_ID" -> {
                     jTextFieldsForm[index] = new JTextField(productBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
-                    jTextFieldsForm[i].setBorder(null);
-                    jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
+                    jTextFieldsForm[index].setBorder(null);
+                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
                     pnlProductConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }

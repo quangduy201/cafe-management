@@ -14,7 +14,6 @@ public class SupplierDAL extends Manager {
                 "PHONE",
                 "ADDRESS",
                 "EMAIL",
-                "PRICE",
                 "DELETED")
         ));
     }
@@ -28,8 +27,7 @@ public class SupplierDAL extends Manager {
                 row.get(2), // phone
                 row.get(3), // address
                 row.get(4), // email
-                Double.parseDouble(row.get(5)), // price
-                Boolean.parseBoolean(row.get(6)) // deleted
+                Boolean.parseBoolean(row.get(5)) // deleted
             );
         });
     }
@@ -41,7 +39,6 @@ public class SupplierDAL extends Manager {
                 supplier.getPhone(),
                 supplier.getAddress(),
                 supplier.getEmail(),
-                supplier.getPrice(),
                 false
             ); // supplier khi tạo mặc định deleted = 0
         } catch (Exception e) {
@@ -58,7 +55,6 @@ public class SupplierDAL extends Manager {
             updateValues.add(supplier.getPhone());
             updateValues.add(supplier.getAddress());
             updateValues.add(supplier.getEmail());
-            updateValues.add(supplier.getPrice());
             updateValues.add(supplier.isDeleted());
             return update(updateValues, "SUPPLIER_ID = '" + supplier.getSupplierID() + "'");
         } catch (Exception e) {

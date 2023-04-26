@@ -5,7 +5,6 @@ public class Ingredient {
     private String name;
     private double quantity;
     private String unit;
-
     private double unitPrice;
     private String supplierID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean

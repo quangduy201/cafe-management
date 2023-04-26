@@ -7,16 +7,18 @@ public class Receipt {
     private String staffID;
     private Day dor;
     private double grandTotal;
+    private String supplierID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Receipt() {
     }
 
-    public Receipt(String receiptID, String staffID, Day dor, double grandTotal, boolean deleted) {
+    public Receipt(String receiptID, String staffID, Day dor, double grandTotal, String supplierID, boolean deleted) {
         this.receiptID = receiptID;
         this.staffID = staffID;
         this.dor = dor;
         this.grandTotal = grandTotal;
+        this.supplierID = supplierID;
         this.deleted = deleted;
     }
 
@@ -52,6 +54,14 @@ public class Receipt {
         this.grandTotal = grandTotal;
     }
 
+    public String getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
@@ -62,9 +72,10 @@ public class Receipt {
 
     @Override
     public String toString() {
-        return receiptID + " | " +
-            staffID + " | " +
-            dor + " | " +
-            grandTotal;
+        return receiptID + "  | " +
+            staffID + "  | " +
+            dor + "  | " +
+            grandTotal + "  | " +
+            supplierID;
     }
 }

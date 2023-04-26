@@ -6,19 +6,17 @@ public class Supplier {
     private String phone;
     private String address;
     private String email;
-    private double price;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Supplier() {
     }
 
-    public Supplier(String supplierID, String name, String phone, String address, String email, double price, boolean deleted) {
+    public Supplier(String supplierID, String name, String phone, String address, String email, boolean deleted) {
         this.supplierID = supplierID;
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.email = email;
-        this.price = price;
         this.deleted = deleted;
     }
 
@@ -62,14 +60,6 @@ public class Supplier {
         this.email = email;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public boolean isDeleted() {
         return deleted;
     }
@@ -84,7 +74,6 @@ public class Supplier {
             name + " | " +
             phone + " | " +
             address + " | " +
-            email + " | " +
-            price;
+            email;
     }
 }
