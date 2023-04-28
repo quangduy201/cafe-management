@@ -7,13 +7,13 @@ public class Discount {
     private double discountPercent;
     private Day startDay;
     private Day endDay;
-    private String status;
+    private int status;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Discount() {
     }
 
-    public Discount(String discountID, double discountPercent, Day startDay, Day endDay, String status, boolean deleted) {
+    public Discount(String discountID, double discountPercent, Day startDay, Day endDay, int status, boolean deleted) {
         this.discountID = discountID;
         this.discountPercent = discountPercent;
         this.startDay = startDay;
@@ -54,11 +54,11 @@ public class Discount {
         this.endDay = endDay;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
@@ -72,10 +72,11 @@ public class Discount {
 
     @Override
     public String toString() {
+        String str = status == 0 ? "Đang áp dụng" : "Ngừng áp dụng";
         return discountID + " | " +
             discountPercent + " | " +
             startDay + " | " +
             endDay + " | " +
-            status;
+            str;
     }
 }

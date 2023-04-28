@@ -27,7 +27,7 @@ public class DiscountDAL extends Manager {
                     Double.parseDouble(row.get(1)), // discountPercent
                     Day.parseDay(row.get(2)), // startDay
                     Day.parseDay(row.get(3)), // endDay
-                    row.get(4), // status
+                    Integer.parseInt(row.get(4)), // status
                     Boolean.parseBoolean(row.get(5)) // deleted
                 );
             } catch (Exception e) {

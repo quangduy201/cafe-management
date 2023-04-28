@@ -2,7 +2,9 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDetailsDAL;
 import com.cafe.DTO.DiscountDetails;
+import com.cafe.DTO.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,13 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
         return discountDetailsDAL.searchDiscountDetails(conditions);
     }
 
+    public List<DiscountDetails> findDiscountDetails(String key, String value) {
+        List<DiscountDetails> list = new ArrayList<>();
+        for (DiscountDetails discountDetail : discountDetailsList)
+            if (getValueByKey(discountDetail, key).toString().toLowerCase().contains(value.toLowerCase()))
+                list.add(discountDetail);
+        return list;
+    }
     public List<DiscountDetails> findDiscountDetailsBy(Map<String, Object> conditions) {
         List<DiscountDetails> discountDetails = discountDetailsList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
