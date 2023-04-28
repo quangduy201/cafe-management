@@ -2,10 +2,12 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ReceiptBLL;
+import com.cafe.BLL.ReceiptDetailsBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.custom.*;
 import com.cafe.custom.Button;
+import com.cafe.utils.Day;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -81,6 +83,7 @@ public class IngredientGUI extends JPanel {
     }
 
     private ReceiptBLL receiptBLL = new ReceiptBLL();
+    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
 
     public void initComponents() {
         ingredient = new RoundPanel();
@@ -425,10 +428,42 @@ public class IngredientGUI extends JPanel {
     }
 
     public void pressImport() {
+        Receipt newReceipt = null;
+        try {
+            newReceipt = getForm1();
+        } catch (Exception ignored) {
+
+        }
+        assert newReceipt != null;
+
+        if (receiptBLL.addReceipt(newReceipt))
+            JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
+            for (int i = 0; i<receiptDetails.size(); i++) {
+                ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+                receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
+            }
+        }
+        supplierID = null;
+        label[7].setText(null);
+
+        pressCacel();
+
+        loadDataTable(new ArrayList<>());
+        loadDataTable1(supplierBLL.getSupplierList());
     }
 
     public void pressCacel() {
-
+        label[3].setText(receiptBLL.getAutoID());
+        receiptDetails = new ArrayList<>();
+        listQuantityChoice = new ArrayList<>();
+        roundPanel[10].removeAll();
+        roundPanel[10].repaint();
+        roundPanel[10].revalidate();
+        label[9].setText("0đ");
     }
 
     public RoundPanel getRoundPanel() {
@@ -515,6 +550,8 @@ public class IngredientGUI extends JPanel {
         ingredientBLL.setIngredientList(ingredientBLL.searchIngredients("DELETED = 0"));
         loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", data[0]));
         supplierID = data[0];
+
+        pressCacel();
     }
     private void unitSearch() {
         ingredientBLL.setIngredientList(ingredientBLL.findIngredients("SUPPLIER_ID", supplierID));
@@ -536,5 +573,14 @@ public class IngredientGUI extends JPanel {
                 searchIngredient();
             }
         }
+    }
+
+    public Receipt getForm1() throws Exception {
+        String receiptID = label[3].getText();
+        String staffID = label[11].getText();
+        Day dor = Day.parseDay(label[5].getText());
+        double grandTotal = 0;
+        String supplierID = label[7].getText();
+        return new Receipt(receiptID, staffID, dor, grandTotal, supplierID, false);
     }
 }

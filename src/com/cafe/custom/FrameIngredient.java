@@ -200,7 +200,6 @@ public class FrameIngredient extends JFrame{
         roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         roundPanel[5].add(roundPanel1[9]);
 
-        System.out.println(data[4]);
         supplier = new SupplierBLL()
             .searchSuppliers("SUPPLIER_ID = '" + data[4] + "'")
             .get(0);
@@ -316,17 +315,14 @@ public class FrameIngredient extends JFrame{
         int index = Integer.parseInt(label1[11].getText());
 
         if(checkOrderExits(data)!=null){
-            System.out.println("updating");
             //Cập nhật quantity
             int location = ingredientGUI.getReceiptDetails().indexOf(checkOrderExits(data));
             ingredientGUI.getListQuantityChoice().set(location, index);
         }else{
-            System.out.println("add new");
             Ingredient ingredient = new Ingredient(data[0],data[1],0,data[2],Double.parseDouble(data[3]),data[4],false);
             ingredientGUI.getReceiptDetails().add(ingredient);
             ingredientGUI.getListQuantityChoice().add(index);
         }
-
         ingredientGUI.getRoundPanel().removeAll();
         ingredientGUI.addIngredient(ingredientGUI.getReceiptDetails(), ingredientGUI.getListQuantityChoice());
         this.dispose();
