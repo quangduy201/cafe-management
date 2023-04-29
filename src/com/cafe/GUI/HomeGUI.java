@@ -8,8 +8,8 @@ import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Staff;
 import com.cafe.custom.*;
 import com.cafe.custom.Button;
-import com.cafe.custom.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,12 +44,19 @@ public class HomeGUI extends JFrame {
     private JLabel lbTime;
     private JLabel[] jLabel = new JLabel[15];
     private RoundPanel[] rpContent = new RoundPanel[15];
-    private int numberContent;
+    private int numberContent = -1;
     private int addContent;
     private JLabel[]  labelName = new JLabel[15];
     private ProductPanel[] roundPanel = new ProductPanel[15];
     private ImageAvatar[] imageAvatar = new ImageAvatar[15];
+    private ImageAvatar[] imageIcon = new ImageAvatar[3];
+    private int  numberjpane;
     private ToggleSwitch themeButton;
+
+    private String string = "img/dow.png";
+
+    private int[] listCount = new int[3];
+    private int totalHeight;
 
     public HomeGUI(Account account) {
         this.account = account;
@@ -113,6 +121,7 @@ public class HomeGUI extends JFrame {
         cate = new RoundPanel();
         function = new RoundPanel();
 
+
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new ProductPanel();
             imageAvatar[i] = new ImageAvatar();
@@ -122,6 +131,10 @@ public class HomeGUI extends JFrame {
         for (int i = 0; i < rpContent.length; i++) {
             rpContent[i] = new RoundPanel();
             labelName[i] = new JLabel();
+        }
+
+        for (int i = 0; i < imageIcon.length; i++) {
+            imageIcon[i] = new ImageAvatar();
         }
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -223,20 +236,20 @@ public class HomeGUI extends JFrame {
         lbRole.setText("Vai Trò: " + decentralization.getDecentralizationName());
         info.add(lbRole);
 
-        cate_frame.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
+        cate_frame.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         cate_frame.setPreferredSize(new Dimension(300, 600));
         cate_frame.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(cate_frame, BorderLayout.CENTER);
 
-//        cate.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        cate.setPreferredSize(new Dimension(280, 590));
+        cate.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        cate.setPreferredSize(new Dimension(290, 600));
         cate.setAlignmentX(Component.CENTER_ALIGNMENT);
         cate_frame.add(cate);
 
         for (int i = 1; i < 5; i++) {
             if (mang[i] != 0) {
-                roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 30, 5));
-                roundPanel[i].setPreferredSize(new Dimension(270, 40));
+                roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 35, 7));
+                roundPanel[i].setPreferredSize(new Dimension(280, 45));
                 roundPanel[i].setAutoscrolls(true);
                 roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
                 int index = i;
@@ -250,174 +263,230 @@ public class HomeGUI extends JFrame {
             }
         }
 
-
-        rpContent[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        rpContent[0].setPreferredSize(new Dimension(270, 40));
-        rpContent[0].setAutoscrolls(true);
-        rpContent[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cate.add(rpContent[0]);
-
-        rpContent[2].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        rpContent[2].setPreferredSize(new Dimension(270, 40));
-        rpContent[2].setAutoscrolls(true);
-        rpContent[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[2].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (numberContent != -1) {
-                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
-                }
-                if (rpContent[0].getHeight() == 40) {
-                    pressdelay(0, rpContent[0].getHeight(), 27, 5);
-                    numberContent = 0;
-                    addContent = -27;
-                } else {
-                    pressdelay(0, rpContent[0].getHeight(), -27, 5);
-                    numberContent = -1;
+        for(int i = 5; i <= 14; i++) {
+            if(mang[i] != 0) {
+                switch (i) {
+                    case 5, 6, 7 -> listCount[0]++;
+                    case 8, 9 -> listCount[1]++;
+                    case 10, 11, 12, 13, 14, 15 -> listCount[2]++;
+                    default -> {
+                    }
                 }
             }
-        });
-        rpContent[0].add(rpContent[2]);
-
-        labelName[0].setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        labelName[0].setText("-----*Quản lý sản phẩm*-----");
-        labelName[0].setHorizontalAlignment(SwingConstants.CENTER);
-        labelName[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[2].add(labelName[0]);
-
-        rpContent[3].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
-        rpContent[3].setPreferredSize(new Dimension(270, 135));
-        rpContent[3].setAutoscrolls(true);
-        rpContent[3].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[0].add(rpContent[3]);
-
-        for (int i = 5; i < 8; i++) {
-            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
-            roundPanel[i].setPreferredSize(new Dimension(210, 40));
-            roundPanel[i].setAutoscrolls(true);
-            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-            int index = i;
-            roundPanel[i].addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    roundPanelMousePressed(index);
-                }
-            });
-            rpContent[3].add(roundPanel[i]);
         }
 
 
+        if(listCount[0] != 0) {
+            rpContent[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            rpContent[0].setPreferredSize(new Dimension(280, 45));
+            rpContent[0].setAutoscrolls(true);
+            rpContent[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            cate.add(rpContent[0]);
 
-        rpContent[4].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        rpContent[4].setPreferredSize(new Dimension(270, 40));
-        rpContent[4].setAutoscrolls(true);
-        rpContent[4].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cate.add(rpContent[4]);
-
-        rpContent[5].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        rpContent[5].setPreferredSize(new Dimension(270, 40));
-        rpContent[5].setAutoscrolls(true);
-        rpContent[5].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[5].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (numberContent != -1) {
-                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
-                }
-                if (rpContent[4].getHeight() == 40) {
-                    pressdelay(4, rpContent[4].getHeight(), 18, 5);
-                    numberContent = 4;
-                    addContent = -18;
-                } else {
-                    pressdelay(4, rpContent[4].getHeight(), -18, 5);
-                    numberContent = -1;
-                }
-            }
-        });
-        rpContent[4].add(rpContent[5]);
-
-        labelName[1].setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        labelName[1].setText("-----*Quản lý số liệu*-----");
-        labelName[1].setHorizontalAlignment(SwingConstants.CENTER);
-        labelName[1].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[5].add(labelName[1]);
-
-        rpContent[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
-        rpContent[6].setPreferredSize(new Dimension(270, 90));
-        rpContent[6].setAutoscrolls(true);
-        rpContent[6].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[4].add(rpContent[6]);
-
-        for (int i = 8; i < 10; i++) {
-            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
-            roundPanel[i].setPreferredSize(new Dimension(210, 40));
-            roundPanel[i].setAutoscrolls(true);
-            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-            int index = i;
-            roundPanel[i].addMouseListener(new MouseAdapter() {
+            rpContent[2].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 7));
+            rpContent[2].setPreferredSize(new Dimension(280, 45));
+            rpContent[2].setAutoscrolls(true);
+            rpContent[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[2].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    roundPanelMousePressed(index);
+                    if (numberContent != -1 && numberjpane != 0) {
+//                    string = "img/up.png";
+                        imageIcon[numberjpane].setIcon(null);
+                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                    }
+                    totalHeight = (listCount[0] * 50) / 5;
+                    if (rpContent[0].getHeight() == 45) {
+//                    string = string;
+                        numberjpane = 0;
+                        pressdelay(0, rpContent[0].getHeight(), totalHeight);
+                        numberContent = 0;
+                        addContent = -totalHeight;
+                    } else {
+                        pressdelay(0, rpContent[0].getHeight(), -totalHeight);
+                        numberContent = -1;
+                    }
                 }
             });
-            rpContent[6].add(roundPanel[i]);
+            rpContent[0].add(rpContent[2]);
+
+            labelName[0].setPreferredSize(new Dimension(230, 30));
+            labelName[0].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            labelName[0].setText("-----*Quản lý sản phẩm");
+            labelName[0].setHorizontalAlignment(SwingConstants.CENTER);
+            labelName[0].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[2].add(labelName[0]);
+
+            rpContent[3].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+            rpContent[3].setPreferredSize(new Dimension(280, listCount[0] * 50));
+            rpContent[3].setAutoscrolls(true);
+            rpContent[3].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[0].add(rpContent[3]);
+
+            imageIcon[0].setPreferredSize(new Dimension(30, 30));
+            imageIcon[0].setBorderSize(2);
+            imageIcon[0].setIcon(new ImageIcon(string));
+            rpContent[2].add(imageIcon[0]);
+
+            for (int i = 5; i < 8; i++) {
+                if (mang[i] != 0) {
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
+                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setAutoscrolls(true);
+                    roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    int index = i;
+                    roundPanel[i].addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            roundPanelMousePressed(index);
+                        }
+                    });
+                    rpContent[3].add(roundPanel[i]);
+                }
+            }
         }
 
 
+        if(listCount[1] != 0) {
+            rpContent[4].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            rpContent[4].setPreferredSize(new Dimension(280, 45));
+            rpContent[4].setAutoscrolls(true);
+            rpContent[4].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            cate.add(rpContent[4]);
 
-        rpContent[7].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
-        rpContent[7].setPreferredSize(new Dimension(270, 40));
-        rpContent[7].setAutoscrolls(true);
-        rpContent[7].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cate.add(rpContent[7]);
-
-        rpContent[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
-        rpContent[8].setPreferredSize(new Dimension(270, 40));
-        rpContent[8].setAutoscrolls(true);
-        rpContent[8].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[8].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (numberContent != -1) {
-                    pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent, 5);
-                }
-                if (rpContent[7].getHeight() == 40) {
-                    pressdelay(7, rpContent[7].getHeight(), 45, 5);
-                    numberContent = 7;
-                    addContent = -45;
-                } else {
-                    pressdelay(7, rpContent[7].getHeight(), -45, 5);
-                    numberContent = -1;
-                }
-            }
-        });
-        rpContent[7].add(rpContent[8]);
-
-        labelName[2].setFont(new Font("Times New Roman", Font.PLAIN, 18));
-        labelName[2].setText("-----*Quản lý thông tin*-----");
-        labelName[2].setHorizontalAlignment(SwingConstants.CENTER);
-        labelName[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[8].add(labelName[2]);
-
-        rpContent[9].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
-        rpContent[9].setPreferredSize(new Dimension(270, 225));
-        rpContent[9].setAutoscrolls(true);
-        rpContent[9].setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rpContent[7].add(rpContent[9]);
-
-        for (int i = 10; i < 15; i++) {
-            roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
-            roundPanel[i].setPreferredSize(new Dimension(210, 40));
-            roundPanel[i].setAutoscrolls(true);
-            roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-            int index = i;
-            roundPanel[i].addMouseListener(new MouseAdapter() {
+            rpContent[5].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 7));
+            rpContent[5].setPreferredSize(new Dimension(280, 45));
+            rpContent[5].setAutoscrolls(true);
+            rpContent[5].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[5].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    roundPanelMousePressed(index);
+                    if (numberContent != -1 && numberjpane != 1) {
+//                    string = "img/up.png";
+                        imageIcon[numberjpane].setIcon(null);
+                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                    }
+                    totalHeight = (listCount[1] * 50) / 5;
+                    if (rpContent[4].getHeight() == 45) {
+                        numberjpane = 1;
+                        pressdelay(4, rpContent[4].getHeight(), totalHeight);
+                        numberContent = 4;
+                        addContent = -totalHeight;
+                    } else {
+                        pressdelay(4, rpContent[4].getHeight(), -totalHeight);
+                        numberContent = -1;
+                    }
                 }
             });
-            rpContent[9].add(roundPanel[i]);
+            rpContent[4].add(rpContent[5]);
+
+            labelName[1].setPreferredSize(new Dimension(230, 30));
+            labelName[1].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            labelName[1].setText("-----*Quản lý số liệu");
+            labelName[1].setHorizontalAlignment(SwingConstants.CENTER);
+            labelName[1].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[5].add(labelName[1]);
+
+            rpContent[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+            rpContent[6].setPreferredSize(new Dimension(280, 50 * listCount[1]));
+            rpContent[6].setAutoscrolls(true);
+            rpContent[6].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[4].add(rpContent[6]);
+
+            imageIcon[1].setPreferredSize(new Dimension(30, 30));
+            imageIcon[1].setBorderSize(2);
+            imageIcon[1].setIcon(new ImageIcon(string));
+            rpContent[5].add(imageIcon[1]);
+
+            for (int i = 8; i < 10; i++) {
+                if (mang[i] != 0) {
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
+                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setAutoscrolls(true);
+                    roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    int index = i;
+                    roundPanel[i].addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            roundPanelMousePressed(index);
+                        }
+                    });
+                    rpContent[6].add(roundPanel[i]);
+                }
+            }
+        }
+
+
+        if(listCount[2] != 0) {
+            rpContent[7].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            rpContent[7].setPreferredSize(new Dimension(280, 45));
+            rpContent[7].setAutoscrolls(true);
+            rpContent[7].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            cate.add(rpContent[7]);
+
+            rpContent[8].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 7));
+            rpContent[8].setPreferredSize(new Dimension(280, 45));
+            rpContent[8].setAutoscrolls(true);
+            rpContent[8].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[8].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (numberContent != -1 && numberjpane != 2) {
+                        imageIcon[numberjpane].setIcon(null);
+                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                    }
+                    totalHeight = (listCount[2] * 50) / 5;
+                    if (rpContent[7].getHeight() == 45) {
+//                    string = "img/dow.png";
+                        numberjpane = 2;
+                        pressdelay(7, rpContent[7].getHeight(), totalHeight);
+                        numberContent = 7;
+                        addContent = -totalHeight;
+                    } else {
+                        pressdelay(7, rpContent[7].getHeight(), -totalHeight);
+                        numberContent = -1;
+                    }
+                }
+            });
+            rpContent[7].add(rpContent[8]);
+
+            labelName[2].setPreferredSize(new Dimension(230, 30));
+            labelName[2].setFont(new Font("Times New Roman", Font.PLAIN, 18));
+            labelName[2].setText("-----*Quản lý thông tin");
+            labelName[2].setHorizontalAlignment(SwingConstants.CENTER);
+            labelName[2].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[8].add(labelName[2]);
+
+            rpContent[9].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 5));
+            rpContent[9].setPreferredSize(new Dimension(280, listCount[2] * 50));
+            rpContent[9].setAutoscrolls(true);
+            rpContent[9].setCursor(new Cursor(Cursor.HAND_CURSOR));
+            rpContent[7].add(rpContent[9]);
+
+            imageIcon[2].setPreferredSize(new Dimension(30, 30));
+            imageIcon[2].setBorderSize(2);
+            imageIcon[2].setIcon(new ImageIcon("img/dow.png"));
+            rpContent[8].add(imageIcon[2]);
+
+            for (int i = 10; i < 15; i++) {
+                if (mang[i] != 0) {
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
+                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setAutoscrolls(true);
+                    roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    int index = i;
+                    roundPanel[i].addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mousePressed(MouseEvent e) {
+                            roundPanelMousePressed(index);
+                        }
+                    });
+                    rpContent[9].add(roundPanel[i]);
+                }
+            }
         }
 
         for (int i = 1; i < roundPanel.length; i++) {
@@ -461,6 +530,7 @@ public class HomeGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    private Color imageAvatarIcon;
     private void changeTheme() {
         Color roundPanelBG, roundPanelColor, roundPanelColorOver, imageAvatarFG, labelBG, labelFG, currentBtnBG;
         if (themeButton.isSelected()) {
@@ -472,6 +542,7 @@ public class HomeGUI extends JFrame {
             info.setBackground(new Color(79, 194, 53));
             cate_frame.setBackground(new Color(79, 194, 53));
             cate.setBackground(new Color(79, 194, 53));
+     //       cate.setBackground(new Color(0, 0, 0));
             rpContent[0].setBackground(new Color(79, 194, 53));
             rpContent[3].setBackground(new Color(79, 194, 53));
             rpContent[4].setBackground(new Color(79, 194, 53));
@@ -485,6 +556,7 @@ public class HomeGUI extends JFrame {
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(25, 25, 25);
             currentBtnBG = new Color(68, 150, 60);
+            imageAvatarIcon = new  Color(79, 194, 53);
         } else {
             home.setBackground(new Color(35, 166, 97));
             north.setBackground(new Color(70, 67, 67));
@@ -492,6 +564,12 @@ public class HomeGUI extends JFrame {
             west.setBackground(new Color(35, 166, 97));
             east.setBackground(new Color(70, 67, 67));
             info.setBackground(new Color(70, 67, 67));
+            rpContent[0].setBackground(new Color(70, 67, 67));
+            rpContent[3].setBackground(new Color(70, 67, 67));
+            rpContent[4].setBackground(new Color(70, 67, 67));
+            rpContent[6].setBackground(new Color(70, 67, 67));
+            rpContent[7].setBackground(new Color(70, 67, 67));
+            rpContent[9].setBackground(new Color(70, 67, 67));
             cate_frame.setBackground(new Color(70, 67, 67));
             cate.setBackground(new Color(70, 67, 67));
             roundPanelBG = new Color(70, 67, 67);
@@ -501,6 +579,7 @@ public class HomeGUI extends JFrame {
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(240, 240, 240);
             currentBtnBG = new Color(35, 166, 97);
+            imageAvatarIcon = new  Color(240, 240, 240, 255);
         }
         for (int i = 1; i < jLabel.length; i++) {
             roundPanel[i].setBackground(roundPanelBG);
@@ -510,6 +589,10 @@ public class HomeGUI extends JFrame {
             jLabel[i].setBackground(labelBG);
             jLabel[i].setForeground(labelFG);
         }
+//        for (int i = 0; i < 3; i++) {
+////            imageIcon[i].setBackground(Color.BLUE);
+////            imageIcon[i].setOpaque(true);
+//        }
         if (currentBtn != null)
             currentBtn.setBackground(currentBtnBG);
     }
@@ -592,20 +675,41 @@ public class HomeGUI extends JFrame {
         thread.start();
     }
 
-    public void pressdelay(int index, int height, int add, int number) {
+    public void pressdelay(int index, int height, int add) {
         Timer timer = new Timer(1, new ActionListener() {
             private int counter = 0;
+            private int angle = 0;
+
+            private int coordinates = 0;
             @Override
             public void actionPerformed(ActionEvent e) {
-                counter ++;
-                rpContent[index].setPreferredSize(new Dimension(270, height + counter * add));
+                counter++;
+                rpContent[index].setPreferredSize(new Dimension(280, height + counter * add));
                 rpContent[index].revalidate();
                 rpContent[index].repaint();
-                if (counter == number) {
+                if(add > 0) coordinates = 36;
+                else coordinates = 72;
+                angle = angle + coordinates;
+                imageIcon[numberjpane].setIcon(rotateIcon(new ImageIcon(string), angle));
+                if (counter == 5) {
                     ((Timer) e.getSource()).stop();
                 }
             }
         });
         timer.start();
+    }
+
+    private ImageIcon rotateIcon(ImageIcon icon, int angle) {
+        int w = icon.getIconWidth();
+        int h = icon.getIconHeight();
+        int type = BufferedImage.TYPE_INT_ARGB;
+
+        BufferedImage img = new BufferedImage(w, h, type);
+        Graphics2D g2 = img.createGraphics();
+        g2.rotate(Math.toRadians(angle), w / 2, h / 2);
+        icon.paintIcon(null, g2, 0, 0);
+        g2.dispose();
+
+        return new ImageIcon(img);
     }
 }
