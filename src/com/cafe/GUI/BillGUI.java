@@ -17,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -402,15 +403,13 @@ public class BillGUI extends JPanel {
         roundPanel[20].setAutoscrolls(true);
         roundPanel[17].add(roundPanel[20]);
 
-        JTextField textField1 = ((JTextField) jdateChooser1.getDateEditor().getUiComponent());
-        textField1.setFont(new Font("Tahoma", Font.BOLD, 12));
-        textField1.setHorizontalAlignment(JTextField.CENTER);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2020);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        jdateChooser1.setCalendar(calendar);
+        textField.setFont(new Font("Tahoma", Font.BOLD, 12));
+        textField.setHorizontalAlignment(JTextField.CENTER);
         jdateChooser1.setPreferredSize(new Dimension(150, 20));
+        jdateChooser1.setDateFormatString("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2020, 1, 1);
+        jdateChooser1.setDate(calendar.getTime());
         jdateChooser1.addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -418,11 +417,10 @@ public class BillGUI extends JPanel {
             }
         });
         textField.addActionListener(e -> {
-            String dateString = textField.getText();
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             format.setLenient(false);
             try {
-                Date date = format.parse(dateString);
+                Date date = format.parse(textField.getText());
                 jdateChooser1.setDate(date);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
@@ -430,10 +428,10 @@ public class BillGUI extends JPanel {
         });
         roundPanel[19].add(jdateChooser1);
 
-        JTextField textField2 = ((JTextField) jdateChooser2.getDateEditor().getUiComponent());
         textField2.setFont(new Font("Tahoma", Font.BOLD, 12));
         textField2.setHorizontalAlignment(JTextField.CENTER);
         jdateChooser2.setPreferredSize(new Dimension(150, 20));
+        jdateChooser2.setDateFormatString("yyyy-MM-dd");
         jdateChooser2.setDate(new Date());
         jdateChooser2.addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
@@ -441,18 +439,14 @@ public class BillGUI extends JPanel {
                 changeCalender();
             }
         });
-        textField2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String dateString = textField2.getText();
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                format.setLenient(false);
-                try {
-                    Date date = format.parse(dateString);
-                    jdateChooser2.setDate(date);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        textField2.addActionListener(e -> {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(textField2.getText());
+                jdateChooser2.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[20].add(jdateChooser2);

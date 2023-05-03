@@ -217,12 +217,12 @@ public class DiscountGUI extends JPanel {
         DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
         jDateChooser1.setPreferredSize(new Dimension(200, 30));
         jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
+        jDateChooser1.setDateFormatString("yyyy-MM-dd");
         DateTextField1.addActionListener(e -> {
-            String dateString = DateTextField1.getText();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             format.setLenient(false);
             try {
-                Date date = format.parse(dateString);
+                Date date = format.parse(DateTextField1.getText());
                 jDateChooser1.setDate(date);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
@@ -239,12 +239,12 @@ public class DiscountGUI extends JPanel {
         DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
         jDateChooser2.setPreferredSize(new Dimension(200, 30));
         jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
+        jDateChooser2.setDateFormatString("yyyy-MM-dd");
         DateTextField2.addActionListener(e -> {
-            String dateString = DateTextField2.getText();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             format.setLenient(false);
             try {
-                Date date = format.parse(dateString);
+                Date date = format.parse(DateTextField2.getText());
                 jDateChooser2.setDate(date);
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
