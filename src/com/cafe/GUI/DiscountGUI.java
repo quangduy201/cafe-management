@@ -20,6 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -43,6 +45,10 @@ public class DiscountGUI extends JPanel {
     private Button btRef;
     private JTextField txtsearchDis;
     private JTextField txtsearchPro;
+    private JDateChooser jDateChooser1;
+    private JDateChooser jDateChooser2;
+    private JTextField DateTextField1;
+    private JTextField DateTextField2;
     private JComboBox<Object> cbbSearchDis;
     private JComboBox<Object> cbbSearchPro;
     private JComboBox<Object> cbbStatus;
@@ -74,6 +80,10 @@ public class DiscountGUI extends JPanel {
         labelimg = new JLabel();
         txtsearchDis = new JTextField();
         txtsearchPro = new JTextField();
+        jDateChooser1 = new JDateChooser();
+        jDateChooser2 = new JDateChooser();
+        DateTextField1 = ((JTextField) jDateChooser1.getDateEditor().getUiComponent());
+        DateTextField2 = ((JTextField) jDateChooser2.getDateEditor().getUiComponent());
 
         mode = new RoundPanel();
         btAdd = new Button();
@@ -206,12 +216,21 @@ public class DiscountGUI extends JPanel {
         label[2].setAutoscrolls(true);
         roundPanel[5].add(label[2]);
 
-        jTextFields[2].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[2].setHorizontalAlignment(JLabel.LEFT);
-        jTextFields[2].setBorder(BorderFactory.createLineBorder(Color.black));
-        jTextFields[2].setPreferredSize(new Dimension(200, 30));
-        jTextFields[2].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[2]);
+        DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jDateChooser1.setPreferredSize(new Dimension(200, 30));
+        jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
+        DateTextField1.addActionListener(e -> {
+            String dateString = DateTextField1.getText();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(dateString);
+                jDateChooser1.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        roundPanel[5].add(jDateChooser1);
 
 
         label[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
@@ -221,12 +240,21 @@ public class DiscountGUI extends JPanel {
         roundPanel[5].add(label[3]);
 
 
-        jTextFields[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[3].setHorizontalAlignment(JLabel.LEFT);
-        jTextFields[3].setBorder(BorderFactory.createLineBorder(Color.black));
-        jTextFields[3].setPreferredSize(new Dimension(200, 30));
-        jTextFields[3].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[3]);
+        DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
+        jDateChooser2.setPreferredSize(new Dimension(200, 30));
+        jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
+        DateTextField2.addActionListener(e -> {
+            String dateString = DateTextField2.getText();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(dateString);
+                jDateChooser2.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        roundPanel[5].add(jDateChooser2);
 
         label[4].setFont(new Font("Times New Roman", Font.BOLD, 15));
         label[4].setHorizontalAlignment(JLabel.LEFT);
@@ -407,6 +435,9 @@ public class DiscountGUI extends JPanel {
         roundPanel[10].add(scrollPane2);
     }
 
+    private void changeCalender() {
+    }
+
     private void selectSearchDis() {
         if (Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString().contains("STATUS")) {
             txtsearchDis.setVisible(false);
@@ -479,11 +510,32 @@ public class DiscountGUI extends JPanel {
         String[] discount = String.join(" | ", data).split(" \\| ");
         jTextFields[0].setText(discount[0]);
         jTextFields[1].setText(discount[1]);
-        jTextFields[2].setText(discount[2]);
-        jTextFields[3].setText(discount[3]);
+        DateTextField1.setText(discount[2]);
+        DateTextField2.setText(discount[3]);
+        String dateString1 = DateTextField1.getText();
+        String dateString2 = DateTextField2.getText();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        try {
+            Date date = format.parse(dateString1);
+            jDateChooser1.setDate(date);
+            date = format.parse(dateString2);
+            jDateChooser2.setDate(date);
+        } catch (ParseException ignored) {
+
+        }
         jComboBox.setSelectedItem(discount[4]);
         discountSelected = discountBLL.findDiscounts("DISCOUNT_ID", discount[0]).get(0);
         cbbSearchPro.setSelectedIndex(0);
+
+        List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
+
+        newProductID_Dis.clear();
+
+        for (DiscountDetails discountDetails : discountDetailsList) {
+            newProductID_Dis.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+        }
+
         loadDataTablePro(productBLL.getProductList());
 
         btAdd.setEnabled(false);
@@ -501,24 +553,16 @@ public class DiscountGUI extends JPanel {
                     data[i] = rowData[i].toString();
             }
             String[] product = String.join(" | ", data).split(" \\| ");
-
-            List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
-            List<String> productID_Discount = new ArrayList<>();
-            for (DiscountDetails discountDetails : discountDetailsList) {
-                productID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
-            }
-            if (!productID_Discount.contains(product[0])) {
-                if (data[6] == null) {
-                    Product product1 = productBLL.findProducts("PRODUCT_ID", product[0]).get(0);
-                    newProductID_Dis.add(product[0]);
-                    double newPrice = product1.getCost() - (product1.getCost() * discountSelected.getDiscountPercent() / 100);
-                    model.setValueAt(newPrice, dataTable[1].getSelectedRow(), 5);
-                    model.setValueAt(true, dataTable[1].getSelectedRow(), 6);
-                } else {
-                    newProductID_Dis.remove(product[0]);
-                    model.setValueAt(null, dataTable[1].getSelectedRow(), 5);
-                    model.setValueAt(null, dataTable[1].getSelectedRow(), 6);
-                }
+            if (data[6] == null) {
+                Product product1 = productBLL.findProducts("PRODUCT_ID", product[0]).get(0);
+                newProductID_Dis.add(product[0]);
+                double newPrice = product1.getCost() - (product1.getCost() * discountSelected.getDiscountPercent() / 100);
+                model.setValueAt(newPrice, dataTable[1].getSelectedRow(), 5);
+                model.setValueAt(true, dataTable[1].getSelectedRow(), 6);
+            } else {
+                newProductID_Dis.remove(product[0]);
+                model.setValueAt(null, dataTable[1].getSelectedRow(), 5);
+                model.setValueAt(null, dataTable[1].getSelectedRow(), 6);
             }
         }
 
@@ -567,7 +611,6 @@ public class DiscountGUI extends JPanel {
 
             }
             assert newDiscount != null;
-            System.out.println(newDiscount);
             int selectedRow = dataTable[0].getSelectedRow();
 //            if (discountBLL.exists(newDiscount))
 //                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -578,12 +621,35 @@ public class DiscountGUI extends JPanel {
                 JOptionPane.showMessageDialog(this, "Failed to update discount!", "Error", JOptionPane.ERROR_MESSAGE);
 
             if (!newProductID_Dis.isEmpty()) {
+                List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
+                List<DiscountDetails> deletedDiscountDetailsList = discountDetailsBLL.searchDiscountDetails("DISCOUNT_ID = '" + newDiscount.getDiscountID() + "'", "DELETED = 1");
+                List<String> productID_Discount = new ArrayList<>();
+                List<String> deletedProductID_Discount = new ArrayList<>();
+                for (DiscountDetails discountDetails : discountDetailsList) {
+                    productID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+                }for (DiscountDetails discountDetails : deletedDiscountDetailsList) {
+                    deletedProductID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+                }
+
+                for (String productID :productID_Discount) {
+                    if (!newProductID_Dis.contains(productID)) {
+                        DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID, false);
+                        discountDetailsBLL.deleteDiscountDetails(newDetails);
+                    }
+                }
+
                 for (String productID :newProductID_Dis) {
-                    DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID);
-                    discountDetailsBLL.addDiscountDetails(newDetails);
+                    if (!productID_Discount.contains(productID)) {
+                        if (deletedProductID_Discount.contains(productID)) {
+                            DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID, false);
+                            discountDetailsBLL.updateDiscountDetails(newDetails);
+                        } else {
+                            DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID, false);
+                            discountDetailsBLL.addDiscountDetails(newDetails);
+                        }
+                    }
                 }
             }
-
             loadDataTableDis(discountBLL.getDiscountList());
             dataTable[0].setRowSelectionInterval(selectedRow, selectedRow);
         }
@@ -601,6 +667,8 @@ public class DiscountGUI extends JPanel {
         for (int i = 1; i < jTextFields.length; i++) {
             jTextFields[i].setText(null);
         }
+        jDateChooser1.setDate(null);
+        jDateChooser2.setDate(null);
         jComboBox.setSelectedIndex(0);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
@@ -624,13 +692,8 @@ public class DiscountGUI extends JPanel {
             }
         }
         else {
-            List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
-            List<String> productID_Discount = new ArrayList<>();
-            for (DiscountDetails discountDetails : discountDetailsList) {
-                productID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
-            }
             for (Product product : data) {
-                if (productID_Discount.contains(product.getProductID())) {
+                if (newProductID_Dis.contains(product.getProductID())) {
                     double newPrice = product.getCost() - (product.getCost() * discountSelected.getDiscountPercent() / 100);
                     model.addRow(new Object[]{product.getProductID(), product.getName(), product.getCategoryID(), product.getSized(), product.getCost(), newPrice, true});
                 } else {
@@ -642,20 +705,37 @@ public class DiscountGUI extends JPanel {
 
     public Discount getForm() throws Exception {
         String discountID = null;
-        double discountPercent = 0;
-        Day startDay = null;
-        Day endDay = null;
+        int discountPercent = 0;
+        Day startDay;
+        Day endDay;
         int status;
         status = Objects.requireNonNull(jComboBox.getSelectedItem()).toString().equals("Đang áp dụng") ? 0 : 1;
         discountID = jTextFields[0].getText();
-        discountPercent = Double.parseDouble(jTextFields[1].getText());
-        startDay = Day.parseDay(jTextFields[2].getText());
-        endDay = Day.parseDay(jTextFields[3].getText());
+        discountPercent = Integer.parseInt(jTextFields[1].getText());
+        Date date1 = jDateChooser1.getDate();
+        Date date2 = jDateChooser2.getDate();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        String dateString1 = format.format(date1);
+        String dateString2 = format.format(date2);
+        startDay = Day.parseDay(dateString1);
+        endDay = Day.parseDay(dateString2);
+        checkStatus(discountID, status);
         return new Discount(discountID, discountPercent, startDay, endDay, status, false);
     }
 
     public boolean checkInput() {
         return true;
+    }
+
+    public void checkStatus(String discountID, int status){
+        if (status == 0) {
+            for (Discount discount1: discountBLL.getDiscountList()) {
+                if (!discount1.getDiscountID().contains(discountID)) {
+                    discountBLL.updateDiscount(new Discount(discount1.getDiscountID(), discount1.getDiscountPercent(), discount1.getStartDay(), discount1.getEndDay(), 1, false));
+                }
+            }
+        }
     }
 
 }

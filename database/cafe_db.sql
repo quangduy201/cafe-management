@@ -153,7 +153,7 @@ DELIMITER $$
 CREATE TRIGGER `InsertBill_Details` AFTER INSERT ON `bill_details` FOR EACH ROW BEGIN
 IF NEW.PRODUCT_ID IN (SELECT discount_details.PRODUCT_ID
           FROM discount_details JOIN  discount ON discount.DISCOUNT_ID = discount_details.DISCOUNT_ID
-		WHERE discount.STATUS = 0)	THEN
+		WHERE discount.STATUS = 0 AND discount.DELETED = 0)	THEN
     UPDATE bill
 	SET bill.TOTAL = bill.TOTAL + (SELECT product.COST FROM product WHERE product.PRODUCT_ID = NEW.PRODUCT_ID) * (100 - (SELECT discount.DISCOUNT_PERCENT FROM discount WHERE discount.STATUS = 0))/100 * NEW.QUANTITY
 	WHERE bill.BILL_ID = NEW.BILL_ID;
@@ -307,46 +307,37 @@ INSERT INTO `discount` (`DISCOUNT_ID`, `DISCOUNT_PERCENT`, `START_DATE`, `END_DA
 
 CREATE TABLE `discount_details` (
   `DISCOUNT_ID` varchar(10) NOT NULL,
-  `PRODUCT_ID` varchar(10) NOT NULL
+  `PRODUCT_ID` varchar(10) NOT NULL,
+  `DELETED` bit(1) DEFAULT b'0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `discount_details`
 --
 
-INSERT INTO `discount_details` (`DISCOUNT_ID`, `PRODUCT_ID`) VALUES
-('DIS001', 'PR003'),
-('DIS001', 'PR006'),
-('DIS001', 'PR009'),
-('DIS001', 'PR012'),
-('DIS001', 'PR015'),
-('DIS001', 'PR018'),
-('DIS002', 'PR021'),
-('DIS002', 'PR024'),
-('DIS002', 'PR027'),
-('DIS002', 'PR030'),
-('DIS002', 'PR033'),
-('DIS002', 'PR036'),
-('DIS002', 'PR039'),
-('DIS002', 'PR042'),
-('DIS003', 'PR045'),
-('DIS003', 'PR048'),
-('DIS003', 'PR051'),
-('DIS003', 'PR054'),
-('DIS003', 'PR057'),
-('DIS004', 'PR061'),
-('DIS004', 'PR063'),
-('DIS004', 'PR065');
-
---
--- Triggers `discount_details`
---
-DELIMITER $$
-CREATE TRIGGER `UpdateStatus` AFTER INSERT ON `discount_details` FOR EACH ROW UPDATE discount
-SET discount.STATUS = 1
-WHERE discount.DISCOUNT_ID != NEW.DISCOUNT_ID
-$$
-DELIMITER ;
+INSERT INTO `discount_details` (`DISCOUNT_ID`, `PRODUCT_ID`, `DELETED`) VALUES
+('DIS001', 'PR003', b'0'),
+('DIS001', 'PR006', b'0'),
+('DIS001', 'PR009', b'0'),
+('DIS001', 'PR012', b'0'),
+('DIS001', 'PR015', b'0'),
+('DIS001', 'PR018', b'0'),
+('DIS002', 'PR021', b'0'),
+('DIS002', 'PR024', b'0'),
+('DIS002', 'PR027', b'0'),
+('DIS002', 'PR030', b'0'),
+('DIS002', 'PR033', b'0'),
+('DIS002', 'PR036', b'0'),
+('DIS002', 'PR039', b'0'),
+('DIS002', 'PR042', b'0'),
+('DIS003', 'PR045', b'0'),
+('DIS003', 'PR048', b'0'),
+('DIS003', 'PR051', b'0'),
+('DIS003', 'PR054', b'0'),
+('DIS003', 'PR057', b'0'),
+('DIS004', 'PR061', b'0'),
+('DIS004', 'PR063', b'0'),
+('DIS004', 'PR065', b'0');
 
 -- --------------------------------------------------------
 
@@ -936,7 +927,7 @@ ALTER TABLE `bill_details`
 -- Constraints for table `discount_details`
 --
 ALTER TABLE `discount_details`
-  ADD CONSTRAINT `FK_DISCOUNT` FOREIGN KEY (`DISCOUNT_ID`) REFERENCES `discount` (`DISCOUNT_ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_DISCOUNT` FOREIGN KEY (`DISCOUNT_ID`) REFERENCES `discount` (`DISCOUNT_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_PRODUCT` FOREIGN KEY (`PRODUCT_ID`) REFERENCES `product` (`PRODUCT_ID`) ON UPDATE CASCADE;
 
 --

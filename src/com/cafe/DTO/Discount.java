@@ -4,7 +4,7 @@ import com.cafe.utils.Day;
 
 public class Discount {
     private String discountID;
-    private double discountPercent;
+    private int discountPercent;
     private Day startDay;
     private Day endDay;
     private int status;
@@ -13,7 +13,7 @@ public class Discount {
     public Discount() {
     }
 
-    public Discount(String discountID, double discountPercent, Day startDay, Day endDay, int status, boolean deleted) {
+    public Discount(String discountID, int discountPercent, Day startDay, Day endDay, int status, boolean deleted) {
         this.discountID = discountID;
         this.discountPercent = discountPercent;
         this.startDay = startDay;
@@ -30,11 +30,11 @@ public class Discount {
         this.discountID = discountID;
     }
 
-    public double getDiscountPercent() {
+    public int getDiscountPercent() {
         return discountPercent;
     }
 
-    public void setDiscountPercent(double discountPercent) {
+    public void setDiscountPercent(int discountPercent) {
         this.discountPercent = discountPercent;
     }
 

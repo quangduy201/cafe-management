@@ -24,7 +24,7 @@ public class DiscountDAL extends Manager {
             try {
                 return new Discount(
                     row.get(0), // discountID
-                    Double.parseDouble(row.get(1)), // discountPercent
+                    Integer.parseInt(row.get(1)), // discountPercent
                     Day.parseDay(row.get(2)), // startDay
                     Day.parseDay(row.get(3)), // endDay
                     Integer.parseInt(row.get(4)), // status
