@@ -1,10 +1,11 @@
 package com.cafe.GUI;
+
 import com.cafe.BLL.*;
-import com.cafe.DAL.ReceiptDAL;
-import com.cafe.DAL.RecipeDAL;
 import com.cafe.DTO.*;
-import com.cafe.custom.*;
+import com.cafe.custom.BillDetailPanel;
 import com.cafe.custom.Button;
+import com.cafe.custom.DataTable;
+import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 
 import javax.swing.*;
@@ -24,21 +25,35 @@ import java.util.Date;
 import java.util.List;
 
 public class BillGUI extends JPanel {
+    private RoundPanel[] roundPanel;
+    private JLabel[] label;
+    private JScrollPane[] jScrollPane;
+    private DataTable dataTable;
+    private Button[] button;
+    private BillBLL billBLL = new BillBLL();
+    private List<String> billColumnNames = billBLL.getBillDAL().getColumnNames();
+    private List<Receipt> receiptList = new ArrayList<>();
+    private List<Bill> billList = new ArrayList<>();
+    private BillDetailsBLL billDetailsBLL;
+    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
+    private Customer customer;
+    private JScrollPane scrollPane;
+    private ReceiptBLL receiptBLL = new ReceiptBLL();
+    private List<String> receiptColumnNames = receiptBLL.getReceiptDAL().getColumnNames();
+    private ArrayList<BillDetails> listDetailBill = new ArrayList<>();
+    private ArrayList<ReceiptDetails> listReceiptDetails = new ArrayList<>();
+    private com.toedter.calendar.JDateChooser jdateChooser1;
+    private JTextField textField;
+    private com.toedter.calendar.JDateChooser jdateChooser2;
+    private JTextField textField2;
+    private boolean checklist = true;
+
     public BillGUI() {
         setLayout(new BorderLayout());
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
-    private RoundPanel roundPanel[];
-    private JLabel label[];
-
-    private JScrollPane jScrollPane[];
-
-    private DataTable dataTable;
-
-
-    private Button button[];
     public void initComponents() {
         roundPanel = new RoundPanel[25];
         label = new JLabel[25];
@@ -50,21 +65,21 @@ public class BillGUI extends JPanel {
         button[3] = new Button();
         jdateChooser1 = new com.toedter.calendar.JDateChooser();
         jdateChooser2 = new com.toedter.calendar.JDateChooser();
-        textField = ((JTextField)jdateChooser1.getDateEditor().getUiComponent());
-        textField2 = ((JTextField)jdateChooser2.getDateEditor().getUiComponent());
+        textField = ((JTextField) jdateChooser1.getDateEditor().getUiComponent());
+        textField2 = ((JTextField) jdateChooser2.getDateEditor().getUiComponent());
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
             label[i] = new JLabel();
         }
 
-        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER,20,0));
+        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
         roundPanel[0].setBackground(new Color(70, 67, 67));
-        this.add(roundPanel[0],BorderLayout.CENTER);
+        this.add(roundPanel[0], BorderLayout.CENTER);
 
         jScrollPane[0] = new JScrollPane(roundPanel[16]);
         jScrollPane[1] = new JScrollPane();
 
-        roundPanel[1].setLayout(new FlowLayout(FlowLayout.CENTER,0,20));
+        roundPanel[1].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
         roundPanel[1].setPreferredSize(new Dimension(560, 670));
         roundPanel[1].setBackground(new Color(70, 67, 67));
         roundPanel[1].setAutoscrolls(true);
@@ -76,7 +91,7 @@ public class BillGUI extends JPanel {
         roundPanel[2].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[2]);
 
-        roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[3].setPreferredSize(new Dimension(560, 40));
         roundPanel[3].setBackground(new Color(70, 67, 67));
         roundPanel[3].setAutoscrolls(true);
@@ -86,7 +101,7 @@ public class BillGUI extends JPanel {
         roundPanel[4].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[4]);
 
-        roundPanel[5].setLayout(new BorderLayout(240,0));
+        roundPanel[5].setLayout(new BorderLayout(240, 0));
         roundPanel[5].setPreferredSize(new Dimension(560, 40));
         roundPanel[5].setBackground(new Color(70, 67, 67));
         roundPanel[5].setAutoscrolls(true);
@@ -97,7 +112,7 @@ public class BillGUI extends JPanel {
         roundPanel[2].add(roundPanel[6]);
 
         roundPanel[7].setPreferredSize(new Dimension(410, 30));
-      //  roundPanel[7].setLayout(new );
+        //  roundPanel[7].setLayout(new );
         roundPanel[7].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[7]);
 
@@ -118,17 +133,17 @@ public class BillGUI extends JPanel {
         roundPanel[2].add(roundPanel[11]);
 
         roundPanel[12].setPreferredSize(new Dimension(410, 25));
-        roundPanel[12].setLayout(new FlowLayout(FlowLayout.RIGHT,15,0));
+        roundPanel[12].setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         roundPanel[12].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[12]);
 
         roundPanel[13].setPreferredSize(new Dimension(410, 25));
-        roundPanel[13].setLayout(new FlowLayout(FlowLayout.RIGHT,15,0));
+        roundPanel[13].setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         roundPanel[13].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[13]);
 
         roundPanel[14].setPreferredSize(new Dimension(410, 25));
-        roundPanel[14].setLayout(new FlowLayout(FlowLayout.RIGHT,15,0));
+        roundPanel[14].setLayout(new FlowLayout(FlowLayout.RIGHT, 15, 0));
         roundPanel[14].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[14]);
 
@@ -141,19 +156,17 @@ public class BillGUI extends JPanel {
         label[0].setAutoscrolls(true);
         roundPanel[3].add(label[0]);
 
-
-        roundPanel[15].setLayout(new BorderLayout(5,0));
+        roundPanel[15].setLayout(new BorderLayout(5, 0));
         roundPanel[15].setBackground(new Color(70, 67, 67));
         roundPanel[15].setPreferredSize(new Dimension(170, 40));
         roundPanel[15].setAutoscrolls(true);
-        roundPanel[5].add(roundPanel[15],BorderLayout.WEST);
-
+        roundPanel[5].add(roundPanel[15], BorderLayout.WEST);
 
         button[0].setPreferredSize(new Dimension(80, 40));
         button[0].setBorderPainted(false);
         button[0].setRadius(15);
         button[0].setFocusPainted(false);
-        button[0].setFont(new Font("Times New Roman", 0, 14));
+        button[0].setFont(new Font("Times New Roman", Font.PLAIN, 14));
         button[0].setColor(new Color(0x70E149));
         button[0].setColorOver(new Color(0x5EFF00));
         button[0].setColorClick(new Color(0x8AD242));
@@ -169,13 +182,13 @@ public class BillGUI extends JPanel {
                 }
             }
         });
-        roundPanel[15].add(button[0],BorderLayout.WEST);
+        roundPanel[15].add(button[0], BorderLayout.WEST);
 
         button[1].setPreferredSize(new Dimension(80, 40));
         button[1].setBorderPainted(false);
         button[1].setRadius(15);
         button[1].setFocusPainted(false);
-        button[1].setFont(new Font("Times New Roman", 0, 14));
+        button[1].setFont(new Font("Times New Roman", Font.PLAIN, 14));
         button[1].setColor(new Color(0x70E149));
         button[1].setColorOver(new Color(0x5EFF00));
         button[1].setColorClick(new Color(0x8AD242));
@@ -191,20 +204,20 @@ public class BillGUI extends JPanel {
                 }
             }
         });
-        roundPanel[15].add(button[1],BorderLayout.EAST);
+        roundPanel[15].add(button[1], BorderLayout.EAST);
 
 
         button[2].setPreferredSize(new Dimension(160, 40));
         button[2].setBorderPainted(false);
         button[2].setRadius(15);
         button[2].setFocusPainted(false);
-        button[2].setFont(new Font("Times New Roman", 0, 14));
-        button[2].setColor(new Color(240,240,240));
+        button[2].setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        button[2].setColor(new Color(240, 240, 240));
         button[2].setColorOver(new Color(0x5EFF00));
         button[2].setColorClick(new Color(0x8AD242));
         button[2].setBorderColor(new Color(70, 67, 67));
         button[2].setIcon(new ImageIcon("img/folder.png"));
-        button[2].setText("Xuất Exxcel");
+        button[2].setText("Xuất Excel");
         button[2].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -215,7 +228,7 @@ public class BillGUI extends JPanel {
                 }
             }
         });
-        roundPanel[5].add(button[2],BorderLayout.EAST);
+        roundPanel[5].add(button[2], BorderLayout.EAST);
 
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 30));
         label[1].setHorizontalAlignment(JLabel.CENTER);
@@ -283,7 +296,7 @@ public class BillGUI extends JPanel {
         jScrollPane[0].setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane[0].setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane[0].setBorder(BorderFactory.createEmptyBorder());
-        roundPanel[16].setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
+        roundPanel[16].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         roundPanel[16].setBackground(new Color(240, 240, 240));
         roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 390));
         roundPanel[11].add(jScrollPane[0]);
@@ -332,13 +345,13 @@ public class BillGUI extends JPanel {
         button[3].setBorderPainted(false);
         button[3].setRadius(15);
         button[3].setFocusPainted(false);
-        button[3].setFont(new Font("Times New Roman", 0, 14));
-        button[3].setColor(new Color(240,240,240));
+        button[3].setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        button[3].setColor(new Color(240, 240, 240));
         button[3].setColorOver(new Color(0x5EFF00));
         button[3].setColorClick(new Color(0x8AD242));
         button[3].setBorderColor(new Color(70, 67, 67));
         button[3].setIcon(new ImageIcon("img/folder.png"));
-        button[3].setText("Xuất Exxcel");
+        button[3].setText("Xuất Excel");
         button[3].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -352,12 +365,12 @@ public class BillGUI extends JPanel {
         roundPanel[2].add(button[3]);
 
         roundPanel[17].setLayout(new FlowLayout(FlowLayout.LEFT));
-       // roundPanel[17].setBackground(new Color(70, 67, 67));
+        // roundPanel[17].setBackground(new Color(70, 67, 67));
         roundPanel[17].setPreferredSize(new Dimension(540, 50));
         roundPanel[17].setAutoscrolls(true);
         roundPanel[4].add(roundPanel[17]);
 
-        roundPanel[18].setLayout(new BorderLayout(5,0));
+        roundPanel[18].setLayout(new BorderLayout(5, 0));
         roundPanel[18].setBackground(new Color(70, 67, 67));
         roundPanel[18].setPreferredSize(new Dimension(540, 465));
         roundPanel[18].setAutoscrolls(true);
@@ -370,7 +383,7 @@ public class BillGUI extends JPanel {
         label[16].setAutoscrolls(true);
         roundPanel[17].add(label[16]);
 
-        roundPanel[19].setLayout(new FlowLayout(FlowLayout.CENTER,0,15));
+        roundPanel[19].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
         roundPanel[19].setPreferredSize(new Dimension(190, 50));
 //        roundPanel[19].setBackground(new Color(250,250,250));
         roundPanel[19].setAutoscrolls(true);
@@ -383,7 +396,7 @@ public class BillGUI extends JPanel {
         label[17].setAutoscrolls(true);
         roundPanel[17].add(label[17]);
 
-        roundPanel[20].setLayout(new FlowLayout(FlowLayout.CENTER,0,15));
+        roundPanel[20].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
 //        roundPanel[20].setBackground(new Color(250, 250, 250));
         roundPanel[20].setPreferredSize(new Dimension(190, 50));
         roundPanel[20].setAutoscrolls(true);
@@ -397,25 +410,22 @@ public class BillGUI extends JPanel {
         calendar.set(Calendar.MONTH, 1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         jdateChooser1.setCalendar(calendar);
-        jdateChooser1.setPreferredSize(new Dimension(150,20));
+        jdateChooser1.setPreferredSize(new Dimension(150, 20));
         jdateChooser1.addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 changeCalender();
             }
         });
-        textField.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String dateString = textField.getText();
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                format.setLenient(false);
-                try {
-                    Date date = format.parse(dateString);
-                    jdateChooser1.setDate(date);
-                } catch (ParseException ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+        textField.addActionListener(e -> {
+            String dateString = textField.getText();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            format.setLenient(false);
+            try {
+                Date date = format.parse(dateString);
+                jdateChooser1.setDate(date);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[19].add(jdateChooser1);
@@ -423,7 +433,7 @@ public class BillGUI extends JPanel {
         JTextField textField2 = ((JTextField) jdateChooser2.getDateEditor().getUiComponent());
         textField2.setFont(new Font("Tahoma", Font.BOLD, 12));
         textField2.setHorizontalAlignment(JTextField.CENTER);
-        jdateChooser2.setPreferredSize(new Dimension(150,20));
+        jdateChooser2.setPreferredSize(new Dimension(150, 20));
         jdateChooser2.setDate(new Date());
         jdateChooser2.addPropertyChangeListener("date", new PropertyChangeListener() {
             @Override
@@ -471,9 +481,6 @@ public class BillGUI extends JPanel {
 
     }
 
-    private BillBLL billBLL = new BillBLL();
-    private List<String> billColumnNames = billBLL.getBillDAL().getColumnNames();
-
     public void fillForm() {
         listDetailBill.clear();
         roundPanel[16].removeAll();
@@ -494,19 +501,18 @@ public class BillGUI extends JPanel {
         label[5].setText(customer.getName());
         label[7].setText(bill[2]);
         for (BillDetails billDetails : billDetailsBLL.getBillDetailsList()) {
-            if(billDetails.getBillID().equals(bill[0])) {
+            if (billDetails.getBillID().equals(bill[0])) {
                 listDetailBill.add(billDetails);
                 BillDetailPanel billDetailPanel = new BillDetailPanel();
                 billDetailPanel.setbill(billDetails);
                 roundPanel[16].add(billDetailPanel);
             }
         }
-        if(listDetailBill.size() >= 5) {
-            int tall =  75 * this.listDetailBill.size();
-            roundPanel[16].setPreferredSize(new Dimension( jScrollPane[0].getWidth(),tall));
-        }
-        else {
-            roundPanel[16].setPreferredSize(new Dimension( jScrollPane[0].getWidth(),390));
+        if (listDetailBill.size() >= 5) {
+            int tall = 75 * this.listDetailBill.size();
+            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), tall));
+        } else {
+            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 390));
         }
         label[11].setText(bill[4]);
         label[13].setText(bill[5]);
@@ -529,69 +535,46 @@ public class BillGUI extends JPanel {
         label[9].setText(receipt[2]);
         label[5].setText(receipt[1]);
         for (ReceiptDetails receiptDetails : receiptDetailsBLL.getReceiptDetailsList()) {
-            if(receiptDetails.getReceiptID().equals(receipt[0])) {
+            if (receiptDetails.getReceiptID().equals(receipt[0])) {
                 listReceiptDetails.add(receiptDetails);
                 BillDetailPanel receiptDetailPanel = new BillDetailPanel();
                 receiptDetailPanel.setreceipt(receiptDetails);
                 roundPanel[16].add(receiptDetailPanel);
             }
         }
-        if(listDetailBill.size() >= 5) {
-            int tall =  75 * this.listDetailBill.size();
-            roundPanel[16].setPreferredSize(new Dimension( jScrollPane[0].getWidth(),tall));
-        }
-        else {
-            roundPanel[16].setPreferredSize(new Dimension( jScrollPane[0].getWidth(),390));
+        if (listDetailBill.size() >= 5) {
+            int tall = 75 * this.listDetailBill.size();
+            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), tall));
+        } else {
+            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 390));
         }
         label[11].setText(receipt[3]);
     }
 
-    private List<Receipt> receiptList = new ArrayList<>();
-    private List<Bill> billList = new ArrayList<>();
-
     private void changeCalender() {
         Day start = new Day(jdateChooser1.getDate());
-        Day end  = new Day(jdateChooser2.getDate());
+        Day end = new Day(jdateChooser2.getDate());
 
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
 
-        if(checklist) {
+        if (checklist) {
             roundPanel[16].removeAll();
             roundPanel[16].repaint();
             roundPanel[16].revalidate();
             for (Bill bill : billBLL.getBillList()) {
-                if(bill.getDateOfPurchase().compareDates(start) && end.compareDates(bill.getDateOfPurchase()))
+                if (bill.getDateOfPurchase().compareDates(start) && end.compareDates(bill.getDateOfPurchase()))
                     model.addRow(new Object[]{bill.getBillID(), bill.getCustomerID(), bill.getStaffID(), bill.getDateOfPurchase(), bill.getTotal(), bill.getReceived(), bill.getExcess()});
             }
-        }
-        else {
+        } else {
             roundPanel[16].removeAll();
             roundPanel[16].repaint();
             for (Receipt recipe : receiptBLL.getReceiptList()) {
-                if(recipe.getDor().compareDates(start) && end.compareDates(recipe.getDor()))
+                if (recipe.getDor().compareDates(start) && end.compareDates(recipe.getDor()))
                     model.addRow(new Object[]{recipe.getReceiptID(), recipe.getStaffID(), recipe.getDor(), recipe.getGrandTotal()});
             }
         }
     }
-    private BillDetailsBLL billDetailsBLL;
-    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
-    private Customer customer;
-    private JScrollPane scrollPane;
-
-    private ReceiptBLL receiptBLL = new ReceiptBLL();
-    private List<String> receiptColumnNames = receiptBLL.getReceiptDAL().getColumnNames();
-
-
-    private ArrayList<BillDetails> listDetailBill = new ArrayList<>();
-    private ArrayList<ReceiptDetails> listReceiptDetails = new ArrayList<>();
-    private com.toedter.calendar.JDateChooser jdateChooser1;
-    private JTextField textField;
-    private com.toedter.calendar.JDateChooser jdateChooser2;
-    private JTextField textField2;
-    private boolean checklist = true;
-
-
 
     public void pressSale() {
         Calendar calendar = Calendar.getInstance();

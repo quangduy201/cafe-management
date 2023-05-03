@@ -29,7 +29,7 @@ public class WarehousesGUI extends JPanel {
     private RoundPanel roundPanel2;
     private RoundPanel search;
     private JScrollPane scrollPane;
-    private JPanel pnlSupplierConfiguration;
+    private JPanel pnlIngredientConfiguration;
     private JPanel mode;
     private JPanel showImg;
     private JLabel[] jLabelsForm;
@@ -61,7 +61,7 @@ public class WarehousesGUI extends JPanel {
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
         search = new RoundPanel();
-        pnlSupplierConfiguration = new JPanel();
+        pnlIngredientConfiguration = new JPanel();
         mode = new JPanel();
         showImg = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
@@ -129,39 +129,44 @@ public class WarehousesGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
-        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
-        pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
-        roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
+//        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+//        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
+//        pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
+//        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
+//        roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
+        pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
+        pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
+        pnlIngredientConfiguration.setPreferredSize(new Dimension(635, 300));
+        roundPanel2.add(pnlIngredientConfiguration, BorderLayout.NORTH);
 
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
             jLabelsForm[i].setText(columnNames.get(i) + ": ");
-            pnlSupplierConfiguration.add(jLabelsForm[i]);
+            pnlIngredientConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
                     jTextFieldsForm[index] = new JTextField(ingredientBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
-                    jTextFieldsForm[i].setBorder(null);
-                    jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
-                    pnlSupplierConfiguration.add(jTextFieldsForm[index]);
+                    jTextFieldsForm[index].setBorder(null);
+                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "UNIT" -> pnlSupplierConfiguration.add(cbbUnit);
-                case "SUPPLIER_ID" -> pnlSupplierConfiguration.add(cbbSupplierID);
+                case "UNIT" -> pnlIngredientConfiguration.add(cbbUnit);
+                case "SUPPLIER_ID" -> pnlIngredientConfiguration.add(cbbSupplierID);
                 default -> {
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
-                    pnlSupplierConfiguration.add(jTextFieldsForm[index]);
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
             }
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 300));
+        showImg.setPreferredSize(new Dimension(635, 250));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
@@ -267,7 +272,7 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
             txtSearch.setVisible(false);
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);

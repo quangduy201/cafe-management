@@ -184,10 +184,10 @@ public class SupplierGUI extends JPanel {
         roundPanel[0].add(btrecipe,BorderLayout.EAST);
 
 
-        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
+        pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
         pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 300));
+        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
@@ -208,7 +208,8 @@ public class SupplierGUI extends JPanel {
         }
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 100));
+//        showImg.setPreferredSize(new Dimension(635, 100)); // TODO:
+        showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
      //   roundPanel2.add(showImg, BorderLayout.CENTER);
 
@@ -381,10 +382,9 @@ public class SupplierGUI extends JPanel {
             data[i] = rowData[i].toString();
         }
         String[] supplier = String.join(" | ", data).split(" \\| ");
-        for (int i = 0; i < jTextFieldsForm.length - 1; i++) {
+        for (int i = 0; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(supplier[i]);
         }
-        jTextFieldsForm[5].setText(String.format("%.1f VND", Double.parseDouble(supplier[5])));
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -409,14 +409,14 @@ public class SupplierGUI extends JPanel {
                 }
             }
         }
-        return new Supplier(supplierID, name, phone, address, email, price, false);
+        return new Supplier(supplierID, name, phone, address, email, false);
     }
 
     public void loadDataTable(List<Supplier> supplierList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Supplier supplier : supplierList) {
-            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail(), supplier.getPrice()});
+            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail()});
         }
     }
 
@@ -454,13 +454,6 @@ public class SupplierGUI extends JPanel {
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
             JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[5].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
-            // Price must be a double >= 0
-            jTextFieldsForm[5].requestFocusInWindow();
-            jTextFieldsForm[5].selectAll();
-            JOptionPane.showMessageDialog(this, "Price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

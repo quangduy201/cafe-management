@@ -190,14 +190,14 @@ public class BillDetailPanel extends RoundPanel {
         Ingredient ingredient = new IngredientBLL()
             .findIngredientsBy(Map.of("INGREDIENT_ID", data.getIngredientID()))
             .get(0);
-        Supplier supplier = new SupplierBLL()
-            .findSuppliersBy(Map.of("SUPPLIER_ID", data.getSupplierID()))
-            .get(0);
+//        Supplier supplier = new SupplierBLL()
+//            .findSuppliersBy(Map.of("SUPPLIER_ID", data.getSupplierID()))
+//            .get(0);
 
         payment_name1.setText(ingredient.getName());
         payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
         payment_price1.setText(String.valueOf(data.getQuantity() * ingredient.getUnitPrice()));
-        ingredientname1.setText(supplier.getName());
+//        ingredientname1.setText(supplier.getName());
     }
 
     public void setIngredient(Ingredient ingredient, int index) {

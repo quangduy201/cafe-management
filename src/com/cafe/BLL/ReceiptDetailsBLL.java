@@ -61,7 +61,6 @@ public class ReceiptDetailsBLL extends Manager<ReceiptDetails> {
             case "RECEIPT_ID" -> receiptDetails.getReceiptID();
             case "INGREDIENT_ID" -> receiptDetails.getIngredientID();
             case "QUANTITY" -> receiptDetails.getQuantity();
-            case "SUPPLIER_ID" -> receiptDetails.getSupplierID();
             default -> null;
         };
     }

@@ -12,7 +12,6 @@ public class ToggleSwitch extends JToggleButton {
 
     public ToggleSwitch() {
         setPreferredSize(new Dimension(50, 30));
-        setBorder(null);
         setBackground(new Color(70, 67, 67));
         setFocusable(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));

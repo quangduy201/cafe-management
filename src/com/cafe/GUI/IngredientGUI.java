@@ -12,7 +12,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
@@ -24,7 +23,7 @@ import java.util.Objects;
 public class IngredientGUI extends JPanel {
 
     private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
-    private ArrayList<Integer> listQuantityChoice = new ArrayList<Integer>();
+    private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
 
     public ArrayList<Ingredient> getReceiptDetails() {
         return receiptDetails;
@@ -73,8 +72,8 @@ public class IngredientGUI extends JPanel {
     private Button btImport;
     private Button btCancel;
 
-    private RoundPanel roundPanel[];
-    private JLabel label[];
+    private RoundPanel[] roundPanel;
+    private JLabel[] label;
     private String staffid;
 
     private JScrollPane ingredientscrollPane;
@@ -101,9 +100,8 @@ public class IngredientGUI extends JPanel {
         }
         List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
         List<String> columnName1 = supplierBLL.getSupplierDAL().getColumnNames();
-        List<String> result = new ArrayList<>();
         List<String> sublist2 = columnNames.subList(0, 2);
-        result.addAll(sublist2);
+        List<String> result = new ArrayList<>(sublist2);
         List<String> sublist1 = columnNames.subList(3, columnNames.size() - 1);
         result.addAll(sublist1);
         search = new RoundPanel();
@@ -233,7 +231,7 @@ public class IngredientGUI extends JPanel {
             model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
         }
 
-        dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnNames.size() - 1).toArray(), e -> fillForm1());
+        dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnName1.size() - 1).toArray(), e -> fillForm1());
         scrollPane = new JScrollPane(dataTable1);
         roundPanel[12].add(scrollPane);
 
@@ -358,7 +356,7 @@ public class IngredientGUI extends JPanel {
         btsupplier.setBorderPainted(false);
         btsupplier.setRadius(15);
         btsupplier.setFocusPainted(false);
-        btsupplier.setFont(new Font("Times New Roman", 0, 14));
+        btsupplier.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btsupplier.setColor(new Color(0x70E149));
         btsupplier.setColorOver(new Color(0x5EFF00));
         btsupplier.setColorClick(new Color(0x8AD242));
@@ -380,7 +378,7 @@ public class IngredientGUI extends JPanel {
         btreceipt.setBorderPainted(false);
         btreceipt.setRadius(15);
         btreceipt.setFocusPainted(false);
-        btreceipt.setFont(new Font("Times New Roman", 0, 14));
+        btreceipt.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btreceipt.setColor(new Color(0x70E149));
         btreceipt.setColorOver(new Color(0x5EFF00));
         btreceipt.setColorClick(new Color(0x8AD242));
@@ -408,7 +406,7 @@ public class IngredientGUI extends JPanel {
         btImport.setBorderPainted(false);
         btImport.setRadius(15);
         btImport.setFocusPainted(false);
-        btImport.setFont(new Font("Times New Roman", 0, 14));
+        btImport.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btImport.setIcon(new ImageIcon(("img/plus.png")));
         btImport.setColor(new Color(0x70E149));
         btImport.setColorOver(new Color(0x5EFF00));
@@ -430,7 +428,7 @@ public class IngredientGUI extends JPanel {
         btCancel.setBorderPainted(false);
         btCancel.setRadius(15);
         btCancel.setFocusPainted(false);
-        btCancel.setFont(new Font("Times New Roman", 0, 14));
+        btCancel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btCancel.setIcon(new ImageIcon(("img/remove.png")));
         btCancel.setColor(new Color(0xFFBD3737));
         btCancel.setColorOver(new Color(0xFF0000));
@@ -483,7 +481,7 @@ public class IngredientGUI extends JPanel {
         DefaultTableModel model = (DefaultTableModel) dataTable1.getModel();
         model.setRowCount(0);
         for (Supplier supplier : supplierList) {
-            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail(), supplier.getPrice()});
+            model.addRow(new Object[]{supplier.getSupplierID(), supplier.getName(), supplier.getPhone(), supplier.getAddress(), supplier.getEmail()});
         }
     }
 
@@ -562,12 +560,9 @@ public class IngredientGUI extends JPanel {
         }
         if (frameIngredient != null) {
             frameIngredient.dispose();
-            frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
-            frameIngredient.setVisible(true);
-        } else {
-            frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
-            frameIngredient.setVisible(true);
         }
+        frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
+        frameIngredient.setVisible(true);
     }
 
     public void fillForm1() {
