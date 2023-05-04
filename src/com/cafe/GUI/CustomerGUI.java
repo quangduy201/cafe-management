@@ -6,6 +6,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.Tasks;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -48,6 +49,7 @@ public class CustomerGUI extends JPanel {
     private Button btUpd;
     private Button btDel;
     private Button btRef;
+    private Button btFaceSignUp;
 
     public CustomerGUI(int decentralizationMode) {
         this.decentralizationMode = decentralizationMode;
@@ -216,6 +218,24 @@ public class CustomerGUI extends JPanel {
         showImg.setPreferredSize(new Dimension(635, 200));
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
+
+        btFaceSignUp = new Button();
+        btFaceSignUp.setBackground(new Color(35, 166, 97));
+        btFaceSignUp.setBorder(null);
+        btFaceSignUp.setIcon(new ImageIcon("img/face-scanner.png"));
+        btFaceSignUp.setText("Sign up your face  ");
+        btFaceSignUp.setColor(new Color(240, 240, 240));
+        btFaceSignUp.setColorClick(new Color(141, 222, 175));
+        btFaceSignUp.setColorOver(new Color(35, 166, 97));
+        btFaceSignUp.setFocusPainted(false);
+        btFaceSignUp.setRadius(20);
+        btFaceSignUp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                faceSignUp();
+            }
+        });
+        showImg.add(btFaceSignUp);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
@@ -534,5 +554,10 @@ public class CustomerGUI extends JPanel {
             return false;
         }
         return true;
+    }
+
+    public void faceSignUp() {
+        Tasks tasks = new Tasks("Camera");
+        new Thread(() -> tasks.recordAndTrain(jTextFieldsForm[0].getText(), 80)).start();
     }
 }

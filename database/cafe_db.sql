@@ -197,7 +197,7 @@ INSERT INTO `category` (`CATEGORY_ID`, `NAME`, `QUANTITY`, `DELETED`) VALUES
 ('CA03', 'BÁNH MÌ QUE', 2, b'0'),
 ('CA04', 'TRÀ', 15, b'0'),
 ('CA05', 'BÁNH', 7, b'0'),
-('CA06', 'FREERE', 15, b'0'),
+('CA06', 'FREEZE', 15, b'0'),
 ('CA07', 'TRÀ SỮA', 8, b'0');
 
 -- --------------------------------------------------------
@@ -222,7 +222,7 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
-('CUS000', 'VÃNG LAI', b'1', '0100-01-01', '', b'0', '0100-01-01', b'0'),
+('CUS000', 'VÃNG LAI', b'1', '1000-01-01', '', b'0', '1000-01-01', b'0'),
 ('CUS001', 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
 ('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
 ('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
@@ -766,11 +766,11 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
-('ST00', 'ADMIN', b'0', '0100-01-01', '', '', '', 0, '0100-01-01', b'0'),
-('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '0100-01-01', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '0100-01-01', b'0'),
-('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '0100-01-01', b'0'),
-('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '0100-01-01', b'0'),
+('ST00', 'ADMIN', b'0', '1000-01-01', '', '', '', 0, '1000-01-01', b'0'),
+('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
+('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
+('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
 ('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '2019-2-2', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
 ('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '2019-10-3', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
 ('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),

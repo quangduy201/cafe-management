@@ -8,8 +8,11 @@ import org.apache.poi.ss.util.AreaReference;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.util.RegionUtil;
-import org.apache.poi.xssf.usermodel.*;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFTable;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,8 +76,6 @@ public class Excel {
         File file = new File("transaction/bills/" + bill.getBillID() + ".xlsx");
         Excel excel = new Excel("Hóa đơn");
         //--- DECLARE COMPONENTS FOR EXCEL ---//
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
-
         // title
         Font titleFont = excel.newFont((short) 14, true, false, false, Font.U_NONE);
         CellStyle titleCellStyle = excel.newCellStyle(titleFont, HorizontalAlignment.CENTER);
@@ -138,23 +139,22 @@ public class Excel {
 
             excel.setCell(billDetails.getQuantity(), 10 + i, 6, excel.commonRightCellStyle);
 
-            String productCost = formatter.format(product.getCost());
+            String productCost = VNString.currency(product.getCost());
             excel.setCellRange(productCost, new CellRangeAddress(10 + i, 10 + i, 7, 8), excel.commonRightCellStyle);
 
-            Discount discount = new DiscountBLL().searchDiscounts("DISCOUNT_ID = '" + "DIS001" + "'").get(0);
-            double percent = discount.getDiscountPercent();
+            double percent = billDetails.getPercent();
             double total;
             if (percent > 0) {
                 double discountedCost = product.getCost() - product.getCost() * percent / 100.0;
-                excel.setCellRange(formatter.format(discountedCost), new CellRangeAddress(10 + i, 10 + i, 9, 10), excel.commonRightCellStyle);
+                excel.setCellRange(VNString.currency(discountedCost), new CellRangeAddress(10 + i, 10 + i, 9, 10), excel.commonRightCellStyle);
                 excel.sheet.getRow(10 + i).getCell(7).setCellStyle(excel.strikeoutRightCellStyle);
-
                 total = billDetails.getQuantity() * discountedCost;
             } else {
+                excel.setCellRange("", new CellRangeAddress(10 + i, 10 + i, 9, 10), excel.commonRightCellStyle);
                 total = billDetails.getQuantity() * product.getCost();
             }
 
-            excel.setCellRange(formatter.format(total), new CellRangeAddress(10 + i, 10 + i, 11, 12), excel.commonRightCellStyle);
+            excel.setCellRange(VNString.currency(total), new CellRangeAddress(10 + i, 10 + i, 11, 12), excel.commonRightCellStyle);
         }
 
         /* ----- */
@@ -165,21 +165,21 @@ public class Excel {
         /* FOOTER */
         // Tổng
         excel.sheet.createRow(13 + billSize);
-        String billTotal = formatter.format(bill.getTotal());
+        String billTotal = VNString.currency(bill.getTotal());
         excel.setCellRange("Tổng tiền:", new CellRangeAddress(13 + billSize, 13 + billSize, 8, 9), excel.boldRightCellStyle);
         excel.setCell(billTotal, 13 + billSize, 10, excel.commonLeftCellStyle);
 
         // Tiền nhận
         excel.sheet.createRow(14 + billSize);
+        String billReceived = VNString.currency(bill.getReceived());
         excel.setCellRange("Tiền nhận:", new CellRangeAddress(14 + billSize, 14 + billSize, 8, 9), excel.boldRightCellStyle);
-        excel.setCell(billTotal, 14 + billSize, 10, excel.commonLeftCellStyle);
-        // TODO: billDetails.getReceived()
+        excel.setCell(billReceived, 14 + billSize, 10, excel.commonLeftCellStyle);
 
-        // Tiền thừa
+        // Tiền thối
         excel.sheet.createRow(15 + billSize);
-        excel.setCellRange("Tiền thừa:", new CellRangeAddress(15 + billSize, 15 + billSize, 8, 9), excel.boldRightCellStyle);
-        excel.setCell(billTotal, 15 + billSize, 10, excel.commonLeftCellStyle);
-        // TODO: billDetails.getExcess()
+        String billExcess = VNString.currency(bill.getExcess());
+        excel.setCellRange("Tiền thối:", new CellRangeAddress(15 + billSize, 15 + billSize, 8, 9), excel.boldRightCellStyle);
+        excel.setCell(billExcess, 15 + billSize, 10, excel.commonLeftCellStyle);
 
         /* BORDER */
         CellRangeAddress billRange = new CellRangeAddress(0, 16 + billDetailsList.size(), 0, 12);
@@ -210,8 +210,6 @@ public class Excel {
         File file = new File("transaction/receipts/" + receipt.getReceiptID() + ".xlsx");
         Excel excel = new Excel("Phiếu nhập hàng");
         //--- DECLARE COMPONENTS FOR EXCEL ---//
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
-
         // title
         Font titleFont = excel.newFont((short) 14, true, false, false, Font.U_NONE);
         CellStyle titleCellStyle = excel.newCellStyle(titleFont, HorizontalAlignment.CENTER);
@@ -273,15 +271,15 @@ public class Excel {
             String ingredientQuantity = receiptDetails.getQuantity() + ingredient.getUnit();
             excel.setCellRange(ingredientQuantity, new CellRangeAddress(10 + i, 10 + i, 6, 7), excel.commonRightCellStyle);
 
-            String ingredientUnitPrice = formatter.format(30000);
+            String ingredientUnitPrice = VNString.currency(30000);
             excel.setCellRange(ingredientUnitPrice, new CellRangeAddress(10 + i, 10 + i, 8, 9), excel.commonRightCellStyle);
-//            String ingredientUnitPrice = formatter.format(ingredient.getUnitPrice());
+//            String ingredientUnitPrice = VNString.currency(ingredient.getUnitPrice());
 //            excel.setCellRange(ingredientUnitPrice, new CellRangeAddress(10 + i, 10 + i, 8, 9), excel.commonRightCellStyle);
 //
             double total = receiptDetails.getQuantity() * 30000;
-            excel.setCellRange(formatter.format(total), new CellRangeAddress(10 + i, 10 + i, 10, 12), excel.commonRightCellStyle);
+            excel.setCellRange(VNString.currency(total), new CellRangeAddress(10 + i, 10 + i, 10, 12), excel.commonRightCellStyle);
 //            double total = receiptDetails.getQuantity() * ingredient.getUnitPrice();
-//            excel.setCellRange(formatter.format(total), new CellRangeAddress(10 + i, 10 + i, 10, 12), excel.commonRightCellStyle);
+//            excel.setCellRange(VNString.currency(total), new CellRangeAddress(10 + i, 10 + i, 10, 12), excel.commonRightCellStyle);
         }
 
         /* ----- */
@@ -292,7 +290,7 @@ public class Excel {
         /* FOOTER */
         // Tổng
         excel.sheet.createRow(13 + receiptSize);
-        String receiptGrandTotal = formatter.format(receipt.getGrandTotal());
+        String receiptGrandTotal = VNString.currency(receipt.getGrandTotal());
         excel.setCellRange("Tổng tiền:", new CellRangeAddress(13 + receiptSize, 13 + receiptSize, 8, 9), excel.boldRightCellStyle);
         excel.setCell(receiptGrandTotal, 13 + receiptSize, 10, excel.commonLeftCellStyle);
 
@@ -326,7 +324,7 @@ public class Excel {
                     max = num;
             }
         }
-        return String.format("%s/%s%03d_%s_%s.xlsx", path, name, max + 1, from, to);
+        return String.format("%s/%s%03d_%s_%s.xlsx", path, name, max + 1, from.toMySQLString(), to.toMySQLString());
     }
 
     public static boolean writeBillsToExcel(List<Bill> bills, Day from, Day to) {
@@ -341,8 +339,6 @@ public class Excel {
         excel.sheet.setDefaultRowHeightInPoints(14.4F);
         excel.sheet.setDefaultColumnWidth(10);
         //--- DECLARE COMPONENTS FOR EXCEL ---//
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
-
         // title
         Font titleFont = excel.newFont((short) 14, true, false, false, Font.U_NONE);
         CellStyle titleCellStyle = excel.newCellStyle(titleFont, HorizontalAlignment.CENTER);
@@ -361,12 +357,11 @@ public class Excel {
         /* HEADER */
         // Title
         excel.sheet.createRow(1);
+        excel.sheet.getRow(1).setHeightInPoints(20);
         excel.setCellRange("BẢNG HÓA ĐƠN", new CellRangeAddress(1, 1, 0, 6), titleCellStyle);
 
         excel.sheet.createRow(2);
-        String day = String.format("Từ ngày %02d/%02d/%04d đến ngày %02d/%02d/%04d",
-            from.getDate(), from.getMonth(), from.getYear(),
-            to.getDate(), to.getMonth(), to.getYear());
+        String day = "Từ ngày " + from + " đến ngày " + to;
         excel.setCellRange(day, new CellRangeAddress(2, 2, 0, 6), dayCellStyle);
 
         XSSFTable table = ((XSSFSheet) excel.sheet).createTable(null);
@@ -398,10 +393,10 @@ public class Excel {
             excel.setCell(bill.getBillID(), rowIndex, 0, excel.commonCenterCellStyle);
             excel.setCell(bill.getCustomerID(), rowIndex, 1, excel.commonCenterCellStyle);
             excel.setCell(bill.getStaffID(), rowIndex, 2, excel.commonCenterCellStyle);
-            excel.setCell(bill.getDateOfPurchase(), rowIndex, 3, excel.commonCenterCellStyle);
-            excel.setCell(formatter.format(bill.getTotal()), rowIndex, 4, excel.commonCenterCellStyle);
-            excel.setCell(formatter.format(bill.getTotal()), rowIndex, 5, excel.commonCenterCellStyle);
-            excel.setCell(formatter.format(bill.getTotal()), rowIndex, 6, excel.commonCenterCellStyle);
+            excel.setCell(bill.getDateOfPurchase().toMySQLString(), rowIndex, 3, excel.commonCenterCellStyle);
+            excel.setCell(VNString.currency(bill.getTotal()), rowIndex, 4, excel.commonCenterCellStyle);
+            excel.setCell(VNString.currency(bill.getTotal()), rowIndex, 5, excel.commonCenterCellStyle);
+            excel.setCell(VNString.currency(bill.getTotal()), rowIndex, 6, excel.commonCenterCellStyle);
             rowIndex++;
         }
 
@@ -436,8 +431,6 @@ public class Excel {
         excel.sheet.setDefaultRowHeightInPoints(14.4F);
         excel.sheet.setDefaultColumnWidth(12);
         //--- DECLARE COMPONENTS FOR EXCEL ---//
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
-
         // title
         Font titleFont = excel.newFont((short) 14, true, false, false, Font.U_NONE);
         CellStyle titleCellStyle = excel.newCellStyle(titleFont, HorizontalAlignment.CENTER);
@@ -456,12 +449,11 @@ public class Excel {
         /* HEADER */
         // Title
         excel.sheet.createRow(1);
+        excel.sheet.getRow(1).setHeightInPoints(20);
         excel.setCellRange("BẢNG PHIẾU NHẬP HÀNG", new CellRangeAddress(1, 1, 0, 4), titleCellStyle);
 
         excel.sheet.createRow(2);
-        String day = String.format("Từ ngày %02d/%02d/%04d đến ngày %02d/%02d/%04d",
-            from.getDate(), from.getMonth(), from.getYear(),
-            to.getDate(), to.getMonth(), to.getYear());
+        String day = "Từ ngày " + from + " đến ngày " + to;
         excel.setCellRange(day, new CellRangeAddress(2, 2, 0, 4), dayCellStyle);
 
         XSSFTable table = ((XSSFSheet) excel.sheet).createTable(null);
@@ -492,9 +484,9 @@ public class Excel {
             excel.sheet.createRow(rowIndex);
             excel.setCell(receipt.getReceiptID(), rowIndex, 0, excel.commonCenterCellStyle);
             excel.setCell(receipt.getStaffID(), rowIndex, 1, excel.commonCenterCellStyle);
-            excel.setCell(receipt.getDor(), rowIndex, 2, excel.commonCenterCellStyle);
-            excel.setCell(formatter.format(receipt.getGrandTotal()), rowIndex, 3, excel.commonCenterCellStyle);
-//            excel.setCell(receipt.getSupplierID(), rowIndex, 4, excel.commonCenterCellStyle);
+            excel.setCell(receipt.getDor().toMySQLString(), rowIndex, 2, excel.commonCenterCellStyle);
+            excel.setCell(VNString.currency(receipt.getGrandTotal()), rowIndex, 3, excel.commonCenterCellStyle);
+            excel.setCell(receipt.getSupplierID(), rowIndex, 4, excel.commonCenterCellStyle);
             rowIndex++;
         }
 
@@ -515,31 +507,6 @@ public class Excel {
             return false;
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-//        Bill bill = new BillBLL().findBillsBy(Map.of("BILL_ID", "BI0001")).get(0);
-//        Receipt receipt = new ReceiptBLL().findReceiptsBy(Map.of("RECEIPT_ID", "REC001")).get(0);
-//        if (Excel.writeToExcel(bill))
-//            System.out.println("Successfully print the bill!");
-//        else
-//            System.out.println("Failed to print the bill!");
-//        if (Excel.writeToExcel(receipt))
-//            System.out.println("Successfully print the receipt!");
-//        else
-//            System.out.println("Failed to print the receipt!");
-//        if (Excel.writeBillsToExcel(new BillBLL().findBillsBy(Map.of("STAFF_ID", "ST05")),
-//            new Day(25, 4, 2023),
-//            new Day(25, 4, 2023)))
-//            System.out.println("Successfully print the bills!");
-//        else
-//            System.out.println("Failed to print the bills!");
-        if (Excel.writeReceiptsToExcel(new ReceiptBLL().findReceiptsBy(Map.of()),
-            new Day(25, 4, 2023),
-            new Day(25, 4, 2023)))
-            System.out.println("Successfully print the bills!");
-        else
-            System.out.println("Failed to print the bills!");
     }
 
     public Font newFont(short size, boolean bold, boolean italic, boolean strikeout, byte underline) {
@@ -575,7 +542,6 @@ public class Excel {
         sheet.addMergedRegion(rangeAddress);
         Cell cell = sheet.getRow(rangeAddress.getFirstRow()).createCell(rangeAddress.getFirstColumn());
         cell.setCellStyle(style);
-        cell.setCellValue(value.toString());
         switch (value.getClass().getSimpleName()) {
             case "Integer" -> cell.setCellValue((Integer) value);
             case "Float" -> cell.setCellValue((Float) value);

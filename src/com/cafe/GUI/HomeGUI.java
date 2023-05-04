@@ -6,9 +6,9 @@ import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Staff;
-import com.cafe.custom.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
+import com.cafe.utils.Day;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,8 +17,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class HomeGUI extends JFrame {
@@ -45,7 +43,7 @@ public class HomeGUI extends JFrame {
     private RoundPanel[] rpContent = new RoundPanel[15];
     private int numberContent;
     private int addContent;
-    private JLabel[]  labelName = new JLabel[15];
+    private JLabel[] labelName = new JLabel[15];
     private ProductPanel[] roundPanel = new ProductPanel[15];
     private ImageAvatar[] imageAvatar = new ImageAvatar[15];
     private ToggleSwitch themeButton;
@@ -307,7 +305,6 @@ public class HomeGUI extends JFrame {
         }
 
 
-
         rpContent[4].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         rpContent[4].setPreferredSize(new Dimension(270, 40));
         rpContent[4].setAutoscrolls(true);
@@ -362,7 +359,6 @@ public class HomeGUI extends JFrame {
             });
             rpContent[6].add(roundPanel[i]);
         }
-
 
 
         rpContent[7].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
@@ -578,15 +574,9 @@ public class HomeGUI extends JFrame {
     }
 
     private void setTime() {
-        SimpleDateFormat formatter = new SimpleDateFormat();
-        formatter.applyPattern("dd-MM-yyyy : hh:mm:ss aa");
         Thread thread = new Thread(() -> {
-            try {
-                while (true) {
-                    lbTime.setText(formatter.format(new Date()));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            while (true) {
+                lbTime.setText(Day.now());
             }
         });
         thread.start();
@@ -595,9 +585,10 @@ public class HomeGUI extends JFrame {
     public void pressdelay(int index, int height, int add, int number) {
         Timer timer = new Timer(1, new ActionListener() {
             private int counter = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                counter ++;
+                counter++;
                 rpContent[index].setPreferredSize(new Dimension(270, height + counter * add));
                 rpContent[index].revalidate();
                 rpContent[index].repaint();

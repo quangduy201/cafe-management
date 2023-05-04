@@ -11,7 +11,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -144,7 +143,7 @@ public class SupplierGUI extends JPanel {
         btsupplier.setBorderPainted(false);
         btsupplier.setRadius(15);
         btsupplier.setFocusPainted(false);
-        btsupplier.setFont(new Font("Times New Roman", 0, 14));
+        btsupplier.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btsupplier.setColor(new Color(0x70E149));
         btsupplier.setColorOver(new Color(0x5EFF00));
         btsupplier.setColorClick(new Color(0x8AD242));
@@ -166,7 +165,7 @@ public class SupplierGUI extends JPanel {
         btrecipe.setBorderPainted(false);
         btrecipe.setRadius(15);
         btrecipe.setFocusPainted(false);
-        btrecipe.setFont(new Font("Times New Roman", 0, 14));
+        btrecipe.setFont(new Font("Times New Roman", Font.PLAIN, 14));
         btrecipe.setColor(new Color(0x70E149));
         btrecipe.setColorOver(new Color(0x5EFF00));
         btrecipe.setColorClick(new Color(0x8AD242));

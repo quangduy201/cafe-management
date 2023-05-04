@@ -391,7 +391,7 @@ public class DiscountGUI extends JPanel {
         btSearch1.setBackground(new Color(240, 240, 240));
         btSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btSearch1.setPreferredSize(new Dimension(35, 35));
-        btSearch1.setIcon(new ImageIcon("img/search.png")); // NOI18N
+        btSearch1.setIcon(new ImageIcon("img/search.png"));
         btSearch1.setFocusPainted(false);
         roundPanel[11].add(btSearch1);
 
@@ -440,7 +440,7 @@ public class DiscountGUI extends JPanel {
         btSearch2.setBackground(new Color(240, 240, 240));
         btSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btSearch2.setPreferredSize(new Dimension(35, 35));
-        btSearch2.setIcon(new ImageIcon("img/search.png")); // NOI18N
+        btSearch2.setIcon(new ImageIcon("img/search.png"));
         btSearch2.setFocusPainted(false);
         roundPanel[12].add(btSearch2);
 

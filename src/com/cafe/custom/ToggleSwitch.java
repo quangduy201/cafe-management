@@ -2,7 +2,6 @@ package com.cafe.custom;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class ToggleSwitch extends JToggleButton {
     private Color onColor;

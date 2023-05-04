@@ -1,19 +1,14 @@
 package com.cafe.custom;
 
-import com.cafe.BLL.*;
-import com.cafe.DTO.*;
+import com.cafe.BLL.SupplierBLL;
+import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Supplier;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.IngredientGUI;
-import com.cafe.GUI.SaleGUI;
-import com.cafe.utils.Day;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class FrameIngredient extends JFrame{
 
@@ -90,7 +85,7 @@ public class FrameIngredient extends JFrame{
         minimize.setPreferredSize(new Dimension(40, 25));
         minimize.setFocusPainted(false);
         minimize.setBackground(new Color(0xF3F0F0));
-        minimize.setFont(new Font("Times New Roman", 0, 16));
+        minimize.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         minimize.setRadius(15);
         roundPanel[1].add(minimize);
         minimize.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -107,7 +102,7 @@ public class FrameIngredient extends JFrame{
         exit.setPreferredSize(new Dimension(40, 25));
         exit.setFocusPainted(false);
         exit.setBackground(new Color(0xFD1111));
-        exit.setFont(new Font("Times New Roman", 0, 16));
+        exit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         exit.setRadius(15);
         roundPanel[1].add(exit);
         exit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -142,7 +137,7 @@ public class FrameIngredient extends JFrame{
 
             label1[i].setBackground(new Color(250, 250, 250));
             label1[i].setPreferredSize(new Dimension(135,50));
-            label1[i].setFont(new Font("Times New Roman", 0, 16));
+            label1[i].setFont(new Font("Times New Roman", Font.PLAIN, 16));
             label1[i].setHorizontalAlignment(SwingConstants.LEFT);
             roundPanel1[i].add(label1[i]);
         }
@@ -216,7 +211,7 @@ public class FrameIngredient extends JFrame{
         confirm.setFocusable(false);
         confirm.setFocusPainted(false);
         confirm.setPreferredSize(new Dimension(120, 45));
-        confirm.setFont(new Font("Times New Roman", 0, 16));
+        confirm.setFont(new Font("Times New Roman", Font.PLAIN, 16));
         confirm.setRadius(45);
         confirm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -236,7 +231,7 @@ public class FrameIngredient extends JFrame{
         minus.setText("-");
         minus.setPreferredSize(new Dimension(35, 35));
         minus.setFocusable(false);
-        minus.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        minus.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 16));
         minus.setRadius(50);
         minus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -264,7 +259,7 @@ public class FrameIngredient extends JFrame{
         plus.setText("+");
         plus.setFocusable(false);
         plus.setPreferredSize(new Dimension(35, 35));
-        plus.setFont(new Font("Tahoma", 0, 16));
+        plus.setFont(new Font("Tahoma", Font.PLAIN, 16));
         plus.setRadius(50);
         plus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -344,6 +339,6 @@ public class FrameIngredient extends JFrame{
     private JTextField jTextField[];
 
     public static void main(String[] arg) {
-        new FrameCustomer().setVisible(true);
+        new FrameCustomer("0987654321").setVisible(true);
     }
 }

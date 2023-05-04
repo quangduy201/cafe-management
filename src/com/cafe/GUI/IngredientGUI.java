@@ -3,9 +3,11 @@ package com.cafe.GUI;
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ReceiptBLL;
 import com.cafe.BLL.SupplierBLL;
-import com.cafe.DTO.*;
-import com.cafe.custom.*;
+import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
+import com.cafe.custom.*;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -17,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class IngredientGUI extends JPanel {
@@ -346,7 +347,7 @@ public class IngredientGUI extends JPanel {
 
         label[9].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[9].setHorizontalAlignment(JLabel.RIGHT);
-        label[9].setText("0đ");
+        label[9].setText(VNString.currency(0.0));
         label[9].setPreferredSize(new Dimension(100, 30));
         label[9].setAutoscrolls(true);
         roundPanel[6].add(label[9]);
@@ -506,7 +507,7 @@ public class IngredientGUI extends JPanel {
             int tall = 80 * this.receiptDetails.size();
             roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
-        double totalPrice = 0;
+        double totalPrice = 0.0;
         for (int e = 0; e < listIngredientArray.size(); e++) {
             int vt = e;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
@@ -546,7 +547,7 @@ public class IngredientGUI extends JPanel {
             roundPanel[10].repaint();
             roundPanel[10].revalidate();
         }
-        label[9].setText(totalPrice + "đ");
+        label[9].setText(VNString.currency(totalPrice));
     }
 
     private FrameIngredient frameIngredient;

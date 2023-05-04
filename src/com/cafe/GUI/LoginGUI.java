@@ -5,9 +5,7 @@ import com.cafe.DTO.Account;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
+import java.awt.event.*;
 import java.util.List;
 
 public class LoginGUI extends JFrame {
@@ -121,17 +119,17 @@ public class LoginGUI extends JFrame {
         textField.setForeground(new Color(0x000000));
         textField.setFont(new Font("open sans", Font.PLAIN, 15));
         textField.addFocusListener(new FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent ignoredEvt) {
+            public void focusGained(FocusEvent ignoredEvt) {
                 textFieldFocusGained(ignoredEvt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent ignoredEvt) {
+            public void focusLost(FocusEvent ignoredEvt) {
                 textFieldFocusLost(ignoredEvt);
             }
         });
         textField.addKeyListener(new KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            public void keyPressed(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
                     login();
                 }
             }
@@ -141,17 +139,17 @@ public class LoginGUI extends JFrame {
         passwordField.setBackground(new Color(0xffffff));
         passwordField.setForeground(new Color(0x000000));
         passwordField.addFocusListener(new FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent ignoredEvt) {
+            public void focusGained(FocusEvent ignoredEvt) {
                 passwordFieldFocusGained(ignoredEvt);
             }
 
-            public void focusLost(java.awt.event.FocusEvent ignoredEvt) {
+            public void focusLost(FocusEvent ignoredEvt) {
                 passwordFieldFocusLost(ignoredEvt);
             }
         });
         passwordField.addKeyListener(new KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent keyEvent) {
-                if (keyEvent.getKeyCode() == java.awt.event.KeyEvent.VK_ENTER) {
+            public void keyPressed(KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_ENTER) {
                     login();
                 }
             }
@@ -166,7 +164,7 @@ public class LoginGUI extends JFrame {
         button.setForeground(new Color(0xFFFFFF));
         button.setFocusPainted(false);
         button.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent mouseEvent) {
+            public void mouseClicked(MouseEvent mouseEvent) {
                 login();
             }
         });
@@ -179,7 +177,7 @@ public class LoginGUI extends JFrame {
         exit.setForeground(new Color(0xFFFFFF));
         exit.setFocusPainted(false);
         exit.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent mouseEvent) {
+            public void mouseClicked(MouseEvent mouseEvent) {
                 exit();
             }
         });
@@ -193,7 +191,7 @@ public class LoginGUI extends JFrame {
         minimize.setForeground(new Color(0xFFFFFF));
         minimize.setFocusPainted(false);
         minimize.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent mouseEvent) {
+            public void mouseClicked(MouseEvent mouseEvent) {
                 minimize();
             }
         });
@@ -214,25 +212,25 @@ public class LoginGUI extends JFrame {
 
     }
 
-    private void textFieldFocusGained(java.awt.event.FocusEvent ignoredEvt) {
+    private void textFieldFocusGained(FocusEvent ignoredEvt) {
         if (textField.getText().equals("Username")) {
             textField.setText("");
         }
     }
 
-    private void textFieldFocusLost(java.awt.event.FocusEvent ignoredEvt) {
+    private void textFieldFocusLost(FocusEvent ignoredEvt) {
         if (textField.getText().equals("")) {
             textField.setText("Username");
         }
     }
 
-    private void passwordFieldFocusGained(java.awt.event.FocusEvent ignoredEvt) {
+    private void passwordFieldFocusGained(FocusEvent ignoredEvt) {
         if (passwordField.getText().equals("Password")) {
             passwordField.setText("");
         }
     }
 
-    private void passwordFieldFocusLost(java.awt.event.FocusEvent ignoredEvt) {
+    private void passwordFieldFocusLost(FocusEvent ignoredEvt) {
         if (passwordField.getText().equals("")) {
             passwordField.setText("Password");
         }

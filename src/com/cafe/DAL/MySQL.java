@@ -1,5 +1,7 @@
 package com.cafe.DAL;
 
+import com.cafe.utils.Day;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,11 +65,13 @@ public class MySQL {
     public String formatQuery(String query, Object... values) {
         String stringValue;
         for (Object value : values) {
-            if (value instanceof String || value instanceof Character) {
+            if (value instanceof Day) {
+                stringValue = "'" + ((Day) value).toMySQLString() + "'";
+            } else if (value instanceof String || value instanceof Character) {
                 stringValue = "'" + value + "'";
             } else if (value instanceof Boolean) {
                 stringValue = (boolean) value ? "1" : "0";
-            } else if (value instanceof Integer || value instanceof Double || value instanceof Float) {
+            } else if (value instanceof Number) {
                 stringValue = value.toString();
             } else {
                 stringValue = "'" + value.toString() + "'";

@@ -4,80 +4,62 @@ import com.cafe.BLL.ProductBLL;
 import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 public class ProductDetailsGUI extends JFrame {
-
-    private  Vector comboBoxItems;
-
-    private Vector listprice;
+    private Vector<String> sizeList;
+    private Vector<String> costList;
     private RoundPanel frame;
+    private Button minimize;
     private Button exit;
     private Button plus;
     private Button minus;
     private Button confirm;
-
     private JLabel text_product;
-    private Button minimize;
-    private RoundPanel roundPanel[];
-
+    private RoundPanel[] roundPanel;
     private RoundPanel frameImg;
     private ImageIcon originalIcon;
     private JLabel slProductImg;
-    private JLabel label[];
+    private JLabel[] label;
     private SaleGUI saleGUI;
-    private String listinfo[];
-    private JComboBox<String> size;
-    private String price;
-
+    private JComboBox<String> comboBoxProductSize;
+    private int quantity;
     private Product newProduct;
-    private int index;
-    public ProductDetailsGUI(SaleGUI saleGUI, Product product) {
+    private Product getProduct;
+
+    public ProductDetailsGUI(SaleGUI saleGUI, Product product, int quantity) {
         this.newProduct = product;
         this.saleGUI = saleGUI;
+        this.quantity = quantity;
         initComponents();
-        comboBoxItems = new Vector();
-        listprice = new Vector();
-        ProductBLL productBLL = new ProductBLL();
-        for (Product product1 : productBLL.getProductList()) {
-            if(product1.getName().equals(newProduct.getName())) {
-                comboBoxItems.add(product1.getSized());
-                listprice.add(product1.getCost());
-            }
+        sizeList = new Vector<>();
+        costList = new Vector<>();
+        List<Product> products = new ProductBLL().findProductsBy(Map.of("NAME", product.getName()));
+        for (Product product1 : products) {
+            sizeList.add(product1.getSized());
+            costList.add(VNString.currency(product1.getCost()));
         }
-        size.setModel(new DefaultComboBoxModel(comboBoxItems));
+        comboBoxProductSize.setModel(new DefaultComboBoxModel<>(sizeList));
+        label[4].setText(costList.get(0));
         label[5].setText("1");
-        label[4].setText(listprice.get(0) + "đ");
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
     }
-
-    public ProductDetailsGUI(SaleGUI saleGUI, Product product, int index) {
-        this.newProduct = product;
-        this.saleGUI = saleGUI;
-        this.index = index;
-        this.price = String.valueOf(product.getCost());
-        initComponents();
-        comboBoxItems = new Vector();
-        label[5].setText(String.valueOf(index));
-        comboBoxItems.add(product.getSized());
-        size.setModel(new DefaultComboBoxModel(comboBoxItems));
-        label[4].setText(product.getCost() + "đ");
-        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
-    }
-
 
     public void initComponents() {
-        setSize(650,540);
+        setSize(650, 540);
         setLocationRelativeTo(null);
         setUndecorated(true);
-
-
 
         frame = new RoundPanel();
         exit = new Button();
@@ -91,45 +73,42 @@ public class ProductDetailsGUI extends JFrame {
         slProductImg = new JLabel();
         minus = new Button();
         plus = new Button();
-        size = new JComboBox<>();
+        comboBoxProductSize = new JComboBox<>();
 
-
-        for(int i = 0; i < roundPanel.length; i++) {
+        for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
             label[i] = new JLabel();
         }
-
-
 
         frame.setLayout(new FlowLayout());
         frame.setBackground(new Color(68, 150, 60));
         this.add(frame);
 
-        roundPanel[0].setLayout(new FlowLayout(FlowLayout.RIGHT,5,0));
+        roundPanel[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         roundPanel[0].setBackground(new Color(68, 150, 60));
-        roundPanel[0].setPreferredSize(new Dimension(650,30));
+        roundPanel[0].setPreferredSize(new Dimension(650, 30));
         frame.add(roundPanel[0]);
 
         roundPanel[1].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[1].setBackground(new Color(68, 150, 60));
-        roundPanel[1].setPreferredSize(new Dimension(650,50));
+        roundPanel[1].setPreferredSize(new Dimension(650, 50));
         //roundPanel[1].setBackground(new Color(145, 0, 0));
         frame.add(roundPanel[1]);
 
-        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
-        roundPanel[2].setPreferredSize(new Dimension(310,210));
-        roundPanel[2].setBackground(new Color(240,240,240));
+        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        roundPanel[2].setPreferredSize(new Dimension(310, 210));
+        roundPanel[2].setBackground(new Color(240, 240, 240));
         frame.add(roundPanel[2]);
 
         roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[3].setBackground(new Color(68, 150, 60));
-        roundPanel[3].setPreferredSize(new Dimension(650,170));
+        roundPanel[3].setPreferredSize(new Dimension(650, 170));
 //        roundPanel[3].setBackground(new Color(145, 0, 0));
         frame.add(roundPanel[3]);
 
-        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[4].setBackground(new Color(68, 150, 60));
-        roundPanel[4].setPreferredSize(new Dimension(650,50));
+        roundPanel[4].setPreferredSize(new Dimension(650, 50));
         frame.add(roundPanel[4]);
 
         minimize.setBorderPainted(false);
@@ -140,8 +119,8 @@ public class ProductDetailsGUI extends JFrame {
         minimize.setFont(new Font("Public Sans", Font.BOLD, 15));
         minimize.setRadius(15);
         roundPanel[0].add(minimize);
-        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        minimize.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 minimize();
             }
         });
@@ -157,8 +136,8 @@ public class ProductDetailsGUI extends JFrame {
         exit.setFont(new Font("Public Sans", Font.BOLD, 15));
         exit.setRadius(15);
         roundPanel[0].add(exit);
-        exit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        exit.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 exit();
             }
         });
@@ -166,37 +145,35 @@ public class ProductDetailsGUI extends JFrame {
         exit.setColorOver(new Color(0xB04848));
         exit.setColorClick(new Color(0xE79292));
 
-
-
         text_product.setText("CHI TIẾT MUA HÀNG");
         //text_product.setBackground(new Color(240,240,240));
-        text_product.setForeground(new Color(240,240,240));
+        text_product.setForeground(new Color(240, 240, 240));
         text_product.setFont(new Font("Times New Roman", Font.BOLD, 25));
         text_product.setPreferredSize(new Dimension(260, 40));
         roundPanel[1].add(text_product);
 
-        frameImg.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        frameImg.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         frameImg.setPreferredSize(new Dimension(300, 200));
-        frameImg.setBackground(new Color(240,240,240));
+        frameImg.setBackground(new Color(240, 240, 240));
         roundPanel[2].add(frameImg);
 
         originalIcon = new ImageIcon(newProduct.getImage());
         slProductImg.setIcon(new ImageIcon(originalIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH)));
         frameImg.add(slProductImg);
 
-        roundPanel[5].setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
+        roundPanel[5].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
         roundPanel[5].setBackground(new Color(68, 150, 60));
-        roundPanel[5].setPreferredSize(new Dimension(650,50));
+        roundPanel[5].setPreferredSize(new Dimension(650, 50));
         roundPanel[3].add(roundPanel[5]);
 
-        roundPanel[6].setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
+        roundPanel[6].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
         roundPanel[6].setBackground(new Color(68, 150, 60));
-        roundPanel[6].setPreferredSize(new Dimension(650,50));
+        roundPanel[6].setPreferredSize(new Dimension(650, 50));
         roundPanel[3].add(roundPanel[6]);
 
-        roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT,20,10));
+        roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
         roundPanel[7].setBackground(new Color(68, 150, 60));
-        roundPanel[7].setPreferredSize(new Dimension(650,50));
+        roundPanel[7].setPreferredSize(new Dimension(650, 50));
         roundPanel[3].add(roundPanel[7]);
 
         label[0].setText("Tên sản phẩm\t:");
@@ -210,13 +187,14 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[6].add(label[1]);
 
         label[2].setText("Số lượng\t\t:");
-        label[2].setPreferredSize(new Dimension(130, 35));;
+        label[2].setPreferredSize(new Dimension(130, 35));
+        ;
         label[2].setFont(new Font("Times New Roman", Font.BOLD, 17));
         roundPanel[7].add(label[2]);
 
-        roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        roundPanel[8].setBackground(new Color(240,240,240));
-        roundPanel[8].setPreferredSize(new Dimension(400,35));
+        roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        roundPanel[8].setBackground(new Color(240, 240, 240));
+        roundPanel[8].setPreferredSize(new Dimension(400, 35));
         roundPanel[5].add(roundPanel[8]);
 
         label[3].setText(newProduct.getName());
@@ -225,9 +203,9 @@ public class ProductDetailsGUI extends JFrame {
         label[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
         roundPanel[8].add(label[3]);
 
-        roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        roundPanel[9].setBackground(new Color(240,240,240));
-        roundPanel[9].setPreferredSize(new Dimension(150,35));
+        roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        roundPanel[9].setBackground(new Color(240, 240, 240));
+        roundPanel[9].setPreferredSize(new Dimension(150, 35));
         roundPanel[6].add(roundPanel[9]);
 
 
@@ -240,21 +218,21 @@ public class ProductDetailsGUI extends JFrame {
         minus.setText("-");
         minus.setPreferredSize(new Dimension(35, 35));
         minus.setFocusable(false);
-        minus.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        minus.setFont(new Font("Tahoma", Font.PLAIN, 16));
         minus.setRadius(50);
-        minus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        minus.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 minusPress();
             }
         });
-        minus.setColor(new Color(240,240,240));
+        minus.setColor(new Color(240, 240, 240));
         minus.setColorOver(new Color(0x737070));
         minus.setColorClick(new Color(0x737070));
         roundPanel[7].add(minus);
 
-        roundPanel[10].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        roundPanel[10].setBackground(new Color(240,240,240));
-        roundPanel[10].setPreferredSize(new Dimension(50,35));
+        roundPanel[10].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        roundPanel[10].setBackground(new Color(240, 240, 240));
+        roundPanel[10].setPreferredSize(new Dimension(50, 35));
         roundPanel[7].add(roundPanel[10]);
 
 
@@ -267,35 +245,36 @@ public class ProductDetailsGUI extends JFrame {
         plus.setText("+");
         plus.setFocusable(false);
         plus.setPreferredSize(new Dimension(35, 35));
-        plus.setFont(new Font("Tahoma", 0, 16));
+        plus.setFont(new Font("Tahoma", Font.PLAIN, 16));
         plus.setRadius(50);
-        plus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        plus.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 plusPress();
             }
         });
-        plus.setColor(new Color(240,240,240));
+        plus.setColor(new Color(240, 240, 240));
         plus.setColorOver(new Color(0x737070));
         plus.setColorClick(new Color(0x737070));
         roundPanel[7].add(plus);
 
         label[6].setText("Size:");
-        label[6].setPreferredSize(new Dimension(50, 35));;
+        label[6].setPreferredSize(new Dimension(50, 35));
+        ;
         label[6].setFont(new Font("Times New Roman", Font.BOLD, 17));
         roundPanel[7].add(label[6]);
 
-        size.setFont(new Font("Dialog", 0, 12));
-        size.setMaximumRowCount(10);//so luong
-        size.setPreferredSize(new Dimension(100, 35));
-        size.setBorder(null);
-        size.setFocusable(false);
-        size.addActionListener(new ActionListener() {
+        comboBoxProductSize.setFont(new Font("Dialog", Font.PLAIN, 12));
+        comboBoxProductSize.setMaximumRowCount(10);//so luong
+        comboBoxProductSize.setPreferredSize(new Dimension(100, 35));
+        comboBoxProductSize.setBorder(null);
+        comboBoxProductSize.setFocusable(false);
+        comboBoxProductSize.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectSize();
             }
         });
-        roundPanel[7].add(size);
+        roundPanel[7].add(comboBoxProductSize);
 
 
         confirm.setIcon(new ImageIcon("img/add-to-cart.png"));
@@ -304,14 +283,14 @@ public class ProductDetailsGUI extends JFrame {
         confirm.setFocusable(false);
         confirm.setFocusPainted(false);
         confirm.setPreferredSize(new Dimension(150, 50));
-        confirm.setFont(new Font("Tahoma", 0, 16));
+        confirm.setFont(new Font("Tahoma", Font.PLAIN, 16));
         confirm.setRadius(45);
-        confirm.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
+        confirm.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent evt) {
                 pressConfirm();
             }
         });
-        confirm.setColor(new Color(240,240,240));
+        confirm.setColor(new Color(240, 240, 240));
         confirm.setColorOver(new Color(0x756969));
         confirm.setColorClick(new Color(0xA65B5B));
         roundPanel[4].add(confirm);
@@ -319,18 +298,18 @@ public class ProductDetailsGUI extends JFrame {
     }
 
     public void minusPress() {
-        int a = Integer.parseInt(label[5].getText());
-        if(a > 0) {
-            a--;
-            label[5].setText(Integer.toString(a));
+        int quantity = Integer.parseInt(label[5].getText());
+        if (quantity > 0) {
+            quantity--;
+            label[5].setText(Integer.toString(quantity));
         }
     }
 
     public void plusPress() {
-        int a = Integer.parseInt(label[5].getText());
-        if(a < 100) {
-            a++;
-            label[5].setText(Integer.toString(a));
+        int quantity = Integer.parseInt(label[5].getText());
+        if (quantity < 100) {
+            quantity++;
+            label[5].setText(Integer.toString(quantity));
         }
     }
 
@@ -339,23 +318,21 @@ public class ProductDetailsGUI extends JFrame {
     }
 
     private void exit() {
-            this.dispose();
+        this.dispose();
     }
 
     public void selectSize() {
-        for(int i =0; i < comboBoxItems.size(); i++) {
-            if(size.getSelectedItem().toString().equals(comboBoxItems.get(i))) {
-               // this.price = (String) listprice.get(i);
-                label[4].setText(listprice.get(i) + "đ");
+        for (int i = 0; i < sizeList.size(); i++) {
+            if (comboBoxProductSize.getSelectedItem().toString().equals(sizeList.get(i))) {
+                // this.price = (String) costList.get(i);
+                label[4].setText(costList.get(i));
                 break;
             }
         }
     }
 
-    private Product getProduct;
-
     private Product checkOrderExits(Product product) {
-        for(int i = 0; i < saleGUI.getListDetailBill().size(); i++) {
+        for (int i = 0; i < saleGUI.getListDetailBill().size(); i++) {
             if (product.getName().equals(saleGUI.getListDetailBill().get(i).getName()) &&
                 product.getSized().equals(saleGUI.getListDetailBill().get(i).getSized())) {
                 return saleGUI.getListDetailBill().get(i);
@@ -363,29 +340,37 @@ public class ProductDetailsGUI extends JFrame {
         }
         return null;
     }
+
     public void pressConfirm() {
         getProduct = new ProductBLL()
-            .searchProducts("NAME = '" + newProduct.getName() + "'", "SIZED = '" + size.getSelectedItem().toString() + "'")
+            .searchProducts("NAME = '" + newProduct.getName() + "'", "SIZED = '" + comboBoxProductSize.getSelectedItem().toString() + "'")
             .get(0);
-        int index = Integer.parseInt(label[5].getText());
+        int quantity = Integer.parseInt(label[5].getText());
         System.out.println(getProduct.toString());
 
-        if(checkOrderExits(getProduct)!=null){
+        if (checkOrderExits(getProduct) != null) {
             System.out.println("updating");
             //Cập nhật quantity
             int location = saleGUI.getListDetailBill().indexOf(checkOrderExits(getProduct));
-            saleGUI.getListQuantityChoice().set(location, index);
-        }else{
+            saleGUI.getListQuantityChoice().set(location, quantity);
+        } else {
             System.out.println("add new");
             saleGUI.getListDetailBill().add(getProduct);
-            saleGUI.getListQuantityChoice().add(index);
+            saleGUI.getListQuantityChoice().add(quantity);
         }
 
         saleGUI.getRoundPanel9().removeAll();
-        saleGUI.addBill(saleGUI.getListDetailBill(), saleGUI.getListQuantityChoice());
+        saleGUI.addProductToBill(saleGUI.getListDetailBill(), saleGUI.getListQuantityChoice());
         this.dispose();
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 //    public static void main(String[] arg) {
 //        new ProductDetailsGUI().setVisible(true);

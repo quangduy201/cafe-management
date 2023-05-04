@@ -54,7 +54,7 @@ public class Product {
         this.sized = sized;
     }
 
-    public Double getCost() {
+    public double getCost() {
         return cost;
     }
 
