@@ -54,11 +54,12 @@
             <version>1.4</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.openpnp/opencv -->
         <dependency>
-            <groupId>org.openpnp</groupId>
+            <groupId>org.opencv</groupId>
             <artifactId>opencv</artifactId>
-            <version>4.7.0-0</version>
+            <version>4.7.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/opencv-470.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
