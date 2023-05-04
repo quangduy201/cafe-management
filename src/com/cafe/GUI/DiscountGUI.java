@@ -74,7 +74,7 @@ public class DiscountGUI extends JPanel {
         jComboBox = new JComboBox<Object>(new String[] {"Đang áp dụng", "Ngừng áp dụng"});
         roundPanel = new RoundPanel[15];
         label = new JLabel[10];
-        jTextFields = new JTextField[10];
+        jTextFields = new JTextField[2];
         dataTable = new DataTable[2];
         discount = new JPanel();
         labelimg = new JLabel();
@@ -101,10 +101,8 @@ public class DiscountGUI extends JPanel {
             roundPanel[i] = new RoundPanel();
         }
 
-        for (int i = 0; i < label.length; i++) {
-            label[i] = new JLabel();
-            jTextFields[i] = new JTextField();
-        }
+        jTextFields[0] = new JTextField();
+        jTextFields[1] = new JTextField();
 
         discount.setLayout(new BorderLayout(10, 10));
         discount.setBackground(new Color(70, 67, 67));
@@ -181,183 +179,171 @@ public class DiscountGUI extends JPanel {
         labelimg.setPreferredSize(new Dimension(150, 150));
         roundPanel[4].add(labelimg);
 
-        label[0].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[0].setHorizontalAlignment(JLabel.LEFT);
-        label[0].setPreferredSize(new Dimension(130, 40));
-        label[0].setAutoscrolls(true);
-        roundPanel[5].add(label[0]);
-
-        jTextFields[0].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[0].setText(discountBLL.getAutoID());
-        jTextFields[0].setHorizontalAlignment(JLabel.CENTER);
-        jTextFields[0].setBorder(BorderFactory.createEmptyBorder());
-        jTextFields[0].setEditable(false);
-        jTextFields[0].setFocusable(false);
-        jTextFields[0].setPreferredSize(new Dimension(200, 30));
-        jTextFields[0].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[0]);
-
-        label[1].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[1].setHorizontalAlignment(JLabel.LEFT);
-        label[1].setPreferredSize(new Dimension(130, 40));
-        label[1].setAutoscrolls(true);
-        roundPanel[5].add(label[1]);
-
-        jTextFields[1].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[1].setHorizontalAlignment(JLabel.LEFT);
-        jTextFields[1].setBorder(BorderFactory.createLineBorder(Color.black));
-        jTextFields[1].setPreferredSize(new Dimension(200, 30));
-        jTextFields[1].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[1]);
-
-        label[2].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[2].setHorizontalAlignment(JLabel.LEFT);
-        label[2].setPreferredSize(new Dimension(130, 40));
-        label[2].setAutoscrolls(true);
-        roundPanel[5].add(label[2]);
-
-        DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser1.setPreferredSize(new Dimension(200, 30));
-        jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
-        DateTextField1.addActionListener(e -> {
-            String dateString = DateTextField1.getText();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(dateString);
-                jDateChooser1.setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[5].add(jDateChooser1);
-
-
-        label[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[3].setHorizontalAlignment(JLabel.LEFT);
-        label[3].setPreferredSize(new Dimension(130, 40));
-        label[3].setAutoscrolls(true);
-        roundPanel[5].add(label[3]);
-
-
-        DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser2.setPreferredSize(new Dimension(200, 30));
-        jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
-        DateTextField2.addActionListener(e -> {
-            String dateString = DateTextField2.getText();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(dateString);
-                jDateChooser2.setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[5].add(jDateChooser2);
-
-        label[4].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[4].setHorizontalAlignment(JLabel.LEFT);
-        label[4].setPreferredSize(new Dimension(130, 40));
-        label[4].setAutoscrolls(true);
-        roundPanel[5].add(label[4]);
-
+        jComboBox.setSelectedIndex(0);
         jComboBox.setFont(new Font("Dialog", Font.PLAIN, 12));
         jComboBox.setMaximumRowCount(2);//so luong
         jComboBox.setPreferredSize(new Dimension(200, 30));
         jComboBox.setBorder(null);
         jComboBox.setFocusable(false);
-        roundPanel[5].add(jComboBox);
 
-        label[0].setText("Mã khuyến mãi:");
-        label[1].setText("Giá trị (%):");
-        label[2].setText("Ngày bắt đầu:");
-        label[3].setText("Ngày kết thúc:");
-        label[4].setText("Trạng thái:");
 
-        mode.setLayout(new GridLayout(2, 2, 40, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(380, 130));
-        roundPanel[6].add(mode);
-
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addDiscount();
+        for (int i = 0; i < columnNamesDis.size() - 1; i++) {
+            label[i] = new JLabel();
+            label[i].setFont(new Font("Times New Roman", Font.BOLD, 10));
+            label[i].setHorizontalAlignment(JLabel.LEFT);
+            label[i].setPreferredSize(new Dimension(130, 40));
+            label[i].setAutoscrolls(true);
+            label[i].setText(columnNamesDis.get(i) + ": ");
+            roundPanel[5].add(label[i]);
+            switch (columnNamesDis.get(i)) {
+                case "DISCOUNT_ID" -> {
+                    jTextFields[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
+                    jTextFields[i].setText(discountBLL.getAutoID());
+                    jTextFields[i].setHorizontalAlignment(JLabel.CENTER);
+                    jTextFields[i].setBorder(BorderFactory.createEmptyBorder());
+                    jTextFields[i].setEditable(false);
+                    jTextFields[i].setFocusable(false);
+                    jTextFields[i].setPreferredSize(new Dimension(200, 30));
+                    jTextFields[i].setAutoscrolls(true);
+                    roundPanel[5].add(jTextFields[i]);
+                }
+                case "DISCOUNT_PERCENT" -> {
+                    jTextFields[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
+                    jTextFields[i].setHorizontalAlignment(JLabel.LEFT);
+                    jTextFields[i].setBorder(BorderFactory.createLineBorder(Color.black));
+                    jTextFields[i].setPreferredSize(new Dimension(200, 30));
+                    jTextFields[i].setAutoscrolls(true);
+                    roundPanel[5].add(jTextFields[i]);
+                }
+                case "START_DATE" -> {
+                    DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
+                    jDateChooser1.setPreferredSize(new Dimension(200, 30));
+                    jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
+                    DateTextField1.addActionListener(e -> {
+                        String dateString = DateTextField1.getText();
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        format.setLenient(false);
+                        try {
+                            Date date = format.parse(dateString);
+                            jDateChooser1.setDate(date);
+                        } catch (ParseException ex) {
+                            JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+                    roundPanel[5].add(jDateChooser1);
+                }
+                case "END_DATE" -> {
+                    DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
+                    jDateChooser2.setPreferredSize(new Dimension(200, 30));
+                    jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
+                    DateTextField2.addActionListener(e -> {
+                        String dateString = DateTextField2.getText();
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        format.setLenient(false);
+                        try {
+                            Date date = format.parse(dateString);
+                            jDateChooser2.setDate(date);
+                        } catch (ParseException ex) {
+                            JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    });
+                    roundPanel[5].add(jDateChooser2);
+                }
+                case "STATUS" -> roundPanel[5].add(jComboBox);
+                default -> {
                 }
             }
-        });
-        mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateDiscount();
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 40, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(380, 130));
+            roundPanel[6].add(mode);
+
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addDiscount();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btAdd);
+        }
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(false);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteDiscount();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateDiscount();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btUpd);
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteDiscount();
+                    }
+                }
+            });
+            mode.add(btDel);
 
+        }
+
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        }
 
         roundPanel[7].add(cbbSearchDis);
         cbbSearchDis.addActionListener(e -> selectSearchDis());
@@ -544,7 +530,7 @@ public class DiscountGUI extends JPanel {
     }
 
     public void fillForm2() {
-        if (discountSelected != null) {
+        if (discountSelected != null && decentralizationMode == 3) {
             DefaultTableModel model = (DefaultTableModel) dataTable[1].getModel();
             Object[] rowData = model.getDataVector().elementAt(dataTable[1].getSelectedRow()).toArray();
             String[] data = new String[rowData.length];
@@ -725,6 +711,29 @@ public class DiscountGUI extends JPanel {
     }
 
     public boolean checkInput() {
+        for (JTextField textField : jTextFields) {
+            if (textField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
+                return false;
+            }
+        }
+
+        if (!jTextFields[1].getText().matches("^-?\\d+$")) {
+            // discount_percent must be integer "|"
+            jTextFields[1].requestFocusInWindow();
+            jTextFields[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Discount percent must be integer", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        Date startDay = jDateChooser1.getDate();
+        Date endDay = jDateChooser2.getDate();
+        if (startDay.after(endDay)) {
+            JOptionPane.showMessageDialog(this, "The start date must be before the end date", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
         return true;
     }
 
