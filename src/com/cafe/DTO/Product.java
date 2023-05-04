@@ -84,7 +84,6 @@ public class Product {
             name + " | " +
             categoryID + " | " +
             sized + " | " +
-            cost + " | " +
-            image;
+            cost;
     }
 }

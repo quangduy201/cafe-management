@@ -47,6 +47,7 @@ public class MySQL {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(formattedQuery);
         return result;
     }
 

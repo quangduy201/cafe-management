@@ -2,11 +2,15 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ReceiptBLL;
+import com.cafe.BLL.ReceiptDetailsBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Receipt;
+import com.cafe.DTO.ReceiptDetails;
 import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
+import com.cafe.utils.Day;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -25,6 +29,44 @@ public class IngredientGUI extends JPanel {
 
     private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
     private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
+    private IngredientBLL ingredientBLL = new IngredientBLL();
+    private SupplierBLL supplierBLL = new SupplierBLL();
+    private int decentralizationMode;
+    private String supplierID;
+    private DataTable dataTable;
+    private DataTable dataTable1;
+    private RoundPanel ingredient;
+    private RoundPanel roundPanel1;
+    private RoundPanel roundPanel2;
+    private RoundPanel search;
+    private RoundPanel search1;
+    private JScrollPane scrollPane;
+    private RoundPanel pnlIngredientConfiguration;
+    private JComboBox<Object> cbbSearchFilter;
+    private JComboBox<Object> cbbSearchSupplier;
+    private JComboBox<Object> cbbUnitSearch;
+    private JTextField txtSearch;
+    private JTextField txtSearch1;
+    private Button btsupplier;
+    private Button btreceipt;
+    private Button btImport;
+    private Button btCancel;
+    private RoundPanel[] roundPanel;
+    private JLabel[] label;
+    private String staffid;
+    private JScrollPane ingredientscrollPane;
+    private ReceiptBLL receiptBLL = new ReceiptBLL();
+    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
+    private FrameIngredient frameIngredient;
+
+    public IngredientGUI(int decentralizationMode, String staffid) {
+        this.staffid = staffid;
+        this.decentralizationMode = decentralizationMode;
+        this.supplierID = null;
+        setLayout(new BorderLayout(10, 10));
+        setBackground(new Color(51, 51, 51));
+        initComponents();
+    }
 
     public ArrayList<Ingredient> getReceiptDetails() {
         return receiptDetails;
@@ -41,53 +83,6 @@ public class IngredientGUI extends JPanel {
     public void setListQuantityChoice(ArrayList<Integer> listQuantityChoice) {
         this.listQuantityChoice = listQuantityChoice;
     }
-
-    private IngredientBLL ingredientBLL = new IngredientBLL();
-    private SupplierBLL supplierBLL = new SupplierBLL();
-    private int decentralizationMode;
-    private DataTable dataTable;
-    private DataTable dataTable1;
-    private RoundPanel ingredient;
-    private RoundPanel roundPanel1;
-    private RoundPanel roundPanel2;
-    private RoundPanel search;
-    private RoundPanel search1;
-    private JScrollPane scrollPane;
-    private RoundPanel pnlIngredientConfiguration;
-    private JPanel showImg;
-    private RoundPanel mode;
-    private JLabel[] jLabelsForm;
-    private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object> cbbSearchSupplier;
-    private JTextField txtSearch;
-    private JTextField txtSearch1;
-    private JTextField[] jTextFieldsForm;
-    private Button btAdd;
-    private Button btUpd;
-    private Button btDel;
-    private Button btRef;
-
-    private Button btsupplier;
-    private Button btreceipt;
-
-    private Button btImport;
-    private Button btCancel;
-
-    private RoundPanel[] roundPanel;
-    private JLabel[] label;
-    private String staffid;
-
-    private JScrollPane ingredientscrollPane;
-
-    public IngredientGUI(int decentralizationMode, String staffid) {
-        this.staffid = staffid;
-        this.decentralizationMode = decentralizationMode;
-        setLayout(new BorderLayout(10, 10));
-        setBackground(new Color(51, 51, 51));
-        initComponents();
-    }
-
-    private ReceiptBLL receiptBLL = new ReceiptBLL();
 
     public void initComponents() {
         ingredient = new RoundPanel();
@@ -108,18 +103,11 @@ public class IngredientGUI extends JPanel {
         search = new RoundPanel();
         search1 = new RoundPanel();
         pnlIngredientConfiguration = new RoundPanel();
-        showImg = new JPanel();
-        mode = new RoundPanel();
-        jLabelsForm = new JLabel[result.size() - 1];
-        cbbSearchFilter = new JComboBox<>(result.subList(0, result.size()).toArray());
-        cbbSearchSupplier = new JComboBox<>(columnName1.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(result.subList(0, result.size() - 1).toArray());
+        cbbSearchSupplier = new JComboBox<>(columnName1.subList(0, columnNames.size() - 2).toArray());
+        cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         txtSearch = new JTextField();
         txtSearch1 = new JTextField();
-        jTextFieldsForm = new JTextField[result.size() - 1];
-        btAdd = new Button();
-        btUpd = new Button();
-        btDel = new Button();
-        btRef = new Button();
         btCancel = new Button();
         btImport = new Button();
         btsupplier = new Button();
@@ -135,11 +123,6 @@ public class IngredientGUI extends JPanel {
         roundPanel1.setAutoscrolls(true);
         ingredient.add(roundPanel1);
 
-        roundPanel[0].setLayout(new BorderLayout(10, 0));
-        roundPanel[0].setBackground(new Color(255, 255, 255));
-        roundPanel[0].setPreferredSize(new Dimension(620, 40));
-        roundPanel[0].setAutoscrolls(true);
-        roundPanel1.add(roundPanel[0]);
 
         roundPanel[11].setBackground(new Color(255, 255, 255));
         roundPanel[11].setPreferredSize(new Dimension(635, 50));
@@ -176,6 +159,7 @@ public class IngredientGUI extends JPanel {
         roundPanel[1].add(search, BorderLayout.NORTH);
 
         cbbSearchFilter.setPreferredSize(new Dimension(120, 30));
+        cbbSearchFilter.addActionListener(e -> selectSearchFilter());
         search.add(cbbSearchFilter);
 
         txtSearch.setPreferredSize(new Dimension(200, 30));
@@ -196,6 +180,9 @@ public class IngredientGUI extends JPanel {
             }
         });
         search.add(txtSearch);
+        cbbUnitSearch.setVisible(false);
+        cbbUnitSearch.addItemListener(e -> unitSearch());
+        search.add(cbbUnitSearch);
 
         search1.setLayout(new FlowLayout());
         search1.setBackground(new Color(0xFFFFFF));
@@ -227,10 +214,6 @@ public class IngredientGUI extends JPanel {
         dataTable = new DataTable(null, result.toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel[2].add(scrollPane);
-        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        for (Ingredient ingredient : ingredientBLL.getIngredientList()) {
-            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
-        }
 
         dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnName1.size() - 1).toArray(), e -> fillForm1());
         scrollPane = new JScrollPane(dataTable1);
@@ -353,50 +336,6 @@ public class IngredientGUI extends JPanel {
         roundPanel[6].add(label[9]);
 
 
-        btsupplier.setPreferredSize(new Dimension(120, 40));
-        btsupplier.setBorderPainted(false);
-        btsupplier.setRadius(15);
-        btsupplier.setFocusPainted(false);
-        btsupplier.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btsupplier.setColor(new Color(0x70E149));
-        btsupplier.setColorOver(new Color(0x5EFF00));
-        btsupplier.setColorClick(new Color(0x8AD242));
-        btsupplier.setBorderColor(new Color(70, 67, 67));
-        btsupplier.setText("Nhập Hàng");
-        btsupplier.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
-        roundPanel[0].add(btsupplier, BorderLayout.WEST);
-
-        btreceipt.setPreferredSize(new Dimension(120, 40));
-        btreceipt.setBorderPainted(false);
-        btreceipt.setRadius(15);
-        btreceipt.setFocusPainted(false);
-        btreceipt.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btreceipt.setColor(new Color(0x70E149));
-        btreceipt.setColorOver(new Color(0x5EFF00));
-        btreceipt.setColorClick(new Color(0x8AD242));
-        btreceipt.setBorderColor(new Color(70, 67, 67));
-        btreceipt.setText("Nhà Cung Cấp");
-        btreceipt.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
-        roundPanel[0].add(btreceipt, BorderLayout.EAST);
-
-
         pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
         pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
         pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
@@ -455,6 +394,7 @@ public class IngredientGUI extends JPanel {
     }
 
     public void searchIngredient() {
+        ingredientBLL.setIngredientList(ingredientBLL.findIngredients("SUPPLIER_ID", supplierID));
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
@@ -487,10 +427,42 @@ public class IngredientGUI extends JPanel {
     }
 
     public void pressImport() {
+        Receipt newReceipt = null;
+        try {
+            newReceipt = getForm1();
+        } catch (Exception ignored) {
+
+        }
+        assert newReceipt != null;
+
+        if (receiptBLL.addReceipt(newReceipt))
+            JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+        else
+            JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
+            for (int i = 0; i < receiptDetails.size(); i++) {
+                ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+                receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
+            }
+        }
+        supplierID = null;
+        label[7].setText(null);
+
+        pressCacel();
+
+        loadDataTable(new ArrayList<>());
+        loadDataTable1(supplierBLL.getSupplierList());
     }
 
     public void pressCacel() {
-
+        label[3].setText(receiptBLL.getAutoID());
+        receiptDetails = new ArrayList<>();
+        listQuantityChoice = new ArrayList<>();
+        roundPanel[10].removeAll();
+        roundPanel[10].repaint();
+        roundPanel[10].revalidate();
+        label[9].setText("0đ");
     }
 
     public RoundPanel getRoundPanel() {
@@ -550,8 +522,6 @@ public class IngredientGUI extends JPanel {
         label[9].setText(VNString.currency(totalPrice));
     }
 
-    private FrameIngredient frameIngredient;
-
     public void fillForm() {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
@@ -574,6 +544,41 @@ public class IngredientGUI extends JPanel {
             data[i] = rowData[i].toString();
         }
         label[7].setText(data[1]);
+        ingredientBLL.setIngredientList(ingredientBLL.searchIngredients("DELETED = 0"));
         loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", data[0]));
+        supplierID = data[0];
+
+        pressCacel();
+    }
+
+    private void unitSearch() {
+        ingredientBLL.setIngredientList(ingredientBLL.findIngredients("SUPPLIER_ID", supplierID));
+        loadDataTable(ingredientBLL.findIngredients("UNIT", Objects.requireNonNull(cbbUnitSearch.getSelectedItem()).toString()));
+    }
+
+    private void selectSearchFilter() {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
+            txtSearch.setVisible(false);
+            cbbUnitSearch.setSelectedIndex(0);
+            cbbUnitSearch.setVisible(true);
+            if (supplierID != null) {
+                unitSearch();
+            }
+        } else {
+            cbbUnitSearch.setVisible(false);
+            txtSearch.setVisible(true);
+            if (supplierID != null) {
+                searchIngredient();
+            }
+        }
+    }
+
+    public Receipt getForm1() throws Exception {
+        String receiptID = label[3].getText();
+        String staffID = label[11].getText();
+        Day dor = Day.parseDay(label[5].getText());
+        double grandTotal = 0;
+        String supplierID = label[7].getText();
+        return new Receipt(receiptID, staffID, dor, grandTotal, supplierID, false);
     }
 }

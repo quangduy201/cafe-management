@@ -1,10 +1,16 @@
 package com.cafe.GUI;
 
+import com.cafe.BLL.CategoryBLL;
 import com.cafe.BLL.DiscountBLL;
+import com.cafe.BLL.DiscountDetailsBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.DTO.Discount;
+import com.cafe.DTO.DiscountDetails;
+import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.Day;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -14,65 +20,65 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.Objects;
 
 public class DiscountGUI extends JPanel {
+    List<String> newProductID_Dis = new ArrayList<>();
     private DiscountBLL discountBLL = new DiscountBLL();
+    private DiscountDetailsBLL discountDetailsBLL = new DiscountDetailsBLL();
     private ProductBLL productBLL = new ProductBLL();
+    private CategoryBLL categoryBLL = new CategoryBLL();
     private int decentralizationMode;
+    private Discount discountSelected;
     private JPanel discount;
     private RoundPanel[] roundPanel;
     private JLabel[] label;
     private JTextField[] jTextFields;
     private DataTable[] dataTable;
-    private JDateChooser jDateChooser1;
-    private JDateChooser jDateChooser2;
-    private JTextField DateTextField1;
-    private JTextField DateTextField2;
-    private JComboBox<String> jComboBox;
+    private JComboBox<Object> jComboBox;
     private RoundPanel mode;
     private Button btAdd;
     private Button btUpd;
     private Button btDel;
     private Button btRef;
-    private JTextField search1;
-    private JTextField search2;
-    private Button btSearch1;
-    private Button btSearch2;
-    private JComboBox<String> jComboBox1;
-    private JComboBox<String> jComboBox2;
+    private JTextField txtsearchDis;
+    private JTextField txtsearchPro;
+    private JDateChooser[] jDateChooser;
+    private JTextField[] dateTextField;
+    private JComboBox<Object> cbbSearchDis;
+    private JComboBox<Object> cbbSearchPro;
+    private JComboBox<Object> cbbStatus;
+    private JComboBox<Object> cbbCategory;
+    private JComboBox<Object> cbbSize;
     private JLabel labelimg;
     private JScrollPane scrollPane1;
     private JScrollPane scrollPane2;
+
     public DiscountGUI(int decentralizationMode) {
         this.decentralizationMode = decentralizationMode;
+        this.discountSelected = null;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
 
     public void initComponents() {
-        jComboBox = new JComboBox<>();
+        List<String> columnNamesDis = discountBLL.getDiscountDAL().getColumnNames();
+        List<String> columnNamesPro = productBLL.getProductDAL().getColumnNames();
+        List<Object> categoriesID = categoryBLL.getObjectsProperty("CATEGORY_ID", categoryBLL.getCategoryList());
+
+        jComboBox = new JComboBox<>(new String[]{"Đang áp dụng", "Ngừng áp dụng"});
         roundPanel = new RoundPanel[15];
         label = new JLabel[10];
-        jTextFields = new JTextField[10];
+        jTextFields = new JTextField[2];
+        jDateChooser = new JDateChooser[2];
         dataTable = new DataTable[2];
         discount = new JPanel();
         labelimg = new JLabel();
-        jDateChooser1 = new JDateChooser();
-        jDateChooser2 = new JDateChooser();
-        DateTextField1 = ((JTextField) jDateChooser1.getDateEditor().getUiComponent());
-        DateTextField2 = ((JTextField) jDateChooser2.getDateEditor().getUiComponent());
-        search1 = new JTextField();
-        search2 = new JTextField();
-        btSearch1 = new Button();
-        btSearch2 = new Button();
-        jComboBox1 = new JComboBox<>();
-        jComboBox2 = new JComboBox<>();
+        txtsearchDis = new JTextField();
+        txtsearchPro = new JTextField();
 
         mode = new RoundPanel();
         btAdd = new Button();
@@ -80,16 +86,14 @@ public class DiscountGUI extends JPanel {
         btDel = new Button();
         btRef = new Button();
 
-//        dataTable[1] = new DataTable();
-//        dataTable[2] = new DataTable();
+        cbbSearchDis = new JComboBox<>(columnNamesDis.subList(0, columnNamesDis.size() - 1).toArray());
+        cbbSearchPro = new JComboBox<>(columnNamesPro.subList(0, columnNamesPro.size() - 2).toArray());
+        cbbStatus = new JComboBox<>(new String[]{"Đang áp dụng", "Ngừng áp dụng"});
+        cbbCategory = new JComboBox<>(categoriesID.toArray());
+        cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
 
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
-        }
-
-        for (int i = 0; i < label.length; i++) {
-            label[i] = new JLabel();
-            jTextFields[i] = new JTextField();
         }
 
         discount.setLayout(new BorderLayout(10, 10));
@@ -136,8 +140,8 @@ public class DiscountGUI extends JPanel {
         roundPanel[6].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[6]);
 
-        roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        roundPanel[7].setBackground(new Color(255, 255, 255));
+        roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER, 50, 0));
+//        roundPanel[7].setBackground(new Color(255, 255, 255));
         roundPanel[7].setPreferredSize(new Dimension(600, 40));
         roundPanel[7].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[7]);
@@ -149,7 +153,7 @@ public class DiscountGUI extends JPanel {
         roundPanel[8].add(new JScrollPane(dataTable[0]), BorderLayout.CENTER);
         roundPanel[2].add(roundPanel[8]);
 
-        roundPanel[9].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER, 50, 0));
         // roundPanel[9].setBackground(new Color(182, 24, 24));
         roundPanel[9].setPreferredSize(new Dimension(600, 40));
         roundPanel[9].setAutoscrolls(true);
@@ -167,306 +171,398 @@ public class DiscountGUI extends JPanel {
         labelimg.setPreferredSize(new Dimension(150, 150));
         roundPanel[4].add(labelimg);
 
-//        for (int i = 0 ; i < 6; i++) {
-//            label[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
-//            label[i].setHorizontalAlignment(JLabel.LEFT);
-//            label[i].setPreferredSize(new Dimension(130, 40));
-//            label[i].setAutoscrolls(true);
-//            roundPanel[5].add(label[i]);
-//
-//            jTextFields[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
-//            jTextFields[i].setPreferredSize(new Dimension(200, 30));
-//            jTextFields[i].setAutoscrolls(true);
-//            roundPanel[5].add(jTextFields[i]);
-//        }
-
-        label[0].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[0].setHorizontalAlignment(JLabel.LEFT);
-        label[0].setPreferredSize(new Dimension(130, 40));
-        label[0].setAutoscrolls(true);
-        roundPanel[5].add(label[0]);
-
-        jTextFields[0].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[0].setHorizontalAlignment(JLabel.CENTER);
-        jTextFields[0].setBorder(BorderFactory.createEmptyBorder());
-        jTextFields[0].setEditable(false);
-        jTextFields[0].setFocusable(false);
-        jTextFields[0].setPreferredSize(new Dimension(200, 30));
-        jTextFields[0].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[0]);
-
-        label[1].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[1].setHorizontalAlignment(JLabel.LEFT);
-        label[1].setPreferredSize(new Dimension(130, 40));
-        label[1].setAutoscrolls(true);
-        roundPanel[5].add(label[1]);
-
-        jTextFields[1].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        jTextFields[1].setHorizontalAlignment(JLabel.LEFT);
-        jTextFields[1].setBorder(BorderFactory.createLineBorder(Color.black));
-        jTextFields[1].setPreferredSize(new Dimension(200, 30));
-        jTextFields[1].setAutoscrolls(true);
-        roundPanel[5].add(jTextFields[1]);
-
-        label[2].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[2].setHorizontalAlignment(JLabel.LEFT);
-        label[2].setPreferredSize(new Dimension(130, 40));
-        label[2].setAutoscrolls(true);
-        roundPanel[5].add(label[2]);
-
-        DateTextField1.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser1.setPreferredSize(new Dimension(200, 30));
-        jDateChooser1.addPropertyChangeListener("date", evt -> changeCalender());
-        DateTextField1.addActionListener(e -> {
-            String dateString = DateTextField1.getText();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(dateString);
-                jDateChooser1.setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[5].add(jDateChooser1);
-
-        label[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[3].setHorizontalAlignment(JLabel.LEFT);
-        label[3].setPreferredSize(new Dimension(130, 40));
-        label[3].setAutoscrolls(true);
-        roundPanel[5].add(label[3]);
-
-        DateTextField2.setFont(new Font("Tahoma", Font.BOLD, 14));
-        jDateChooser2.setPreferredSize(new Dimension(200, 30));
-        jDateChooser2.addPropertyChangeListener("date", evt -> changeCalender());
-        DateTextField2.addActionListener(e -> {
-            String dateString = DateTextField2.getText();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(dateString);
-                jDateChooser2.setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[5].add(jDateChooser2);
-
-        label[4].setFont(new Font("Times New Roman", Font.BOLD, 15));
-        label[4].setHorizontalAlignment(JLabel.LEFT);
-        label[4].setPreferredSize(new Dimension(130, 40));
-        label[4].setAutoscrolls(true);
-        roundPanel[5].add(label[4]);
-
-        Vector<String> comboBoxItems = new Vector<>();
-        comboBoxItems.add("Ngừng áp dụng");
-        comboBoxItems.add("Đang áp dụng");
-        jComboBox.setModel(new DefaultComboBoxModel<>(comboBoxItems));
-
+        Dimension inputFieldsSize = new Dimension(200, 30);
+        jComboBox.setSelectedIndex(0);
         jComboBox.setFont(new Font("Dialog", Font.PLAIN, 12));
         jComboBox.setMaximumRowCount(2);//so luong
-        jComboBox.setPreferredSize(new Dimension(200, 30));
+        jComboBox.setPreferredSize(inputFieldsSize);
         jComboBox.setBorder(null);
         jComboBox.setFocusable(false);
-        roundPanel[5].add(jComboBox);
 
-        label[0].setText("Mã khuyến mãi:");
-        label[1].setText("Giá trị (%):");
-        label[2].setText("Ngày bắt đầu:");
-        label[3].setText("Ngày kết thúc:");
-        label[4].setText("Trạng thái:");
-
-        mode.setLayout(new GridLayout(2, 2, 40, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(380, 130));
-        roundPanel[6].add(mode);
-
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addDiscount();
+        jTextFields = new JTextField[2];
+        jDateChooser = new JDateChooser[2];
+        dateTextField = new JTextField[2];
+        for (int i = 0; i < 2; i++) {
+            jTextFields[i] = new JTextField();
+            jTextFields[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
+            jTextFields[i].setPreferredSize(inputFieldsSize);
+            jTextFields[i].setAutoscrolls(true);
+            jDateChooser[i] = new JDateChooser();
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(inputFieldsSize);
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            dateTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            dateTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            int index = i;
+            dateTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(dateTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+            if (i == 0) {
+                jTextFields[i].setText(discountBLL.getAutoID());
+                jTextFields[i].setHorizontalAlignment(JLabel.CENTER);
+                jTextFields[i].setEditable(false);
+                jTextFields[i].setFocusable(false);
+                jTextFields[i].setBorder(BorderFactory.createEmptyBorder());
+            } else {
+                jTextFields[i].setBorder(BorderFactory.createLineBorder(Color.black));
+            }
+        }
+        for (int i = 0; i < columnNamesDis.size() - 1; i++) {
+            label[i] = new JLabel();
+            label[i].setFont(new Font("Times New Roman", Font.BOLD, 12));
+            label[i].setHorizontalAlignment(JLabel.LEFT);
+            label[i].setPreferredSize(new Dimension(160, 30));
+            label[i].setAutoscrolls(true);
+            label[i].setText(columnNamesDis.get(i) + ": ");
+            roundPanel[5].add(label[i]);
+            switch (columnNamesDis.get(i)) {
+                case "DISCOUNT_ID", "DISCOUNT_PERCENT" -> roundPanel[5].add(jTextFields[i]);
+                case "START_DATE", "END_DATE" -> roundPanel[5].add(jDateChooser[i - 2]);
+                case "STATUS" -> roundPanel[5].add(jComboBox);
+                default -> {
                 }
             }
-        });
-        mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(true);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateDiscount();
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 40, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(380, 130));
+            roundPanel[6].add(mode);
+
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Add");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addDiscount();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btAdd);
+        }
 
-        btDel.setBackground(new Color(35, 166, 97));
-        btDel.setBorder(null);
-        btDel.setIcon(new ImageIcon("img/delete.png"));
-        btDel.setText("  Delete");
-        btDel.setColor(new Color(240, 240, 240));
-        btDel.setColorClick(new Color(141, 222, 175));
-        btDel.setColorOver(new Color(35, 166, 97));
-        btDel.setFocusPainted(false);
-        btDel.setRadius(20);
-        btDel.setEnabled(true);
-        btDel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btDel.isEnabled()) {
-                    deleteDiscount();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Update");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateDiscount();
+                    }
                 }
-            }
-        });
-        mode.add(btDel);
+            });
+            mode.add(btUpd);
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+            btDel.setBackground(new Color(35, 166, 97));
+            btDel.setBorder(null);
+            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setText("  Delete");
+            btDel.setColor(new Color(240, 240, 240));
+            btDel.setColorClick(new Color(141, 222, 175));
+            btDel.setColorOver(new Color(35, 166, 97));
+            btDel.setFocusPainted(false);
+            btDel.setRadius(20);
+            btDel.setEnabled(false);
+            btDel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btDel.isEnabled()) {
+                        deleteDiscount();
+                    }
+                }
+            });
+            mode.add(btDel);
 
+        }
 
-        roundPanel[11].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        roundPanel[11].setPreferredSize(new Dimension(440, 35));
-        roundPanel[11].setAutoscrolls(true);
-        roundPanel[7].add(roundPanel[11]);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Refresh");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        }
 
+        roundPanel[7].add(cbbSearchDis);
+        cbbSearchDis.addActionListener(e -> selectSearchDis());
 
-        search1.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        search1.setPreferredSize(new Dimension(300, 35));
-        search1.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-        search1.getDocument().addDocumentListener(new DocumentListener() {
+        txtsearchDis.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        txtsearchDis.setPreferredSize(new Dimension(300, 35));
+        txtsearchDis.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        txtsearchDis.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchDiscounts();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchDiscounts();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchDiscounts();
             }
         });
-        roundPanel[11].add(search1);
+        roundPanel[7].add(txtsearchDis);
+        cbbStatus.setVisible(false);
+        cbbStatus.addItemListener(e -> statusSearch());
+        roundPanel[7].add(cbbStatus);
 
-        btSearch1.setBackground(new Color(240, 240, 240));
-        btSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btSearch1.setPreferredSize(new Dimension(35, 35));
-        btSearch1.setIcon(new ImageIcon("img/search.png"));
-        btSearch1.setFocusPainted(false);
-        roundPanel[11].add(btSearch1);
+        roundPanel[9].add(cbbSearchPro);
+        cbbSearchPro.addActionListener(e -> selectSearchPro());
 
-        Vector<String> comboBoxItem = new Vector<>();
-        comboBoxItem.add("Tất cả");
-        comboBoxItem.add("Đang áp dụng");
-        comboBoxItem.add("Ngừng áp dụng");
-        jComboBox1.setModel(new DefaultComboBoxModel<>(comboBoxItem));
-
-        jComboBox1.setFont(new Font("Dialog", Font.PLAIN, 15));
-        jComboBox1.setMaximumRowCount(5);//so luong
-        jComboBox1.setPreferredSize(new Dimension(150, 35));
-        jComboBox1.setBorder(null);
-        jComboBox1.setFocusable(false);
-        jComboBox1.addActionListener(evt -> pressComboBox1());
-        roundPanel[7].add(jComboBox1);
-
-        roundPanel[12].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        roundPanel[12].setPreferredSize(new Dimension(440, 35));
-        roundPanel[12].setAutoscrolls(true);
-        roundPanel[9].add(roundPanel[12]);
-
-
-        search2.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-        search2.setPreferredSize(new Dimension(300, 35));
-        search2.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
-        search2.getDocument().addDocumentListener(new DocumentListener() {
+        txtsearchPro.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        txtsearchPro.setPreferredSize(new Dimension(300, 35));
+        txtsearchPro.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0)));
+        txtsearchPro.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchProducts();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchProducts();
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                loadDataTable();
+                searchProducts();
             }
         });
-        roundPanel[12].add(search2);
-
-        btSearch2.setBackground(new Color(240, 240, 240));
-        btSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btSearch2.setPreferredSize(new Dimension(35, 35));
-        btSearch2.setIcon(new ImageIcon("img/search.png"));
-        btSearch2.setFocusPainted(false);
-        roundPanel[12].add(btSearch2);
-
-        Vector<String> ComboBox = new Vector<>();
-        jComboBox2.setModel(new DefaultComboBoxModel<>(ComboBox));
-
-        jComboBox2.setFont(new Font("Dialog", Font.PLAIN, 15));
-        jComboBox2.setMaximumRowCount(10);//so luong
-        jComboBox2.setPreferredSize(new Dimension(150, 35));
-        jComboBox2.setBorder(null);
-        jComboBox2.setFocusable(false);
-        jComboBox2.addActionListener(evt -> pressComboBox2());
-        roundPanel[9].add(jComboBox2);
+        roundPanel[9].add(txtsearchPro);
+        cbbCategory.setVisible(false);
+        cbbCategory.addItemListener(e -> categoryIDSearch());
+        roundPanel[9].add(cbbCategory);
+        cbbSize.setVisible(false);
+        cbbSize.addItemListener(e -> sizeSearch());
+        roundPanel[9].add(cbbSize);
 
         scrollPane1 = new JScrollPane();
         scrollPane2 = new JScrollPane();
 
-        List<String> columnNames = discountBLL.getDiscountDAL().getColumnNames();
-        dataTable[0] = new DataTable(discountBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm1());
+        dataTable[0] = new DataTable(discountBLL.getData(), columnNamesDis.subList(0, columnNamesDis.size() - 1).toArray(), e -> fillForm1());
         scrollPane1 = new JScrollPane(dataTable[0]);
         roundPanel[8].add(scrollPane1);
 
-        columnNames = productBLL.getProductDAL().getColumnNames();
-        dataTable[1] = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), e -> fillForm2());
+        List<String> columnTablePro = new ArrayList<>(columnNamesPro.subList(0, columnNamesPro.size() - 3));
+        columnTablePro.add("OLD_PRICE");
+        columnTablePro.add("NEW_PRICE");
+        columnTablePro.add("");
+
+        dataTable[1] = new DataTable(productBLL.getData(), columnTablePro.toArray(), e -> fillForm2(), true);
         scrollPane2 = new JScrollPane(dataTable[1]);
         roundPanel[10].add(scrollPane2);
+    }
+
+    private void selectSearchDis() {
+        if (Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString().contains("STATUS")) {
+            txtsearchDis.setVisible(false);
+            cbbStatus.setSelectedIndex(0);
+            cbbStatus.setVisible(true);
+            statusSearch();
+        } else {
+            cbbStatus.setVisible(false);
+            txtsearchDis.setVisible(true);
+            searchDiscounts();
+        }
+    }
+
+    private void selectSearchPro() {
+        if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("CATEGORY_ID")) {
+            txtsearchPro.setVisible(false);
+            cbbSize.setVisible(false);
+            cbbCategory.setSelectedIndex(0);
+            cbbCategory.setVisible(true);
+            categoryIDSearch();
+        } else if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("SIZED")) {
+            txtsearchPro.setVisible(false);
+            cbbCategory.setVisible(false);
+            cbbSize.setSelectedIndex(0);
+            cbbSize.setVisible(true);
+            sizeSearch();
+        } else {
+            cbbSize.setVisible(false);
+            cbbCategory.setVisible(false);
+            txtsearchPro.setVisible(true);
+            txtsearchPro.setText(null);
+            searchProducts();
+        }
+    }
+
+    private void searchDiscounts() {
+        if (txtsearchDis.getText().isEmpty()) {
+            loadDataTableDis(discountBLL.getDiscountList());
+        } else {
+            loadDataTableDis(discountBLL.findDiscounts(Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString(), txtsearchDis.getText()));
+        }
+    }
+
+    private void searchProducts() {
+        if (txtsearchPro.getText().isEmpty()) {
+            loadDataTablePro(productBLL.getProductList());
+        } else {
+            loadDataTablePro(productBLL.findProducts(Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString(), txtsearchPro.getText()));
+        }
+    }
+
+    private void statusSearch() {
+        int status = Objects.requireNonNull(cbbStatus.getSelectedItem()).toString().equals("Đang áp dụng") ? 0 : 1;
+        loadDataTableDis(discountBLL.findDiscounts("STATUS", status));
+    }
+
+    private void categoryIDSearch() {
+        loadDataTablePro(productBLL.findProducts("CATEGORY_ID", Objects.requireNonNull(cbbCategory.getSelectedItem()).toString()));
+    }
+
+    private void sizeSearch() {
+        loadDataTablePro(productBLL.findProducts("SIZED", Objects.requireNonNull(cbbSize.getSelectedItem()).toString()));
+    }
+
+    public void addDiscount() {
+        if (checkInput()) {
+            Discount newDiscount = null;
+            try {
+                newDiscount = getForm();
+            } catch (Exception ignored) {
+
+            }
+            assert newDiscount != null;
+//            if (discountBLL.exists(newDiscount))
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//            else
+            if (discountBLL.addDiscount(newDiscount))
+                JOptionPane.showMessageDialog(this, "Successfully added new discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new discount!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
+    }
+
+    public void updateDiscount() {
+        if (checkInput()) {
+            Discount newDiscount = null;
+            try {
+                newDiscount = getForm();
+            } catch (Exception ignored) {
+
+            }
+            assert newDiscount != null;
+            int selectedRow = dataTable[0].getSelectedRow();
+//            if (discountBLL.exists(newDiscount))
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//            else
+            if (discountBLL.updateDiscount(newDiscount))
+                JOptionPane.showMessageDialog(this, "Successfully updated discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to update discount!", "Error", JOptionPane.ERROR_MESSAGE);
+
+            if (!newProductID_Dis.isEmpty()) {
+                List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
+                List<DiscountDetails> deletedDiscountDetailsList = discountDetailsBLL.searchDiscountDetails("DISCOUNT_ID = '" + newDiscount.getDiscountID() + "'", "DELETED = 1");
+                List<String> productID_Discount = new ArrayList<>();
+                List<String> deletedProductID_Discount = new ArrayList<>();
+                for (DiscountDetails discountDetails : discountDetailsList) {
+                    productID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+                }
+                for (DiscountDetails discountDetails : deletedDiscountDetailsList) {
+                    deletedProductID_Discount.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+                }
+
+                for (String productID : productID_Discount) {
+                    if (!newProductID_Dis.contains(productID)) {
+                        DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID, false);
+                        discountDetailsBLL.deleteDiscountDetails(newDetails);
+                    }
+                }
+
+                for (String productID : newProductID_Dis) {
+                    if (!productID_Discount.contains(productID)) {
+                        DiscountDetails newDetails = new DiscountDetails(newDiscount.getDiscountID(), productID, false);
+                        if (deletedProductID_Discount.contains(productID)) {
+                            discountDetailsBLL.updateDiscountDetails(newDetails);
+                        } else {
+                            discountDetailsBLL.addDiscountDetails(newDetails);
+                        }
+                    }
+                }
+            }
+            loadDataTableDis(discountBLL.getDiscountList());
+            dataTable[0].setRowSelectionInterval(selectedRow, selectedRow);
+        }
+    }
+
+    public void deleteDiscount() {
+        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this discount?",
+            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            Discount discount = new Discount();
+            discount.setDiscountID(jTextFields[0].getText());
+            if (discountBLL.deleteDiscount(discount))
+                JOptionPane.showMessageDialog(this, "Successfully deleted discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to delete discount!", "Error", JOptionPane.ERROR_MESSAGE);
+            refreshForm();
+        }
+    }
+
+    public void refreshForm() {
+        discountSelected = null;
+        cbbSearchDis.setSelectedIndex(0);
+        cbbSearchPro.setSelectedIndex(0);
+        txtsearchDis.setText(null);
+        txtsearchPro.setText(null);
+        loadDataTableDis(discountBLL.getDiscountList());
+        loadDataTablePro(productBLL.getProductList());
+        jTextFields[0].setText(discountBLL.getAutoID());
+        for (int i = 1; i < jTextFields.length; i++) {
+            jTextFields[i].setText(null);
+        }
+        jDateChooser[0].setDate(null);
+        jDateChooser[1].setDate(null);
+        jComboBox.setSelectedIndex(0);
+        btAdd.setEnabled(true);
+        btUpd.setEnabled(false);
+        btDel.setEnabled(false);
     }
 
     public void fillForm1() {
@@ -479,56 +575,132 @@ public class DiscountGUI extends JPanel {
         String[] discount = String.join(" | ", data).split(" \\| ");
         jTextFields[0].setText(discount[0]);
         jTextFields[1].setText(discount[1]);
-        DateTextField1.setText(discount[2]);
-        DateTextField2.setText(discount[3]);
-        String dateString1 = DateTextField1.getText();
-        String dateString2 = DateTextField2.getText();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        format.setLenient(false);
         try {
-            Date date = format.parse(dateString1);
-            jDateChooser1.setDate(date);
-            date = format.parse(dateString2);
-            jDateChooser2.setDate(date);
-        } catch (ParseException ignored) {
+            Day date = Day.parseDay(discount[2]);
+            jDateChooser[0].setDate(date.toDate());
+            date = Day.parseDay(discount[3]);
+            jDateChooser[1].setDate(date.toDate());
+        } catch (Exception ignored) {
 
         }
-        jComboBox.setSelectedIndex(Integer.parseInt(discount[4]));
+        jComboBox.setSelectedItem(discount[4]);
+        discountSelected = discountBLL.findDiscounts("DISCOUNT_ID", discount[0]).get(0);
+        cbbSearchPro.setSelectedIndex(0);
+
+        List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
+
+        newProductID_Dis.clear();
+
+        for (DiscountDetails discountDetails : discountDetailsList) {
+            newProductID_Dis.add(discountDetailsBLL.getValueByKey(discountDetails, "PRODUCT_ID").toString());
+        }
+
+        loadDataTablePro(productBLL.getProductList());
+
+        btAdd.setEnabled(false);
+        btUpd.setEnabled(true);
+        btDel.setEnabled(true);
     }
 
     public void fillForm2() {
-
+        if (discountSelected != null && decentralizationMode == 3) {
+            DefaultTableModel model = (DefaultTableModel) dataTable[1].getModel();
+            Object[] rowData = model.getDataVector().elementAt(dataTable[1].getSelectedRow()).toArray();
+            String[] data = new String[rowData.length];
+            for (int i = 0; i < rowData.length; i++) {
+                if (rowData[i] != null)
+                    data[i] = rowData[i].toString();
+            }
+            String[] product = String.join(" | ", data).split(" \\| ");
+            if (data[6] == null) {
+                Product product1 = productBLL.findProducts("PRODUCT_ID", product[0]).get(0);
+                newProductID_Dis.add(product[0]);
+                double newPrice = product1.getCost() - (product1.getCost() * discountSelected.getDiscountPercent() / 100);
+                model.setValueAt(newPrice, dataTable[1].getSelectedRow(), 5);
+                model.setValueAt(true, dataTable[1].getSelectedRow(), 6);
+            } else {
+                newProductID_Dis.remove(product[0]);
+                model.setValueAt(null, dataTable[1].getSelectedRow(), 5);
+                model.setValueAt(null, dataTable[1].getSelectedRow(), 6);
+            }
+        }
     }
 
-    public void changeCalender() {
-
+    public Discount getForm() throws Exception {
+        String discountID;
+        int discountPercent;
+        Day startDay;
+        Day endDay;
+        int status;
+        status = Objects.requireNonNull(jComboBox.getSelectedItem()).toString().equals("Đang áp dụng") ? 0 : 1;
+        discountID = jTextFields[0].getText();
+        discountPercent = Integer.parseInt(jTextFields[1].getText());
+        startDay = new Day(jDateChooser[0].getDate());
+        endDay = new Day(jDateChooser[1].getDate());
+        checkStatus(discountID, status);
+        return new Discount(discountID, discountPercent, startDay, endDay, status, false);
     }
 
-    public void addDiscount() {
-
+    public void loadDataTableDis(List<Discount> data) {
+        DefaultTableModel model = (DefaultTableModel) dataTable[0].getModel();
+        model.setRowCount(0);
+        for (Discount discount : data) {
+            String status = discount.getStatus() == 0 ? "Đang áp dụng" : "Ngừng áp dụng";
+            model.addRow(new Object[]{discount.getDiscountID(), discount.getDiscountPercent(), discount.getStartDay(), discount.getEndDay(), status});
+        }
     }
 
-    public void deleteDiscount() {
-
+    public void loadDataTablePro(List<Product> data) {
+        DefaultTableModel model = (DefaultTableModel) dataTable[1].getModel();
+        model.setRowCount(0);
+        if (discountSelected == null) {
+            for (Product product : data) {
+                model.addRow(new Object[]{product.getProductID(), product.getName(), product.getCategoryID(), product.getSized(), product.getCost()});
+            }
+        } else {
+            for (Product product : data) {
+                if (newProductID_Dis.contains(product.getProductID())) {
+                    double newPrice = product.getCost() - (product.getCost() * discountSelected.getDiscountPercent() / 100);
+                    model.addRow(new Object[]{product.getProductID(), product.getName(), product.getCategoryID(), product.getSized(), product.getCost(), newPrice, true});
+                } else {
+                    model.addRow(new Object[]{product.getProductID(), product.getName(), product.getCategoryID(), product.getSized(), product.getCost(), null});
+                }
+            }
+        }
     }
 
-    public void updateDiscount() {
-
+    public boolean checkInput() {
+        for (JTextField textField : jTextFields) {
+            if (textField.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                textField.requestFocusInWindow();
+                return false;
+            }
+        }
+        if (!jTextFields[1].getText().matches("^-?\\d+$")) {
+            // Discount percent must be an integer
+            jTextFields[1].requestFocusInWindow();
+            jTextFields[1].selectAll();
+            JOptionPane.showMessageDialog(this, "Discount percent must be an integer", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        Day startDate = new Day(jDateChooser[0].getDate());
+        Day endDate = new Day(jDateChooser[1].getDate());
+        if (startDate.isAfter(endDate)) {
+            JOptionPane.showMessageDialog(this, "The start date must come before the end date", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
-    public void refreshForm() {
-
+    public void checkStatus(String discountID, int status) {
+        if (status == 0) {
+            for (Discount discount1 : discountBLL.getDiscountList()) {
+                if (!discount1.getDiscountID().contains(discountID)) {
+                    discountBLL.updateDiscount(new Discount(discount1.getDiscountID(), discount1.getDiscountPercent(), discount1.getStartDay(), discount1.getEndDay(), 1, false));
+                }
+            }
+        }
     }
 
-    public void loadDataTable() {
-
-    }
-
-    public void pressComboBox1() {
-
-    }
-
-    public void pressComboBox2() {
-
-    }
 }
