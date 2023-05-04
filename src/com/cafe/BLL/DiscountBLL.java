@@ -77,11 +77,10 @@ public class DiscountBLL extends Manager<Discount> {
 
     public boolean exists(Discount discount) {
         return !findDiscountsBy(Map.of(
-            "DISCOUNT_ID", discount.getDiscountID(),
             "DISCOUNT_PERCENT", discount.getDiscountPercent(),
             "START_DATE", discount.getStartDay(),
-            "END_DATE", discount.getEndDay(),
-            "STATUS", discount.getStatus()
+            "END_DATE", discount.getEndDay()
+//            "STATUS", discount.getStatus()
         )).isEmpty();
     }
 

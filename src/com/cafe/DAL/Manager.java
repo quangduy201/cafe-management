@@ -35,10 +35,8 @@ public class Manager extends MySQL {
 
     public List<List<String>> read(String... conditions) throws SQLException {
         String query = "SELECT * FROM `" + tableName + "`";
-//        List<Object> values = new ArrayList<>();
         if (conditions != null && conditions.length > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
-//            values = Arrays.asList(conditions);
         }
 
         query += ";";
@@ -69,7 +67,6 @@ public class Manager extends MySQL {
             query += " WHERE " + String.join(" AND ", conditions);
         }
         query += ";";
-        System.out.println(query);
         return executeUpdate(query, updateValues.toArray());
     }
 

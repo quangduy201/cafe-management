@@ -2,18 +2,29 @@ package com.cafe.DAL;
 
 import com.cafe.utils.Day;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class MySQL {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/cafe-management";
-    private static final String USER = "root";
-    private static final String PASS = "";
-    private final Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-    private final Statement stmt = conn.createStatement();
+    private final Connection conn;
+    private final Statement stmt;
 
     public MySQL() throws SQLException {
+        Properties properties = new Properties();
+        try (InputStream input = new FileInputStream("database/db.properties")) {
+            properties.load(input);
+        } catch (Exception ignored) {
+
+        }
+        String dbUrl = properties.getProperty("db.url");
+        String dbUsername = properties.getProperty("db.username");
+        String dbPassword = properties.getProperty("db.password");
+        conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        stmt = conn.createStatement();
     }
 
     public void close() throws SQLException {
@@ -33,33 +44,23 @@ public class MySQL {
     public List<List<String>> executeQuery(String query, Object... values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
         List<List<String>> result = new ArrayList<>();
-        try {
-            ResultSet resultSet = stmt.executeQuery(formattedQuery);
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            while (resultSet.next()) {
-                List<String> row = new ArrayList<>(columnCount);
-                for (int i = 1; i <= columnCount; i++) {
-                    row.add(resultSet.getString(i));
-                }
-                result.add(row);
+        ResultSet resultSet = stmt.executeQuery(formattedQuery);
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        while (resultSet.next()) {
+            List<String> row = new ArrayList<>(columnCount);
+            for (int i = 1; i <= columnCount; i++) {
+                row.add(resultSet.getString(i));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            result.add(row);
         }
-        System.out.println(formattedQuery);
         return result;
     }
 
     public int executeUpdate(String query, Object... values) throws SQLException {
         String formattedQuery = formatQuery(query, values);
-        System.out.println(formattedQuery);
         int numOfRows;
-        try {
-            numOfRows = stmt.executeUpdate(formattedQuery);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        numOfRows = stmt.executeUpdate(formattedQuery);
         return numOfRows;
     }
 
@@ -79,38 +80,7 @@ public class MySQL {
             }
             query = query.replaceFirst("\\?", stringValue);
         }
+        System.out.println(query);
         return query;
-    }
-
-    public static void main(String[] args) {
-        // Test MySQL and its functions
-        try {
-            MySQL connector = new MySQL();
-
-            // Select customer whose gender = 1 and name = 'Nguuyễn Văn A'
-            List<List<String>> result = connector.executeQuery("""
-                    SELECT * FROM `customer`
-                    WHERE CUSTOMER_ID = ?;
-                    """,
-                 "CUS001");
-            for (List<String> row : result) {
-                for (Object value : row) {
-                    System.out.print(value + "\t");
-                }
-                System.out.println();
-            }
-
-            // Delete customer whose CUSTOMER_ID = 'KH002' by setting its DELETED = 1
-//            int numOfRows = connector.executeUpdate("""
-//                    UPDATE `customer` SET DELETED = ?
-//                    WHERE CUSTOMER_ID = ?;
-//                    """,
-//                1, "KH002");
-//            System.out.println(numOfRows + " row(s) affected");
-
-            connector.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
