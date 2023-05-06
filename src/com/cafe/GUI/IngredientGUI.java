@@ -377,7 +377,7 @@ public class IngredientGUI extends JPanel {
         btCancel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
-                pressCacel();
+                pressCancel();
             }
         });
         roundPanel[7].add(btCancel, BorderLayout.EAST);
@@ -449,20 +449,20 @@ public class IngredientGUI extends JPanel {
         supplierID = null;
         label[7].setText(null);
 
-        pressCacel();
+        pressCancel();
 
         loadDataTable(new ArrayList<>());
         loadDataTable1(supplierBLL.getSupplierList());
     }
 
-    public void pressCacel() {
+    public void pressCancel() {
         label[3].setText(receiptBLL.getAutoID());
         receiptDetails = new ArrayList<>();
         listQuantityChoice = new ArrayList<>();
         roundPanel[10].removeAll();
         roundPanel[10].repaint();
         roundPanel[10].revalidate();
-        label[9].setText("0đ");
+        label[9].setText(VNString.currency(0.0));
     }
 
     public RoundPanel getRoundPanel() {
@@ -548,7 +548,7 @@ public class IngredientGUI extends JPanel {
         loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", data[0]));
         supplierID = data[0];
 
-        pressCacel();
+        pressCancel();
     }
 
     private void unitSearch() {
@@ -578,7 +578,6 @@ public class IngredientGUI extends JPanel {
         String staffID = label[11].getText();
         Day dor = Day.parseDay(label[5].getText());
         double grandTotal = 0;
-        String supplierID = label[7].getText();
         return new Receipt(receiptID, staffID, dor, grandTotal, supplierID, false);
     }
 }
