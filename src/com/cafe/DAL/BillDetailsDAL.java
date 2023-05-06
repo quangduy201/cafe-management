@@ -22,8 +22,8 @@ public class BillDetailsDAL extends Manager {
             row.get(0), // billID
             row.get(1), // productID
             Integer.parseInt(row.get(2)), // quantity
-            Double.parseDouble(row.get(2)),
-            Double.parseDouble(row.get(3))
+            Double.parseDouble(row.get(3)),
+            Double.parseDouble(row.get(4))
         ));
     }
 

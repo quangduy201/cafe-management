@@ -577,6 +577,10 @@ public class SaleGUI extends JPanel {
     public void pressButton4() {
         search1.setText("");
         txtname.setText("");
+        for(int i = 0; i < listDetailBill.size();i++) {
+            listDetailBill.remove(i);
+            listQuantityChoice.remove(i);
+        }
         roundPanel9.removeAll();
         roundPanel9.repaint();
         roundPanel9.revalidate();
