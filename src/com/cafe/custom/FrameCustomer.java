@@ -209,7 +209,7 @@ public class FrameCustomer extends JFrame {
         roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[5].add(roundPanel1[9]);
 
-        confirm.setIcon(new ImageIcon("img/add-user.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
         confirm.setBorderPainted(false);
         confirm.setText("THÊM");
         confirm.setFocusable(false);

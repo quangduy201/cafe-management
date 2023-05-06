@@ -2,7 +2,6 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDAL;
 import com.cafe.DTO.Discount;
-import com.cafe.DTO.Product;
 
 import java.util.ArrayList;
 import java.util.List;

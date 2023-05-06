@@ -187,7 +187,7 @@ public class SaleGUI extends JPanel {
         btnSearch1.setBackground(new Color(240, 240, 240));
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
-        btnSearch1.setIcon(new ImageIcon("img/search.png"));
+        btnSearch1.setIcon(new ImageIcon("img/icons/search.png"));
         btnSearch1.setFocusPainted(false);
         roundPanel5.add(btnSearch1);
 
@@ -221,7 +221,7 @@ public class SaleGUI extends JPanel {
 //        btnSearchByFace.setBackground(new Color(240, 240, 240));
 //        btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
 //        btnSearchByFace.setPreferredSize(new Dimension(35, 35));
-//        btnSearchByFace.setIcon(new ImageIcon("img/face-scanner.png"));
+//        btnSearchByFace.setIcon(new ImageIcon("img/icons/face-scanner.png"));
 //        btnSearchByFace.setFocusPainted(false);
 //        btnSearchByFace.setColor(new Color(240, 240, 240));
 //        btnSearchByFace.setColorOver(new Color(0xA6A1A1));
@@ -237,7 +237,7 @@ public class SaleGUI extends JPanel {
         btnSearch2.setBackground(new Color(240, 240, 240));
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch2.setPreferredSize(new Dimension(35, 35));
-        btnSearch2.setIcon(new ImageIcon("img/search.png"));
+        btnSearch2.setIcon(new ImageIcon("img/icons/search.png"));
         btnSearch2.setFocusPainted(false);
         btnSearch2.setColor(new Color(240, 240, 240));
         btnSearch2.setColorOver(new Color(0xA6A1A1));
@@ -390,7 +390,7 @@ public class SaleGUI extends JPanel {
         btnCancel.setRadius(15);
         btnCancel.setFocusPainted(false);
         btnCancel.setFont(fontTimesNewRoman);
-        btnCancel.setIcon(new ImageIcon("img/remove.png"));
+        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
         btnCancel.setColor(new Color(0xFFBD3737));
         btnCancel.setColorOver(new Color(0xFF0000));
         btnCancel.setColorClick(new Color(0xB65858));

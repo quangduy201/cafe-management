@@ -1,15 +1,11 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDetailsDAL;
-import com.cafe.DTO.Discount;
 import com.cafe.DTO.DiscountDetails;
-import com.cafe.DTO.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.IntStream;
 
 public class DiscountDetailsBLL extends Manager<DiscountDetails> {
     private DiscountDetailsDAL discountDetailsDAL;

@@ -3,27 +3,22 @@ package com.cafe.GUI;
 import com.cafe.BLL.BillDetailsBLL;
 import com.cafe.BLL.CustomerBLL;
 import com.cafe.BLL.ReceiptDetailsBLL;
-import com.cafe.DTO.*;
-import com.cafe.custom.Header;
-import com.cafe.custom.RoundPanel;
-import com.cafe.custom.*;
+import com.cafe.DTO.BillDetails;
+import com.cafe.DTO.Customer;
+import com.cafe.DTO.ReceiptDetails;
 import com.cafe.custom.ButtonStatic;
+import com.cafe.custom.DataTable;
+import com.cafe.custom.ImageAvatar;
+import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 import com.toedter.calendar.JDateChooser;
-import org.apache.poi.sl.usermodel.Background;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class StatisticGUI extends JPanel {
@@ -31,6 +26,7 @@ public class StatisticGUI extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
+        btOverview();
     }
     private RoundPanel statistic;
     private RoundPanel[] roundPanel;
@@ -110,7 +106,7 @@ public class StatisticGUI extends JPanel {
         btFunction[0].setRadius(15);
         btFunction[0].addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent evt) {
-                btGenerality();
+                btOverview();
             }
         });
         cpButton = btFunction[0];
@@ -161,11 +157,9 @@ public class StatisticGUI extends JPanel {
             }
         });
         roundPanel[2].add(btFunction[3]);
-
-        btGenerality();
     }
 
-    public void btGenerality() {
+    public void btOverview() {
         cpButton.setColor(new Color(0x646464));
         cpButton.setColorOver(new Color(0xB2B2B2));
         btFunction[0].setColor(new Color(240,240,240));
@@ -212,13 +206,13 @@ public class StatisticGUI extends JPanel {
         jLabel[0].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         jLabel[0].setPreferredSize(new Dimension(125, 350));
         jLabel[0].setAutoscrolls(true);
-        jLabel[0].setIcon(new ImageIcon(new ImageIcon("img/Up_arrow.png").getImage().getScaledInstance(125, 250, Image.SCALE_SMOOTH)));
+        jLabel[0].setIcon(new ImageIcon(new ImageIcon("img/icons/Up_arrow.png").getImage().getScaledInstance(125, 250, Image.SCALE_SMOOTH)));
         roundPanel[4].add(jLabel[0]);
 
         jLabel[1].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         jLabel[1].setPreferredSize(new Dimension(125, 350));
         jLabel[1].setAutoscrolls(true);
-        jLabel[1].setIcon(new ImageIcon(new ImageIcon("img/Down_arrow.png").getImage().getScaledInstance(125, 250, Image.SCALE_SMOOTH)));
+        jLabel[1].setIcon(new ImageIcon(new ImageIcon("img/icons/Down_arrow.png").getImage().getScaledInstance(125, 250, Image.SCALE_SMOOTH)));
         roundPanel[4].add(jLabel[1]);
 
         roundPanel[6].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
@@ -229,7 +223,7 @@ public class StatisticGUI extends JPanel {
 
         jLabel[2].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         jLabel[2].setPreferredSize(new Dimension(490, 350));
-        jLabel[2].setIcon(new ImageIcon(new ImageIcon("img/chart.png").getImage().getScaledInstance(470, 300, Image.SCALE_SMOOTH)));
+        jLabel[2].setIcon(new ImageIcon(new ImageIcon("img/icons/chart.png").getImage().getScaledInstance(470, 300, Image.SCALE_SMOOTH)));
         jLabel[2].setAutoscrolls(true);
         roundPanel[4].add(jLabel[2]);
 
@@ -299,7 +293,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[0].setPreferredSize(new Dimension(75, 75));
         imageAvatars[0].setBorderSize(2);
         imageAvatars[0].setForeground(new Color(255,255,255));
-        imageAvatars[0].setIcon(new ImageIcon("img/Customer.png"));
+        imageAvatars[0].setIcon(new ImageIcon("img/icons/Customer.png"));
         imageAvatars[0].setAutoscrolls(true);
         roundPanel[10].add(imageAvatars[0]);
 
@@ -315,7 +309,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[1].setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
         imageAvatars[1].setPreferredSize(new Dimension(75, 75));
         imageAvatars[1].setBorderSize(2);
-        imageAvatars[1].setIcon(new ImageIcon("img/ReceivedNote.png"));
+        imageAvatars[1].setIcon(new ImageIcon("img/icons/ReceivedNote.png"));
         imageAvatars[1].setForeground(new Color(255,255,255));
         imageAvatars[1].setAutoscrolls(true);
         roundPanel[11].add(imageAvatars[1]);
@@ -332,7 +326,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[2].setLayout(new FlowLayout(FlowLayout.RIGHT,0,0));
         imageAvatars[2].setPreferredSize(new Dimension(75, 75));
         imageAvatars[2].setBorderSize(2);
-        imageAvatars[2].setIcon(new ImageIcon("img/Bill.png"));
+        imageAvatars[2].setIcon(new ImageIcon("img/icons/Bill.png"));
         imageAvatars[2].setForeground(new Color(255,255,255));
         imageAvatars[2].setAutoscrolls(true);
         roundPanel[12].add(imageAvatars[2]);
@@ -511,8 +505,6 @@ public class StatisticGUI extends JPanel {
         roundPanel[6].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[6]);
 
-
-
         roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER,10,5));
         roundPanel[7].setBackground(new Color(0xF8F883));
         roundPanel[7].setPreferredSize(new Dimension(250, 50));
@@ -550,7 +542,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[0].setPreferredSize(new Dimension(60, 60));
         imageAvatars[0].setBorderSize(2);
         imageAvatars[0].setForeground(new Color(255,255,255));
-        imageAvatars[0].setIcon(new ImageIcon("img/Customer.png"));
+        imageAvatars[0].setIcon(new ImageIcon("img/icons/Customer.png"));
         imageAvatars[0].setAutoscrolls(true);
         jPanel[0].add(imageAvatars[0]);
 
@@ -619,7 +611,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[1].setPreferredSize(new Dimension(60, 60));
         imageAvatars[1].setBorderSize(2);
         imageAvatars[1].setForeground(new Color(255,255,255));
-        imageAvatars[1].setIcon(new ImageIcon("img/ReceivedNote.png"));
+        imageAvatars[1].setIcon(new ImageIcon("img/icons/ReceivedNote.png"));
         imageAvatars[1].setAutoscrolls(true);
         jPanel[1].add(imageAvatars[1]);
 
@@ -685,7 +677,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[2].setPreferredSize(new Dimension(60, 60));
         imageAvatars[2].setBorderSize(2);
         imageAvatars[2].setForeground(new Color(255,255,255));
-        imageAvatars[2].setIcon(new ImageIcon("img/Bill.png"));
+        imageAvatars[2].setIcon(new ImageIcon("img/icons/Bill.png"));
         imageAvatars[2].setAutoscrolls(true);
         jPanel[2].add(imageAvatars[2]);
 
@@ -716,7 +708,7 @@ public class StatisticGUI extends JPanel {
     }
 
     private JTextField[] jTextField;
-    private com.toedter.calendar.JDateChooser[] jdateChooser;
+    private JDateChooser[] jDateChooser;
     public void btEveryday() {
         cpButton.setColor(new Color(0x646464));
         cpButton.setColorOver(new Color(0xB2B2B2));
@@ -724,16 +716,12 @@ public class StatisticGUI extends JPanel {
         btFunction[2].setColorOver(new Color(240,240,240));
         cpButton = btFunction[2];
         jTextField = new JTextField[2];
-        jdateChooser = new JDateChooser[2];
+        jDateChooser = new JDateChooser[2];
         roundPanel[1].removeAll();
         roundPanel[1].revalidate();
         roundPanel[1].repaint();
         dataTable = new DataTable[4];
         jScrollPane = new JScrollPane[4];
-        for (int i = 0; i < jTextField.length; i++) {
-            jdateChooser[i] = new JDateChooser();
-            jTextField[i] = ((JTextField) jdateChooser[i].getDateEditor().getUiComponent());
-        }
         for (int i = 3; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
         }
@@ -781,53 +769,29 @@ public class StatisticGUI extends JPanel {
         roundPanel[6].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[6]);
 
-        jTextField[0].setFont(new Font("Tahoma", Font.BOLD, 14));
-        jTextField[0].setHorizontalAlignment(JTextField.CENTER);
-        jdateChooser[0].setPreferredSize(new Dimension(150, 30));
-        jdateChooser[0].setDateFormatString("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, 1, 1);
-        jdateChooser[0].setDate(calendar.getTime());
-        jdateChooser[0].addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        jTextField[0].addActionListener(e -> {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(jTextField[0].getText());
-                jdateChooser[0].setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[5].add(jdateChooser[0]);
-
-        jTextField[1].setFont(new Font("Tahoma", Font.BOLD, 14));
-        jTextField[1].setHorizontalAlignment(JTextField.CENTER);
-        jdateChooser[1].setPreferredSize(new Dimension(150, 30));
-        jdateChooser[1].setDateFormatString("yyyy-MM-dd");
-        jdateChooser[1].setDate(new Date());
-        jdateChooser[1].addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        jTextField[1].addActionListener(e -> {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(jTextField[1].getText());
-                jdateChooser[1].setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[6].add(jdateChooser[1]);
+        Day today = new Day();
+        jDateChooser[0] = new JDateChooser(today.before(0, 5, 0).toDateSafe());
+        jDateChooser[1] = new JDateChooser(today.toDateSafe());
+        for (int i = 0; i < jTextField.length; i++) {
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(new Dimension(150, 30));
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            jDateChooser[i].addPropertyChangeListener("date", evt -> changeCalender());
+            jTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            jTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            jTextField[i].setHorizontalAlignment(JTextField.CENTER);
+            int index = i;
+            jTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(jTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+        roundPanel[5].add(jDateChooser[0]);
+        roundPanel[6].add(jDateChooser[1]);
 
         roundPanel[7].setLayout(new BorderLayout(0,10));
         roundPanel[7].setPreferredSize(new Dimension(485, 590));
@@ -838,8 +802,6 @@ public class StatisticGUI extends JPanel {
         roundPanel[8].setPreferredSize(new Dimension(485, 590));
         roundPanel[8].setAutoscrolls(true);
         roundPanel[4].add(roundPanel[8], BorderLayout.EAST);
-
-
 
         roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[9].setBackground(new Color(112, 225, 73));
@@ -960,28 +922,9 @@ public class StatisticGUI extends JPanel {
     }
 
     private void changeCalender() {
-        Day start = new Day(jdateChooser[0].getDate());
-        Day end = new Day(jdateChooser[1].getDate());
+        Day start = new Day(jDateChooser[0].getDate());
+        Day end = new Day(jDateChooser[1].getDate());
 
-//        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-//        model.setRowCount(0);
-//
-//        if (checklist) {
-//            roundPanel[16].removeAll();
-//            roundPanel[16].repaint();
-//            roundPanel[16].revalidate();
-//            for (Bill bill : billBLL.getBillList()) {
-//                if (bill.getDateOfPurchase().compareDates(start) && end.compareDates(bill.getDateOfPurchase()))
-//                    model.addRow(new Object[]{bill.getBillID(), bill.getCustomerID(), bill.getStaffID(), bill.getDateOfPurchase(), bill.getTotal(), bill.getReceived(), bill.getExcess()});
-//            }
-//        } else {
-//            roundPanel[16].removeAll();
-//            roundPanel[16].repaint();
-//            for (Receipt recipe : receiptBLL.getReceiptList()) {
-//                if (recipe.getDor().compareDates(start) && end.compareDates(recipe.getDor()))
-//                    model.addRow(new Object[]{recipe.getReceiptID(), recipe.getStaffID(), recipe.getDor(), recipe.getGrandTotal()});
-//            }
-//        }
     }
 
     public void btChart() {

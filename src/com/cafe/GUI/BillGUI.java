@@ -17,11 +17,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +161,7 @@ public class BillGUI extends JPanel {
                 button[i].setText("Xuất Excel");
                 button[i].setColor(new Color(240, 240, 240));
                 button[i].setPreferredSize(new Dimension(160, 40));
-                button[i].setIcon(new ImageIcon("img/folder.png"));
+                button[i].setIcon(new ImageIcon("img/icons/folder.png"));
             }
             switch (i) {
                 case 0 -> button[i].setText("Bán");
@@ -198,7 +193,7 @@ public class BillGUI extends JPanel {
 //        btFaceSignUp = new Button();
 //        btFaceSignUp.setBackground(new Color(35, 166, 97));
 //        btFaceSignUp.setBorder(null);
-//        btFaceSignUp.setIcon(new ImageIcon("img/face-scanner.png"));
+//        btFaceSignUp.setIcon(new ImageIcon("img/icons/face-scanner.png"));
 //        btFaceSignUp.setText("Sign up your face  ");
 //        btFaceSignUp.setColor(new Color(240, 240, 240));
 //        btFaceSignUp.setColorClick(new Color(141, 222, 175));
@@ -585,6 +580,6 @@ public class BillGUI extends JPanel {
     public void findBillsByFace() {
         Tasks tasks = new Tasks("Camera");
         clearDetails();
-        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel())).start();
+        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel(), "BILL")).start();
     }
 }

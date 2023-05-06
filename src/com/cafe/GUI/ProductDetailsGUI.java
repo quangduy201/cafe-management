@@ -277,7 +277,7 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[7].add(comboBoxProductSize);
 
 
-        confirm.setIcon(new ImageIcon("img/add-to-cart.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-to-cart.png"));
         confirm.setBorderPainted(false);
         confirm.setText("Xác Nhận");
         confirm.setFocusable(false);

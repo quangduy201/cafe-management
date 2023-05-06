@@ -166,7 +166,7 @@ public class DiscountGUI extends JPanel {
         roundPanel[10].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[10]);
 
-        labelimg.setIcon(new ImageIcon(new ImageIcon("img/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+        labelimg.setIcon(new ImageIcon(new ImageIcon("img/icons/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         labelimg.setFocusable(false);
         labelimg.setPreferredSize(new Dimension(150, 150));
         roundPanel[4].add(labelimg);
@@ -260,7 +260,7 @@ public class DiscountGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
             btUpd.setText("  Update");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
@@ -280,7 +280,7 @@ public class DiscountGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
             btDel.setText("  Delete");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
@@ -303,7 +303,7 @@ public class DiscountGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
             btRef.setText("  Refresh");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));

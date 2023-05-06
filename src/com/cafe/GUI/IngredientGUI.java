@@ -369,7 +369,7 @@ public class IngredientGUI extends JPanel {
         btCancel.setRadius(15);
         btCancel.setFocusPainted(false);
         btCancel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btCancel.setIcon(new ImageIcon(("img/remove.png")));
+        btCancel.setIcon(new ImageIcon(("img/icons/remove.png")));
         btCancel.setColor(new Color(0xFFBD3737));
         btCancel.setColorOver(new Color(0xFF0000));
         btCancel.setColorClick(new Color(0xB65858));
@@ -480,24 +480,24 @@ public class IngredientGUI extends JPanel {
             roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
         double totalPrice = 0.0;
-        for (int e = 0; e < listIngredientArray.size(); e++) {
-            int vt = e;
+        for (int i = 0; i < listIngredientArray.size(); i++) {
+            int vt = i;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
-            billDetailPanel.setIngredient(receiptDetails.get(e), listQuantityChoice.get(e));
-            Ingredient ingredient = listIngredientArray.get(e);
-            String[] a = new String[6];
-            a[0] = ingredient.getIngredientID();
-            a[1] = ingredient.getName();
-            a[2] = ingredient.getUnit();
-            a[3] = String.valueOf(ingredient.getUnitPrice());
-            a[4] = ingredient.getSupplierID();
+            billDetailPanel.setIngredient(receiptDetails.get(i), listQuantityChoice.get(i));
+            Ingredient ingredient = listIngredientArray.get(i);
+            String[] ingredientString = new String[6];
+            ingredientString[0] = ingredient.getIngredientID();
+            ingredientString[1] = ingredient.getName();
+            ingredientString[2] = ingredient.getUnit();
+            ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
+            ingredientString[4] = ingredient.getSupplierID();
 
-            int index = listQuantityChoice.get(e);
+            int index = listQuantityChoice.get(i);
 
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new FrameIngredient(IngredientGUI.this, a, index).setVisible(true);
+                    new FrameIngredient(IngredientGUI.this, ingredientString, index).setVisible(true);
                 }
             });
 
@@ -514,7 +514,7 @@ public class IngredientGUI extends JPanel {
                     }
                 }
             });
-            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(e);
+            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(i);
             roundPanel[10].add(billDetailPanel);
             roundPanel[10].repaint();
             roundPanel[10].revalidate();

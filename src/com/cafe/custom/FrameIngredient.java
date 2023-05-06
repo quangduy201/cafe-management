@@ -204,7 +204,7 @@ public class FrameIngredient extends JFrame{
         label1[8].setText(this.data[3]);
         label1[9].setText(supplier.getName());
 
-        confirm.setIcon(new ImageIcon("img/add-user.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
         confirm.setBorderPainted(false);
         confirm.setText("THÊM");
         confirm.setFocusable(false);

@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 public class Recorder {
     public static final int NUMBER_OF_PICTURES = 40;
     public static final int CAPTURE_INTERVAL = 500;
-    static final String FACE_DIRECTORY = "img/faces";
+    static final String FACE_DIRECTORY = "img/icons/faces";
     private Camera camera;
     private Detector detector;
     private Mat grayROI;

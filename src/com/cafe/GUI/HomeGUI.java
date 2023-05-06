@@ -10,7 +10,6 @@ import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.utils.Day;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,8 +18,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class HomeGUI extends JFrame {
@@ -54,7 +51,7 @@ public class HomeGUI extends JFrame {
     private int  numberjpane;
     private ToggleSwitch themeButton;
 
-    private String string = "img/dow.png";
+    private String string = "img/icons/down.png";
 
     private int[] listCount = new int[3];
     private int totalHeight;
@@ -161,8 +158,8 @@ public class HomeGUI extends JFrame {
         themeButton.setSelected(true);
         themeButton.setOnColor(new Color(0xFCE797));
         themeButton.setOffColor(new Color(0x504C4C));
-        themeButton.setOnIcon(new ImageIcon("img/sun.png"));
-        themeButton.setOffIcon(new ImageIcon("img/moon.png"));
+        themeButton.setOnIcon(new ImageIcon("img/icons/sun.png"));
+        themeButton.setOffIcon(new ImageIcon("img/icons/moon.png"));
         north.add(themeButton);
 
         minimize.setText("-");
@@ -222,7 +219,7 @@ public class HomeGUI extends JFrame {
         imageAvatar[0].setForeground(new Color(255, 255, 255));
         imageAvatar[0].setBorderSize(2);
         imageAvatar[0].setBounds(20, 10, 60, 60);
-        imageAvatar[0].setIcon(new ImageIcon("img/bell-boy.png"));
+        imageAvatar[0].setIcon(new ImageIcon("img/icons/bell-boy.png"));
         info.add(imageAvatar[0]);
 
         lbName.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -292,7 +289,7 @@ public class HomeGUI extends JFrame {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (numberContent != -1 && numberjpane != 0) {
-//                    string = "img/up.png";
+//                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
                         imageIcon[numberjpane].setIcon(new ImageIcon(string));
                         pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
@@ -364,7 +361,7 @@ public class HomeGUI extends JFrame {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (numberContent != -1 && numberjpane != 1) {
-//                    string = "img/up.png";
+//                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
                         imageIcon[numberjpane].setIcon(new ImageIcon(string));
                         pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
@@ -441,7 +438,7 @@ public class HomeGUI extends JFrame {
                     }
                     totalHeight = (listCount[2] * 50) / 5;
                     if (rpContent[7].getHeight() == 45) {
-//                    string = "img/dow.png";
+//                    string = "img/icons/down.png";
                         numberjpane = 2;
                         pressdelay(7, rpContent[7].getHeight(), totalHeight);
                         numberContent = 7;
@@ -469,7 +466,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[2].setPreferredSize(new Dimension(30, 30));
             imageIcon[2].setBorderSize(2);
-            imageIcon[2].setIcon(new ImageIcon("img/dow.png"));
+            imageIcon[2].setIcon(new ImageIcon("img/icons/down.png"));
             rpContent[8].add(imageIcon[2]);
 
             for (int i = 10; i < 15; i++) {
@@ -494,7 +491,7 @@ public class HomeGUI extends JFrame {
             if (mang[i] != 0) {
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
-                imageAvatar[i].setIcon(new ImageIcon("img/0" + i + ".png"));
+                imageAvatar[i].setIcon(new ImageIcon(String.format("img/icons/%02d.png", i)));
                 roundPanel[i].add(imageAvatar[i]);
 
                 jLabel[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -700,7 +697,7 @@ public class HomeGUI extends JFrame {
 
         BufferedImage img = new BufferedImage(w, h, type);
         Graphics2D g2 = img.createGraphics();
-        g2.rotate(Math.toRadians(angle), w / 2, h / 2);
+        g2.rotate(Math.toRadians(angle), (double) w / 2, (double) h / 2);
         icon.paintIcon(null, g2, 0, 0);
         g2.dispose();
 

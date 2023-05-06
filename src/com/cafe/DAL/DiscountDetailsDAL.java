@@ -1,8 +1,6 @@
 package com.cafe.DAL;
 
-import com.cafe.DTO.Discount;
 import com.cafe.DTO.DiscountDetails;
-import com.cafe.utils.Day;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
