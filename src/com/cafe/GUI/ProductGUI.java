@@ -70,7 +70,7 @@ public class ProductGUI extends JPanel {
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
         imgProduct = new JLabel();
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 2).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"});
         cbbCategoryID = new JComboBox<>(categoriesID.toArray());
         cbbCategoryIDSearch = new JComboBox<>(categoriesID.toArray());
         cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
@@ -131,7 +131,7 @@ public class ProductGUI extends JPanel {
         cbbSizeSearch.addItemListener(e -> sizeSearch());
         search.add(cbbSizeSearch);
 
-        dataTable = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), e -> fillForm());
+        dataTable = new DataTable(productBLL.getData(), new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -144,10 +144,10 @@ public class ProductGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlProductConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "PRODUCT_ID" -> {
+                    jLabelsForm[i].setText("Mã sản phẩm: ");
                     jTextFieldsForm[index] = new JTextField(productBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -155,20 +155,37 @@ public class ProductGUI extends JPanel {
                     pnlProductConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "CATEGORY_ID" -> pnlProductConfiguration.add(cbbCategoryID);
-                case "SIZED" -> pnlProductConfiguration.add(cbbSize);
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên sản phẩm: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlProductConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "CATEGORY_ID" -> {
+                    jLabelsForm[i].setText("Mã thể loại: ");
+                    pnlProductConfiguration.add(cbbCategoryID);
+                }
+                case "SIZED" -> {
+                    jLabelsForm[i].setText("Size: ");
+                    pnlProductConfiguration.add(cbbSize);
+                }
+                case "COST" -> {
+                    jLabelsForm[i].setText("Giá: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlProductConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "IMAGE" -> {
-                    btChooseImg.setText("Choose an image");
+                    jLabelsForm[i].setText("Hình ảnh: ");
+                    btChooseImg.setText("Chọn hình ảnh");
                     btChooseImg.setCursor(new Cursor(Cursor.HAND_CURSOR));
                     btChooseImg.setFocusPainted(false);
                     btChooseImg.addActionListener(this::btnProductImageActionPerformed);
                     pnlProductConfiguration.add(btChooseImg);
                 }
                 default -> {
-                    jTextFieldsForm[index] = new JTextField();
-                    jTextFieldsForm[index].setText(null);
-                    pnlProductConfiguration.add(jTextFieldsForm[index]);
-                    index++;
                 }
             }
         }
@@ -190,7 +207,7 @@ public class ProductGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -212,7 +229,7 @@ public class ProductGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -232,7 +249,7 @@ public class ProductGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -254,7 +271,7 @@ public class ProductGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -282,13 +299,13 @@ public class ProductGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("CATEGORY_ID")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã thể loại")) {
             txtSearch.setVisible(false);
             cbbSizeSearch.setVisible(false);
             cbbCategoryIDSearch.setSelectedIndex(0);
             cbbCategoryIDSearch.setVisible(true);
             categoryIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SIZED")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Size")) {
             txtSearch.setVisible(false);
             cbbCategoryIDSearch.setVisible(false);
             cbbSizeSearch.setSelectedIndex(0);
@@ -306,7 +323,16 @@ public class ProductGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(productBLL.getProductList());
         } else {
-            loadDataTable(productBLL.findProducts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "PRODUCT_ID";
+                case 1 -> key = "NAME";
+                case 4 -> key = "COST";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(productBLL.findProducts(key, txtSearch.getText()));
         }
     }
 

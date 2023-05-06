@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -63,7 +64,7 @@ public class WarehousesGUI extends JPanel {
         mode = new JPanel();
         showImg = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
         cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbSupplierID = new JComboBox<>(suppliersID.toArray());
@@ -123,15 +124,10 @@ public class WarehousesGUI extends JPanel {
         cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(ingredientBLL.getData(), new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-//        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
-//        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
-//        pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-//        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
-//        roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
         pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
         pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
         pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
@@ -141,10 +137,10 @@ public class WarehousesGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlIngredientConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
+                    jLabelsForm[i].setText("Mã nguyên liệu: ");
                     jTextFieldsForm[index] = new JTextField(ingredientBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -152,13 +148,36 @@ public class WarehousesGUI extends JPanel {
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "UNIT" -> pnlIngredientConfiguration.add(cbbUnit);
-                case "SUPPLIER_ID" -> pnlIngredientConfiguration.add(cbbSupplierID);
-                default -> {
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên nguyên liệu: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                case "QUANTITY" -> {
+                    jLabelsForm[i].setText("Số lượng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "UNIT" -> {
+                    jLabelsForm[i].setText("Đơn vị: ");
+                    pnlIngredientConfiguration.add(cbbUnit);
+                }
+                case "UNIT_PRICE" -> {
+                    jLabelsForm[i].setText("Đơn giá: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "SUPPLIER_ID" -> {
+                    jLabelsForm[i].setText("Mã nhà cung cấp: ");
+                    pnlIngredientConfiguration.add(cbbSupplierID);
+                }
+                default -> {
                 }
             }
         }
@@ -178,7 +197,7 @@ public class WarehousesGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -200,7 +219,7 @@ public class WarehousesGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -220,7 +239,7 @@ public class WarehousesGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -242,7 +261,7 @@ public class WarehousesGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -270,13 +289,13 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("Đơn vị")) {
             txtSearch.setVisible(false);
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
             unitSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SUPPLIER_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhà cung cấp")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             cbbSupplierIDSearch.setSelectedIndex(0);
@@ -294,7 +313,16 @@ public class WarehousesGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
-            loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "INGREDIENT_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "QUANTITY";
+                case 4 -> key = "UNIT_PRICE";
+                default -> {
+                }
+            }
+            loadDataTable(ingredientBLL.findIngredients(key, txtSearch.getText()));
         }
     }
 

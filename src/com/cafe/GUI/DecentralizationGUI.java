@@ -56,7 +56,7 @@ public class DecentralizationGUI extends JPanel {
         pnlDecentralizationConfiguration = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã quyền", "Bán hàng", "Sản phẩm", "Thể loại", "Công thức", "Nhập hàng", "Nhà cung cấp", "Hoá đơn", "Nhà kho", "Tài khoản", "Nhân viên", "Khách hàng", "Giảm giá", "Phân quyền", "Tên quyền"});
         jComboBoxForm = new JComboBox[columnNames.size() - 3];
         jComboBoxSearch = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
         txtSearch = new JTextField(20);
@@ -111,13 +111,13 @@ public class DecentralizationGUI extends JPanel {
         jComboBoxSearch.addItemListener(e -> comboboxSearch());
         search.add(jComboBoxSearch);
 
-        dataTable = new DataTable(decentralizationBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(decentralizationBLL.getData(), new String[]{"Mã quyền", "Bán hàng", "Sản phẩm", "Thể loại", "Công thức", "Nhập hàng", "Nhà cung cấp", "Hoá đơn", "Nhà kho", "Tài khoản", "Nhân viên", "Khách hàng", "Giảm giá", "Phân quyền", "Tên quyền"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
         JScrollPane jScrollPane = new JScrollPane(pnlDecentralizationConfiguration);
         jScrollPane.setPreferredSize(new Dimension(600, 550));
-        pnlDecentralizationConfiguration.setLayout(new GridLayout(15, 2, 20, 20));
+        pnlDecentralizationConfiguration.setLayout(new GridLayout(16, 2, 20, 20));
         pnlDecentralizationConfiguration.setBackground(new Color(0xFFFFFF));
         pnlDecentralizationConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlDecentralizationConfiguration.setPreferredSize(new Dimension(jScrollPane.getViewport().getWidth(), 700));
@@ -127,10 +127,10 @@ public class DecentralizationGUI extends JPanel {
         int index2 = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlDecentralizationConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "DECENTRALIZATION_ID" -> {
+                    jLabelsForm[i].setText("Mã quyền: ");
                     jTextFieldsForm[index1] = new JTextField(decentralizationBLL.getAutoID());
                     jTextFieldsForm[index1].setEnabled(false);
                     jTextFieldsForm[index1].setBorder(null);
@@ -138,17 +138,105 @@ public class DecentralizationGUI extends JPanel {
                     pnlDecentralizationConfiguration.add(jTextFieldsForm[index1]);
                     index1++;
                 }
+                case "IS_SALE" -> {
+                    jLabelsForm[i].setText("Bán hàng: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_PRODUCT" -> {
+                    jLabelsForm[i].setText("Sản phẩm: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_CATEGORY" -> {
+                    jLabelsForm[i].setText("Thể loại: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_RECIPE" -> {
+                    jLabelsForm[i].setText("Công thức: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_IMPORT" -> {
+                    jLabelsForm[i].setText("Nhập hàng: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_SUPPLIER" -> {
+                    jLabelsForm[i].setText("Nhà cung cấp: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_BILL" -> {
+                    jLabelsForm[i].setText("Hoá đơn: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_WAREHOUSES" -> {
+                    jLabelsForm[i].setText("Nhà kho: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_ACCOUNT" -> {
+                    jLabelsForm[i].setText("Tài khoản: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_STAFF" -> {
+                    jLabelsForm[i].setText("Nhân viên: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_CUSTOMER" -> {
+                    jLabelsForm[i].setText("Khách hàng: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_DISCOUNT" -> {
+                    jLabelsForm[i].setText("Giảm giá: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
+                case "IS_DECENTRALIZE" -> {
+                    jLabelsForm[i].setText("Phân quyền: ");
+                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
+                    jComboBoxForm[index2].setSelectedIndex(0);
+                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
+                    index2++;
+                }
                 case "DECENTRALIZATION_NAME" -> {
+                    jLabelsForm[i].setText("Tên quyền: ");
                     jTextFieldsForm[index1] = new JTextField();
                     jTextFieldsForm[index1].setText(null);
                     pnlDecentralizationConfiguration.add(jTextFieldsForm[index1]);
                     index1++;
                 }
                 default -> {
-                    jComboBoxForm[index2] = new JComboBox<>(new String[]{"Không", "Xem", "Thêm", "Sửa và xóa"});
-                    jComboBoxForm[index2].setSelectedIndex(0);
-                    pnlDecentralizationConfiguration.add(jComboBoxForm[index2]);
-                    index2++;
                 }
             }
         }
@@ -163,7 +251,7 @@ public class DecentralizationGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -185,7 +273,7 @@ public class DecentralizationGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -205,7 +293,7 @@ public class DecentralizationGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -227,7 +315,7 @@ public class DecentralizationGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -248,6 +336,25 @@ public class DecentralizationGUI extends JPanel {
     }
 
     private void comboboxSearch() {
+        String key = null;
+        switch (cbbSearchFilter.getSelectedIndex()){
+            case 1 -> key = "IS_SALE";
+            case 2 -> key = "IS_PRODUCT";
+            case 3 -> key = "IS_CATEGORY";
+            case 4 -> key = "IS_RECIPE";
+            case 5 -> key = "IS_IMPORT";
+            case 6 -> key = "IS_SUPPLIER";
+            case 7 -> key = "IS_BILL";
+            case 8 -> key = "IS_WAREHOUSES";
+            case 9 -> key = "IS_ACCOUNT";
+            case 10 -> key = "IS_STAFF";
+            case 11 -> key = "IS_CUSTOMER";
+            case 12 -> key = "IS_DISCOUNT";
+            case 13 -> key = "IS_DECENTRALIZE";
+            default -> {
+            }
+        }
+        assert key != null;
         String value = null;
         switch (Objects.requireNonNull(jComboBoxSearch.getSelectedItem()).toString()) {
             case "Không" -> value = "0";
@@ -257,11 +364,11 @@ public class DecentralizationGUI extends JPanel {
             default -> {
             }
         }
-        loadDataTable(decentralizationBLL.findDecentralizations(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), value));
+        loadDataTable(decentralizationBLL.findDecentralizations(key, value));
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_ID") || Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_NAME")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã quyền") || Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên quyền")) {
             jComboBoxSearch.setVisible(false);
             txtSearch.setVisible(true);
             searchDecentralizations();
@@ -277,7 +384,15 @@ public class DecentralizationGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(decentralizationBLL.getDecentralizationList());
         } else {
-            loadDataTable(decentralizationBLL.findDecentralizations(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "DECENTRALIZATION_ID";
+                case 14 -> key = "DECENTRALIZATION_NAME";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(decentralizationBLL.findDecentralizations(key, txtSearch.getText()));
         }
     }
 

@@ -66,7 +66,7 @@ public class AccountGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"});
         cbbDecentralizationID = new JComboBox<>(decentralizationsID.toArray());
         cbbDecentralizationIDSearch = new JComboBox<>(decentralizationsID.toArray());
         cbbStaffID = new JComboBox<>(staffsID.toArray());
@@ -127,7 +127,7 @@ public class AccountGUI extends JPanel {
         cbbStaffIDSearch.addItemListener(e -> staffIDSearch());
         search.add(cbbStaffIDSearch);
 
-        dataTable = new DataTable(accountBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(accountBLL.getData(), new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -139,22 +139,37 @@ public class AccountGUI extends JPanel {
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlAccountConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "ACCOUNT_ID" -> {
+                    jLabelsForm[i].setText("Mã tài khoản: ");
                     jTextFieldsForm[i] = new JTextField(accountBLL.getAutoID());
                     jTextFieldsForm[i].setEnabled(false);
                     jTextFieldsForm[i].setBorder(null);
                     jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
                 }
-                case "DECENTRALIZATION_ID" -> pnlAccountConfiguration.add(cbbDecentralizationID);
-                case "STAFF_ID" -> pnlAccountConfiguration.add(cbbStaffID);
-                default -> {
+                case "USERNAME" -> {
+                    jLabelsForm[i].setText("Tên đăng nhập: ");
                     jTextFieldsForm[i] = new JTextField();
                     jTextFieldsForm[i].setText(null);
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
+                }
+                case "PASSWD" -> {
+                    jLabelsForm[i].setText("Mật khẩu: ");
+                    jTextFieldsForm[i] = new JTextField();
+                    jTextFieldsForm[i].setText(null);
+                    pnlAccountConfiguration.add(jTextFieldsForm[i]);
+                }
+                case "DECENTRALIZATION_ID" -> {
+                    jLabelsForm[i].setText("Mã quyền: ");
+                    pnlAccountConfiguration.add(cbbDecentralizationID);
+                }
+                case "STAFF_ID" -> {
+                    jLabelsForm[i].setText("Mã nhân viên: ");
+                    pnlAccountConfiguration.add(cbbStaffID);
+                }
+                default -> {
                 }
             }
         }
@@ -175,7 +190,7 @@ public class AccountGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -197,7 +212,7 @@ public class AccountGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -217,7 +232,7 @@ public class AccountGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -239,7 +254,7 @@ public class AccountGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -267,13 +282,13 @@ public class AccountGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_ID")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã quyền")) {
             txtSearch.setVisible(false);
             cbbStaffIDSearch.setVisible(false);
             cbbDecentralizationIDSearch.setSelectedIndex(0);
             cbbDecentralizationIDSearch.setVisible(true);
             decentralizationIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("STAFF_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhân viên")) {
             txtSearch.setVisible(false);
             cbbDecentralizationIDSearch.setVisible(false);
             cbbStaffIDSearch.setSelectedIndex(0);
@@ -291,7 +306,16 @@ public class AccountGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(accountBLL.getAccountList());
         } else {
-            loadDataTable(accountBLL.findAccounts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "ACCOUNT_ID";
+                case 1 -> key = "USERNAME";
+                case 2 -> key = "PASSWD";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(accountBLL.findAccounts(key, txtSearch.getText()));
         }
     }
 

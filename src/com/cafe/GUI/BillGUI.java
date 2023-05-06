@@ -500,7 +500,7 @@ public class BillGUI extends JPanel {
         label[12].setText("Tiền nhận:");
         label[14].setText("Tiền thối:");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
-        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(billBLL.getData(), new String[]{"Mã hoá đơn", "Mã khách hàng", "Mã nhân viên", "Ngày mua", "Tổng tiền", "Tiền nhận", "Tiền thừa"}, e -> fillForm());
         inSaleMode = true;
     }
 
@@ -512,7 +512,7 @@ public class BillGUI extends JPanel {
         label[12].setText("");
         label[14].setText("");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        dataTable = new DataTable(receiptBLL.getData(), receiptColumnNames.subList(0, receiptColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(receiptBLL.getData(), new String[]{"Mã phiếu nhập", "Mã nhân viên", "Ngày nhập", "Tổng tiền", "Mã nhà cung cấp"}, e -> fillForm());
         inSaleMode = false;
     }
 

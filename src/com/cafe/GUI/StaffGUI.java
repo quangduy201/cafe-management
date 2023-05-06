@@ -62,7 +62,7 @@ public class StaffGUI extends JPanel {
         mode = new JPanel();
         radiusBtGender = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Địa chỉ", "Điện thoại", "Email", "Lương", "Ngày vào làm"});
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
         rbFemale = new JRadioButton("Nữ");
@@ -131,7 +131,7 @@ public class StaffGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(staffBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(staffBLL.getData(), new String[]{"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Địa chỉ", "Điện thoại", "Email", "Lương", "Ngày vào làm"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -144,10 +144,10 @@ public class StaffGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlStaffConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "STAFF_ID" -> {
+                    jLabelsForm[i].setText("Mã nhân viên: ");
                     jTextFieldsForm[index] = new JTextField(staffBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -155,7 +155,15 @@ public class StaffGUI extends JPanel {
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên khách hàng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "GENDER" -> {
+                    jLabelsForm[i].setText("Giới tính: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -167,11 +175,49 @@ public class StaffGUI extends JPanel {
                     panel.add(rbFemale);
                     pnlStaffConfiguration.add(panel);
                 }
-                default -> {
+                case "DOB" -> {
+                    jLabelsForm[i].setText("Ngày sinh: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                case "ADDRESS" -> {
+                    jLabelsForm[i].setText("Địa chỉ: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "PHONE" -> {
+                    jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "EMAIL" -> {
+                    jLabelsForm[i].setText("Email: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "SALARY" -> {
+                    jLabelsForm[i].setText("Lương: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "DOENTRY" -> {
+                    jLabelsForm[i].setText("Ngày vào làm: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                default -> {
                 }
             }
         }
@@ -191,7 +237,7 @@ public class StaffGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -213,7 +259,7 @@ public class StaffGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -233,7 +279,7 @@ public class StaffGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -255,7 +301,7 @@ public class StaffGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -275,7 +321,7 @@ public class StaffGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Giới tính")) {
             txtSearch.setVisible(false);
             radiusBtGender.setVisible(true);
             genderSearch();
@@ -295,7 +341,21 @@ public class StaffGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(staffBLL.getStaffList());
         } else {
-            loadDataTable(staffBLL.findStaffs(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "STAFF_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "DOB";
+                case 4 -> key = "ADDRESS";
+                case 5 -> key = "PHONE";
+                case 6 -> key = "EMAIL";
+                case 7 -> key = "SALARY";
+                case 8 -> key = "DOENTRY";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(staffBLL.findStaffs(key, txtSearch.getText()));
         }
     }
 

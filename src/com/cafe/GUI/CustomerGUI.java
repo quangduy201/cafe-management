@@ -70,7 +70,7 @@ public class CustomerGUI extends JPanel {
         radiusBtGender = new JPanel();
         radiusBtMember = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Điện thoại", "Thành viên", "Ngày đăng ký"});
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
         rbFemale = new JRadioButton("Nữ");
@@ -157,7 +157,7 @@ public class CustomerGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(customerBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(customerBLL.getData(), new String[]{"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Điện thoại", "Thành viên", "Ngày đăng ký"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -170,10 +170,10 @@ public class CustomerGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCustomerConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "CUSTOMER_ID" -> {
+                    jLabelsForm[i].setText("Mã khách hàng: ");
                     jTextFieldsForm[index] = new JTextField(customerBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -181,7 +181,15 @@ public class CustomerGUI extends JPanel {
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên khách hàng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "GENDER" -> {
+                    jLabelsForm[i].setText("Giới tính: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -193,7 +201,22 @@ public class CustomerGUI extends JPanel {
                     panel.add(rbFemale);
                     pnlCustomerConfiguration.add(panel);
                 }
+                case "DOB" -> {
+                    jLabelsForm[i].setText("Ngày sinh: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "PHONE" -> {
+                    jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "MEMBERSHIP" -> {
+                    jLabelsForm[i].setText("Thành viên: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -205,11 +228,14 @@ public class CustomerGUI extends JPanel {
                     panel.add(rbNo);
                     pnlCustomerConfiguration.add(panel);
                 }
-                default -> {
+                case "DOSUP" -> {
+                    jLabelsForm[i].setText("Ngày đăng ký: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                default -> {
                 }
             }
         }
@@ -247,7 +273,7 @@ public class CustomerGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -269,7 +295,7 @@ public class CustomerGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -289,7 +315,7 @@ public class CustomerGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -311,7 +337,7 @@ public class CustomerGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -331,12 +357,12 @@ public class CustomerGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Giới tính")) {
             txtSearch.setVisible(false);
             radiusBtMember.setVisible(false);
             radiusBtGender.setVisible(true);
             genderSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("MEMBERSHIP")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Thành viên")) {
             txtSearch.setVisible(false);
             radiusBtGender.setVisible(false);
             radiusBtMember.setVisible(true);
@@ -364,7 +390,18 @@ public class CustomerGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(customerBLL.getCustomerList());
         } else {
-            loadDataTable(customerBLL.findCustomers(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "CUSTOMER_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "DOB";
+                case 4 -> key = "PHONE";
+                case 6 -> key = "DOSUP";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(customerBLL.findCustomers(key, txtSearch.getText()));
         }
     }
 

@@ -55,7 +55,7 @@ public class CategoryGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã thể loại", "Tên thể loại", "Số lượng"});
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
@@ -105,7 +105,7 @@ public class CategoryGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(categoryBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(categoryBLL.getData(), new String[]{"Mã thể loại", "Tên thể loại", "Số lượng"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -117,21 +117,23 @@ public class CategoryGUI extends JPanel {
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCategoryConfiguration.add(jLabelsForm[i]);
             if ("CATEGORY_ID".equals(columnNames.get(i))) {
+                jLabelsForm[i].setText("Mã thể loại: ");
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
             } else if ("QUANTITY".equals(columnNames.get(i))) {
+                jLabelsForm[i].setText("Số lượng: ");
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setText("0");
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
             } else {
+                jLabelsForm[i].setText("Tên thể loại: ");
                 jTextFieldsForm[i] = new JTextField();
                 jTextFieldsForm[i].setText(null);
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
@@ -153,7 +155,7 @@ public class CategoryGUI extends JPanel {
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
             btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -175,7 +177,7 @@ public class CategoryGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -195,7 +197,7 @@ public class CategoryGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -217,7 +219,7 @@ public class CategoryGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -240,7 +242,16 @@ public class CategoryGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(categoryBLL.getCategoryList());
         } else {
-            loadDataTable(categoryBLL.findCategories(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "CATEGORY_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "QUANTITY";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(categoryBLL.findCategories(key, txtSearch.getText()));
         }
     }
 

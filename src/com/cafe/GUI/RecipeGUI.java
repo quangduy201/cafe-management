@@ -67,7 +67,7 @@ public class RecipeGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã công thức", "Mã sản phẩm", "Mã nguyên liệu", "Định lượng", "Đơn vị"});
         cbbProductID = new JComboBox<>(productsID.toArray());
         cbbProductIDSearch = new JComboBox<>(productsID.toArray());
         cbbIngredientID = new JComboBox<>(ingredientsID.toArray());
@@ -131,7 +131,7 @@ public class RecipeGUI extends JPanel {
         cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(recipeBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(recipeBLL.getData(), new String[]{"Mã công thức", "Mã sản phẩm", "Mã nguyên liệu", "Định lượng", "Đơn vị"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -144,10 +144,10 @@ public class RecipeGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlRecipeConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "RECIPE_ID" -> {
+                    jLabelsForm[i].setText("Mã công thức: ");
                     jTextFieldsForm[index] = new JTextField(recipeBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -155,14 +155,26 @@ public class RecipeGUI extends JPanel {
                     pnlRecipeConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "PRODUCT_ID" -> pnlRecipeConfiguration.add(cbbProductID);
-                case "INGREDIENT_ID" -> pnlRecipeConfiguration.add(cbbIngredientID);
-                case "UNIT" -> pnlRecipeConfiguration.add(cbbUnit);
-                default -> {
+                case "PRODUCT_ID" -> {
+                    jLabelsForm[i].setText("Mã sản phẩm: ");
+                    pnlRecipeConfiguration.add(cbbProductID);
+                }
+                case "INGREDIENT_ID" -> {
+                    jLabelsForm[i].setText("Mã nguyên liệu: ");
+                    pnlRecipeConfiguration.add(cbbIngredientID);
+                }
+                case "MASS" -> {
+                    jLabelsForm[i].setText("Định lượng: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlRecipeConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                case "UNIT" -> {
+                    jLabelsForm[i].setText("Đơn vị: ");
+                    pnlRecipeConfiguration.add(cbbUnit);
+                }
+                default -> {
                 }
             }
         }
@@ -172,68 +184,77 @@ public class RecipeGUI extends JPanel {
         showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setBackground(new Color(0xFFFFFF));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        if (decentralizationMode > 1) {
+            mode.setLayout(new GridLayout(2, 2, 20, 20));
+            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            mode.setBackground(new Color(0xFFFFFF));
+            mode.setPreferredSize(new Dimension(635, 130));
+            roundPanel2.add(mode, BorderLayout.SOUTH);
 
-        btAdd.setBackground(new Color(35, 166, 97));
-        btAdd.setBorder(null);
-        btAdd.setIcon(new ImageIcon("img/plus.png"));
-        btAdd.setText("  Add");
-        btAdd.setColor(new Color(240, 240, 240));
-        btAdd.setColorClick(new Color(141, 222, 175));
-        btAdd.setColorOver(new Color(35, 166, 97));
-        btAdd.setFocusPainted(false);
-        btAdd.setRadius(20);
-        btAdd.setEnabled(true);
-        btAdd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btAdd.isEnabled()) {
-                    addRecipe();
+            btAdd.setBackground(new Color(35, 166, 97));
+            btAdd.setBorder(null);
+            btAdd.setIcon(new ImageIcon("img/plus.png"));
+            btAdd.setText("  Thêm");
+            btAdd.setColor(new Color(240, 240, 240));
+            btAdd.setColorClick(new Color(141, 222, 175));
+            btAdd.setColorOver(new Color(35, 166, 97));
+            btAdd.setFocusPainted(false);
+            btAdd.setRadius(20);
+            btAdd.setEnabled(true);
+            btAdd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btAdd.isEnabled()) {
+                        addRecipe();
+                    }
                 }
-            }
-        });
-        mode.add(btAdd);
+            });
+            mode.add(btAdd);
+        }
 
-        btUpd.setBackground(new Color(35, 166, 97));
-        btUpd.setBorder(null);
-        btUpd.setIcon(new ImageIcon("img/wrench.png"));
-        btUpd.setText("  Update");
-        btUpd.setColor(new Color(240, 240, 240));
-        btUpd.setColorClick(new Color(141, 222, 175));
-        btUpd.setColorOver(new Color(35, 166, 97));
-        btUpd.setFocusPainted(false);
-        btUpd.setRadius(20);
-        btUpd.setEnabled(false);
-        btUpd.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (btUpd.isEnabled()) {
-                    updateRecipe();
+        if (decentralizationMode == 3) {
+            btUpd.setBackground(new Color(35, 166, 97));
+            btUpd.setBorder(null);
+            btUpd.setIcon(new ImageIcon("img/wrench.png"));
+            btUpd.setText("  Sửa");
+            btUpd.setColor(new Color(240, 240, 240));
+            btUpd.setColorClick(new Color(141, 222, 175));
+            btUpd.setColorOver(new Color(35, 166, 97));
+            btUpd.setFocusPainted(false);
+            btUpd.setRadius(20);
+            btUpd.setEnabled(false);
+            btUpd.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (btUpd.isEnabled()) {
+                        updateRecipe();
+                    }
                 }
-            }
-        });
-        mode.add(btUpd);
+            });
+            mode.add(btUpd);
+        }
 
-        btRef.setBackground(new Color(35, 166, 97));
-        btRef.setBorder(null);
-        btRef.setIcon(new ImageIcon("img/refresh.png"));
-        btRef.setText("  Refresh");
-        btRef.setColor(new Color(240, 240, 240));
-        btRef.setColorClick(new Color(141, 222, 175));
-        btRef.setColorOver(new Color(35, 166, 97));
-        btRef.setFocusPainted(false);
-        btRef.setRadius(20);
-        btRef.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                refreshForm();
-            }
-        });
-        mode.add(btRef);
+        if (decentralizationMode > 1) {
+            btRef.setBackground(new Color(35, 166, 97));
+            btRef.setBorder(null);
+            btRef.setIcon(new ImageIcon("img/refresh.png"));
+            btRef.setText("  Làm mới");
+            btRef.setColor(new Color(240, 240, 240));
+            btRef.setColorClick(new Color(141, 222, 175));
+            btRef.setColorOver(new Color(35, 166, 97));
+            btRef.setFocusPainted(false);
+            btRef.setRadius(20);
+            btRef.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    refreshForm();
+                }
+            });
+            mode.add(btRef);
+        } else {
+            dataTable.setRowSelectionInterval(0, 0);
+            fillForm();
+        }
     }
 
     private void unitSearch() {
@@ -248,21 +269,21 @@ public class RecipeGUI extends JPanel {
         loadDataTable(recipeBLL.findRecipes("PRODUCT_ID", Objects.requireNonNull(cbbProductIDSearch.getSelectedItem()).toString()));
     }
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Đơn vị")) {
             txtSearch.setVisible(false);
             cbbIngredientIDSearch.setVisible(false);
             cbbProductIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
             unitSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("INGREDIENT_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nguyên liệu")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             cbbProductIDSearch.setVisible(false);
             cbbIngredientIDSearch.setSelectedIndex(0);
             cbbIngredientIDSearch.setVisible(true);
             ingredientIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("PRODUCT_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã sản phẩm")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             cbbIngredientIDSearch.setVisible(false);
@@ -282,7 +303,15 @@ public class RecipeGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(recipeBLL.getRecipeList());
         } else {
-            loadDataTable(recipeBLL.findRecipes(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "RECIPE_ID";
+                case 3 -> key = "MASS";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(recipeBLL.findRecipes(key, txtSearch.getText()));
         }
     }
 

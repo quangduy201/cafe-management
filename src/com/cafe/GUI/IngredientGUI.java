@@ -103,8 +103,8 @@ public class IngredientGUI extends JPanel {
         search = new RoundPanel();
         search1 = new RoundPanel();
         pnlIngredientConfiguration = new RoundPanel();
-        cbbSearchFilter = new JComboBox<>(result.subList(0, result.size() - 1).toArray());
-        cbbSearchSupplier = new JComboBox<>(columnName1.subList(0, columnNames.size() - 2).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
+        cbbSearchSupplier = new JComboBox<>(new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         txtSearch = new JTextField();
         txtSearch1 = new JTextField();
@@ -211,11 +211,11 @@ public class IngredientGUI extends JPanel {
         });
         search1.add(txtSearch1);
 
-        dataTable = new DataTable(null, result.toArray(), e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel[2].add(scrollPane);
 
-        dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnName1.size() - 1).toArray(), e -> fillForm1());
+        dataTable1 = new DataTable(supplierBLL.getData(), new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"}, e -> fillForm1());
         scrollPane = new JScrollPane(dataTable1);
         roundPanel[12].add(scrollPane);
 
@@ -398,7 +398,15 @@ public class IngredientGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
-            loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "INGREDIENT_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "UNIT_PRICE";
+                default -> {
+                }
+            }
+            loadDataTable(ingredientBLL.findIngredients(key, txtSearch.getText()));
         }
     }
 
@@ -406,7 +414,18 @@ public class IngredientGUI extends JPanel {
         if (txtSearch1.getText().isEmpty()) {
             loadDataTable1(supplierBLL.getSupplierList());
         } else {
-            loadDataTable1(supplierBLL.findSuppliers(Objects.requireNonNull(cbbSearchSupplier.getSelectedItem()).toString(), txtSearch1.getText()));
+            String key = null;
+            switch (cbbSearchSupplier.getSelectedIndex()){
+                case 0 -> key = "SUPPLIER_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "PHONE";
+                case 3 -> key = "ADDRESS";
+                case 4 -> key = "EMAIL";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable1(supplierBLL.findSuppliers(key, txtSearch1.getText()));
         }
     }
 
@@ -427,32 +446,35 @@ public class IngredientGUI extends JPanel {
     }
 
     public void pressImport() {
-        Receipt newReceipt = null;
-        try {
-            newReceipt = getForm1();
-        } catch (Exception ignored) {
+        if (checkInput()) {
+            Receipt newReceipt = null;
+            try {
+                newReceipt = getForm1();
+            } catch (Exception ignored) {
 
-        }
-        assert newReceipt != null;
-
-        if (receiptBLL.addReceipt(newReceipt))
-            JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-        else
-            JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
-
-        if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
-            for (int i = 0; i < receiptDetails.size(); i++) {
-                ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
-                receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
             }
+            assert newReceipt != null;
+
+            if (receiptBLL.addReceipt(newReceipt))
+                JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
+
+            if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
+                for (int i = 0; i < receiptDetails.size(); i++) {
+                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+                    receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
+                }
+            }
+            supplierID = null;
+            label[7].setText(null);
+
+            pressCancel();
+
+            loadDataTable(new ArrayList<>());
+            loadDataTable1(supplierBLL.getSupplierList());
+
         }
-        supplierID = null;
-        label[7].setText(null);
-
-        pressCancel();
-
-        loadDataTable(new ArrayList<>());
-        loadDataTable1(supplierBLL.getSupplierList());
     }
 
     public void pressCancel() {
@@ -557,7 +579,7 @@ public class IngredientGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("Đơn vị")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
@@ -579,5 +601,19 @@ public class IngredientGUI extends JPanel {
         Day dor = Day.parseDay(label[5].getText());
         double grandTotal = 0;
         return new Receipt(receiptID, staffID, dor, grandTotal, supplierID, false);
+    }
+
+    public boolean checkInput() {
+        if (supplierID == null) {
+            JOptionPane.showMessageDialog(this, "Please choose the supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (receiptDetails.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please choose the ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 }
