@@ -8,7 +8,17 @@ import java.awt.event.MouseEvent;
 public class Button extends JButton {
     public Button(){
         setContentAreaFilled(false);
-        addMouseListener(new MouseAdapter(){
+        initComponent();
+    }
+
+    public Button(Color color){
+        this.borderColor = color;
+        setContentAreaFilled(false);
+        initComponent();
+    }
+
+    public void initComponent() {
+        this.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(colorOver);
@@ -78,6 +88,7 @@ public class Button extends JButton {
 
     public void setBorderColor(Color borderColor) {
         this.borderColor = borderColor;
+//        super.paintComponent(null);
     }
 
     public int getRadius() {
@@ -102,7 +113,7 @@ public class Button extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         //Paint Border
-        g2.setColor(borderColor);
+        g2.setColor(getBorderColor());
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         //Border set 2px
         g2.setColor(getBackground());

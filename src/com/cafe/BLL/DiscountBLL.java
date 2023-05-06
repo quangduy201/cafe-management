@@ -2,7 +2,9 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDAL;
 import com.cafe.DTO.Discount;
+import com.cafe.DTO.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public class DiscountBLL extends Manager<Discount> {
     public DiscountBLL() {
         try {
             discountDAL = new DiscountDAL();
-            discountList = searchDiscounts();
+            discountList = searchDiscounts("DELETED = 0");
         } catch (Exception ignored) {
 
         }
@@ -58,6 +60,14 @@ public class DiscountBLL extends Manager<Discount> {
         return discountDAL.searchDiscounts(conditions);
     }
 
+    public List<Discount> findDiscounts(String key, Object value) {
+        List<Discount> list = new ArrayList<>();
+        for (Discount discount : discountList)
+            if (getValueByKey(discount, key).toString().toLowerCase().contains(value.toString().toLowerCase()))
+                list.add(discount);
+        return list;
+    }
+
     public List<Discount> findDiscountsBy(Map<String, Object> conditions) {
         List<Discount> discounts = discountList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -67,11 +77,10 @@ public class DiscountBLL extends Manager<Discount> {
 
     public boolean exists(Discount discount) {
         return !findDiscountsBy(Map.of(
-            "CATEGORY_ID", discount.getDiscountID(),
             "DISCOUNT_PERCENT", discount.getDiscountPercent(),
             "START_DATE", discount.getStartDay(),
-            "END_DATE", discount.getEndDay(),
-            "STATUS", discount.getStatus()
+            "END_DATE", discount.getEndDay()
+//            "STATUS", discount.getStatus()
         )).isEmpty();
     }
 

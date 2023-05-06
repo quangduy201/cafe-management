@@ -7,66 +7,58 @@ import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.Excel;
+import com.cafe.utils.Tasks;
+import com.cafe.utils.VNString;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class BillGUI extends JPanel {
     private RoundPanel[] roundPanel;
     private JLabel[] label;
     private JScrollPane[] jScrollPane;
+    private JScrollPane scrollPane;
     private DataTable dataTable;
     private Button[] button;
     private BillBLL billBLL = new BillBLL();
     private List<String> billColumnNames = billBLL.getBillDAL().getColumnNames();
-    private List<Receipt> receiptList = new ArrayList<>();
-    private List<Bill> billList = new ArrayList<>();
-    private BillDetailsBLL billDetailsBLL;
-    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
-    private Customer customer;
-    private JScrollPane scrollPane;
+    private BillDetailsBLL billDetailsBLL = new BillDetailsBLL();
     private ReceiptBLL receiptBLL = new ReceiptBLL();
     private List<String> receiptColumnNames = receiptBLL.getReceiptDAL().getColumnNames();
-    private ArrayList<BillDetails> listDetailBill = new ArrayList<>();
+    private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
+    private ArrayList<BillDetails> listBillDetails = new ArrayList<>();
     private ArrayList<ReceiptDetails> listReceiptDetails = new ArrayList<>();
-    private com.toedter.calendar.JDateChooser jdateChooser1;
-    private JTextField textField;
-    private com.toedter.calendar.JDateChooser jdateChooser2;
-    private JTextField textField2;
-    private boolean checklist = true;
+    private JDateChooser[] jDateChooser;
+    private JTextField[] jTextField;
+    private boolean inSaleMode = true;
+    private Button btFaceSignUp;
 
     public BillGUI() {
         setLayout(new BorderLayout());
         setBackground(new Color(70, 67, 67));
         initComponents();
+        changeMode("SALE");
     }
 
     public void initComponents() {
-        roundPanel = new RoundPanel[25];
-        label = new JLabel[25];
+        roundPanel = new RoundPanel[21];
+        label = new JLabel[21];
         button = new Button[4];
         jScrollPane = new JScrollPane[2];
-        button[0] = new Button();
-        button[1] = new Button();
-        button[2] = new Button();
-        button[3] = new Button();
-        jdateChooser1 = new com.toedter.calendar.JDateChooser();
-        jdateChooser2 = new com.toedter.calendar.JDateChooser();
-        textField = ((JTextField) jdateChooser1.getDateEditor().getUiComponent());
-        textField2 = ((JTextField) jdateChooser2.getDateEditor().getUiComponent());
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
             label[i] = new JLabel();
@@ -75,9 +67,6 @@ public class BillGUI extends JPanel {
         roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
         roundPanel[0].setBackground(new Color(70, 67, 67));
         this.add(roundPanel[0], BorderLayout.CENTER);
-
-        jScrollPane[0] = new JScrollPane(roundPanel[16]);
-        jScrollPane[1] = new JScrollPane();
 
         roundPanel[1].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
         roundPanel[1].setPreferredSize(new Dimension(560, 670));
@@ -162,73 +151,67 @@ public class BillGUI extends JPanel {
         roundPanel[15].setAutoscrolls(true);
         roundPanel[5].add(roundPanel[15], BorderLayout.WEST);
 
-        button[0].setPreferredSize(new Dimension(80, 40));
-        button[0].setBorderPainted(false);
-        button[0].setRadius(15);
-        button[0].setFocusPainted(false);
-        button[0].setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        button[0].setColor(new Color(0x70E149));
-        button[0].setColorOver(new Color(0x5EFF00));
-        button[0].setColorClick(new Color(0x8AD242));
-        button[0].setBorderColor(new Color(70, 67, 67));
-        button[0].setText("Bán");
-        button[0].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                    pressSale();
-                } catch (Exception ignored) {
-
-                }
+        for (int i = 0; i < 4; i++) {
+            button[i] = new Button();
+            button[i].setBorderPainted(false);
+            button[i].setFocusPainted(false);
+            button[i].setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            button[i].setColor(new Color(0x70E149));
+            button[i].setColorOver(new Color(0x5EFF00));
+            button[i].setColorClick(new Color(0x8AD242));
+            button[i].setBorderColor(new Color(70, 67, 67));
+            button[i].setRadius(15);
+            button[i].setPreferredSize(new Dimension(80, 40));
+            if (i >= 2) {
+                button[i].setText("Xuất Excel");
+                button[i].setColor(new Color(240, 240, 240));
+                button[i].setPreferredSize(new Dimension(160, 40));
+                button[i].setIcon(new ImageIcon("img/folder.png"));
             }
-        });
+            switch (i) {
+                case 0 -> button[i].setText("Bán");
+                case 1 -> button[i].setText("Nhập");
+            }
+            int index = i;
+            button[i].addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent mouseEvent) {
+                    try {
+                        switch (index) {
+                            case 0 -> changeMode("SALE");
+                            case 1 -> changeMode("IMPORT");
+                            case 2 -> pressExcel(true);
+                            case 3 -> pressExcel(false);
+                        }
+                    } catch (Exception ignored) {
+
+                    }
+                }
+            });
+        }
         roundPanel[15].add(button[0], BorderLayout.WEST);
-
-        button[1].setPreferredSize(new Dimension(80, 40));
-        button[1].setBorderPainted(false);
-        button[1].setRadius(15);
-        button[1].setFocusPainted(false);
-        button[1].setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        button[1].setColor(new Color(0x70E149));
-        button[1].setColorOver(new Color(0x5EFF00));
-        button[1].setColorClick(new Color(0x8AD242));
-        button[1].setBorderColor(new Color(70, 67, 67));
-        button[1].setText("Nhập");
-        button[1].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                    pressImport();
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
         roundPanel[15].add(button[1], BorderLayout.EAST);
-
-
-        button[2].setPreferredSize(new Dimension(160, 40));
-        button[2].setBorderPainted(false);
-        button[2].setRadius(15);
-        button[2].setFocusPainted(false);
-        button[2].setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        button[2].setColor(new Color(240, 240, 240));
-        button[2].setColorOver(new Color(0x5EFF00));
-        button[2].setColorClick(new Color(0x8AD242));
-        button[2].setBorderColor(new Color(70, 67, 67));
-        button[2].setIcon(new ImageIcon("img/folder.png"));
-        button[2].setText("Xuất Excel");
-        button[2].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                    pressExcel();
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
         roundPanel[5].add(button[2], BorderLayout.EAST);
+        roundPanel[2].add(button[3]);
+
+//        TODO
+//        btFaceSignUp = new Button();
+//        btFaceSignUp.setBackground(new Color(35, 166, 97));
+//        btFaceSignUp.setBorder(null);
+//        btFaceSignUp.setIcon(new ImageIcon("img/face-scanner.png"));
+//        btFaceSignUp.setText("Sign up your face  ");
+//        btFaceSignUp.setColor(new Color(240, 240, 240));
+//        btFaceSignUp.setColorClick(new Color(141, 222, 175));
+//        btFaceSignUp.setColorOver(new Color(35, 166, 97));
+//        btFaceSignUp.setFocusPainted(false);
+//        btFaceSignUp.setRadius(20);
+//        btFaceSignUp.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent e) {
+//                findBillsByFace();
+//            }
+//        });
+//        roundPanel[5].add(btFaceSignUp);
 
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 30));
         label[1].setHorizontalAlignment(JLabel.CENTER);
@@ -291,7 +274,8 @@ public class BillGUI extends JPanel {
         label[7].setAutoscrolls(true);
         roundPanel[8].add(label[7]);
 
-
+        jScrollPane[1] = new JScrollPane(roundPanel[16]);
+        jScrollPane[0] = new JScrollPane(roundPanel[16]);
         jScrollPane[0].setPreferredSize(new Dimension(400, 380));
         jScrollPane[0].setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         jScrollPane[0].setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -341,29 +325,6 @@ public class BillGUI extends JPanel {
         label[15].setAutoscrolls(true);
         roundPanel[14].add(label[15]);
 
-        button[3].setPreferredSize(new Dimension(150, 40));
-        button[3].setBorderPainted(false);
-        button[3].setRadius(15);
-        button[3].setFocusPainted(false);
-        button[3].setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        button[3].setColor(new Color(240, 240, 240));
-        button[3].setColorOver(new Color(0x5EFF00));
-        button[3].setColorClick(new Color(0x8AD242));
-        button[3].setBorderColor(new Color(70, 67, 67));
-        button[3].setIcon(new ImageIcon("img/folder.png"));
-        button[3].setText("Xuất Excel");
-        button[3].addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                    pressExcel();
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
-        roundPanel[2].add(button[3]);
-
         roundPanel[17].setLayout(new FlowLayout(FlowLayout.LEFT));
         // roundPanel[17].setBackground(new Color(70, 67, 67));
         roundPanel[17].setPreferredSize(new Dimension(540, 50));
@@ -402,251 +363,228 @@ public class BillGUI extends JPanel {
         roundPanel[20].setAutoscrolls(true);
         roundPanel[17].add(roundPanel[20]);
 
-        JTextField textField1 = ((JTextField) jdateChooser1.getDateEditor().getUiComponent());
-        textField1.setFont(new Font("Tahoma", Font.BOLD, 12));
-        textField1.setHorizontalAlignment(JTextField.CENTER);
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2020);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        jdateChooser1.setCalendar(calendar);
-        jdateChooser1.setPreferredSize(new Dimension(150, 20));
-        jdateChooser1.addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        textField.addActionListener(e -> {
-            String dateString = textField.getText();
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-            format.setLenient(false);
-            try {
-                Date date = format.parse(dateString);
-                jdateChooser1.setDate(date);
-            } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        roundPanel[19].add(jdateChooser1);
-
-        JTextField textField2 = ((JTextField) jdateChooser2.getDateEditor().getUiComponent());
-        textField2.setFont(new Font("Tahoma", Font.BOLD, 12));
-        textField2.setHorizontalAlignment(JTextField.CENTER);
-        jdateChooser2.setPreferredSize(new Dimension(150, 20));
-        jdateChooser2.setDate(new Date());
-        jdateChooser2.addPropertyChangeListener("date", new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                changeCalender();
-            }
-        });
-        textField2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String dateString = textField2.getText();
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                format.setLenient(false);
+        jDateChooser = new JDateChooser[2];
+        jTextField = new JTextField[2];
+        for (int i = 0; i < 2; i++) {
+            jDateChooser[i] = new JDateChooser(new Day().toDateSafe());
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(new Dimension(150, 20));
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            jDateChooser[i].addPropertyChangeListener("date", evt -> changeCalender());
+            jTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            jTextField[i].setFont(new Font("Tahoma", Font.BOLD, 12));
+            jTextField[i].setHorizontalAlignment(JTextField.CENTER);
+            int index = i;
+            jTextField[i].addActionListener(e -> {
                 try {
-                    Date date = format.parse(dateString);
-                    jdateChooser2.setDate(date);
-                } catch (ParseException ex) {
+                    Day day = Day.parseDay(jTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-            }
-        });
-        roundPanel[20].add(jdateChooser2);
+            });
+        }
+        roundPanel[19].add(jDateChooser[0]);
+        roundPanel[20].add(jDateChooser[1]);
 
-
-        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel[18].add(scrollPane);
-
-//        Calendar cal = Calendar.getInstance(); // Lấy đối tượng Calendar hiện tại
-//        cal.set(Calendar.YEAR, 2023);
-//        cal.set(Calendar.MONTH, -5);
-//        cal.set(Calendar.DAY_OF_MONTH, 32);
-//        jdateChooser1.setCalendar(cal); // Đặt ngày cho JCalendar
-//
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String start = sdf.format(jdateChooser1.getDate());
-//        System.out.println(start);
-        billDetailsBLL = new BillDetailsBLL();
-//
-//        receiptDetailsBLL = new ReceiptDetailsBLL();
-//        for (ReceiptDetails receiptDetails : receiptDetailsBLL.getReceiptDetailsList()) {
-//            listReceipDetails.add(receiptDetails);
-//        }
-
-
     }
 
     public void fillForm() {
-        listDetailBill.clear();
-        roundPanel[16].removeAll();
-        roundPanel[16].repaint();
-        roundPanel[16].revalidate();
+        listBillDetails.clear();
+        listReceiptDetails.clear();
+        clearDetails();
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
         String[] data = new String[rowData.length];
         for (int i = 0; i < rowData.length; i++) {
             data[i] = rowData[i].toString();
         }
+        if (inSaleMode)
+            fillFormBillDetails(data);
+        else
+            fillFormReceiptDetails(data);
+    }
+
+    public void fillFormBillDetails(String[] data) {
         String[] bill = String.join(" | ", data).split(" \\| ");
         label[3].setText(bill[0]);
         label[9].setText(bill[3]);
-        customer = new CustomerBLL()
+        Customer customer = new CustomerBLL()
             .searchCustomers("CUSTOMER_ID = '" + bill[1] + "'")
             .get(0);
         label[5].setText(customer.getName());
         label[7].setText(bill[2]);
         for (BillDetails billDetails : billDetailsBLL.getBillDetailsList()) {
             if (billDetails.getBillID().equals(bill[0])) {
-                listDetailBill.add(billDetails);
+                listBillDetails.add(billDetails);
                 BillDetailPanel billDetailPanel = new BillDetailPanel();
-                billDetailPanel.setbill(billDetails);
+                billDetailPanel.setBill(billDetails);
                 roundPanel[16].add(billDetailPanel);
             }
         }
-        if (listDetailBill.size() >= 5) {
-            int tall = 75 * this.listDetailBill.size();
-            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), tall));
-        } else {
-            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 390));
-        }
-        label[11].setText(bill[4]);
-        label[13].setText(bill[5]);
-        label[15].setText(bill[6]);
+        int height = 390;
+        if (listBillDetails.size() >= 5)
+            height = 75 * this.listBillDetails.size();
+        roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), height));
+        label[11].setText(VNString.currency(Double.parseDouble(bill[4])));
+        label[13].setText(VNString.currency(Double.parseDouble(bill[5])));
+        label[15].setText(VNString.currency(Double.parseDouble(bill[6])));
     }
 
-    public void fillForm1() {
-        listDetailBill.clear();
-        roundPanel[16].removeAll();
-        roundPanel[16].repaint();
-        roundPanel[16].revalidate();
-        DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
-        Object[] rowData = model.getDataVector().elementAt(dataTable.getSelectedRow()).toArray();
-        String[] data = new String[rowData.length];
-        for (int i = 0; i < rowData.length; i++) {
-            data[i] = rowData[i].toString();
-        }
+    public void fillFormReceiptDetails(String[] data) {
         String[] receipt = String.join(" | ", data).split(" \\| ");
         label[3].setText(receipt[0]);
         label[9].setText(receipt[2]);
-        label[5].setText(receipt[1]);
+        Supplier supplier = new SupplierBLL()
+            .searchSuppliers("SUPPLIER_ID = '" + receipt[4] + "'")
+            .get(0);
+        label[5].setText(supplier.getName());
+        label[7].setText(receipt[1]);
         for (ReceiptDetails receiptDetails : receiptDetailsBLL.getReceiptDetailsList()) {
             if (receiptDetails.getReceiptID().equals(receipt[0])) {
                 listReceiptDetails.add(receiptDetails);
                 BillDetailPanel receiptDetailPanel = new BillDetailPanel();
-                receiptDetailPanel.setreceipt(receiptDetails);
+                receiptDetailPanel.setReceipt(receiptDetails);
                 roundPanel[16].add(receiptDetailPanel);
             }
         }
-        if (listDetailBill.size() >= 5) {
-            int tall = 75 * this.listDetailBill.size();
-            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), tall));
-        } else {
-            roundPanel[16].setPreferredSize(new Dimension(jScrollPane[0].getWidth(), 390));
-        }
-        label[11].setText(receipt[3]);
+        int height = 390;
+        if (listReceiptDetails.size() >= 5)
+            height = 75 * this.listReceiptDetails.size();
+        roundPanel[16].setPreferredSize(new Dimension(jScrollPane[1].getWidth(), height));
+        label[11].setText(VNString.currency(Double.parseDouble(receipt[3])));
     }
 
     private void changeCalender() {
-        Day start = new Day(jdateChooser1.getDate());
-        Day end = new Day(jdateChooser2.getDate());
+        Day start = new Day(jDateChooser[0].getDate());
+        Day end = new Day(jDateChooser[1].getDate());
 
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
+        clearDetails();
 
-        if (checklist) {
-            roundPanel[16].removeAll();
-            roundPanel[16].repaint();
-            roundPanel[16].revalidate();
-            for (Bill bill : billBLL.getBillList()) {
-                if (bill.getDateOfPurchase().compareDates(start) && end.compareDates(bill.getDateOfPurchase()))
+        if (inSaleMode) {
+            for (Bill bill : billBLL.getBillList())
+                if (bill.getDateOfPurchase().isBetween(start, end))
                     model.addRow(new Object[]{bill.getBillID(), bill.getCustomerID(), bill.getStaffID(), bill.getDateOfPurchase(), bill.getTotal(), bill.getReceived(), bill.getExcess()});
+        } else {
+            for (Receipt receipt : receiptBLL.getReceiptList())
+                if (receipt.getDor().isBetween(start, end))
+                    model.addRow(new Object[]{receipt.getReceiptID(), receipt.getStaffID(), receipt.getDor(), receipt.getGrandTotal(), receipt.getSupplierID()});
+        }
+    }
+
+    public void changeMode(String mode) {
+        switch (mode) {
+            case "SALE" -> pressSale();
+            case "IMPORT" -> pressImport();
+        }
+        Day today = new Day();
+        jDateChooser[0].setDate(today.before(0, 5, 0).toDateSafe());
+        jDateChooser[1].setDate(today.toDateSafe());
+        clearDetails();
+        roundPanel[18].remove(scrollPane);
+        roundPanel[18].repaint();
+        roundPanel[18].revalidate();
+        scrollPane = new JScrollPane(dataTable);
+        roundPanel[18].add(scrollPane);
+    }
+
+    public void pressSale() {
+        label[0].setText("Danh Sách Phiếu Bán Hàng");
+        label[1].setText("HÓA ĐƠN");
+        label[2].setText("Mã hóa đơn:");
+        label[4].setText("Tên khách hàng:");
+        label[12].setText("Tiền nhận:");
+        label[14].setText("Tiền thối:");
+        label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
+        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
+        inSaleMode = true;
+    }
+
+    public void pressImport() {
+        label[0].setText("Danh Sách Phiếu Nhập Hàng");
+        label[1].setText("PHIẾU NHẬP HÀNG");
+        label[2].setText("Mã nhập hàng:");
+        label[4].setText("Nhà cung cấp:");
+        label[12].setText("");
+        label[14].setText("");
+        label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
+        dataTable = new DataTable(receiptBLL.getData(), receiptColumnNames.subList(0, receiptColumnNames.size() - 1).toArray(), e -> fillForm());
+        inSaleMode = false;
+    }
+
+    public void pressExcel(boolean all) {
+        if (all) {
+            Day from = new Day(jDateChooser[0].getDate());
+            Day to = new Day(jDateChooser[1].getDate());
+            if (dataTable.getModel().getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "Can't print an empty table!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else if (JOptionPane.showConfirmDialog(null, "Print table from " + from + " to " + to + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                return;
+            }
+            DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
+            Object[] data = model.getDataVector().toArray();
+            if (inSaleMode) {
+                List<Bill> bills = new ArrayList<>();
+                for (Object row : data) {
+                    Vector<?> vector = (Vector<?>) row;
+                    bills.add(billBLL.searchBills("BILL_ID = '" + vector.elementAt(0) + "'").get(0));
+                }
+                if (Excel.writeBillsToExcel(bills, from, to))
+                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+            } else {
+                List<Receipt> receipts = new ArrayList<>();
+                for (Object row : data) {
+                    Vector<?> vector = (Vector<?>) row;
+                    receipts.add(receiptBLL.searchReceipts("RECEIPT_ID = '" + vector.elementAt(0) + "'").get(0));
+                }
+                if (Excel.writeReceiptsToExcel(receipts, from, to))
+                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            roundPanel[16].removeAll();
-            roundPanel[16].repaint();
-            for (Receipt recipe : receiptBLL.getReceiptList()) {
-                if (recipe.getDor().compareDates(start) && end.compareDates(recipe.getDor()))
-                    model.addRow(new Object[]{recipe.getReceiptID(), recipe.getStaffID(), recipe.getDor(), recipe.getGrandTotal()});
+            String id = label[3].getText();
+            if (id.equals("")) {
+                JOptionPane.showMessageDialog(null, "Can't print an empty detail!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            } else if (JOptionPane.showConfirmDialog(null, "Print " + id + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+                return;
+            }
+            if (inSaleMode) {
+                Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
+                if (Excel.writeToExcel(bill))
+                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+            } else {
+                Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
+                if (Excel.writeToExcel(receipt))
+                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public void pressSale() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2020);
-        calendar.set(Calendar.MONTH, 0);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        jdateChooser1.setCalendar(calendar);
-        jdateChooser2.setDate(new Date());
-        label[0].setText("Danh Sách Phiếu Bán Hàng");
-        label[1].setText("HÓA ĐƠN");
-        label[2].setText("Mã hóa đơn:");
-        label[8].setText("Ngày:");
-        label[4].setText("Tên khách hàng:");
-        label[6].setText("Mã nhân viên:");
-        label[12].setText("Tiền nhận:");
-        label[14].setText("Tiền thối:");
-        label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
-        label[3].setText("");
-        label[9].setText("");
-        label[5].setText("");
-        label[7].setText("");
-        label[13].setText("");
-        label[15].setText("");
-        label[11].setText("");
+    public void clearDetails() {
+        for (int i = 3; i <= 15; i += 2) {
+            label[i].setText("");
+        }
         roundPanel[16].removeAll();
         roundPanel[16].repaint();
         roundPanel[16].revalidate();
-        roundPanel[18].remove(scrollPane);
-        roundPanel[18].repaint();
-        roundPanel[18].revalidate();
-        checklist = true;
-        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
-        scrollPane = new JScrollPane(dataTable);
-        roundPanel[18].add(scrollPane);
     }
 
-    public void pressImport() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, 2020);
-        calendar.set(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        jdateChooser1.setCalendar(calendar);
-        jdateChooser2.setDate(new Date());
-        label[0].setText("Danh Sách Phiếu Nhập Hàng");
-        label[1].setText("PHIẾU NHẬP HÀNG");
-        label[2].setText("Mã nhập hàng:");
-        label[8].setText("Ngày:");
-        label[4].setText("Mã nhân viên");
-        label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        label[6].setText("");
-        label[12].setText("");
-        label[14].setText("");
-        label[3].setText("");
-        label[9].setText("");
-        label[5].setText("");
-        label[7].setText("");
-        label[13].setText("");
-        label[15].setText("");
-        label[11].setText("");
-        roundPanel[16].removeAll();
-        roundPanel[16].repaint();
-        roundPanel[16].revalidate();
-        roundPanel[18].remove(scrollPane);
-        roundPanel[18].repaint();
-        roundPanel[18].revalidate();
-        checklist = false;
-        dataTable = new DataTable(receiptBLL.getData(), receiptColumnNames.subList(0, receiptColumnNames.size() - 1).toArray(), e -> fillForm1());
-        scrollPane = new JScrollPane(dataTable);
-        roundPanel[18].add(scrollPane);
-    }
-
-    public void pressExcel() {
-
+    public void findBillsByFace() {
+        Tasks tasks = new Tasks("Camera");
+        clearDetails();
+        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel())).start();
     }
 }

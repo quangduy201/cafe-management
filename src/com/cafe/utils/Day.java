@@ -1,22 +1,35 @@
 package com.cafe.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Day {
-    private int date, month, year;
+    private int date;
+    private int month;
+    private int year;
 
     public Day() {
-        this.date = 0;
-        this.month = 0;
-        this.year = 0;
+        LocalDate localDate = LocalDate.now();
+        this.date = localDate.getDayOfMonth();
+        this.month = localDate.getMonthValue();
+        this.year = localDate.getYear();
     }
 
     public Day(int date, int month, int year) {
         this.date = date;
         this.month = month;
         this.year = year;
+    }
+
+    public Day(Day day) {
+        this.date = day.date;
+        this.month = day.month;
+        this.year = day.year;
     }
 
     public Day(Date date) {
@@ -40,41 +53,51 @@ public class Day {
     }
 
     public static boolean isValidDay(int date, int month, int year) {
-        return year >= 100 && year <= 2030 &&
+        return year >= 1000 && year <= 9999 &&
             month > 0 && month <= 12 &&
             date > 0 && date <= numOfDays(month, year);
     }
 
     public static boolean isValidDay(Day day) {
-        return day.year > 1930 && day.year <= 2030 &&
+        return day.year >= 1000 && day.year <= 9999 &&
             day.month > 0 && day.month <= 12 &&
             day.date > 0 && day.date <= numOfDays(day.month, day.year);
     }
 
     public static int calculateDays(Day day1, Day day2) {
-        Day start = day1.compareDates(day2) ? day2 : day1;
-        Day end = day1.compareDates(day2) ? day1 : day2;
-        int days = 0;
-        while (end.compareDates(start)) {
-            days++;
-            start = start.nextDate();
-        }
-        return days;
+        if (day1.isAfter(day2))
+            return calculateDays(day2, day1);
+        if (day1.year < day2.year)
+            return calculateDays(day1, new Day(31, 12, day1.year))
+                + calculateDays(new Day(1, 1, day1.year + 1), day2);
+        if (day1.month < day2.month)
+            return calculateDays(day1, new Day(numOfDays(day1.month, day1.year), day1.month, day1.year))
+                + calculateDays(new Day(1, day1.month + 1, day1.year), day2);
+        return day2.date - day1.date;
     }
 
     public static Day parseDay(String str) throws Exception {
-        String[] temp = str.split("-");
         int date, month, year;
-        try {
+        if (str.matches("^\\d{4}-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])$")) {
+            String[] temp = str.split("-");
             year = Integer.parseInt(temp[0]);
             month = Integer.parseInt(temp[1]);
             date = Integer.parseInt(temp[2]);
-            if (!Day.isValidDay(date, month, year))
-                throw new Exception();
-        } catch (Exception e) {
-            throw new Exception();
+        } else if (str.matches("^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/\\d{4}$")) {
+            String[] temp = str.split("/");
+            date = Integer.parseInt(temp[0]);
+            month = Integer.parseInt(temp[1]);
+            year = Integer.parseInt(temp[2]);
+        } else {
+            throw new Exception("Invalid day.");
         }
+        if (!Day.isValidDay(date, month, year))
+            throw new Exception("Invalid day.");
         return new Day(date, month, year);
+    }
+
+    public static String now() {
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm:ss a"));
     }
 
     public int getDate() {
@@ -103,48 +126,101 @@ public class Day {
 
     @Override
     public boolean equals(Object object) {
+        assert object.getClass().equals(Day.class);
         Day day = (Day) object;
-        return year == day.getYear() && month == day.getMonth() && date == day.getDate();
+        return year == day.year && month == day.month && date == day.date;
     }
 
     public boolean isBetween(Day day1, Day day2) {
-        return year >= day1.getYear() && month >= day1.getMonth() && date >= day1.getDate()
-            && year <= day2.getYear() && month <= day2.getMonth() && date <= day2.getDate();
+        return (isAfter(day1) || equals(day1)) && (isBefore(day2) || equals(day2));
     }
 
-    public boolean compareDates(Day day) {
-        if (this.year != day.getYear()) {
-            return this.year > day.getYear();
-        } else if (this.month != day.getMonth()) {
-            return this.month > day.getMonth();
+    public boolean isAfter(Day day) {
+        if (this.year != day.year) {
+            return this.year > day.year;
+        } else if (this.month != day.month) {
+            return this.month > day.month;
         } else {
-            return this.date > day.getDate();
+            return this.date > day.date;
         }
     }
 
-    public Day nextDate() {
-        if (this.date == numOfDays(this.month, this.year)) {
-            if (this.month == 12)
-                return new Day(1, 1, this.year + 1);
-            else
-                return new Day(1, this.month + 1, this.year);
-        } else
-            return new Day(this.date + 1, this.month, this.year);
+    public boolean isBefore(Day day) {
+        if (this.year != day.year) {
+            return this.year < day.year;
+        } else if (this.month != day.month) {
+            return this.month < day.month;
+        } else {
+            return this.date < day.date;
+        }
     }
 
-    public Day previousDate() {
-        if (this.date == 1) {
-            if (this.month == 1)
-                return new Day(31, 12, this.year - 1);
-            else
-                return new Day(numOfDays(this.month - 1, this.year), this.month - 1, this.year);
-        } else
-            return new Day(this.date - 1, this.month, this.year);
+    public Day after(int days, int months, int years) {
+        int newYear = year + years;
+        int newMonth = month + months;
+        int newDate = date + days;
+        while (newMonth > 12) {
+            newMonth -= 12;
+            newYear++;
+        }
+        while (newDate > numOfDays(newMonth, newYear)) {
+            newDate -= numOfDays(newMonth, newYear);
+            newMonth++;
+            if (newMonth > 12) {
+                newMonth = 1;
+                newYear++;
+            }
+        }
+        return new Day(newDate, newMonth, newYear);
+    }
+
+    public Day before(int days, int months, int years) {
+        int newYear = year - years;
+        int newMonth = month - months;
+        int newDate = date - days;
+        while (newMonth < 1) {
+            newMonth += 12;
+            newYear--;
+        }
+        while (newDate < 1) {
+            newMonth--;
+            if (newMonth < 1) {
+                newMonth = 12;
+                newYear--;
+            }
+            newDate += numOfDays(newMonth, newYear);
+        }
+        return new Day(newDate, newMonth, newYear);
+    }
+
+    public Date toDate() throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter.setLenient(false);
+        return formatter.parse(date + "/" + month + "/" + year);
+    }
+
+    public Date toDateSafe() {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        formatter.setLenient(false);
+        try {
+            return formatter.parse(date + "/" + month + "/" + year);
+        } catch (Exception ignored) {
+            return new Date();
+        }
+    }
+
+    public LocalDate toLocalDate() {
+        return LocalDate.parse(toMySQLString());
+    }
+
+    public String toMySQLString() {
+        // yyyy-MM-dd
+        return String.format("%04d-%02d-%02d", year, month, date);
     }
 
     @Override
     public String toString() {
-        // yyyy-MM-dd
-        return String.format("%04d-%02d-%02d", year, month, date);
+        // dd/MM/yyyy
+        return String.format("%02d/%02d/%04d", date, month, year);
     }
 }

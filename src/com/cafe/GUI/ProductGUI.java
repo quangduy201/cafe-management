@@ -17,8 +17,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class ProductGUI extends JPanel {
     private ProductBLL productBLL = new ProductBLL();
@@ -158,7 +159,7 @@ public class ProductGUI extends JPanel {
                 case "SIZED" -> pnlProductConfiguration.add(cbbSize);
                 case "IMAGE" -> {
                     btChooseImg.setText("Choose an image");
-                    btChooseImg.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                    btChooseImg.setCursor(new Cursor(Cursor.HAND_CURSOR));
                     btChooseImg.setFocusPainted(false);
                     btChooseImg.addActionListener(this::btnProductImageActionPerformed);
                     pnlProductConfiguration.add(btChooseImg);

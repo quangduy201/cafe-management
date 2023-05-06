@@ -33,9 +33,8 @@ public abstract class Manager<T> {
     }
 
     public String formatNumberToString(int number, int digits) {
-        String n = String.valueOf(number);
-        int count = digits - n.length();
-        return "0".repeat(count) + n;
+        String format = "%0" + digits + "d";
+        return String.format(format, number);
     }
 
     public List<Object> getObjectsProperty(String key, List<T> objectList) {

@@ -38,7 +38,7 @@ public class CustomerDAL extends Manager {
                     Boolean.parseBoolean(row.get(7)) // deleted
                 );
             } catch (Exception e) {
-                System.out.println("Error occurred in DAL.convertTos(): " + e.getMessage());
+                System.out.println("Error occurred in CustomerDAL.convertToCustomers(): " + e.getMessage());
             }
             return new Customer();
         });

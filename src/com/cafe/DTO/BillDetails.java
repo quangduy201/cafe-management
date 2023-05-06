@@ -4,10 +4,8 @@ public class BillDetails {
     private String billID;
     private String productID;
     private int quantity;
-
-    private Double total;
-
-    private Double percent;
+    private double total;
+    private double percent;
 
     public BillDetails() {
     }
@@ -44,19 +42,19 @@ public class BillDetails {
         this.quantity = quantity;
     }
 
-    public Double getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
-    public Double getPercent() {
+    public double getPercent() {
         return percent;
     }
 
-    public void setPercent(Double percent) {
+    public void setPercent(double percent) {
         this.percent = percent;
     }
 
