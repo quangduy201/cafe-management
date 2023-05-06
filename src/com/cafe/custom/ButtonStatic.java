@@ -5,14 +5,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Button extends JButton {
-    public Button(){
-        setContentAreaFilled(false);
-        initComponent();
-    }
+public class ButtonStatic extends JButton {
 
-    public Button(Color color){
-        this.borderColor = color;
+    public ButtonStatic(){
         setContentAreaFilled(false);
         initComponent();
     }
@@ -113,7 +108,7 @@ public class Button extends JButton {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         //Paint Border
-        g2.setColor(getBorderColor());
+        g2.setColor(getBackground());
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         //Border set 2px
         g2.setColor(getBackground());
@@ -121,5 +116,4 @@ public class Button extends JButton {
 
         super.paintComponent(g);
     }
-
 }
