@@ -50,6 +50,7 @@ public class CustomerGUI extends JPanel {
     private Button btDel;
     private Button btRef;
     private Button btFaceSignUp;
+    private Button findCustomerByFace;
 
     public CustomerGUI(int decentralizationMode) {
         this.decentralizationMode = decentralizationMode;
@@ -60,6 +61,7 @@ public class CustomerGUI extends JPanel {
 
     public void initComponents() {
         List<String> columnNames = customerBLL.getCustomerDAL().getColumnNames();
+        findCustomerByFace = new Button();
         customer = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -236,6 +238,25 @@ public class CustomerGUI extends JPanel {
             }
         });
         showImg.add(btFaceSignUp);
+
+
+        findCustomerByFace.setBackground(new Color(35, 166, 97));
+        findCustomerByFace.setBorder(null);
+        findCustomerByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
+        findCustomerByFace.setText("Find Customer  ");
+        findCustomerByFace.setPreferredSize(new Dimension(150, 25));
+        findCustomerByFace.setColor(new Color(240, 240, 240));
+        findCustomerByFace.setColorClick(new Color(141, 222, 175));
+        findCustomerByFace.setColorOver(new Color(35, 166, 97));
+        findCustomerByFace.setFocusPainted(false);
+        findCustomerByFace.setRadius(20);
+        findCustomerByFace.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                faceSignUp();
+            }
+        });
+        search.add(findCustomerByFace);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
@@ -560,4 +581,5 @@ public class CustomerGUI extends JPanel {
         Tasks tasks = new Tasks("Camera");
         new Thread(() -> tasks.recordAndTrain(jTextFieldsForm[0].getText(), 80)).start();
     }
+
 }

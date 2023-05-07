@@ -184,6 +184,7 @@ public class SaleGUI extends JPanel {
         });
         roundPanel5.add(txtSearch1);
 
+
         btnSearch1.setBackground(new Color(240, 240, 240));
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
@@ -191,7 +192,7 @@ public class SaleGUI extends JPanel {
         btnSearch1.setFocusPainted(false);
         roundPanel5.add(btnSearch1);
 
-        roundPanel7.setLayout(new BorderLayout(65, 0));
+        roundPanel7.setLayout(new BorderLayout(10, 0));
         roundPanel7.setPreferredSize(new Dimension(350, 35));
         roundPanel2.add(roundPanel7);
 
@@ -217,22 +218,22 @@ public class SaleGUI extends JPanel {
         });
         roundPanel7.add(txtSearch2, BorderLayout.WEST);
 
-//        TODO: find customer by face button
-//        btnSearchByFace.setBackground(new Color(240, 240, 240));
-//        btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-//        btnSearchByFace.setPreferredSize(new Dimension(35, 35));
-//        btnSearchByFace.setIcon(new ImageIcon("img/face-scanner.png"));
-//        btnSearchByFace.setFocusPainted(false);
-//        btnSearchByFace.setColor(new Color(240, 240, 240));
-//        btnSearchByFace.setColorOver(new Color(0xA6A1A1));
-//        btnSearchByFace.setColorOver(new Color(0x2F2F2F));
-//        btnSearchByFace.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                findCustomerByFace();
-//            }
-//        });
-//        roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
+        //        TODO: find customer by face button * ok nha duy
+        btnSearchByFace.setBackground(new Color(240, 240, 240));
+        btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btnSearchByFace.setPreferredSize(new Dimension(35, 35));
+        btnSearchByFace.setFocusPainted(false);
+        btnSearchByFace.setColor(new Color(240, 240, 240));
+        btnSearchByFace.setColorOver(new Color(0xA6A1A1));
+        btnSearchByFace.setColorOver(new Color(0x2F2F2F));
+        btnSearchByFace.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                findCustomerByFace();
+            }
+        });
+        roundPanel7.add(btnSearchByFace, BorderLayout.CENTER);
 
         btnSearch2.setBackground(new Color(240, 240, 240));
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -248,7 +249,7 @@ public class SaleGUI extends JPanel {
                 findCustomer();
             }
         });
-        roundPanel7.add(btnSearch2, BorderLayout.CENTER);
+        roundPanel7.add(btnSearch2, BorderLayout.EAST);
 
         roundPanel8.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         roundPanel8.setPreferredSize(new Dimension(350, 35));
