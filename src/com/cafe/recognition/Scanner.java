@@ -84,10 +84,11 @@ public class Scanner {
         return customer;
     }
 
-    public void scan(double confidence, Function<Customer, Void> function) {
+    public boolean scan(double confidence, Function<Customer, Void> function) {
         camera.open(Videoio.CAP_ANY);
         loadModels();
 
+        boolean found = false;
         Customer customer;
         while (camera.isActive()) {
             camera.read(true);
@@ -98,10 +99,12 @@ public class Scanner {
                 customer = getTheClosestCustomer(rect, confidence);
                 if (customer != null) {
                     function.apply(customer);
+                    found = true;
                 }
             }
             camera.showImage();
         }
         camera.close();
+        return found;
     }
 }

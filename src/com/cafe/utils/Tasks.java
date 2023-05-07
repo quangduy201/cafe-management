@@ -4,6 +4,7 @@ import com.cafe.BLL.BillBLL;
 import com.cafe.BLL.CustomerBLL;
 import com.cafe.DTO.Bill;
 import com.cafe.DTO.Customer;
+import com.cafe.custom.FrameCustomer;
 import com.cafe.recognition.Recorder;
 import com.cafe.recognition.Scanner;
 import com.cafe.recognition.Trainer;
@@ -27,18 +28,25 @@ public class Tasks {
     public void recordAndTrain(String customerID, double percentToSuccess) {
         recorder.record(customerID);
         String imageDirPath = new File(Trainer.FACE_DIRECTORY, customerID).getPath();
-        int numberOfImages = Objects.requireNonNull(new File(imageDirPath).list()).length;
+        int numberOfImages;
+        try {
+            numberOfImages = Objects.requireNonNull(new File(imageDirPath).list()).length;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Không có hình ảnh của khách hàng " + customerID, "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         if (numberOfImages != Recorder.NUMBER_OF_PICTURES) {
-            System.out.println("Not trained");
+            JOptionPane.showMessageDialog(null, "Không đủ hình ảnh của khách hàng " + customerID, "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         trainer.train(customerID, percentToSuccess);
     }
 
     public void detectAndRecognize(double confidence, DefaultTableModel model, String object) {
+        boolean found = false;
         if (object.equals("BILL")) {
             BillBLL billBLL = new BillBLL();
-            scanner.scan(confidence, (customer) -> {
+            found = scanner.scan(confidence, (customer) -> {
                 model.setRowCount(0);
                 for (Bill bill : billBLL.getBillList()) {
                     if (bill.getCustomerID().equals(customer.getCustomerID())) {
@@ -49,7 +57,7 @@ public class Tasks {
             });
         } else if (object.equals("CUSTOMER")) {
             CustomerBLL customerBLL = new CustomerBLL();
-            scanner.scan(confidence, (foundCustomer) -> {
+            found = scanner.scan(confidence, (foundCustomer) -> {
                 model.setRowCount(0);
                 for (Customer customer : customerBLL.getCustomerList()) {
                     if (customer.getCustomerID().equals(foundCustomer.getCustomerID())) {
@@ -63,13 +71,37 @@ public class Tasks {
                 return null;
             });
         }
+        if (!found) {
+            if (JOptionPane.showOptionDialog(null,
+                "Không tìm thấy khách hàng. Tạo khách hàng mới?",
+                "Failed",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Tạo", "Hủy"},
+                "Tạo") == JOptionPane.YES_OPTION) {
+                new FrameCustomer("").setVisible(true);
+            }
+        }
     }
 
     public void detectAndRecognize(double confidence, JTextField textFieldCustomerName) {
-        scanner.scan(confidence, (customer) -> {
+        boolean found = scanner.scan(confidence, (customer) -> {
             textFieldCustomerName.setText(customer.getName());
             return null;
         });
+        if (!found) {
+            if (JOptionPane.showOptionDialog(null,
+                "Không tìm thấy khách hàng. Tạo khách hàng mới?",
+                "Failed",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Tạo", "Hủy"},
+                "Tạo") == JOptionPane.YES_OPTION) {
+                new FrameCustomer("").setVisible(true);
+            }
+        }
     }
 
     static {

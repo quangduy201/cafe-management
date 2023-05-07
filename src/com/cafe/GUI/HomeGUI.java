@@ -11,6 +11,7 @@ import com.cafe.custom.*;
 import com.cafe.utils.Day;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -651,7 +652,6 @@ public class HomeGUI extends JFrame {
     }
 
     private void exit() {
-        Object [] objects = {"Co", "Khong"};
         int message = JOptionPane.showOptionDialog(null,
             "Bạn có chắc chắn muốn thoát?",
             "Thoát",

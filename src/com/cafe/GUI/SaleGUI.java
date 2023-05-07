@@ -372,7 +372,7 @@ public class SaleGUI extends JPanel {
         btnPurchase.setRadius(15);
         btnPurchase.setFocusPainted(false);
         btnPurchase.setFont(fontTimesNewRoman);
-        btnPurchase.setIcon(new ImageIcon("img/plus.png"));
+        btnPurchase.setIcon(new ImageIcon("img/icons/plus.png"));
         btnPurchase.setColor(new Color(0x70E149));
         btnPurchase.setColorOver(new Color(0x5EFF00));
         btnPurchase.setColorClick(new Color(0x8AD242));

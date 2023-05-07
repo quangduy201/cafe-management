@@ -347,7 +347,7 @@ public class IngredientGUI extends JPanel {
         btImport.setRadius(15);
         btImport.setFocusPainted(false);
         btImport.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btImport.setIcon(new ImageIcon(("img/plus.png")));
+        btImport.setIcon(new ImageIcon(("img/icons/plus.png")));
         btImport.setColor(new Color(0x70E149));
         btImport.setColorOver(new Color(0x5EFF00));
         btImport.setColorClick(new Color(0x8AD242));

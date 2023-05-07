@@ -205,7 +205,7 @@ public class BillDetailPanel extends RoundPanel {
 
         payment_name1.setText(ingredient.getName());
         payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
-        payment_price1.setText(String.valueOf(data.getQuantity() * ingredient.getUnitPrice()));
+        payment_price1.setText(VNString.currency(data.getQuantity() * ingredient.getUnitPrice()));
 //        ingredientname1.setText(supplier.getName());
     }
 
@@ -233,7 +233,7 @@ public class BillDetailPanel extends RoundPanel {
 
         payment_name1.setText(ingredient.getName());
         payment_quantity1.setText(index + ingredient.getUnit());
-        payment_price1.setText(String.valueOf(index * ingredient.getUnitPrice()));
+        payment_price1.setText(VNString.currency(index * ingredient.getUnitPrice()));
         ingredientname1.setText(supplier.getName());
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Trainer {
-    public static final String FACE_DIRECTORY = "img/icons/faces";
+    public static final String FACE_DIRECTORY = "img/faces";
     public static final String CLASSIFIER_DIRECTORY = "classifiers";
     Detector detector;
     Recognizer recognizer;
