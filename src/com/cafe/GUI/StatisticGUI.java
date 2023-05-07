@@ -786,7 +786,7 @@ public class StatisticGUI extends JPanel {
                     Day day = Day.parseDay(jTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

@@ -150,12 +150,12 @@ public class FrameIngredient extends JFrame{
         roundPanel[5].add(roundPanel1[4]);
 
 
-        label1[0].setText("INGREDIENNT_ID:");
-        label1[1].setText("NAME:");
-        label1[2].setText("QUANTITY:");
-        label1[3].setText("UNIT:");
-        label1[4].setText("UNIT_PRICE:");
-        label1[5].setText("SUPPLIERNAME:");
+        label1[0].setText("Mã nguyên liệu:");
+        label1[1].setText("Tên nguyên liệu:");
+        label1[2].setText("Số lượng:");
+        label1[3].setText("Đơn vị:");
+        label1[4].setText("Đơn giá:");
+        label1[5].setText("Tên nhà cung cấp:");
 
         jTextField[0].setFont(new Font("Times New Roman", Font.BOLD, 16));
         jTextField[0].setHorizontalAlignment(SwingConstants.CENTER);

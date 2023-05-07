@@ -651,7 +651,15 @@ public class HomeGUI extends JFrame {
     }
 
     private void exit() {
-        int message = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn thoát?", "Quit", JOptionPane.YES_NO_OPTION);
+        Object [] objects = {"Co", "Khong"};
+        int message = JOptionPane.showOptionDialog(null,
+            "Bạn có chắc chắn muốn thoát?",
+            "Thoát",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Thoát", "Huỷ"},
+            "Thoát");
         if (message == JOptionPane.YES_OPTION) {
             this.dispose();
             new LoginGUI();

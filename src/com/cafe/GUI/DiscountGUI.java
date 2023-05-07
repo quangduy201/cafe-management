@@ -86,8 +86,8 @@ public class DiscountGUI extends JPanel {
         btDel = new Button();
         btRef = new Button();
 
-        cbbSearchDis = new JComboBox<>(columnNamesDis.subList(0, columnNamesDis.size() - 1).toArray());
-        cbbSearchPro = new JComboBox<>(columnNamesPro.subList(0, columnNamesPro.size() - 2).toArray());
+        cbbSearchDis = new JComboBox<>(new String[]{"Mã đợt giảm giá", "Phần trăm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"});
+        cbbSearchPro = new JComboBox<>(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá cũ"});
         cbbStatus = new JComboBox<>(new String[]{"Đang áp dụng", "Ngừng áp dụng"});
         cbbCategory = new JComboBox<>(categoriesID.toArray());
         cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
@@ -199,7 +199,7 @@ public class DiscountGUI extends JPanel {
                     Day day = Day.parseDay(dateTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
             if (i == 0) {
@@ -214,16 +214,32 @@ public class DiscountGUI extends JPanel {
         }
         for (int i = 0; i < columnNamesDis.size() - 1; i++) {
             label[i] = new JLabel();
-            label[i].setFont(new Font("Times New Roman", Font.BOLD, 12));
+            label[i].setFont(new Font("Times New Roman", Font.BOLD, 15));
             label[i].setHorizontalAlignment(JLabel.LEFT);
             label[i].setPreferredSize(new Dimension(160, 30));
             label[i].setAutoscrolls(true);
-            label[i].setText(columnNamesDis.get(i) + ": ");
             roundPanel[5].add(label[i]);
             switch (columnNamesDis.get(i)) {
-                case "DISCOUNT_ID", "DISCOUNT_PERCENT" -> roundPanel[5].add(jTextFields[i]);
-                case "START_DATE", "END_DATE" -> roundPanel[5].add(jDateChooser[i - 2]);
-                case "STATUS" -> roundPanel[5].add(jComboBox);
+                case "DISCOUNT_ID" -> {
+                    label[i].setText("Mã đợt giảm giá: ");
+                    roundPanel[5].add(jTextFields[i]);
+                }
+                case "DISCOUNT_PERCENT" -> {
+                    label[i].setText("Phần trăm: ");
+                    roundPanel[5].add(jTextFields[i]);
+                }
+                case "START_DATE" -> {
+                    label[i].setText("Ngày bắt đầu: ");
+                    roundPanel[5].add(jDateChooser[i - 2]);
+                }
+                case"END_DATE" -> {
+                    label[i].setText("Ngày kết thúc: ");
+                    roundPanel[5].add(jDateChooser[i - 2]);
+                }
+                case "STATUS" -> {
+                    label[i].setText("Trạng thái: ");
+                    roundPanel[5].add(jComboBox);
+                }
                 default -> {
                 }
             }
@@ -238,8 +254,8 @@ public class DiscountGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -261,7 +277,7 @@ public class DiscountGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -281,7 +297,7 @@ public class DiscountGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -304,7 +320,7 @@ public class DiscountGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -381,7 +397,7 @@ public class DiscountGUI extends JPanel {
         scrollPane1 = new JScrollPane();
         scrollPane2 = new JScrollPane();
 
-        dataTable[0] = new DataTable(discountBLL.getData(), columnNamesDis.subList(0, columnNamesDis.size() - 1).toArray(), e -> fillForm1());
+        dataTable[0] = new DataTable(discountBLL.getData(), new String[]{"Mã đợt giảm giá", "Phần trăm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"}, e -> fillForm1());
         scrollPane1 = new JScrollPane(dataTable[0]);
         roundPanel[8].add(scrollPane1);
 
@@ -390,13 +406,13 @@ public class DiscountGUI extends JPanel {
         columnTablePro.add("NEW_PRICE");
         columnTablePro.add("");
 
-        dataTable[1] = new DataTable(productBLL.getData(), columnTablePro.toArray(), e -> fillForm2(), true);
+        dataTable[1] = new DataTable(productBLL.getData(), new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá cũ", "Giá mới", ""}, e -> fillForm2(), true);
         scrollPane2 = new JScrollPane(dataTable[1]);
         roundPanel[10].add(scrollPane2);
     }
 
     private void selectSearchDis() {
-        if (Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString().contains("STATUS")) {
+        if (Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString().contains("Trạng thái")) {
             txtsearchDis.setVisible(false);
             cbbStatus.setSelectedIndex(0);
             cbbStatus.setVisible(true);
@@ -409,13 +425,13 @@ public class DiscountGUI extends JPanel {
     }
 
     private void selectSearchPro() {
-        if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("CATEGORY_ID")) {
+        if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("Mã thể loại")) {
             txtsearchPro.setVisible(false);
             cbbSize.setVisible(false);
             cbbCategory.setSelectedIndex(0);
             cbbCategory.setVisible(true);
             categoryIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("SIZED")) {
+        } else if (Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString().contains("Size")) {
             txtsearchPro.setVisible(false);
             cbbCategory.setVisible(false);
             cbbSize.setSelectedIndex(0);
@@ -434,7 +450,17 @@ public class DiscountGUI extends JPanel {
         if (txtsearchDis.getText().isEmpty()) {
             loadDataTableDis(discountBLL.getDiscountList());
         } else {
-            loadDataTableDis(discountBLL.findDiscounts(Objects.requireNonNull(cbbSearchDis.getSelectedItem()).toString(), txtsearchDis.getText()));
+            String key = null;
+            switch (cbbSearchDis.getSelectedIndex()){
+                case 0 -> key = "DISCOUNT_ID";
+                case 1 -> key = "DISCOUNT_PERCENT";
+                case 2 -> key = "START_DATE";
+                case 3 -> key = "END_DATE";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTableDis(discountBLL.findDiscounts(key, txtsearchDis.getText()));
         }
     }
 
@@ -442,7 +468,16 @@ public class DiscountGUI extends JPanel {
         if (txtsearchPro.getText().isEmpty()) {
             loadDataTablePro(productBLL.getProductList());
         } else {
-            loadDataTablePro(productBLL.findProducts(Objects.requireNonNull(cbbSearchPro.getSelectedItem()).toString(), txtsearchPro.getText()));
+            String key = null;
+            switch (cbbSearchPro.getSelectedIndex()){
+                case 0 -> key = "PRODUCT_ID";
+                case 1 -> key = "NAME";
+                case 4 -> key = "COST";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTablePro(productBLL.findProducts(key, txtsearchPro.getText()));
         }
     }
 
@@ -469,12 +504,12 @@ public class DiscountGUI extends JPanel {
             }
             assert newDiscount != null;
 //            if (discountBLL.exists(newDiscount))
-//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //            else
             if (discountBLL.addDiscount(newDiscount))
-                JOptionPane.showMessageDialog(this, "Successfully added new discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm đợt giảm giá mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm đợt giảm giá mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -490,12 +525,12 @@ public class DiscountGUI extends JPanel {
             assert newDiscount != null;
             int selectedRow = dataTable[0].getSelectedRow();
 //            if (discountBLL.exists(newDiscount))
-//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //            else
             if (discountBLL.updateDiscount(newDiscount))
-                JOptionPane.showMessageDialog(this, "Successfully updated discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa đợt giảm giá thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa đợt giảm giá thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
             if (!newProductID_Dis.isEmpty()) {
                 List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
@@ -533,14 +568,20 @@ public class DiscountGUI extends JPanel {
     }
 
     public void deleteDiscount() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this discount?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá đợt giảm giá này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Discount discount = new Discount();
             discount.setDiscountID(jTextFields[0].getText());
             if (discountBLL.deleteDiscount(discount))
-                JOptionPane.showMessageDialog(this, "Successfully deleted discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá đợt giảm giá thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá đợt giảm giá thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -672,7 +713,7 @@ public class DiscountGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFields) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -681,13 +722,13 @@ public class DiscountGUI extends JPanel {
             // Discount percent must be an integer
             jTextFields[1].requestFocusInWindow();
             jTextFields[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Discount percent must be an integer", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Phần trăm giảm giá phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         Day startDate = new Day(jDateChooser[0].getDate());
         Day endDate = new Day(jDateChooser[1].getDate());
         if (startDate.isAfter(endDate)) {
-            JOptionPane.showMessageDialog(this, "The start date must come before the end date", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải trước ngày kết thúc", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

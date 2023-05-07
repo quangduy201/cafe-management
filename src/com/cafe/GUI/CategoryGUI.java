@@ -55,7 +55,7 @@ public class CategoryGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã thể loại", "Tên thể loại", "Số lượng"});
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
@@ -105,7 +105,7 @@ public class CategoryGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(categoryBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(categoryBLL.getData(), new String[]{"Mã thể loại", "Tên thể loại", "Số lượng"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -117,21 +117,23 @@ public class CategoryGUI extends JPanel {
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCategoryConfiguration.add(jLabelsForm[i]);
             if ("CATEGORY_ID".equals(columnNames.get(i))) {
+                jLabelsForm[i].setText("Mã thể loại: ");
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
             } else if ("QUANTITY".equals(columnNames.get(i))) {
+                jLabelsForm[i].setText("Số lượng: ");
                 jTextFieldsForm[i] = new JTextField(categoryBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setText("0");
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
             } else {
+                jLabelsForm[i].setText("Tên thể loại: ");
                 jTextFieldsForm[i] = new JTextField();
                 jTextFieldsForm[i].setText(null);
                 pnlCategoryConfiguration.add(jTextFieldsForm[i]);
@@ -152,8 +154,8 @@ public class CategoryGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -175,7 +177,7 @@ public class CategoryGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -195,7 +197,7 @@ public class CategoryGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -217,7 +219,7 @@ public class CategoryGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -240,7 +242,16 @@ public class CategoryGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(categoryBLL.getCategoryList());
         } else {
-            loadDataTable(categoryBLL.findCategories(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "CATEGORY_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "QUANTITY";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(categoryBLL.findCategories(key, txtSearch.getText()));
         }
     }
 
@@ -248,13 +259,13 @@ public class CategoryGUI extends JPanel {
         if (checkInput()) {
             Category newCategory = getForm();
             if (categoryBLL.exists(newCategory))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.exists(Map.of("NAME", newCategory.getName())))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.addCategory(newCategory))
-                JOptionPane.showMessageDialog(this, "Successfully added new category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm thể loại mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm thể loại mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -266,13 +277,13 @@ public class CategoryGUI extends JPanel {
             String currentName = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newCategory.getName().equals(currentName);
             if (categoryBLL.exists(newCategory))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && categoryBLL.exists(Map.of("NAME", newCategory.getName())))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.updateCategory(newCategory))
-                JOptionPane.showMessageDialog(this, "Successfully updated category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa thể loại thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa thể loại thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(categoryBLL.getCategoryList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -280,14 +291,20 @@ public class CategoryGUI extends JPanel {
     }
 
     private void deleteCategory() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this category?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá thể loại này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Category category = new Category();
             category.setCategoryID(jTextFieldsForm[0].getText());
             if (categoryBLL.deleteCategory(category))
-                JOptionPane.showMessageDialog(this, "Successfully deleted category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá thể loại thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá thể loại thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -356,7 +373,7 @@ public class CategoryGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -365,7 +382,7 @@ public class CategoryGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên thể loại không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

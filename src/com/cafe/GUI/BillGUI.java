@@ -375,7 +375,7 @@ public class BillGUI extends JPanel {
                     Day day = Day.parseDay(jTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
@@ -495,7 +495,7 @@ public class BillGUI extends JPanel {
         label[12].setText("Tiền nhận:");
         label[14].setText("Tiền thối:");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
-        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(billBLL.getData(), new String[]{"Mã hoá đơn", "Mã khách hàng", "Mã nhân viên", "Ngày mua", "Tổng tiền", "Tiền nhận", "Tiền thừa"}, e -> fillForm());
         inSaleMode = true;
     }
 
@@ -507,7 +507,7 @@ public class BillGUI extends JPanel {
         label[12].setText("");
         label[14].setText("");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        dataTable = new DataTable(receiptBLL.getData(), receiptColumnNames.subList(0, receiptColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(receiptBLL.getData(), new String[]{"Mã phiếu nhập", "Mã nhân viên", "Ngày nhập", "Tổng tiền", "Mã nhà cung cấp"}, e -> fillForm());
         inSaleMode = false;
     }
 
@@ -516,11 +516,21 @@ public class BillGUI extends JPanel {
             Day from = new Day(jDateChooser[0].getDate());
             Day to = new Day(jDateChooser[1].getDate());
             if (dataTable.getModel().getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Can't print an empty table!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if (JOptionPane.showConfirmDialog(null, "Print table from " + from + " to " + to + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-                return;
+            } else {
+                int message = JOptionPane.showOptionDialog(null,
+                    "Xuất dữ liệu từ ngày " + from + " đến " + to + " sang Excel?", "Xuất dữ liệu?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{"Xuất", "Huỷ"},
+                    "Xuất");
+                if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
             }
+
             DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
             Object[] data = model.getDataVector().toArray();
             if (inSaleMode) {
@@ -530,9 +540,9 @@ public class BillGUI extends JPanel {
                     bills.add(billBLL.searchBills("BILL_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
                 if (Excel.writeBillsToExcel(bills, from, to))
-                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thành công.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 List<Receipt> receipts = new ArrayList<>();
                 for (Object row : data) {
@@ -540,30 +550,40 @@ public class BillGUI extends JPanel {
                     receipts.add(receiptBLL.searchReceipts("RECEIPT_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
                 if (Excel.writeReceiptsToExcel(receipts, from, to))
-                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thành công.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thât bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             String id = label[3].getText();
             if (id.equals("")) {
-                JOptionPane.showMessageDialog(null, "Can't print an empty detail!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if (JOptionPane.showConfirmDialog(null, "Print " + id + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-                return;
+            } else {
+                int message = JOptionPane.showOptionDialog(null,
+                    "Xuất dữ liệu của " + id + " sang Excel?",
+                    "Xuất dữ liệu?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{"Xuất", "Huỷ"},
+                    "Xuất");
+                if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
             }
             if (inSaleMode) {
                 Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
                 if (Excel.writeToExcel(bill))
-                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang Excel thành công.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
                 if (Excel.writeToExcel(receipt))
-                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang Excel thành công.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

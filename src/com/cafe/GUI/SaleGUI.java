@@ -505,19 +505,26 @@ public class SaleGUI extends JPanel {
 
     public void findCustomer() {
         if (txtSearch2.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter information in the search box", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin vào ô tìm kiếm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (!txtSearch2.getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
             // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             txtSearch2.requestFocusInWindow();
             txtSearch2.selectAll();
-            JOptionPane.showMessageDialog(this, "Phone number is a sequence of non-negative integers", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         List<Customer> customers = customerBLL.findCustomersBy(Map.of("PHONE", txtSearch2.getText()));
         if (customers.isEmpty()) {
-            if (JOptionPane.showConfirmDialog(null, "Phone number not found in the system, do you want to add a new one?", "Add new customer?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+            if (JOptionPane.showOptionDialog(null,
+                "Số điện thoại không tồn tại trong hệ thống, bạn có muốn thêm mới?",
+                "Thêm khách hàng mới?",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Thêm", "Huỷ"},
+                "Thêm") == JOptionPane.YES_OPTION) {
                 infoTxt[0].setText("");
                 new FrameCustomer(txtSearch2.getText()).setVisible(true);
             }
@@ -549,7 +556,14 @@ public class SaleGUI extends JPanel {
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (JOptionPane.showOptionDialog(null,
+                        "Bạn có chắc chắn muốn xoá sản phẩm khỏi hoá đơn này?",
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Xoá", "Huỷ"},
+                        "Xoá") == JOptionPane.YES_OPTION) {
                         listDetailBill.remove(index);
                         listQuantityChoice.remove(index);
                         roundPanel9.repaint();
@@ -569,13 +583,13 @@ public class SaleGUI extends JPanel {
 
     public void purchase() {
         if (roundPanel4.getComponentCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Please select a product to pay", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để mua", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } else if (jTextField[1].getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter the amount received from the customer for payment", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Nhập số tiền nhận từ khách hàng để thanh toán", "Lỗi", JOptionPane.ERROR_MESSAGE);
             jTextField[1].requestFocusInWindow();
             jTextField[1].selectAll();
         } else if (Double.parseDouble(jTextField[2].getText().replaceAll("[^\\d-]+", "")) > 0.0) {
-            JOptionPane.showMessageDialog(this, "Not enough money", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Không đủ tiền", "Lỗi", JOptionPane.ERROR_MESSAGE);
             jTextField[1].requestFocusInWindow();
             jTextField[1].selectAll();
         } else {
@@ -596,13 +610,13 @@ public class SaleGUI extends JPanel {
             bill = new Bill(billID, customerID, staffID, date, 0.0, received, excess, false);
 
             if (billBLL.exists(bill))
-                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Hoá đơn đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (billBLL.exists(Map.of("BILL_ID", bill.getBillID())))
-                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Hoá đơn đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (billBLL.addBill(bill))
-                JOptionPane.showMessageDialog(this, "Successfully added new bill!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mua hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new bill!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mua hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
 //            billBLL.updateBill(bill);
             double billDetail_total;

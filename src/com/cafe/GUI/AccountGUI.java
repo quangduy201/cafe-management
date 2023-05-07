@@ -66,7 +66,7 @@ public class AccountGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"});
         cbbDecentralizationID = new JComboBox<>(decentralizationsID.toArray());
         cbbDecentralizationIDSearch = new JComboBox<>(decentralizationsID.toArray());
         cbbStaffID = new JComboBox<>(staffsID.toArray());
@@ -127,7 +127,7 @@ public class AccountGUI extends JPanel {
         cbbStaffIDSearch.addItemListener(e -> staffIDSearch());
         search.add(cbbStaffIDSearch);
 
-        dataTable = new DataTable(accountBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(accountBLL.getData(), new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -139,22 +139,37 @@ public class AccountGUI extends JPanel {
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlAccountConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "ACCOUNT_ID" -> {
+                    jLabelsForm[i].setText("Mã tài khoản: ");
                     jTextFieldsForm[i] = new JTextField(accountBLL.getAutoID());
                     jTextFieldsForm[i].setEnabled(false);
                     jTextFieldsForm[i].setBorder(null);
                     jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
                 }
-                case "DECENTRALIZATION_ID" -> pnlAccountConfiguration.add(cbbDecentralizationID);
-                case "STAFF_ID" -> pnlAccountConfiguration.add(cbbStaffID);
-                default -> {
+                case "USERNAME" -> {
+                    jLabelsForm[i].setText("Tên đăng nhập: ");
                     jTextFieldsForm[i] = new JTextField();
                     jTextFieldsForm[i].setText(null);
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
+                }
+                case "PASSWD" -> {
+                    jLabelsForm[i].setText("Mật khẩu: ");
+                    jTextFieldsForm[i] = new JTextField();
+                    jTextFieldsForm[i].setText(null);
+                    pnlAccountConfiguration.add(jTextFieldsForm[i]);
+                }
+                case "DECENTRALIZATION_ID" -> {
+                    jLabelsForm[i].setText("Mã quyền: ");
+                    pnlAccountConfiguration.add(cbbDecentralizationID);
+                }
+                case "STAFF_ID" -> {
+                    jLabelsForm[i].setText("Mã nhân viên: ");
+                    pnlAccountConfiguration.add(cbbStaffID);
+                }
+                default -> {
                 }
             }
         }
@@ -174,8 +189,8 @@ public class AccountGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -197,7 +212,7 @@ public class AccountGUI extends JPanel {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
             btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -217,7 +232,7 @@ public class AccountGUI extends JPanel {
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
             btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -239,7 +254,7 @@ public class AccountGUI extends JPanel {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
             btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -267,13 +282,13 @@ public class AccountGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("DECENTRALIZATION_ID")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã quyền")) {
             txtSearch.setVisible(false);
             cbbStaffIDSearch.setVisible(false);
             cbbDecentralizationIDSearch.setSelectedIndex(0);
             cbbDecentralizationIDSearch.setVisible(true);
             decentralizationIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("STAFF_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhân viên")) {
             txtSearch.setVisible(false);
             cbbDecentralizationIDSearch.setVisible(false);
             cbbStaffIDSearch.setSelectedIndex(0);
@@ -291,7 +306,16 @@ public class AccountGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(accountBLL.getAccountList());
         } else {
-            loadDataTable(accountBLL.findAccounts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "ACCOUNT_ID";
+                case 1 -> key = "USERNAME";
+                case 2 -> key = "PASSWD";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(accountBLL.findAccounts(key, txtSearch.getText()));
         }
     }
 
@@ -299,13 +323,13 @@ public class AccountGUI extends JPanel {
         if (checkInput()) {
             Account newAccount = getForm();
             if (accountBLL.exists(newAccount))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.addAccount(newAccount))
-                JOptionPane.showMessageDialog(this, "Successfully added new account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm tài khoản mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm tài khoản mới không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -317,13 +341,13 @@ public class AccountGUI extends JPanel {
             String currentUsername = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newAccount.getUsername().equals(currentUsername);
             if (accountBLL.exists(newAccount))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.updateAccount(newAccount))
-                JOptionPane.showMessageDialog(this, "Successfully updated account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa tài khoản không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(accountBLL.getAccountList());
             dataTable.changeSelection(selectedRow, 0, true, false);
             fillForm();
@@ -331,14 +355,20 @@ public class AccountGUI extends JPanel {
     }
 
     private void deleteAccount() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this account?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá tài khoản này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Account account = new Account();
             account.setAccountID(jTextFieldsForm[0].getText());
             if (accountBLL.deleteAccount(account))
-                JOptionPane.showMessageDialog(this, "Successfully deleted account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá tài khoản không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -407,7 +437,7 @@ public class AccountGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -416,7 +446,7 @@ public class AccountGUI extends JPanel {
             // Username can't contain " " or "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Username can't contain \" \" or \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên tài khoản không được chứa \" \" or \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\s|]{3,32}$")) {
@@ -424,7 +454,7 @@ public class AccountGUI extends JPanel {
             // Password must contain at lease 1 lower-case, 1 upper-case and 1 number
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Password can't contain \" \" or \"|\"\nPassword must contain at least 1 lower-case, 1 upper-case and 1 number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa \" \" or \"|\"\nMật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa and 1 chữ số", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
