@@ -415,13 +415,13 @@ public class CustomerGUI extends JPanel {
             }
             assert newCustomer != null;
             if (customerBLL.exists(newCustomer))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.addCustomer(newCustomer))
-                JOptionPane.showMessageDialog(this, "Successfully added new customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -439,13 +439,13 @@ public class CustomerGUI extends JPanel {
             String currentPhone = dataTable.getValueAt(selectedRow, 4).toString();
             boolean valueChanged = !newCustomer.getPhone().equals(currentPhone);
             if (customerBLL.exists(newCustomer))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.updateCustomer(newCustomer))
-                JOptionPane.showMessageDialog(this, "Successfully updated customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa khách hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(customerBLL.getCustomerList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -453,14 +453,20 @@ public class CustomerGUI extends JPanel {
     }
 
     private void deleteCustomer() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this customer?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá khách hàng này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Customer customer = new Customer();
             customer.setCustomerID(jTextFieldsForm[0].getText());
             if (customerBLL.deleteCustomer(customer))
-                JOptionPane.showMessageDialog(this, "Successfully deleted customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá khách hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -547,7 +553,7 @@ public class CustomerGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -556,7 +562,7 @@ public class CustomerGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
@@ -568,14 +574,14 @@ public class CustomerGUI extends JPanel {
         } catch (Exception exception) {
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày sinh phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
             // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextFieldsForm[3].requestFocusInWindow();
             jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
@@ -587,7 +593,7 @@ public class CustomerGUI extends JPanel {
         } catch (Exception exception) {
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of sign up must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày đăng ký phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

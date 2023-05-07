@@ -323,13 +323,13 @@ public class AccountGUI extends JPanel {
         if (checkInput()) {
             Account newAccount = getForm();
             if (accountBLL.exists(newAccount))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.addAccount(newAccount))
-                JOptionPane.showMessageDialog(this, "Successfully added new account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm tài khoản mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm tài khoản mới không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -341,13 +341,13 @@ public class AccountGUI extends JPanel {
             String currentUsername = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newAccount.getUsername().equals(currentUsername);
             if (accountBLL.exists(newAccount))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
-                JOptionPane.showMessageDialog(this, "Account already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.updateAccount(newAccount))
-                JOptionPane.showMessageDialog(this, "Successfully updated account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa tài khoản không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(accountBLL.getAccountList());
             dataTable.changeSelection(selectedRow, 0, true, false);
             fillForm();
@@ -355,14 +355,20 @@ public class AccountGUI extends JPanel {
     }
 
     private void deleteAccount() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this account?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá tài khoản này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Account account = new Account();
             account.setAccountID(jTextFieldsForm[0].getText());
             if (accountBLL.deleteAccount(account))
-                JOptionPane.showMessageDialog(this, "Successfully deleted account!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá tài khoản thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete account!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá tài khoản không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -431,7 +437,7 @@ public class AccountGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -440,7 +446,7 @@ public class AccountGUI extends JPanel {
             // Username can't contain " " or "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Username can't contain \" \" or \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên tài khoản không được chứa \" \" or \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\s|]{3,32}$")) {
@@ -448,7 +454,7 @@ public class AccountGUI extends JPanel {
             // Password must contain at lease 1 lower-case, 1 upper-case and 1 number
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Password can't contain \" \" or \"|\"\nPassword must contain at least 1 lower-case, 1 upper-case and 1 number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa \" \" or \"|\"\nMật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa and 1 chữ số", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

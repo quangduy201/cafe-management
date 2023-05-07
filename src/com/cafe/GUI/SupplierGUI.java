@@ -287,13 +287,13 @@ public class SupplierGUI extends JPanel {
         if (checkInput()) {
             Supplier newSupplier = getForm();
             if (supplierBLL.exists(newSupplier))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.addSupplier(newSupplier))
-                JOptionPane.showMessageDialog(this, "Successfully added new supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhà cung cấp mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhà cung cấp mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -305,13 +305,13 @@ public class SupplierGUI extends JPanel {
             String currentPhone = dataTable.getValueAt(selectedRow, 2).toString();
             boolean valueChanged = !newSupplier.getPhone().equals(currentPhone);
             if (supplierBLL.exists(newSupplier))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.updateSupplier(newSupplier))
-                JOptionPane.showMessageDialog(this, "Successfully updated supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhà cung cấp thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhà cung cấp thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(supplierBLL.getSupplierList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -319,14 +319,20 @@ public class SupplierGUI extends JPanel {
     }
 
     private void deleteSupplier() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this supplier?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá nhà cung cấp này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Supplier supplier = new Supplier();
             supplier.setSupplierID(jTextFieldsForm[0].getText());
             if (supplierBLL.deleteSupplier(supplier))
-                JOptionPane.showMessageDialog(this, "Successfully deleted supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhà cung cấp thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhà cung cấp thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -393,7 +399,7 @@ public class SupplierGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điên đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -402,28 +408,28 @@ public class SupplierGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên nhà cung cấp không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(\\+?84|0)[235789]\\d{8,9}$")) {
             // Phone must start with "0x", "+84x" or "84x" where "x" in {2, 3, 5, 7, 8, 9}
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[3].getText().matches("^[^|]+$")) {
             // Address can't contain "|"
             jTextFieldsForm[3].requestFocusInWindow();
             jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Địa chỉ không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[4].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
             // Email must follow "username@domain.name"
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Email phải theo định dạng \"username@domain.name\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

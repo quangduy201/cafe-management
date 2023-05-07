@@ -199,7 +199,7 @@ public class DiscountGUI extends JPanel {
                     Day day = Day.parseDay(dateTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
             if (i == 0) {
@@ -504,12 +504,12 @@ public class DiscountGUI extends JPanel {
             }
             assert newDiscount != null;
 //            if (discountBLL.exists(newDiscount))
-//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //            else
             if (discountBLL.addDiscount(newDiscount))
-                JOptionPane.showMessageDialog(this, "Successfully added new discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm đợt giảm giá mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm đợt giảm giá mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -525,12 +525,12 @@ public class DiscountGUI extends JPanel {
             assert newDiscount != null;
             int selectedRow = dataTable[0].getSelectedRow();
 //            if (discountBLL.exists(newDiscount))
-//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //            else
             if (discountBLL.updateDiscount(newDiscount))
-                JOptionPane.showMessageDialog(this, "Successfully updated discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa đợt giảm giá thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa đợt giảm giá thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
             if (!newProductID_Dis.isEmpty()) {
                 List<DiscountDetails> discountDetailsList = discountDetailsBLL.findDiscountDetails("DISCOUNT_ID", discountSelected.getDiscountID());
@@ -568,14 +568,20 @@ public class DiscountGUI extends JPanel {
     }
 
     public void deleteDiscount() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this discount?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá đợt giảm giá này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Discount discount = new Discount();
             discount.setDiscountID(jTextFields[0].getText());
             if (discountBLL.deleteDiscount(discount))
-                JOptionPane.showMessageDialog(this, "Successfully deleted discount!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá đợt giảm giá thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete discount!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá đợt giảm giá thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -707,7 +713,7 @@ public class DiscountGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFields) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -716,13 +722,13 @@ public class DiscountGUI extends JPanel {
             // Discount percent must be an integer
             jTextFields[1].requestFocusInWindow();
             jTextFields[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Discount percent must be an integer", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Phần trăm giảm giá phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         Day startDate = new Day(jDateChooser[0].getDate());
         Day endDate = new Day(jDateChooser[1].getDate());
         if (startDate.isAfter(endDate)) {
-            JOptionPane.showMessageDialog(this, "The start date must come before the end date", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày bắt đầu phải trước ngày kết thúc", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

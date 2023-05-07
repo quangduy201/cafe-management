@@ -400,13 +400,13 @@ public class DecentralizationGUI extends JPanel {
         if (checkInput()) {
             Decentralization newDecentralization = getForm();
             if (decentralizationBLL.exists(newDecentralization))
-                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (decentralizationBLL.exists(Map.of("DECENTRALIZATION_NAME", newDecentralization.getDecentralizationName())))
-                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (decentralizationBLL.addDecentralization(newDecentralization))
-                JOptionPane.showMessageDialog(this, "Successfully added new decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm quyền mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm quyền mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -419,13 +419,13 @@ public class DecentralizationGUI extends JPanel {
             boolean valueChanged = !newDecentralization.getDecentralizationName().equals(currentDecentralizationName);
             valueChanged |= !newDecentralization.getDecentralizationName().equals(dataTable.getValueAt(selectedRow, 13).toString());
             if (decentralizationBLL.exists(newDecentralization))
-                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && decentralizationBLL.exists(Map.of("DECENTRALIZATION_NAME", newDecentralization.getDecentralizationName())))
-                JOptionPane.showMessageDialog(this, "Decentralization already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (decentralizationBLL.updateDecentralization(newDecentralization))
-                JOptionPane.showMessageDialog(this, "Successfully updated decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(decentralizationBLL.getDecentralizationList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -433,14 +433,20 @@ public class DecentralizationGUI extends JPanel {
     }
 
     private void deleteDecentralization() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this decentralization?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá quyền này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Decentralization decentralization = new Decentralization();
             decentralization.setDecentralizationID(jTextFieldsForm[0].getText());
             if (decentralizationBLL.deleteDecentralization(decentralization))
-                JOptionPane.showMessageDialog(this, "Successfully deleted decentralization!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete decentralization!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -528,7 +534,7 @@ public class DecentralizationGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -537,7 +543,7 @@ public class DecentralizationGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên quyền không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

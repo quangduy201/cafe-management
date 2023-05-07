@@ -259,13 +259,13 @@ public class CategoryGUI extends JPanel {
         if (checkInput()) {
             Category newCategory = getForm();
             if (categoryBLL.exists(newCategory))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.exists(Map.of("NAME", newCategory.getName())))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.addCategory(newCategory))
-                JOptionPane.showMessageDialog(this, "Successfully added new category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm thể loại mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm thể loại mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -277,13 +277,13 @@ public class CategoryGUI extends JPanel {
             String currentName = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newCategory.getName().equals(currentName);
             if (categoryBLL.exists(newCategory))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && categoryBLL.exists(Map.of("NAME", newCategory.getName())))
-                JOptionPane.showMessageDialog(this, "Category already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Tên thể loại đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (categoryBLL.updateCategory(newCategory))
-                JOptionPane.showMessageDialog(this, "Successfully updated category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa thể loại thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa thể loại thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(categoryBLL.getCategoryList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -291,14 +291,20 @@ public class CategoryGUI extends JPanel {
     }
 
     private void deleteCategory() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this category?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá thể loại này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Category category = new Category();
             category.setCategoryID(jTextFieldsForm[0].getText());
             if (categoryBLL.deleteCategory(category))
-                JOptionPane.showMessageDialog(this, "Successfully deleted category!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá thể loại thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete category!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá thể loại thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -367,7 +373,7 @@ public class CategoryGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -376,7 +382,7 @@ public class CategoryGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên thể loại không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

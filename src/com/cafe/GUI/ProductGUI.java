@@ -354,13 +354,13 @@ public class ProductGUI extends JPanel {
         if (checkInput()) {
             Product newProduct = getForm();
             if (productBLL.exists(newProduct))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.addProduct(newProduct))
-                JOptionPane.showMessageDialog(this, "Successfully added new product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -374,13 +374,13 @@ public class ProductGUI extends JPanel {
             String currentSized = dataTable.getValueAt(selectedRow, 3).toString();
             boolean valueChanged = !newProduct.getName().equals(currentName) || !newProduct.getCategoryID().equals(currentCategoryID) || !newProduct.getSized().equals(currentSized);
             if (productBLL.exists(newProduct))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.updateProduct(newProduct))
-                JOptionPane.showMessageDialog(this, "Successfully updated product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(productBLL.getProductList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -388,14 +388,20 @@ public class ProductGUI extends JPanel {
     }
 
     private void deleteProduct() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this product?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá sản phẩm này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Product product = new Product();
             product.setProductID(jTextFieldsForm[0].getText());
             if (productBLL.deleteProduct(product))
-                JOptionPane.showMessageDialog(this, "Successfully deleted product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -475,7 +481,7 @@ public class ProductGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -484,18 +490,18 @@ public class ProductGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên sản phẩm không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
             // Cost must be a double >= 0.0
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Cost must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Giá sản phẩm phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (chosenImg == null) {
-            JOptionPane.showMessageDialog(this, "Image can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Hình ảnh sản phẩm không được trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
             btChooseImg.doClick();
             return false;
         }

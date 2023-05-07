@@ -456,9 +456,9 @@ public class IngredientGUI extends JPanel {
             assert newReceipt != null;
 
             if (receiptBLL.addReceipt(newReceipt))
-                JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhập hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhập hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
             if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
                 for (int i = 0; i < receiptDetails.size(); i++) {
@@ -526,7 +526,14 @@ public class IngredientGUI extends JPanel {
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+                    if (JOptionPane.showOptionDialog(null,
+                        "Bạn có chắc chắn muốn xoá nguyên liệu này?",
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Xoá", "Huỷ"},
+                        "Xoá") == JOptionPane.YES_NO_OPTION) {
                         listIngredientArray.remove(vt);
                         listQuantityChoice.remove(vt);
                         roundPanel[10].removeAll();
@@ -605,12 +612,12 @@ public class IngredientGUI extends JPanel {
 
     public boolean checkInput() {
         if (supplierID == null) {
-            JOptionPane.showMessageDialog(this, "Please choose the supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhà cung cấp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         if (receiptDetails.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please choose the ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 

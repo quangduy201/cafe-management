@@ -801,7 +801,7 @@ public class StatisticGUI extends JPanel {
                 Date date = format.parse(jTextField[0].getText());
                 jdateChooser[0].setDate(date);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[5].add(jdateChooser[0]);
@@ -824,7 +824,7 @@ public class StatisticGUI extends JPanel {
                 Date date = format.parse(jTextField[1].getText());
                 jdateChooser[1].setDate(date);
             } catch (ParseException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         });
         roundPanel[6].add(jdateChooser[1]);

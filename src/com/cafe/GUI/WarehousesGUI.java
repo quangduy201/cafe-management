@@ -330,13 +330,13 @@ public class WarehousesGUI extends JPanel {
         if (checkInput()) {
             Ingredient newIngredient = getForm();
             if (ingredientBLL.exists(newIngredient))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.addIngredient(newIngredient))
-                JOptionPane.showMessageDialog(this, "Successfully added new ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nguyên liệu mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nguyên liệu mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -348,13 +348,13 @@ public class WarehousesGUI extends JPanel {
             String currentName = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newIngredient.getName().equals(currentName);
             if (ingredientBLL.exists(newIngredient))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.updateIngredient(newIngredient))
-                JOptionPane.showMessageDialog(this, "Successfully updated ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nguyên liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nguyên liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(ingredientBLL.getIngredientList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -362,14 +362,20 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void deleteIngredient() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this ingredient?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá nguyên liệu này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Ingredient ingredient = new Ingredient();
             ingredient.setIngredientID(jTextFieldsForm[0].getText());
             if (ingredientBLL.deleteIngredient(ingredient))
-                JOptionPane.showMessageDialog(this, "Successfully deleted ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nguyên liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nguyên liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -442,7 +448,7 @@ public class WarehousesGUI extends JPanel {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -450,21 +456,21 @@ public class WarehousesGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên nguyên liệu không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
             // Quantity must be a double >= 0.0
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Quantity must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[3].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
             // Unit price must be a double >= 0.0
             jTextFieldsForm[3].requestFocusInWindow();
             jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Unit price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Đơn giá phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

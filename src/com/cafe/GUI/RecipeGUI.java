@@ -319,13 +319,13 @@ public class RecipeGUI extends JPanel {
         if (checkInput()) {
             Recipe newRecipe = getForm();
             if (recipeBLL.exists(newRecipe))
-                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Công thức đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (recipeBLL.exists(Map.of("PRODUCT_ID", newRecipe.getProductID(), "INGREDIENT_ID", newRecipe.getIngredientID())))
-                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Công thức đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (recipeBLL.addRecipe(newRecipe))
-                JOptionPane.showMessageDialog(this, "Successfully added new recipe!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm công thức mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new recipe!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm công thức mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -338,13 +338,13 @@ public class RecipeGUI extends JPanel {
             String currentIngredientID = dataTable.getValueAt(selectedRow, 2).toString();
             boolean valueChanged = !newRecipe.getProductID().equals(currentProductID) || !newRecipe.getIngredientID().equals(currentIngredientID);
             if (recipeBLL.exists(newRecipe))
-                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Công thức đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && recipeBLL.exists(Map.of("PRODUCT_ID", newRecipe.getProductID(), "INGREDIENT_ID", newRecipe.getIngredientID())))
-                JOptionPane.showMessageDialog(this, "Recipe already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Công thức đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (recipeBLL.updateRecipe(newRecipe))
-                JOptionPane.showMessageDialog(this, "Successfully updated recipe!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa công thức thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update recipe!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa công thức thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(recipeBLL.getRecipeList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -406,7 +406,7 @@ public class RecipeGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -415,7 +415,7 @@ public class RecipeGUI extends JPanel {
             // Mass must be a double >= 0.0
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Mass must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Định lượng phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
