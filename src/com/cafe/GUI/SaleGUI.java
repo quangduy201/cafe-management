@@ -552,6 +552,8 @@ public class SaleGUI extends JPanel {
                     if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                         listDetailBill.remove(index);
                         listQuantityChoice.remove(index);
+                        roundPanel9.repaint();
+                        roundPanel9.revalidate();
                         addProductToBill(listDetailBill, listQuantityChoice);
                     }
                 }
