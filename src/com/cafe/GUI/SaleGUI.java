@@ -222,7 +222,7 @@ public class SaleGUI extends JPanel {
         btnSearchByFace.setBackground(new Color(240, 240, 240));
         btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
-        btnSearchByFace.setPreferredSize(new Dimension(35, 35));
+        btnSearchByFace.setPreferredSize(new Dimension(40, 35));
         btnSearchByFace.setFocusPainted(false);
         btnSearchByFace.setColor(new Color(240, 240, 240));
         btnSearchByFace.setColorOver(new Color(0xA6A1A1));
@@ -233,7 +233,7 @@ public class SaleGUI extends JPanel {
                 findCustomerByFace();
             }
         });
-        roundPanel7.add(btnSearchByFace, BorderLayout.CENTER);
+        roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
 
         btnSearch2.setBackground(new Color(240, 240, 240));
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -249,7 +249,7 @@ public class SaleGUI extends JPanel {
                 findCustomer();
             }
         });
-        roundPanel7.add(btnSearch2, BorderLayout.EAST);
+        roundPanel7.add(btnSearch2, BorderLayout.CENTER);
 
         roundPanel8.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         roundPanel8.setPreferredSize(new Dimension(350, 35));
@@ -419,11 +419,11 @@ public class SaleGUI extends JPanel {
                 productlist.add(product);
             }
         }
-        refreshProducts(product -> true);
+        loadProducts(product -> true);
     }
-
+    private ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
+    private int sl = 0;
     public void addProductPanel(Product product, int index) {
-        ProductPanel productPanel = new ProductPanel();
         RoundPanel frameProduct = new RoundPanel();
         RoundPanel frameImg = new RoundPanel();
         JTextField categoryName = new JTextField();
@@ -431,12 +431,13 @@ public class SaleGUI extends JPanel {
         JTextField[] productName = new JTextField[2];
         Color color = new Color(0xB65858);
 
-        productPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
-        productPanel.setPreferredSize(new Dimension(185, 250));
-        productPanel.setBackground(color);
-        productPanel.setColor(color);
-        productPanel.setColorOver(new Color(25, 25, 25));
-        productPanel.addMouseListener(new MouseAdapter() {
+        productPanel[sl] = new ProductPanel();
+        productPanel[sl].setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
+        productPanel[sl].setPreferredSize(new Dimension(185, 250));
+        productPanel[sl].setBackground(color);
+        productPanel[sl].setColor(color);
+        productPanel[sl].setColorOver(new Color(25, 25, 25));
+        productPanel[sl].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 if (productDetailsGUI != null) {
@@ -446,11 +447,12 @@ public class SaleGUI extends JPanel {
                 productDetailsGUI.setVisible(true);
             }
         });
-        roundPanel4.add(productPanel);
+        roundPanel4.add(productPanel[sl]);
 
         frameProduct.setPreferredSize(new Dimension(181, 246));
         frameProduct.setBackground(color);
-        productPanel.add(frameProduct);
+        productPanel[sl].add(frameProduct);
+        sl++;
 
         Font fontDialog = new Font("Dialog", Font.PLAIN, 15);
         Category category = categoryBLL.findCategoriesBy(Map.of("CATEGORY_ID", product.getCategoryID())).get(0);
@@ -653,7 +655,22 @@ public class SaleGUI extends JPanel {
     public void refreshProducts(Function<Product, Boolean> condition) {
         roundPanel4.removeAll();
         roundPanel4.repaint();
-        roundPanel4.validate();
+        roundPanel4.revalidate();
+        int size = 0;
+        for (int i = 0; i < productlist.size(); i++) {
+            if (condition.apply(productlist.get(i))) {
+                roundPanel4.add(productPanel[i]);
+                size++;
+            }
+        }
+        int height = 256 * ((size / 3) + 1);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height));
+    }
+
+    public void loadProducts(Function<Product, Boolean> condition) {
+        roundPanel4.removeAll();
+        roundPanel4.repaint();
+        roundPanel4.revalidate();
         int size = 0;
         for (Product product : productlist) {
             if (condition.apply(product)) {

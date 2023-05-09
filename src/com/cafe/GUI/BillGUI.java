@@ -222,7 +222,7 @@ public class BillGUI extends JPanel {
         btFaceSignUp.setBackground(new Color(35, 166, 97));
         btFaceSignUp.setBorder(null);
         btFaceSignUp.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
-        btFaceSignUp.setText("Sign up your face  ");
+        btFaceSignUp.setText("Find Customer ");
         btFaceSignUp.setColor(new Color(240, 240, 240));
         btFaceSignUp.setColorClick(new Color(141, 222, 175));
         btFaceSignUp.setColorOver(new Color(35, 166, 97));
