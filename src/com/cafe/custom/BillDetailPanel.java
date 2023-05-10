@@ -12,7 +12,6 @@ import java.awt.*;
 import java.util.Map;
 
 public class BillDetailPanel extends RoundPanel {
-    private JLabel ingredientname;
     private JLabel ingredientname1;
     private int index;
     private RoundPanel frameProduct;
@@ -50,14 +49,12 @@ public class BillDetailPanel extends RoundPanel {
         frame_name = new RoundPanel();
         frame_price = new RoundPanel();
         payment_img = new Button();
-        ingredientname = new JLabel();
         ingredientname1 = new JLabel();
 
 
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         this.setPreferredSize(new Dimension(340, 75));
-        //if(frameProduct.get)
-        // pictureScrollPane.add(paymentFrame[0]);
+
         paymentFrame.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         paymentFrame.setPreferredSize(new Dimension(340, 75));
         paymentFrame.setBackground(new Color(250, 250, 250));
@@ -131,11 +128,6 @@ public class BillDetailPanel extends RoundPanel {
         payment_img.setColorOver(new Color(0x000000));
         frame_price.add(payment_img);
 
-        ingredientname.setText("Nhà cung cấp:");
-        ingredientname.setPreferredSize(new Dimension(90, 30));
-        ingredientname.setHorizontalAlignment(JLabel.LEFT);
-        ingredientname.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-
         ingredientname1.setPreferredSize(new Dimension(180, 30));
         ingredientname1.setHorizontalAlignment(JLabel.LEFT);
         ingredientname1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
@@ -172,17 +164,15 @@ public class BillDetailPanel extends RoundPanel {
     }
 
     public void setReceipt(ReceiptDetails receiptDetails) {
-        this.setPreferredSize(new Dimension(340, 80));
-        paymentFrame.setPreferredSize(new Dimension(340, 80));
+        this.setPreferredSize(new Dimension(340, 70));
+        paymentFrame.setPreferredSize(new Dimension(340, 70));
         payment_name.setText("Tên nl:");
         payment_name1.setPreferredSize(new Dimension(270, 30));
         frame_name.remove(payment_size);
         frame_name.remove(payment_size1);
-        frame_name.remove(payment_size1);
         frame_price.remove(payment_img);
         payment_quantity.setText("Số lượng:");
         payment_price.setText("Giá tiền:");
-        paymentFrame.add(ingredientname);
         paymentFrame.add(ingredientname1);
 
 
@@ -199,14 +189,10 @@ public class BillDetailPanel extends RoundPanel {
         Ingredient ingredient = new IngredientBLL()
             .findIngredientsBy(Map.of("INGREDIENT_ID", data.getIngredientID()))
             .get(0);
-//        Supplier supplier = new SupplierBLL()
-//            .findSuppliersBy(Map.of("SUPPLIER_ID", data.getSupplierID()))
-//            .get(0);
 
         payment_name1.setText(ingredient.getName());
         payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
-        payment_price1.setText(String.valueOf(data.getQuantity() * ingredient.getUnitPrice()));
-//        ingredientname1.setText(supplier.getName());
+        payment_price1.setText(VNString.currency(data.getQuantity() * ingredient.getUnitPrice()));
     }
 
     public void setIngredient(Ingredient ingredient, int index) {
@@ -233,7 +219,7 @@ public class BillDetailPanel extends RoundPanel {
 
         payment_name1.setText(ingredient.getName());
         payment_quantity1.setText(index + ingredient.getUnit());
-        payment_price1.setText(String.valueOf(index * ingredient.getUnitPrice()));
+        payment_price1.setText(VNString.currency(index * ingredient.getUnitPrice()));
         ingredientname1.setText(supplier.getName());
     }
 }

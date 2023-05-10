@@ -3,6 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.BLL.StaffBLL;
+import com.cafe.BLL.DiscountBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Staff;
@@ -65,6 +66,7 @@ public class HomeGUI extends JFrame {
         initComponents();
         changeTheme();
         setTime();
+        checkDiscountNotAvailable();
     }
 
     public static void main(String[] args) {
@@ -673,6 +675,15 @@ public class HomeGUI extends JFrame {
         Thread thread = new Thread(() -> {
             while (true) {
                 lbTime.setText(Day.now());
+                if (Day.now().split(" - ")[1].contains("00:00:00")) {
+                    try {
+                        Thread.sleep(1000);
+                        // chi thuc hien 1 lan khi 00:00:00
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    newLoginSession();
+                }
             }
         });
         thread.start();
@@ -713,5 +724,20 @@ public class HomeGUI extends JFrame {
         g2.dispose();
 
         return new ImageIcon(img);
+    }
+
+    private void checkDiscountNotAvailable() {
+        DiscountBLL discountBLL = new DiscountBLL();
+        try {
+            discountBLL.checkDateDiscount(Day.parseDay(Day.now().split(" - ")[0]));
+        } catch (Exception ignored){
+
+        }
+    }
+
+    private void newLoginSession() {
+        JOptionPane.showMessageDialog(this, "Phiên đăng nhập hết hạn.\nVui lòng đăng nhập lại.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+        new LoginGUI();
     }
 }

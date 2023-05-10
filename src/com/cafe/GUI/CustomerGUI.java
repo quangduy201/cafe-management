@@ -7,12 +7,15 @@ import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 import com.cafe.utils.Tasks;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -34,6 +37,8 @@ public class CustomerGUI extends JPanel {
     private JPanel radiusBtGender;
     private JPanel radiusBtMember;
     private JLabel[] jLabelsForm;
+    private JDateChooser[] jDateChooser;
+    private JTextField[] dateTextField;
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
@@ -70,6 +75,8 @@ public class CustomerGUI extends JPanel {
         radiusBtGender = new JPanel();
         radiusBtMember = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
+        jDateChooser = new JDateChooser[2];
+        dateTextField = new JTextField[2];
         cbbSearchFilter = new JComboBox<>(new String[]{"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Điện thoại", "Thành viên", "Ngày đăng ký"});
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
@@ -80,7 +87,7 @@ public class CustomerGUI extends JPanel {
         rbNo = new JRadioButton("Không");
         rbNoSearch = new JRadioButton("Không");
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columnNames.size() - 3];
+        jTextFieldsForm = new JTextField[columnNames.size() - 5];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -167,6 +174,25 @@ public class CustomerGUI extends JPanel {
         pnlCustomerConfiguration.setPreferredSize(new Dimension(635, 350));
         roundPanel2.add(pnlCustomerConfiguration, BorderLayout.NORTH);
 
+        Dimension inputFieldsSize = new Dimension(200, 30);
+        for (int i = 0; i < 2; i++) {
+            jDateChooser[i] = new JDateChooser();
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(inputFieldsSize);
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            dateTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            dateTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            int index = i;
+            dateTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(dateTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
@@ -203,15 +229,21 @@ public class CustomerGUI extends JPanel {
                 }
                 case "DOB" -> {
                     jLabelsForm[i].setText("Ngày sinh: ");
-                    jTextFieldsForm[index] = new JTextField();
-                    jTextFieldsForm[index].setText(null);
-                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
-                    index++;
+                    pnlCustomerConfiguration.add(jDateChooser[0]);
                 }
                 case "PHONE" -> {
                     jLabelsForm[i].setText("Điện thoại: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                                e.consume();
+                            }
+                        }
+                    });
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -230,10 +262,7 @@ public class CustomerGUI extends JPanel {
                 }
                 case "DOSUP" -> {
                     jLabelsForm[i].setText("Ngày đăng ký: ");
-                    jTextFieldsForm[index] = new JTextField();
-                    jTextFieldsForm[index].setText(null);
-                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
-                    index++;
+                    pnlCustomerConfiguration.add(jDateChooser[1]);
                 }
                 default -> {
                 }
@@ -479,6 +508,8 @@ public class CustomerGUI extends JPanel {
         for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
+        jDateChooser[0].setDate(null);
+        jDateChooser[1].setDate(null);
         rbMale.setSelected(true);
         rbYes.setSelected(true);
         btAdd.setEnabled(true);
@@ -501,14 +532,20 @@ public class CustomerGUI extends JPanel {
         } else {
             rbFemale.setSelected(true);
         }
-        jTextFieldsForm[2].setText(customer[3]);
-        jTextFieldsForm[3].setText(customer[4]);
+        try {
+            Day date = Day.parseDay(customer[3]);
+            jDateChooser[0].setDate(date.toDate());
+            date = Day.parseDay(customer[6]);
+            jDateChooser[1].setDate(date.toDate());
+        } catch (Exception ignored) {
+
+        }
+        jTextFieldsForm[2].setText(customer[4]);
         if (customer[5].contains("Có")) {
             rbYes.setSelected(true);
         } else {
             rbNo.setSelected(true);
         }
-        jTextFieldsForm[4].setText(customer[6]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -526,13 +563,13 @@ public class CustomerGUI extends JPanel {
             switch (i) {
                 case 0 -> customerID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
-                case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
-                case 3 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
-                case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                case 2 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
                 default -> {
                 }
             }
         }
+        dateOfBirth = new Day(jDateChooser[0].getDate());
+        dateOfSup = new Day(jDateChooser[1].getDate());
         gender = rbMale.isSelected();
         membership = rbYes.isSelected();
         return new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
@@ -565,35 +602,11 @@ public class CustomerGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            if (!jTextFieldsForm[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[2].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
+        if (!jTextFieldsForm[2].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Ngày sinh phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
-            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
-            jTextFieldsForm[3].requestFocusInWindow();
-            jTextFieldsForm[3].selectAll();
             JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            if (!jTextFieldsForm[4].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[4].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
-            jTextFieldsForm[4].requestFocusInWindow();
-            jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Ngày đăng ký phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

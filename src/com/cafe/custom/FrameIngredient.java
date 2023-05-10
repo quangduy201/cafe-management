@@ -5,6 +5,7 @@ import com.cafe.DTO.Ingredient;
 import com.cafe.DTO.Supplier;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.IngredientGUI;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import java.awt.*;
@@ -201,7 +202,7 @@ public class FrameIngredient extends JFrame{
 
         label1[6].setText(this.data[1]);
         label1[7].setText(this.data[2]);
-        label1[8].setText(this.data[3]);
+        label1[8].setText(VNString.currency(Double.parseDouble(this.data[3])));
         label1[9].setText(supplier.getName());
 
         confirm.setIcon(new ImageIcon("img/add-user.png"));
