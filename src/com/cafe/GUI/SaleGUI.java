@@ -677,8 +677,8 @@ public class SaleGUI extends JPanel {
                 size++;
             }
         }
-        int height = 256 * ((size / 3) + 1);
-        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height));
+        Double height = 256 * Math.ceil(Double.valueOf(size) / 3);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height.intValue()));
     }
 
     public void loadProducts(Function<Product, Boolean> condition) {
@@ -692,8 +692,8 @@ public class SaleGUI extends JPanel {
                 size++;
             }
         }
-        int height = 256 * ((size / 3) + 1);
-        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height));
+        Double height = 256 * Math.ceil( Double.valueOf(size) / 3);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height.intValue()));
     }
 
     public void calculate() {
