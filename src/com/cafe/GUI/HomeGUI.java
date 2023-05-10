@@ -11,6 +11,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,6 +61,11 @@ public class HomeGUI extends JFrame {
     private Color imageAvatarIcon;
 
     public HomeGUI(Account account) {
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
         this.account = account;
         getUser();
         initComponents();
@@ -359,8 +365,8 @@ public class HomeGUI extends JFrame {
 
             for (int i = 5; i < 8; i++) {
                 if (mang[i] != 0) {
-                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
-                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 35, 7));
+                    roundPanel[i].setPreferredSize(new Dimension(280, 45));
                     roundPanel[i].setAutoscrolls(true);
                     roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
                     int index = i;
@@ -429,8 +435,8 @@ public class HomeGUI extends JFrame {
 
             for (int i = 8; i < 10; i++) {
                 if (mang[i] != 0) {
-                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
-                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 35, 7));
+                    roundPanel[i].setPreferredSize(new Dimension(280, 45));
                     roundPanel[i].setAutoscrolls(true);
                     roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
                     int index = i;
@@ -499,8 +505,8 @@ public class HomeGUI extends JFrame {
 
             for (int i = 10; i < 15; i++) {
                 if (mang[i] != 0) {
-                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 5));
-                    roundPanel[i].setPreferredSize(new Dimension(210, 45));
+                    roundPanel[i].setLayout(new FlowLayout(FlowLayout.LEFT, 35, 7));
+                    roundPanel[i].setPreferredSize(new Dimension(280, 45));
                     roundPanel[i].setAutoscrolls(true);
                     roundPanel[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
                     int index = i;
