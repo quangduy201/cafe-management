@@ -6,6 +6,7 @@ import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,6 +15,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -175,6 +178,15 @@ public class ProductGUI extends JPanel {
                     jLabelsForm[i].setText("Giá: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+                                e.consume();
+                            }
+                        }
+                    });
                     pnlProductConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -436,7 +448,7 @@ public class ProductGUI extends JPanel {
         jTextFieldsForm[1].setText(product[1]);
         cbbCategoryID.setSelectedItem(product[2]);
         cbbSize.setSelectedItem(product[3]);
-        jTextFieldsForm[2].setText(String.format("%.1f VND", Double.parseDouble(product[4])));
+        jTextFieldsForm[2].setText(VNString.currency(Double.parseDouble(product[4])));
         for (Product product1 : productBLL.getProductList()) {
             if (product1.getProductID().equals(product[0])) {
                 chosenImg = product1.getImage();
@@ -460,7 +472,7 @@ public class ProductGUI extends JPanel {
             switch (i) {
                 case 0 -> productID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
-                case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("(\\s|VND|VNĐ)", ""));
+                case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("\\D+", ""));
                 default -> {
                 }
             }
@@ -492,13 +504,6 @@ public class ProductGUI extends JPanel {
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
             JOptionPane.showMessageDialog(this, "Tên sản phẩm không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
-            // Cost must be a double >= 0.0
-            jTextFieldsForm[2].requestFocusInWindow();
-            jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Giá sản phẩm phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (chosenImg == null) {

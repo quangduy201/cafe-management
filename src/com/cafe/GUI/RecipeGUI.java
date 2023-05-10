@@ -13,6 +13,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -168,6 +170,15 @@ public class RecipeGUI extends JPanel {
                     jLabelsForm[i].setText("Định lượng: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '.') {
+                                e.consume();
+                            }
+                        }
+                    });
                     pnlRecipeConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }

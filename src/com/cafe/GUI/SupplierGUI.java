@@ -11,6 +11,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -139,13 +141,15 @@ public class SupplierGUI extends JPanel {
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
             pnlSupplierConfiguration.add(jLabelsForm[i]);
+            jTextFieldsForm[i] = new JTextField();
+            jTextFieldsForm[i].setText(null);
+            pnlSupplierConfiguration.add(jTextFieldsForm[i]);
             if ("SUPPLIER_ID".equals(columnNames.get(i))) {
                 jLabelsForm[i].setText("Mã nhà cung cấp: ");
-                jTextFieldsForm[i] = new JTextField(supplierBLL.getAutoID());
+                jTextFieldsForm[i].setText(supplierBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
-                pnlSupplierConfiguration.add(jTextFieldsForm[i]);
             }
             else {
                 if ("NAME".equals(columnNames.get(i))) {
@@ -153,6 +157,15 @@ public class SupplierGUI extends JPanel {
                 }
                 if ("PHONE".equals(columnNames.get(i))) {
                     jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[i].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                                e.consume();
+                            }
+                        }
+                    });
                 }
                 if ("ADDRESS".equals(columnNames.get(i))) {
                     jLabelsForm[i].setText("Địa chỉ: ");
@@ -160,9 +173,7 @@ public class SupplierGUI extends JPanel {
                 if ("EMAIL".equals(columnNames.get(i))) {
                     jLabelsForm[i].setText("Email: ");
                 }
-                jTextFieldsForm[i] = new JTextField();
-                jTextFieldsForm[i].setText(null);
-                pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+
             }
         }
         showImg.setLayout(new FlowLayout());

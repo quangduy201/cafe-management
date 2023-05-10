@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
+import com.cafe.BLL.DiscountBLL;
 import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
@@ -64,6 +65,7 @@ public class HomeGUI extends JFrame {
         initComponents();
         changeTheme();
         setTime();
+        checkDiscountNotAvailable();
     }
 
     public static void main(String[] args) {
@@ -723,5 +725,20 @@ public class HomeGUI extends JFrame {
         g2.dispose();
 
         return new ImageIcon(img);
+    }
+
+    private void checkDiscountNotAvailable() {
+        DiscountBLL discountBLL = new DiscountBLL();
+        try {
+            discountBLL.checkDateDiscount(Day.parseDay(Day.now().split(" - ")[0]));
+        } catch (Exception ignored){
+
+        }
+    }
+
+    private void newLoginSession() {
+        JOptionPane.showMessageDialog(this, "Phiên đăng nhập hết hạn.\nVui lòng đăng nhập lại.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+        new LoginGUI();
     }
 }

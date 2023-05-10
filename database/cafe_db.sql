@@ -42,15 +42,15 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
 ('AC000', 'admin', 'admin', 'DE00', 'ST00', b'0'),
-('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
-('AC010', 'zidan', '123', 'DE01', 'ST04', b'0'),
-('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
-('AC003', 'longbott', '123', 'DE01', 'ST03', b'0'),
-('AC004', 'quangduy', '123', 'DE01', 'ST02', b'0'),
-('AC005', 'tienmanh', '123', 'DE03', 'ST06', b'0'),
-('AC006', 'vanlam', '123', 'DE05', 'ST07', b'0'),
-('AC007', 'xuanmai', '123', 'DE06', 'ST05', b'0'),
-('AC008', 'xuanphuc', '123', 'DE02', 'ST09', b'0');
+('AC001', 'dungboi', 'Dung123', 'DE01', 'ST01', b'0'),
+('AC010', 'zidan', 'Dan123', 'DE01', 'ST04', b'0'),
+('AC002', 'legiang', 'Giang123', 'DE04', 'ST08', b'0'),
+('AC003', 'longbott', 'Long123', 'DE01', 'ST03', b'0'),
+('AC004', 'quangduy', 'Duy123', 'DE01', 'ST02', b'0'),
+('AC005', 'tienmanh', 'Manh123', 'DE03', 'ST06', b'0'),
+('AC006', 'vanlam', 'Lam123', 'DE05', 'ST07', b'0'),
+('AC007', 'xuanmai', 'Mai123', 'DE06', 'ST05', b'0'),
+('AC008', 'xuanphuc', 'Phuc123', 'DE02', 'ST09', b'0');
 
 -- --------------------------------------------------------
 
@@ -224,7 +224,7 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
 ('CUS000', 'VÃNG LAI', b'1', '1000-01-01', '', b'0', '1000-01-01', b'0'),
 ('CUS001', 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
-('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
+('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '0967563268', b'1', '2021-02-07', b'0'),
 ('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
 ('CUS004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
 ('CUS005', 'NGUYỄN THỊ YẾN NHI', b'0', '2004-12-08', '0392258127', b'1', '2022-03-19', b'0'),
@@ -706,6 +706,28 @@ INSERT INTO `receipt` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `SUPPLIER
 ('REC060', 'ST06', '2022-01-01', 300000, 'SUP001',b'0'),
 ('REC061', 'ST06', '2023-01-01', 300000, 'SUP001',b'0'),
 ('REC062', 'ST06', '2023-03-01', 750000, 'SUP001',b'0');
+
+--
+-- Triggers `receipt`
+--
+DELIMITER $$
+CREATE TRIGGER `UpdateReceipt` AFTER UPDATE ON `receipt`
+ FOR EACH ROW BEGIN
+IF NEW.DELETED <> OLD.DELETED THEN
+	CREATE TEMPORARY TABLE my_temp_table ( INGREDIENT_ID VARCHAR(10) NOT NULL, QUANTITY DOUBLE NOT NULL, PRIMARY KEY (INGREDIENT_ID) );
+	INSERT INTO my_temp_table (INGREDIENT_ID, QUANTITY)
+    SELECT RD.INGREDIENT_ID, RD.QUANTITY
+    FROM receipt_details RD
+    WHERE RD.RECEIPT_ID = NEW.RECEIPT_ID;
+
+	UPDATE ingredient
+    SET ingredient.QUANTITY = ingredient.QUANTITY - (SELECT QUANTITY
+                                                     FROM my_temp_table WHERE my_temp_table.INGREDIENT_ID = ingredient.INGREDIENT_ID)
+    WHERE ingredient.INGREDIENT_ID IN (SELECT INGREDIENT_ID FROM my_temp_table);
+END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1249,15 +1271,15 @@ CREATE TABLE `staff` (
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
 ('ST00', 'ADMIN', b'0', '1000-01-01', '', '', '', 0, '1000-01-01', b'0'),
-('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
-('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
-('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
-('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '2019-2-2', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
-('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '2019-10-3', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
-('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
-('ST08', 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '2022-3-9', '0340734629', 'phucvu@gmail.com', 3100000, '2023-09-28', b'0'),
-('ST09', 'HOÀNG XUÂN PHÚC', b'1', '2001-04-11', '2022-5-10', '0963527895', 'sale@gmail.com', 2000000, '2023-08-17', b'0');
+('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '531 Nguyễn Oanh, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
+('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '514/26 Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
+('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '153 Lê Hoàng Phái, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
+('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '168 Lê Đức Thọ, Phường 15, Gò Vấp, Thành phố Hồ Chí Minh', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
+('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '242 Nguyễn Văn Lượng, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
+('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '7 Phan Văn Trị, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
+('ST08', 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '190 Quang Trung, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0340734629', 'phucvu@gmail.com', 3100000, '2023-09-28', b'0'),
+('ST09', 'HOÀNG XUÂN PHÚC', b'1', '2001-04-11', '526 Lê Quang Định, Phường 1, Gò Vấp, Thành phố Hồ Chí Minh', '0963527895', 'sale@gmail.com', 2000000, '2023-08-17', b'0');
 
 -- --------------------------------------------------------
 

@@ -6,12 +6,15 @@ import com.cafe.DTO.Ingredient;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -159,6 +162,15 @@ public class WarehousesGUI extends JPanel {
                     jLabelsForm[i].setText("Số lượng: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '.') {
+                                e.consume();
+                            }
+                        }
+                    });
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -170,6 +182,15 @@ public class WarehousesGUI extends JPanel {
                     jLabelsForm[i].setText("Đơn giá: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+                                e.consume();
+                            }
+                        }
+                    });
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -314,7 +335,7 @@ public class WarehousesGUI extends JPanel {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "INGREDIENT_ID";
                 case 1 -> key = "NAME";
                 case 2 -> key = "QUANTITY";
@@ -407,7 +428,7 @@ public class WarehousesGUI extends JPanel {
         jTextFieldsForm[1].setText(ingredient[1]);
         jTextFieldsForm[2].setText(ingredient[2]);
         cbbUnit.setSelectedItem(ingredient[3]);
-        jTextFieldsForm[3].setText(ingredient[4]);
+        jTextFieldsForm[3].setText(VNString.currency(Double.parseDouble(ingredient[4])));
         cbbSupplierID.setSelectedItem(ingredient[5]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
@@ -426,7 +447,7 @@ public class WarehousesGUI extends JPanel {
                 case 0 -> ingredientID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
                 case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                case 3 -> unitPrice = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 3 -> unitPrice = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("\\D+", ""));
                 default -> {
                 }
             }
@@ -464,13 +485,6 @@ public class WarehousesGUI extends JPanel {
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
             JOptionPane.showMessageDialog(this, "Số lượng phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[3].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
-            // Unit price must be a double >= 0.0
-            jTextFieldsForm[3].requestFocusInWindow();
-            jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Đơn giá phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

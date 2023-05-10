@@ -2,6 +2,7 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.DiscountDAL;
 import com.cafe.DTO.Discount;
+import com.cafe.utils.Day;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,5 +102,20 @@ public class DiscountBLL extends Manager<Discount> {
             case "STATUS" -> discount.getStatus();
             default -> null;
         };
+    }
+
+    public void checkDateDiscount(Day today) {
+        List<Discount> list = new ArrayList<>();
+        for (Discount discount : findDiscounts("STATUS", '0')) {
+            if (discount.getEndDay().isBefore(today)) {
+                list.add(discount);
+            }
+        }
+        if (!list.isEmpty()) {
+            for (Discount discount : list) {
+                Discount newDiscount = new Discount(discount.getDiscountID(), discount.getDiscountPercent(), discount.getStartDay(), discount.getEndDay(), 1, false);
+                updateDiscount(newDiscount);
+            }
+        }
     }
 }
