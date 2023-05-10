@@ -1,7 +1,6 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
-import com.cafe.BLL.ProductBLL;
 import com.cafe.DTO.Category;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
