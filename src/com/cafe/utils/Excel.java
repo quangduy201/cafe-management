@@ -63,14 +63,14 @@ public class Excel {
         underlineCenterCellStyle = newCellStyle(underlineFont, HorizontalAlignment.CENTER);
     }
 
-    public static boolean writeToExcel(Bill bill) {
+    public static boolean writeToExcel(Bill bill, String path) {
         try {
-            Files.createDirectories(Paths.get("transaction/bills"));
+            Files.createDirectories(Paths.get(path));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-        File file = new File("transaction/bills/" + bill.getBillID() + ".xlsx");
+        File file = new File(path + "/" + bill.getBillID() + ".xlsx");
         Excel excel = new Excel("Hóa đơn");
         //--- DECLARE COMPONENTS FOR EXCEL ---//
         // title
@@ -197,14 +197,14 @@ public class Excel {
         return true;
     }
 
-    public static boolean writeToExcel(Receipt receipt) {
+    public static boolean writeToExcel(Receipt receipt,String path) {
         try {
-            Files.createDirectories(Paths.get("transaction/receipts"));
+            Files.createDirectories(Paths.get(path));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-        File file = new File("transaction/receipts/" + receipt.getReceiptID() + ".xlsx");
+        File file = new File(path + "/" + receipt.getReceiptID() + ".xlsx");
         Excel excel = new Excel("Phiếu nhập hàng");
         //--- DECLARE COMPONENTS FOR EXCEL ---//
         // title
@@ -324,14 +324,14 @@ public class Excel {
         return String.format("%s/%s%03d_%s_%s.xlsx", path, name, max + 1, from.toMySQLString(), to.toMySQLString());
     }
 
-    public static boolean writeBillsToExcel(List<Bill> bills, Day from, Day to) {
+    public static boolean writeBillsToExcel(List<Bill> bills, Day from, Day to, String path) {
         try {
-            Files.createDirectories(Paths.get("transaction/bills"));
+            Files.createDirectories(Paths.get(path));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-        File file = new File(getNextFileName("transaction/bills", "bills", from, to));
+        File file = new File(getNextFileName(path, "bills", from, to));
         Excel excel = new Excel("Hóa đơn");
         excel.sheet.setDefaultRowHeightInPoints(14.4F);
         excel.sheet.setDefaultColumnWidth(10);
@@ -416,14 +416,14 @@ public class Excel {
         return true;
     }
 
-    public static boolean writeReceiptsToExcel(List<Receipt> receipts, Day from, Day to) {
+    public static boolean writeReceiptsToExcel(List<Receipt> receipts, Day from, Day to, String path) {
         try {
-            Files.createDirectories(Paths.get("transaction/receipts"));
+            Files.createDirectories(Paths.get(path));
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
         }
-        File file = new File(getNextFileName("transaction/receipts", "receipts", from, to));
+        File file = new File(getNextFileName(path, "receipts", from, to));
         Excel excel = new Excel("Phiếu nhập hàng");
         excel.sheet.setDefaultRowHeightInPoints(14.4F);
         excel.sheet.setDefaultColumnWidth(12);
