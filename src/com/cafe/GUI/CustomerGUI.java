@@ -260,6 +260,17 @@ public class CustomerGUI extends JPanel {
                     buttonGroup.add(rbYes);
                     buttonGroup.add(rbNo);
                     panel.add(rbYes);
+                    rbYes.addActionListener( e -> {
+                        if (rbYes.isSelected()) {
+                            btFaceSignUp.setEnabled(true);
+                        }
+                    } );
+                    rbNo.addActionListener( e -> {
+                        if (rbNo.isSelected()) {
+                            btFaceSignUp.setEnabled(false);
+                        }
+                    } );
+                    rbNo.setSelected(true);
                     panel.add(rbNo);
                     pnlCustomerConfiguration.add(panel);
                 }
@@ -287,6 +298,7 @@ public class CustomerGUI extends JPanel {
         btFaceSignUp.setColorOver(new Color(35, 166, 97));
         btFaceSignUp.setFocusPainted(false);
         btFaceSignUp.setRadius(20);
+        btFaceSignUp.setEnabled(false);
         btFaceSignUp.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -567,6 +579,12 @@ public class CustomerGUI extends JPanel {
             rbYes.setSelected(true);
         } else {
             rbNo.setSelected(true);
+        }
+        if (rbYes.isSelected()) {
+            btFaceSignUp.setEnabled(true);
+        }
+        if (rbNo.isSelected()) {
+            btFaceSignUp.setEnabled(false);
         }
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
