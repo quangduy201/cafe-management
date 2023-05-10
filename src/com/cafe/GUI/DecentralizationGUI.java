@@ -1,10 +1,13 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.DecentralizationBLL;
+import com.cafe.BLL.AccountBLL;
+import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.main.CafeManagement;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -20,6 +23,7 @@ import java.util.Objects;
 
 public class DecentralizationGUI extends JPanel {
     private DecentralizationBLL decentralizationBLL = new DecentralizationBLL();
+    private AccountBLL accountBLL = new AccountBLL();
     private int decentralizationMode;
     private DataTable dataTable;
     private RoundPanel decentralization;
@@ -421,8 +425,6 @@ public class DecentralizationGUI extends JPanel {
             valueChanged |= !newDecentralization.getDecentralizationName().equals(dataTable.getValueAt(selectedRow, 13).toString());
             if (decentralizationBLL.exists(newDecentralization))
                 JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            else if (valueChanged && decentralizationBLL.exists(Map.of("DECENTRALIZATION_NAME", newDecentralization.getDecentralizationName())))
-                JOptionPane.showMessageDialog(this, "Quyền đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (decentralizationBLL.updateDecentralization(newDecentralization))
                 JOptionPane.showMessageDialog(this, "Sửa quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
@@ -430,6 +432,8 @@ public class DecentralizationGUI extends JPanel {
             loadDataTable(decentralizationBLL.getDecentralizationList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
+            Account account = CafeManagement.homeGUI.getAccount();
+            CafeManagement.homeGUI.setAccount(account);
         }
     }
 
@@ -444,7 +448,9 @@ public class DecentralizationGUI extends JPanel {
             "Xoá") == JOptionPane.YES_OPTION) {
             Decentralization decentralization = new Decentralization();
             decentralization.setDecentralizationID(jTextFieldsForm[0].getText());
-            if (decentralizationBLL.deleteDecentralization(decentralization))
+            if (!accountBLL.findAccounts("DECENTRALIZATION_ID", decentralization.getDecentralizationID()).isEmpty())
+                JOptionPane.showMessageDialog(this, "Quyền đang có tài khoản không được xoá!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            else if (decentralizationBLL.deleteDecentralization(decentralization))
                 JOptionPane.showMessageDialog(this, "Xoá quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
                 JOptionPane.showMessageDialog(this, "Xoá quyền thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
