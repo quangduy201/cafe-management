@@ -221,7 +221,7 @@ public class SaleGUI extends JPanel {
 
         btnSearchByFace.setBackground(new Color(240, 240, 240));
         btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btnSearchByFace.setPreferredSize(new Dimension(40, 35));
         btnSearchByFace.setFocusPainted(false);
         btnSearchByFace.setColor(new Color(240, 240, 240));

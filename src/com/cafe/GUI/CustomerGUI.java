@@ -298,7 +298,7 @@ public class CustomerGUI extends JPanel {
 
         findCustomerByFace.setBackground(new Color(35, 166, 97));
         findCustomerByFace.setBorder(null);
-        findCustomerByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
+        findCustomerByFace.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
         findCustomerByFace.setText("Find Customer  ");
         findCustomerByFace.setPreferredSize(new Dimension(150, 25));
         findCustomerByFace.setColor(new Color(240, 240, 240));
@@ -309,7 +309,7 @@ public class CustomerGUI extends JPanel {
         findCustomerByFace.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                faceSignUp();
+                findCustomerByFace();
             }
         });
         search.add(findCustomerByFace);
