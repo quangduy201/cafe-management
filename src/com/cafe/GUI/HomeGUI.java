@@ -2,15 +2,16 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
+import com.cafe.BLL.DiscountBLL;
 import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Staff;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,8 +20,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class HomeGUI extends JFrame {
@@ -51,13 +50,14 @@ public class HomeGUI extends JFrame {
     private ProductPanel[] roundPanel = new ProductPanel[15];
     private ImageAvatar[] imageAvatar = new ImageAvatar[15];
     private ImageAvatar[] imageIcon = new ImageAvatar[3];
-    private int  numberjpane;
+    private int numberjpane;
     private ToggleSwitch themeButton;
 
-    private String string = "img/dow.png";
+    private String string = "img/icons/down.png";
 
     private int[] listCount = new int[3];
     private int totalHeight;
+    private Color imageAvatarIcon;
 
     public HomeGUI(Account account) {
         this.account = account;
@@ -65,6 +65,7 @@ public class HomeGUI extends JFrame {
         initComponents();
         changeTheme();
         setTime();
+        checkDiscountNotAvailable();
     }
 
     public static void main(String[] args) {
@@ -74,6 +75,13 @@ public class HomeGUI extends JFrame {
         new HomeGUI(account).setVisible(true);
     }
 
+    public void setAccount(Account account) {
+        this.account = account;
+        getUser();
+        System.gc();
+        initLeftMenu();
+    }
+
     private void getUser() {
         decentralization = new DecentralizationBLL()
             .searchDecentralization("DECENTRALIZATION_ID = '" + account.getDecentralizationID() + "'")
@@ -81,11 +89,6 @@ public class HomeGUI extends JFrame {
         staff = new StaffBLL()
             .searchStaffs("STAFF_ID = '" + account.getStaffID() + "'")
             .get(0);
-//        TODO: khi nào có nhà cung cấp thì đổi lại khúc này
-//        String[] decentralizationString = decentralization.toString().split(" \\| ");
-//        for (int i = 1; i < decentralizationString.length - 1; i++) {
-//            mang[i] = Integer.parseInt(decentralizationString[i]);
-//        }
         mang[1] = decentralization.getIsSale();
         mang[2] = decentralization.getIsImport();
         mang[3] = decentralization.getIsBill();
@@ -94,7 +97,7 @@ public class HomeGUI extends JFrame {
         mang[6] = decentralization.getIsCategory();
         mang[7] = decentralization.getIsRecipe();
         mang[8] = decentralization.getIsDiscount();
-        mang[9] = decentralization.getIsDecentralization();//
+        mang[9] = decentralization.getIsDecentralization();
         mang[10] = decentralization.getIsCustomer();
         mang[11] = decentralization.getIsStaff();
         mang[12] = decentralization.getIsAccount();
@@ -121,7 +124,6 @@ public class HomeGUI extends JFrame {
         cate_frame = new RoundPanel();
         cate = new RoundPanel();
         function = new RoundPanel();
-
 
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new ProductPanel();
@@ -161,8 +163,8 @@ public class HomeGUI extends JFrame {
         themeButton.setSelected(true);
         themeButton.setOnColor(new Color(0xFCE797));
         themeButton.setOffColor(new Color(0x504C4C));
-        themeButton.setOnIcon(new ImageIcon("img/sun.png"));
-        themeButton.setOffIcon(new ImageIcon("img/moon.png"));
+        themeButton.setOnIcon(new ImageIcon("img/icons/sun.png"));
+        themeButton.setOffIcon(new ImageIcon("img/icons/moon.png"));
         north.add(themeButton);
 
         minimize.setText("-");
@@ -214,6 +216,32 @@ public class HomeGUI extends JFrame {
         center.add(east);
 
         // home.center.west
+
+        initLeftMenu();
+
+        // home.center.east
+        function.setPreferredSize(new Dimension(1005, 680));
+        function.setBackground(new Color(70, 67, 67));
+        pack();
+        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
+        setLocationRelativeTo(null);
+    }
+
+    public void initLeftMenu() {
+        listCount[0] = 0;
+        listCount[1] = 0;
+        listCount[2] = 0;
+
+        west.removeAll();
+        west.revalidate();
+        west.repaint();
+        cate_frame.removeAll();
+        cate_frame.revalidate();
+        cate_frame.repaint();
+        cate.removeAll();
+        cate.revalidate();
+        cate.repaint();
+
         info.setLayout(null);
         info.setPreferredSize(new Dimension(300, 80));
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -222,7 +250,7 @@ public class HomeGUI extends JFrame {
         imageAvatar[0].setForeground(new Color(255, 255, 255));
         imageAvatar[0].setBorderSize(2);
         imageAvatar[0].setBounds(20, 10, 60, 60);
-        imageAvatar[0].setIcon(new ImageIcon("img/bell-boy.png"));
+        imageAvatar[0].setIcon(new ImageIcon("img/icons/bell-boy.png"));
         info.add(imageAvatar[0]);
 
         lbName.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -264,20 +292,19 @@ public class HomeGUI extends JFrame {
             }
         }
 
-        for(int i = 5; i <= 14; i++) {
-            if(mang[i] != 0) {
+        for (int i = 5; i <= 14; i++) {
+            if (mang[i] != 0) {
                 switch (i) {
                     case 5, 6, 7 -> listCount[0]++;
                     case 8, 9 -> listCount[1]++;
-                    case 10, 11, 12, 13, 14, 15 -> listCount[2]++;
+                    case 10, 11, 12, 13, 14 -> listCount[2]++;
                     default -> {
                     }
                 }
             }
         }
 
-
-        if(listCount[0] != 0) {
+        if (listCount[0] != 0) {
             rpContent[0].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
             rpContent[0].setPreferredSize(new Dimension(280, 45));
             rpContent[0].setAutoscrolls(true);
@@ -292,20 +319,20 @@ public class HomeGUI extends JFrame {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (numberContent != -1 && numberjpane != 0) {
-//                    string = "img/up.png";
+//                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
                         imageIcon[numberjpane].setIcon(new ImageIcon(string));
-                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[0] * 50) / 5;
                     if (rpContent[0].getHeight() == 45) {
 //                    string = string;
                         numberjpane = 0;
-                        pressdelay(0, rpContent[0].getHeight(), totalHeight);
+                        pressDelay(0, rpContent[0].getHeight(), totalHeight);
                         numberContent = 0;
                         addContent = -totalHeight;
                     } else {
-                        pressdelay(0, rpContent[0].getHeight(), -totalHeight);
+                        pressDelay(0, rpContent[0].getHeight(), -totalHeight);
                         numberContent = -1;
                     }
                 }
@@ -348,8 +375,7 @@ public class HomeGUI extends JFrame {
             }
         }
 
-
-        if(listCount[1] != 0) {
+        if (listCount[1] != 0) {
             rpContent[4].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
             rpContent[4].setPreferredSize(new Dimension(280, 45));
             rpContent[4].setAutoscrolls(true);
@@ -364,19 +390,19 @@ public class HomeGUI extends JFrame {
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (numberContent != -1 && numberjpane != 1) {
-//                    string = "img/up.png";
+//                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
                         imageIcon[numberjpane].setIcon(new ImageIcon(string));
-                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[1] * 50) / 5;
                     if (rpContent[4].getHeight() == 45) {
                         numberjpane = 1;
-                        pressdelay(4, rpContent[4].getHeight(), totalHeight);
+                        pressDelay(4, rpContent[4].getHeight(), totalHeight);
                         numberContent = 4;
                         addContent = -totalHeight;
                     } else {
-                        pressdelay(4, rpContent[4].getHeight(), -totalHeight);
+                        pressDelay(4, rpContent[4].getHeight(), -totalHeight);
                         numberContent = -1;
                     }
                 }
@@ -419,8 +445,7 @@ public class HomeGUI extends JFrame {
             }
         }
 
-
-        if(listCount[2] != 0) {
+        if (listCount[2] != 0) {
             rpContent[7].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
             rpContent[7].setPreferredSize(new Dimension(280, 45));
             rpContent[7].setAutoscrolls(true);
@@ -437,17 +462,17 @@ public class HomeGUI extends JFrame {
                     if (numberContent != -1 && numberjpane != 2) {
                         imageIcon[numberjpane].setIcon(null);
                         imageIcon[numberjpane].setIcon(new ImageIcon(string));
-                        pressdelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[2] * 50) / 5;
                     if (rpContent[7].getHeight() == 45) {
-//                    string = "img/dow.png";
+//                    string = "img/icons/down.png";
                         numberjpane = 2;
-                        pressdelay(7, rpContent[7].getHeight(), totalHeight);
+                        pressDelay(7, rpContent[7].getHeight(), totalHeight);
                         numberContent = 7;
                         addContent = -totalHeight;
                     } else {
-                        pressdelay(7, rpContent[7].getHeight(), -totalHeight);
+                        pressDelay(7, rpContent[7].getHeight(), -totalHeight);
                         numberContent = -1;
                     }
                 }
@@ -469,7 +494,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[2].setPreferredSize(new Dimension(30, 30));
             imageIcon[2].setBorderSize(2);
-            imageIcon[2].setIcon(new ImageIcon("img/dow.png"));
+            imageIcon[2].setIcon(new ImageIcon("img/icons/down.png"));
             rpContent[8].add(imageIcon[2]);
 
             for (int i = 10; i < 15; i++) {
@@ -494,7 +519,7 @@ public class HomeGUI extends JFrame {
             if (mang[i] != 0) {
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
-                imageAvatar[i].setIcon(new ImageIcon("img/0" + i + ".png"));
+                imageAvatar[i].setIcon(new ImageIcon(String.format("img/icons/%02d.png", i)));
                 roundPanel[i].add(imageAvatar[i]);
 
                 jLabel[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -521,17 +546,8 @@ public class HomeGUI extends JFrame {
         jLabel[12].setText("Tài khoản");
         jLabel[13].setText("Phân quyền");
         jLabel[14].setText("Nhà cung cấp");
-
-
-        // home.center.east
-        function.setPreferredSize(new Dimension(1005, 680));
-        function.setBackground(new Color(70, 67, 67));
-        pack();
-        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
-        setLocationRelativeTo(null);
     }
 
-    private Color imageAvatarIcon;
     private void changeTheme() {
         Color roundPanelBG, roundPanelColor, roundPanelColorOver, imageAvatarFG, labelBG, labelFG, currentBtnBG;
         if (themeButton.isSelected()) {
@@ -543,7 +559,7 @@ public class HomeGUI extends JFrame {
             info.setBackground(new Color(79, 194, 53));
             cate_frame.setBackground(new Color(79, 194, 53));
             cate.setBackground(new Color(79, 194, 53));
-     //       cate.setBackground(new Color(0, 0, 0));
+            //       cate.setBackground(new Color(0, 0, 0));
             rpContent[0].setBackground(new Color(79, 194, 53));
             rpContent[3].setBackground(new Color(79, 194, 53));
             rpContent[4].setBackground(new Color(79, 194, 53));
@@ -557,7 +573,7 @@ public class HomeGUI extends JFrame {
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(25, 25, 25);
             currentBtnBG = new Color(68, 150, 60);
-            imageAvatarIcon = new  Color(79, 194, 53);
+            imageAvatarIcon = new Color(79, 194, 53);
         } else {
             home.setBackground(new Color(35, 166, 97));
             north.setBackground(new Color(70, 67, 67));
@@ -580,7 +596,7 @@ public class HomeGUI extends JFrame {
             labelBG = new Color(51, 51, 51);
             labelFG = new Color(240, 240, 240);
             currentBtnBG = new Color(35, 166, 97);
-            imageAvatarIcon = new  Color(240, 240, 240, 255);
+            imageAvatarIcon = new Color(240, 240, 240, 255);
         }
         for (int i = 1; i < jLabel.length; i++) {
             roundPanel[i].setBackground(roundPanelBG);
@@ -654,34 +670,38 @@ public class HomeGUI extends JFrame {
     }
 
     private void exit() {
-        int message = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn thoát?", "Quit", JOptionPane.YES_NO_OPTION);
+        int message = JOptionPane.showOptionDialog(null,
+            "Bạn có chắc chắn muốn thoát?",
+            "Thoát",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Thoát", "Huỷ"},
+            "Thoát");
         if (message == JOptionPane.YES_OPTION) {
+            exit.setColor(new Color(0xFD1111));
             this.dispose();
-            new LoginGUI();
+            CafeManagement.loginGUI.setVisible(true);
         }
     }
 
-    private void setTime() {
-        Thread thread = new Thread(() -> {
-            while (true) {
-                lbTime.setText(Day.now());
-            }
-        });
-        thread.start();
+    public void setTime() {
+        lbTime.setText(Day.now());
     }
 
-    public void pressdelay(int index, int height, int add) {
+    public void pressDelay(int index, int height, int add) {
         Timer timer = new Timer(1, new ActionListener() {
             private int counter = 0;
             private int angle = 0;
             private int coordinates = 0;
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 counter++;
                 rpContent[index].setPreferredSize(new Dimension(280, height + counter * add));
                 rpContent[index].revalidate();
                 rpContent[index].repaint();
-                if(add > 0) coordinates = 36;
+                if (add > 0) coordinates = 36;
                 else coordinates = 72;
                 angle = angle + coordinates;
                 imageIcon[numberjpane].setIcon(rotateIcon(new ImageIcon(string), angle));
@@ -700,10 +720,25 @@ public class HomeGUI extends JFrame {
 
         BufferedImage img = new BufferedImage(w, h, type);
         Graphics2D g2 = img.createGraphics();
-        g2.rotate(Math.toRadians(angle), w / 2, h / 2);
+        g2.rotate(Math.toRadians(angle), (double) w / 2, (double) h / 2);
         icon.paintIcon(null, g2, 0, 0);
         g2.dispose();
 
         return new ImageIcon(img);
+    }
+
+    private void checkDiscountNotAvailable() {
+        DiscountBLL discountBLL = new DiscountBLL();
+        try {
+            discountBLL.checkDateDiscount(Day.parseDay(Day.now().split(" - ")[0]));
+        } catch (Exception ignored){
+
+        }
+    }
+
+    private void newLoginSession() {
+        JOptionPane.showMessageDialog(this, "Phiên đăng nhập hết hạn.\nVui lòng đăng nhập lại.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+        new LoginGUI();
     }
 }

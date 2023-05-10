@@ -13,12 +13,17 @@ import com.cafe.utils.VNString;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,6 +53,7 @@ public class BillGUI extends JPanel {
     private Button btFaceSignUp;
 
     public BillGUI() {
+        System.gc();
         setLayout(new BorderLayout());
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -90,7 +96,7 @@ public class BillGUI extends JPanel {
         roundPanel[4].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[4]);
 
-        roundPanel[5].setLayout(new BorderLayout(240, 0));
+        roundPanel[5].setLayout(new BorderLayout(20, 0));
         roundPanel[5].setPreferredSize(new Dimension(560, 40));
         roundPanel[5].setBackground(new Color(70, 67, 67));
         roundPanel[5].setAutoscrolls(true);
@@ -166,7 +172,7 @@ public class BillGUI extends JPanel {
                 button[i].setText("Xuất Excel");
                 button[i].setColor(new Color(240, 240, 240));
                 button[i].setPreferredSize(new Dimension(160, 40));
-                button[i].setIcon(new ImageIcon("img/folder.png"));
+                button[i].setIcon(new ImageIcon("img/icons/folder.png"));
             }
             switch (i) {
                 case 0 -> button[i].setText("Bán");
@@ -180,8 +186,26 @@ public class BillGUI extends JPanel {
                         switch (index) {
                             case 0 -> changeMode("SALE");
                             case 1 -> changeMode("IMPORT");
-                            case 2 -> pressExcel(true);
-                            case 3 -> pressExcel(false);
+                            case 2 -> {
+                                JFileChooser fileChooser = new JFileChooser();
+                                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                                int result = fileChooser.showOpenDialog(null);
+                                if (result == JFileChooser.APPROVE_OPTION) {
+                                    File selectedFile = fileChooser.getSelectedFile();
+                                    String path = selectedFile.getAbsolutePath();
+                                    pressExcel(true,path);
+                                }
+                            }
+                            case 3 -> {
+                                JFileChooser fileChooser = new JFileChooser();
+                                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                                int result = fileChooser.showOpenDialog(null);
+                                if (result == JFileChooser.APPROVE_OPTION) {
+                                    File selectedFile = fileChooser.getSelectedFile();
+                                    String path = selectedFile.getAbsolutePath();
+                                    pressExcel(false,path);
+                                }
+                            }
                         }
                     } catch (Exception ignored) {
 
@@ -194,24 +218,23 @@ public class BillGUI extends JPanel {
         roundPanel[5].add(button[2], BorderLayout.EAST);
         roundPanel[2].add(button[3]);
 
-//        TODO
-//        btFaceSignUp = new Button();
-//        btFaceSignUp.setBackground(new Color(35, 166, 97));
-//        btFaceSignUp.setBorder(null);
-//        btFaceSignUp.setIcon(new ImageIcon("img/face-scanner.png"));
-//        btFaceSignUp.setText("Sign up your face  ");
-//        btFaceSignUp.setColor(new Color(240, 240, 240));
-//        btFaceSignUp.setColorClick(new Color(141, 222, 175));
-//        btFaceSignUp.setColorOver(new Color(35, 166, 97));
-//        btFaceSignUp.setFocusPainted(false);
-//        btFaceSignUp.setRadius(20);
-//        btFaceSignUp.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                findBillsByFace();
-//            }
-//        });
-//        roundPanel[5].add(btFaceSignUp);
+        btFaceSignUp = new Button();
+        btFaceSignUp.setBackground(new Color(35, 166, 97));
+        btFaceSignUp.setBorder(null);
+        btFaceSignUp.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btFaceSignUp.setText("Find Customer ");
+        btFaceSignUp.setColor(new Color(240, 240, 240));
+        btFaceSignUp.setColorClick(new Color(141, 222, 175));
+        btFaceSignUp.setColorOver(new Color(35, 166, 97));
+        btFaceSignUp.setFocusPainted(false);
+        btFaceSignUp.setRadius(20);
+        btFaceSignUp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                findBillsByFace();
+            }
+        });
+        roundPanel[5].add(btFaceSignUp, BorderLayout.CENTER);
 
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 30));
         label[1].setHorizontalAlignment(JLabel.CENTER);
@@ -380,7 +403,7 @@ public class BillGUI extends JPanel {
                     Day day = Day.parseDay(jTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Invalid date", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Invalid date", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
@@ -466,6 +489,7 @@ public class BillGUI extends JPanel {
         clearDetails();
 
         if (inSaleMode) {
+
             for (Bill bill : billBLL.getBillList())
                 if (bill.getDateOfPurchase().isBetween(start, end))
                     model.addRow(new Object[]{bill.getBillID(), bill.getCustomerID(), bill.getStaffID(), bill.getDateOfPurchase(), bill.getTotal(), bill.getReceived(), bill.getExcess()});
@@ -500,7 +524,7 @@ public class BillGUI extends JPanel {
         label[12].setText("Tiền nhận:");
         label[14].setText("Tiền thối:");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
-        dataTable = new DataTable(billBLL.getData(), billColumnNames.subList(0, billColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(billBLL.getData(), new String[]{"Mã hoá đơn", "Mã khách hàng", "Mã nhân viên", "Ngày mua", "Tổng tiền", "Tiền nhận", "Tiền thừa"}, e -> fillForm());
         inSaleMode = true;
     }
 
@@ -512,20 +536,43 @@ public class BillGUI extends JPanel {
         label[12].setText("");
         label[14].setText("");
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
-        dataTable = new DataTable(receiptBLL.getData(), receiptColumnNames.subList(0, receiptColumnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(receiptBLL.getData(), new String[]{"Mã phiếu nhập", "Mã nhân viên", "Ngày nhập", "Tổng tiền", "Mã nhà cung cấp"}, e -> fillForm());
         inSaleMode = false;
     }
 
-    public void pressExcel(boolean all) {
+    public void pressExcel(boolean all, String path) {
+
+        JButton button = new JButton("Open Directory");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    // Replace "C:\\example\\folder" with the path to your directory
+                    Runtime.getRuntime().exec("explorer.exe /select,C:\\example\\folder");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
         if (all) {
             Day from = new Day(jDateChooser[0].getDate());
             Day to = new Day(jDateChooser[1].getDate());
             if (dataTable.getModel().getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Can't print an empty table!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if (JOptionPane.showConfirmDialog(null, "Print table from " + from + " to " + to + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-                return;
+            } else {
+                int message = JOptionPane.showOptionDialog(null,
+                    "Xuất dữ liệu từ ngày " + from + " đến " + to + " sang Excel?", "Xuất dữ liệu?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{"Xuất", "Huỷ"},
+                    "Xuất");
+                if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
             }
+
             DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
             Object[] data = model.getDataVector().toArray();
             if (inSaleMode) {
@@ -534,41 +581,51 @@ public class BillGUI extends JPanel {
                     Vector<?> vector = (Vector<?>) row;
                     bills.add(billBLL.searchBills("BILL_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
-                if (Excel.writeBillsToExcel(bills, from, to))
+                if (Excel.writeBillsToExcel(bills, from, to, path))
                     JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 List<Receipt> receipts = new ArrayList<>();
                 for (Object row : data) {
                     Vector<?> vector = (Vector<?>) row;
                     receipts.add(receiptBLL.searchReceipts("RECEIPT_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
-                if (Excel.writeReceiptsToExcel(receipts, from, to))
+                if (Excel.writeReceiptsToExcel(receipts, from, to, path))
                     JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print table to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thât bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             String id = label[3].getText();
             if (id.equals("")) {
-                JOptionPane.showMessageDialog(null, "Can't print an empty detail!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
-            } else if (JOptionPane.showConfirmDialog(null, "Print " + id + " to Excel?", "Print?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-                return;
+            } else {
+                int message = JOptionPane.showOptionDialog(null,
+                    "Xuất dữ liệu của " + id + " sang Excel?",
+                    "Xuất dữ liệu?",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{"Xuất", "Huỷ"},
+                    "Xuất");
+                if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
             }
             if (inSaleMode) {
                 Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
-                if (Excel.writeToExcel(bill))
+                if (Excel.writeToExcel(bill, path))
                     JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
-                if (Excel.writeToExcel(receipt))
+                if (Excel.writeToExcel(receipt, path))
                     JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Failed to print " + id + " to Excel.", "Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -585,6 +642,6 @@ public class BillGUI extends JPanel {
     public void findBillsByFace() {
         Tasks tasks = new Tasks("Camera");
         clearDetails();
-        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel())).start();
+        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel(), "BILL")).start();
     }
 }

@@ -7,12 +7,15 @@ import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 import com.cafe.utils.Tasks;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -34,6 +37,8 @@ public class CustomerGUI extends JPanel {
     private JPanel radiusBtGender;
     private JPanel radiusBtMember;
     private JLabel[] jLabelsForm;
+    private JDateChooser[] jDateChooser;
+    private JTextField[] dateTextField;
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
@@ -50,8 +55,10 @@ public class CustomerGUI extends JPanel {
     private Button btDel;
     private Button btRef;
     private Button btFaceSignUp;
+    private Button findCustomerByFace;
 
     public CustomerGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -60,6 +67,7 @@ public class CustomerGUI extends JPanel {
 
     public void initComponents() {
         List<String> columnNames = customerBLL.getCustomerDAL().getColumnNames();
+        findCustomerByFace = new Button();
         customer = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -70,7 +78,9 @@ public class CustomerGUI extends JPanel {
         radiusBtGender = new JPanel();
         radiusBtMember = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        jDateChooser = new JDateChooser[2];
+        dateTextField = new JTextField[2];
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Điện thoại", "Thành viên", "Ngày đăng ký"});
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
         rbFemale = new JRadioButton("Nữ");
@@ -80,7 +90,7 @@ public class CustomerGUI extends JPanel {
         rbNo = new JRadioButton("Không");
         rbNoSearch = new JRadioButton("Không");
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columnNames.size() - 3];
+        jTextFieldsForm = new JTextField[columnNames.size() - 5];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -157,7 +167,7 @@ public class CustomerGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(customerBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(customerBLL.getData(), new String[]{"Mã khách hàng", "Tên khách hàng", "Giới tính", "Ngày sinh", "Điện thoại", "Thành viên", "Ngày đăng ký"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -167,13 +177,32 @@ public class CustomerGUI extends JPanel {
         pnlCustomerConfiguration.setPreferredSize(new Dimension(635, 350));
         roundPanel2.add(pnlCustomerConfiguration, BorderLayout.NORTH);
 
+        Dimension inputFieldsSize = new Dimension(200, 30);
+        for (int i = 0; i < 2; i++) {
+            jDateChooser[i] = new JDateChooser();
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(inputFieldsSize);
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            dateTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            dateTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            int index = i;
+            dateTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(dateTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlCustomerConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "CUSTOMER_ID" -> {
+                    jLabelsForm[i].setText("Mã khách hàng: ");
                     jTextFieldsForm[index] = new JTextField(customerBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -181,7 +210,15 @@ public class CustomerGUI extends JPanel {
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên khách hàng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "GENDER" -> {
+                    jLabelsForm[i].setText("Giới tính: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -193,7 +230,28 @@ public class CustomerGUI extends JPanel {
                     panel.add(rbFemale);
                     pnlCustomerConfiguration.add(panel);
                 }
+                case "DOB" -> {
+                    jLabelsForm[i].setText("Ngày sinh: ");
+                    pnlCustomerConfiguration.add(jDateChooser[0]);
+                }
+                case "PHONE" -> {
+                    jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "MEMBERSHIP" -> {
+                    jLabelsForm[i].setText("Thành viên: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -205,11 +263,11 @@ public class CustomerGUI extends JPanel {
                     panel.add(rbNo);
                     pnlCustomerConfiguration.add(panel);
                 }
+                case "DOSUP" -> {
+                    jLabelsForm[i].setText("Ngày đăng ký: ");
+                    pnlCustomerConfiguration.add(jDateChooser[1]);
+                }
                 default -> {
-                    jTextFieldsForm[index] = new JTextField();
-                    jTextFieldsForm[index].setText(null);
-                    pnlCustomerConfiguration.add(jTextFieldsForm[index]);
-                    index++;
                 }
             }
         }
@@ -222,7 +280,7 @@ public class CustomerGUI extends JPanel {
         btFaceSignUp = new Button();
         btFaceSignUp.setBackground(new Color(35, 166, 97));
         btFaceSignUp.setBorder(null);
-        btFaceSignUp.setIcon(new ImageIcon("img/face-scanner.png"));
+        btFaceSignUp.setIcon(new ImageIcon("img/icons/face-scanner.png"));
         btFaceSignUp.setText("Sign up your face  ");
         btFaceSignUp.setColor(new Color(240, 240, 240));
         btFaceSignUp.setColorClick(new Color(141, 222, 175));
@@ -237,6 +295,25 @@ public class CustomerGUI extends JPanel {
         });
         showImg.add(btFaceSignUp);
 
+
+        findCustomerByFace.setBackground(new Color(35, 166, 97));
+        findCustomerByFace.setBorder(null);
+        findCustomerByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
+        findCustomerByFace.setText("Find Customer  ");
+        findCustomerByFace.setPreferredSize(new Dimension(150, 25));
+        findCustomerByFace.setColor(new Color(240, 240, 240));
+        findCustomerByFace.setColorClick(new Color(141, 222, 175));
+        findCustomerByFace.setColorOver(new Color(35, 166, 97));
+        findCustomerByFace.setFocusPainted(false);
+        findCustomerByFace.setRadius(20);
+        findCustomerByFace.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                faceSignUp();
+            }
+        });
+        search.add(findCustomerByFace);
+
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -246,8 +323,8 @@ public class CustomerGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -268,8 +345,8 @@ public class CustomerGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -288,8 +365,8 @@ public class CustomerGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -310,8 +387,8 @@ public class CustomerGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -331,12 +408,12 @@ public class CustomerGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Giới tính")) {
             txtSearch.setVisible(false);
             radiusBtMember.setVisible(false);
             radiusBtGender.setVisible(true);
             genderSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("MEMBERSHIP")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Thành viên")) {
             txtSearch.setVisible(false);
             radiusBtGender.setVisible(false);
             radiusBtMember.setVisible(true);
@@ -364,7 +441,18 @@ public class CustomerGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(customerBLL.getCustomerList());
         } else {
-            loadDataTable(customerBLL.findCustomers(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "CUSTOMER_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "DOB";
+                case 4 -> key = "PHONE";
+                case 6 -> key = "DOSUP";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(customerBLL.findCustomers(key, txtSearch.getText()));
         }
     }
 
@@ -378,13 +466,13 @@ public class CustomerGUI extends JPanel {
             }
             assert newCustomer != null;
             if (customerBLL.exists(newCustomer))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.addCustomer(newCustomer))
-                JOptionPane.showMessageDialog(this, "Successfully added new customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -402,13 +490,13 @@ public class CustomerGUI extends JPanel {
             String currentPhone = dataTable.getValueAt(selectedRow, 4).toString();
             boolean valueChanged = !newCustomer.getPhone().equals(currentPhone);
             if (customerBLL.exists(newCustomer))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.updateCustomer(newCustomer))
-                JOptionPane.showMessageDialog(this, "Successfully updated customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa khách hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(customerBLL.getCustomerList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -416,14 +504,20 @@ public class CustomerGUI extends JPanel {
     }
 
     private void deleteCustomer() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this customer?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá khách hàng này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Customer customer = new Customer();
             customer.setCustomerID(jTextFieldsForm[0].getText());
             if (customerBLL.deleteCustomer(customer))
-                JOptionPane.showMessageDialog(this, "Successfully deleted customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá khách hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá khách hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -436,6 +530,8 @@ public class CustomerGUI extends JPanel {
         for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
+        jDateChooser[0].setDate(null);
+        jDateChooser[1].setDate(null);
         rbMale.setSelected(true);
         rbYes.setSelected(true);
         btAdd.setEnabled(true);
@@ -458,14 +554,20 @@ public class CustomerGUI extends JPanel {
         } else {
             rbFemale.setSelected(true);
         }
-        jTextFieldsForm[2].setText(customer[3]);
-        jTextFieldsForm[3].setText(customer[4]);
+        try {
+            Day date = Day.parseDay(customer[3]);
+            jDateChooser[0].setDate(date.toDate());
+            date = Day.parseDay(customer[6]);
+            jDateChooser[1].setDate(date.toDate());
+        } catch (Exception ignored) {
+
+        }
+        jTextFieldsForm[2].setText(customer[4]);
         if (customer[5].contains("Có")) {
             rbYes.setSelected(true);
         } else {
             rbNo.setSelected(true);
         }
-        jTextFieldsForm[4].setText(customer[6]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -483,13 +585,13 @@ public class CustomerGUI extends JPanel {
             switch (i) {
                 case 0 -> customerID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
-                case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
-                case 3 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
-                case 4 -> dateOfSup = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                case 2 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
                 default -> {
                 }
             }
         }
+        dateOfBirth = new Day(jDateChooser[0].getDate());
+        dateOfSup = new Day(jDateChooser[1].getDate());
         gender = rbMale.isSelected();
         membership = rbYes.isSelected();
         return new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
@@ -510,7 +612,7 @@ public class CustomerGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -519,38 +621,14 @@ public class CustomerGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            if (!jTextFieldsForm[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[2].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
+        if (!jTextFieldsForm[2].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
-            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
-            jTextFieldsForm[3].requestFocusInWindow();
-            jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            if (!jTextFieldsForm[4].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[4].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
-            jTextFieldsForm[4].requestFocusInWindow();
-            jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of sign up must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
@@ -559,5 +637,10 @@ public class CustomerGUI extends JPanel {
     public void faceSignUp() {
         Tasks tasks = new Tasks("Camera");
         new Thread(() -> tasks.recordAndTrain(jTextFieldsForm[0].getText(), 80)).start();
+    }
+
+    public void findCustomerByFace() {
+        Tasks tasks = new Tasks("Camera");
+        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel(), "CUSTOMER")).start();
     }
 }

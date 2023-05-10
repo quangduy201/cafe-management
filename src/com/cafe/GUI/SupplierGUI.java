@@ -11,11 +11,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class SupplierGUI extends JPanel {
     private SupplierBLL supplierBLL = new SupplierBLL();
@@ -38,12 +39,10 @@ public class SupplierGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    private Button btsupplier;
-    private Button btrecipe;
-
     private RoundPanel roundPanel[];
 
     public SupplierGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(51, 51, 51));
@@ -64,15 +63,14 @@ public class SupplierGUI extends JPanel {
         showImg = new JPanel();
         mode = new RoundPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"});
         txtSearch = new JTextField();
         jTextFieldsForm = new JTextField[columnNames.size() - 1];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
         btRef = new Button();
-        btsupplier =  new Button();
-        btrecipe = new Button();
+
 
         supplier.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         supplier.setBackground(new Color(70, 67, 67));
@@ -82,12 +80,6 @@ public class SupplierGUI extends JPanel {
         roundPanel1.setPreferredSize(new Dimension(635, 670));
         roundPanel1.setAutoscrolls(true);
         supplier.add(roundPanel1);
-
-        roundPanel[0].setLayout(new BorderLayout(10,0));
-        roundPanel[0].setBackground(new Color(255, 255, 255));
-        roundPanel[0].setPreferredSize(new Dimension(620, 40));
-        roundPanel[0].setAutoscrolls(true);
-        roundPanel1.add(roundPanel[0]);
 
         roundPanel[1].setBackground(new Color(255, 255, 255));
         roundPanel[1].setPreferredSize(new Dimension(635, 50));
@@ -135,52 +127,9 @@ public class SupplierGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(supplierBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(supplierBLL.getData(), new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel[2].add(scrollPane);
-
-        btsupplier.setPreferredSize(new Dimension(120, 40));
-        btsupplier.setBorderPainted(false);
-        btsupplier.setRadius(15);
-        btsupplier.setFocusPainted(false);
-        btsupplier.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btsupplier.setColor(new Color(0x70E149));
-        btsupplier.setColorOver(new Color(0x5EFF00));
-        btsupplier.setColorClick(new Color(0x8AD242));
-        btsupplier.setBorderColor(new Color(70, 67, 67));
-        btsupplier.setText("Nhập Hàng");
-        btsupplier.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
-        roundPanel[0].add(btsupplier,BorderLayout.WEST);
-
-        btrecipe.setPreferredSize(new Dimension(120, 40));
-        btrecipe.setBorderPainted(false);
-        btrecipe.setRadius(15);
-        btrecipe.setFocusPainted(false);
-        btrecipe.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btrecipe.setColor(new Color(0x70E149));
-        btrecipe.setColorOver(new Color(0x5EFF00));
-        btrecipe.setColorClick(new Color(0x8AD242));
-        btrecipe.setBorderColor(new Color(70, 67, 67));
-        btrecipe.setText("Nhà Cung Cấp");
-        btrecipe.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                } catch (Exception ignored) {
-
-                }
-            }
-        });
-        roundPanel[0].add(btrecipe,BorderLayout.EAST);
 
 
         pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
@@ -191,18 +140,40 @@ public class SupplierGUI extends JPanel {
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlSupplierConfiguration.add(jLabelsForm[i]);
+            jTextFieldsForm[i] = new JTextField();
+            jTextFieldsForm[i].setText(null);
+            pnlSupplierConfiguration.add(jTextFieldsForm[i]);
             if ("SUPPLIER_ID".equals(columnNames.get(i))) {
-                jTextFieldsForm[i] = new JTextField(supplierBLL.getAutoID());
+                jLabelsForm[i].setText("Mã nhà cung cấp: ");
+                jTextFieldsForm[i].setText(supplierBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
-                pnlSupplierConfiguration.add(jTextFieldsForm[i]);
-            } else {
-                jTextFieldsForm[i] = new JTextField();
-                jTextFieldsForm[i].setText(null);
-                pnlSupplierConfiguration.add(jTextFieldsForm[i]);
+            }
+            else {
+                if ("NAME".equals(columnNames.get(i))) {
+                    jLabelsForm[i].setText("Tên nhà cung cấp: ");
+                }
+                if ("PHONE".equals(columnNames.get(i))) {
+                    jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[i].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                                e.consume();
+                            }
+                        }
+                    });
+                }
+                if ("ADDRESS".equals(columnNames.get(i))) {
+                    jLabelsForm[i].setText("Địa chỉ: ");
+                }
+                if ("EMAIL".equals(columnNames.get(i))) {
+                    jLabelsForm[i].setText("Email: ");
+                }
+
             }
         }
         showImg.setLayout(new FlowLayout());
@@ -221,8 +192,8 @@ public class SupplierGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -243,8 +214,8 @@ public class SupplierGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -263,8 +234,8 @@ public class SupplierGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -285,8 +256,8 @@ public class SupplierGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -308,7 +279,18 @@ public class SupplierGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(supplierBLL.getSupplierList());
         } else {
-            loadDataTable(supplierBLL.findSuppliers(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "SUPPLIER_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "PHONE";
+                case 3 -> key = "ADDRESS";
+                case 4 -> key = "EMAIL";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(supplierBLL.findSuppliers(key, txtSearch.getText()));
         }
     }
 
@@ -316,13 +298,13 @@ public class SupplierGUI extends JPanel {
         if (checkInput()) {
             Supplier newSupplier = getForm();
             if (supplierBLL.exists(newSupplier))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.addSupplier(newSupplier))
-                JOptionPane.showMessageDialog(this, "Successfully added new supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhà cung cấp mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhà cung cấp mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -334,13 +316,13 @@ public class SupplierGUI extends JPanel {
             String currentPhone = dataTable.getValueAt(selectedRow, 2).toString();
             boolean valueChanged = !newSupplier.getPhone().equals(currentPhone);
             if (supplierBLL.exists(newSupplier))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && supplierBLL.exists(Map.of("PHONE", newSupplier.getPhone())))
-                JOptionPane.showMessageDialog(this, "Supplier already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhà cung cấp đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (supplierBLL.updateSupplier(newSupplier))
-                JOptionPane.showMessageDialog(this, "Successfully updated supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhà cung cấp thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhà cung cấp thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(supplierBLL.getSupplierList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -348,14 +330,20 @@ public class SupplierGUI extends JPanel {
     }
 
     private void deleteSupplier() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this supplier?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá nhà cung cấp này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Supplier supplier = new Supplier();
             supplier.setSupplierID(jTextFieldsForm[0].getText());
             if (supplierBLL.deleteSupplier(supplier))
-                JOptionPane.showMessageDialog(this, "Successfully deleted supplier!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhà cung cấp thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete supplier!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhà cung cấp thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -422,7 +410,7 @@ public class SupplierGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điên đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -431,28 +419,28 @@ public class SupplierGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên nhà cung cấp không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(\\+?84|0)[235789]\\d{8,9}$")) {
             // Phone must start with "0x", "+84x" or "84x" where "x" in {2, 3, 5, 7, 8, 9}
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[3].getText().matches("^[^|]+$")) {
             // Address can't contain "|"
             jTextFieldsForm[3].requestFocusInWindow();
             jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Địa chỉ không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[4].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
             // Email must follow "username@domain.name"
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Email phải theo định dạng \"username@domain.name\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

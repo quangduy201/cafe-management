@@ -39,6 +39,7 @@ public class ProductDetailsGUI extends JFrame {
     private Product getProduct;
 
     public ProductDetailsGUI(SaleGUI saleGUI, Product product, int quantity) {
+        System.gc();
         this.newProduct = product;
         this.saleGUI = saleGUI;
         this.quantity = quantity;
@@ -277,7 +278,7 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[7].add(comboBoxProductSize);
 
 
-        confirm.setIcon(new ImageIcon("img/add-to-cart.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-to-cart.png"));
         confirm.setBorderPainted(false);
         confirm.setText("Xác Nhận");
         confirm.setFocusable(false);

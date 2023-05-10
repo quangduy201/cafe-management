@@ -6,12 +6,15 @@ import com.cafe.DTO.Ingredient;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -44,6 +47,7 @@ public class WarehousesGUI extends JPanel {
     private Button btRef;
 
     public WarehousesGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -63,7 +67,7 @@ public class WarehousesGUI extends JPanel {
         mode = new JPanel();
         showImg = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
         cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbSupplierID = new JComboBox<>(suppliersID.toArray());
@@ -123,15 +127,10 @@ public class WarehousesGUI extends JPanel {
         cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(ingredientBLL.getData(), new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-//        pnlSupplierConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
-//        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
-//        pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-//        pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
-//        roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
         pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
         pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
         pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
@@ -141,10 +140,10 @@ public class WarehousesGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlIngredientConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "INGREDIENT_ID" -> {
+                    jLabelsForm[i].setText("Mã nguyên liệu: ");
                     jTextFieldsForm[index] = new JTextField(ingredientBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -152,13 +151,54 @@ public class WarehousesGUI extends JPanel {
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "UNIT" -> pnlIngredientConfiguration.add(cbbUnit);
-                case "SUPPLIER_ID" -> pnlIngredientConfiguration.add(cbbSupplierID);
-                default -> {
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên nguyên liệu: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlIngredientConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                case "QUANTITY" -> {
+                    jLabelsForm[i].setText("Số lượng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '.') {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "UNIT" -> {
+                    jLabelsForm[i].setText("Đơn vị: ");
+                    pnlIngredientConfiguration.add(cbbUnit);
+                }
+                case "UNIT_PRICE" -> {
+                    jLabelsForm[i].setText("Đơn giá: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlIngredientConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "SUPPLIER_ID" -> {
+                    jLabelsForm[i].setText("Mã nhà cung cấp: ");
+                    pnlIngredientConfiguration.add(cbbSupplierID);
+                }
+                default -> {
                 }
             }
         }
@@ -177,8 +217,8 @@ public class WarehousesGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -199,8 +239,8 @@ public class WarehousesGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -219,8 +259,8 @@ public class WarehousesGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -241,8 +281,8 @@ public class WarehousesGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -270,13 +310,13 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("Đơn vị")) {
             txtSearch.setVisible(false);
             cbbSupplierIDSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
             unitSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SUPPLIER_ID")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhà cung cấp")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             cbbSupplierIDSearch.setSelectedIndex(0);
@@ -294,7 +334,16 @@ public class WarehousesGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
-            loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()) {
+                case 0 -> key = "INGREDIENT_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "QUANTITY";
+                case 4 -> key = "UNIT_PRICE";
+                default -> {
+                }
+            }
+            loadDataTable(ingredientBLL.findIngredients(key, txtSearch.getText()));
         }
     }
 
@@ -302,13 +351,13 @@ public class WarehousesGUI extends JPanel {
         if (checkInput()) {
             Ingredient newIngredient = getForm();
             if (ingredientBLL.exists(newIngredient))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.addIngredient(newIngredient))
-                JOptionPane.showMessageDialog(this, "Successfully added new ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nguyên liệu mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nguyên liệu mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -320,13 +369,13 @@ public class WarehousesGUI extends JPanel {
             String currentName = dataTable.getValueAt(selectedRow, 1).toString();
             boolean valueChanged = !newIngredient.getName().equals(currentName);
             if (ingredientBLL.exists(newIngredient))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && ingredientBLL.exists(Map.of("NAME", newIngredient.getName())))
-                JOptionPane.showMessageDialog(this, "Ingredient already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nguyên liệu đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (ingredientBLL.updateIngredient(newIngredient))
-                JOptionPane.showMessageDialog(this, "Successfully updated ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nguyên liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nguyên liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(ingredientBLL.getIngredientList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -334,14 +383,20 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void deleteIngredient() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this ingredient?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá nguyên liệu này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Ingredient ingredient = new Ingredient();
             ingredient.setIngredientID(jTextFieldsForm[0].getText());
             if (ingredientBLL.deleteIngredient(ingredient))
-                JOptionPane.showMessageDialog(this, "Successfully deleted ingredient!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nguyên liệu thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete ingredient!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nguyên liệu thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -373,7 +428,7 @@ public class WarehousesGUI extends JPanel {
         jTextFieldsForm[1].setText(ingredient[1]);
         jTextFieldsForm[2].setText(ingredient[2]);
         cbbUnit.setSelectedItem(ingredient[3]);
-        jTextFieldsForm[3].setText(ingredient[4]);
+        jTextFieldsForm[3].setText(VNString.currency(Double.parseDouble(ingredient[4])));
         cbbSupplierID.setSelectedItem(ingredient[5]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
@@ -392,7 +447,7 @@ public class WarehousesGUI extends JPanel {
                 case 0 -> ingredientID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
                 case 2 -> quantity = Double.parseDouble(jTextFieldsForm[i].getText());
-                case 3 -> unitPrice = Double.parseDouble(jTextFieldsForm[i].getText());
+                case 3 -> unitPrice = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("\\D+", ""));
                 default -> {
                 }
             }
@@ -414,7 +469,7 @@ public class WarehousesGUI extends JPanel {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
                 System.out.println(textField.getText());
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -422,21 +477,14 @@ public class WarehousesGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên nguyên liệu không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
             // Quantity must be a double >= 0.0
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Quantity must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[3].getText().matches("^(?=.*\\d)\\d*\\.?\\d*$")) {
-            // Unit price must be a double >= 0.0
-            jTextFieldsForm[3].requestFocusInWindow();
-            jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Unit price must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số thực không âm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

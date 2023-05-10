@@ -59,10 +59,10 @@ public class SupplierBLL extends Manager<Supplier> {
         return supplierDAL.searchSuppliers(conditions);
     }
 
-    public List<Supplier> findSuppliers(String key, String value) {
+    public List<Supplier> findSuppliers(String key, Object value) {
         List<Supplier> list = new ArrayList<>();
         for (Supplier supplier : supplierList) {
-            if (getValueByKey(supplier, key).toString().toLowerCase().contains(value.toLowerCase())) {
+            if (getValueByKey(supplier, key).toString().toLowerCase().contains(value.toString().toLowerCase())) {
                 list.add(supplier);
             }
         }

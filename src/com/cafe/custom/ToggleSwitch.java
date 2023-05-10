@@ -1,6 +1,7 @@
 package com.cafe.custom;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 
 public class ToggleSwitch extends JToggleButton {
@@ -11,11 +12,11 @@ public class ToggleSwitch extends JToggleButton {
 
     public ToggleSwitch() {
         setPreferredSize(new Dimension(50, 30));
-        setBackground(new Color(70, 67, 67));
         setFocusable(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setBorderPainted(false);
         setOpaque(true);
+        setUI(new BasicButtonUI());
     }
 
     @Override
@@ -30,8 +31,10 @@ public class ToggleSwitch extends JToggleButton {
 
         if (isSelected()) {
             g2d.setColor(onColor);
+            setBackground(new Color(35, 166, 97));
         } else {
             g2d.setColor(offColor);
+            setBackground(new Color(70, 67, 67));
         }
         g2d.fillRoundRect(0, 0, width, height, height, height);
 

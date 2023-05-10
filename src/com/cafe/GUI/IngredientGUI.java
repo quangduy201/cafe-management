@@ -60,6 +60,7 @@ public class IngredientGUI extends JPanel {
     private FrameIngredient frameIngredient;
 
     public IngredientGUI(int decentralizationMode, String staffid) {
+        System.gc();
         this.staffid = staffid;
         this.decentralizationMode = decentralizationMode;
         this.supplierID = null;
@@ -103,8 +104,8 @@ public class IngredientGUI extends JPanel {
         search = new RoundPanel();
         search1 = new RoundPanel();
         pnlIngredientConfiguration = new RoundPanel();
-        cbbSearchFilter = new JComboBox<>(result.subList(0, result.size() - 1).toArray());
-        cbbSearchSupplier = new JComboBox<>(columnName1.subList(0, columnNames.size() - 2).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
+        cbbSearchSupplier = new JComboBox<>(new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         txtSearch = new JTextField();
         txtSearch1 = new JTextField();
@@ -211,11 +212,11 @@ public class IngredientGUI extends JPanel {
         });
         search1.add(txtSearch1);
 
-        dataTable = new DataTable(null, result.toArray(), e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel[2].add(scrollPane);
 
-        dataTable1 = new DataTable(supplierBLL.getData(), columnName1.subList(0, columnName1.size() - 1).toArray(), e -> fillForm1());
+        dataTable1 = new DataTable(supplierBLL.getData(), new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"}, e -> fillForm1());
         scrollPane = new JScrollPane(dataTable1);
         roundPanel[12].add(scrollPane);
 
@@ -347,7 +348,7 @@ public class IngredientGUI extends JPanel {
         btImport.setRadius(15);
         btImport.setFocusPainted(false);
         btImport.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btImport.setIcon(new ImageIcon(("img/plus.png")));
+        btImport.setIcon(new ImageIcon(("img/icons/plus.png")));
         btImport.setColor(new Color(0x70E149));
         btImport.setColorOver(new Color(0x5EFF00));
         btImport.setColorClick(new Color(0x8AD242));
@@ -369,7 +370,7 @@ public class IngredientGUI extends JPanel {
         btCancel.setRadius(15);
         btCancel.setFocusPainted(false);
         btCancel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btCancel.setIcon(new ImageIcon(("img/remove.png")));
+        btCancel.setIcon(new ImageIcon(("img/icons/remove.png")));
         btCancel.setColor(new Color(0xFFBD3737));
         btCancel.setColorOver(new Color(0xFF0000));
         btCancel.setColorClick(new Color(0xB65858));
@@ -398,7 +399,15 @@ public class IngredientGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
-            loadDataTable(ingredientBLL.findIngredients(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "INGREDIENT_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "UNIT_PRICE";
+                default -> {
+                }
+            }
+            loadDataTable(ingredientBLL.findIngredients(key, txtSearch.getText()));
         }
     }
 
@@ -406,7 +415,18 @@ public class IngredientGUI extends JPanel {
         if (txtSearch1.getText().isEmpty()) {
             loadDataTable1(supplierBLL.getSupplierList());
         } else {
-            loadDataTable1(supplierBLL.findSuppliers(Objects.requireNonNull(cbbSearchSupplier.getSelectedItem()).toString(), txtSearch1.getText()));
+            String key = null;
+            switch (cbbSearchSupplier.getSelectedIndex()){
+                case 0 -> key = "SUPPLIER_ID";
+                case 1 -> key = "NAME";
+                case 2 -> key = "PHONE";
+                case 3 -> key = "ADDRESS";
+                case 4 -> key = "EMAIL";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable1(supplierBLL.findSuppliers(key, txtSearch1.getText()));
         }
     }
 
@@ -427,32 +447,35 @@ public class IngredientGUI extends JPanel {
     }
 
     public void pressImport() {
-        Receipt newReceipt = null;
-        try {
-            newReceipt = getForm1();
-        } catch (Exception ignored) {
+        if (checkInput()) {
+            Receipt newReceipt = null;
+            try {
+                newReceipt = getForm1();
+            } catch (Exception ignored) {
 
-        }
-        assert newReceipt != null;
-
-        if (receiptBLL.addReceipt(newReceipt))
-            JOptionPane.showMessageDialog(this, "Successfully added new receipt!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-        else
-            JOptionPane.showMessageDialog(this, "Failed to add new receipt!", "Error", JOptionPane.ERROR_MESSAGE);
-
-        if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
-            for (int i = 0; i < receiptDetails.size(); i++) {
-                ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
-                receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
             }
+            assert newReceipt != null;
+
+            if (receiptBLL.addReceipt(newReceipt))
+                JOptionPane.showMessageDialog(this, "Nhập hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            else
+                JOptionPane.showMessageDialog(this, "Nhập hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+
+            if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
+                for (int i = 0; i < receiptDetails.size(); i++) {
+                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+                    receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
+                }
+            }
+            supplierID = null;
+            label[7].setText(null);
+
+            pressCancel();
+
+            loadDataTable(new ArrayList<>());
+            loadDataTable1(supplierBLL.getSupplierList());
+
         }
-        supplierID = null;
-        label[7].setText(null);
-
-        pressCancel();
-
-        loadDataTable(new ArrayList<>());
-        loadDataTable1(supplierBLL.getSupplierList());
     }
 
     public void pressCancel() {
@@ -480,31 +503,38 @@ public class IngredientGUI extends JPanel {
             roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
         double totalPrice = 0.0;
-        for (int e = 0; e < listIngredientArray.size(); e++) {
-            int vt = e;
+        for (int i = 0; i < listIngredientArray.size(); i++) {
+            int vt = i;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
-            billDetailPanel.setIngredient(receiptDetails.get(e), listQuantityChoice.get(e));
-            Ingredient ingredient = listIngredientArray.get(e);
-            String[] a = new String[6];
-            a[0] = ingredient.getIngredientID();
-            a[1] = ingredient.getName();
-            a[2] = ingredient.getUnit();
-            a[3] = String.valueOf(ingredient.getUnitPrice());
-            a[4] = ingredient.getSupplierID();
+            billDetailPanel.setIngredient(receiptDetails.get(i), listQuantityChoice.get(i));
+            Ingredient ingredient = listIngredientArray.get(i);
+            String[] ingredientString = new String[6];
+            ingredientString[0] = ingredient.getIngredientID();
+            ingredientString[1] = ingredient.getName();
+            ingredientString[2] = ingredient.getUnit();
+            ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
+            ingredientString[4] = ingredient.getSupplierID();
 
-            int index = listQuantityChoice.get(e);
+            int index = listQuantityChoice.get(i);
 
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new FrameIngredient(IngredientGUI.this, a, index).setVisible(true);
+                    new FrameIngredient(IngredientGUI.this, ingredientString, index).setVisible(true);
                 }
             });
 
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warnning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+                    if (JOptionPane.showOptionDialog(null,
+                        "Bạn có chắc chắn muốn xoá nguyên liệu này?",
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Xoá", "Huỷ"},
+                        "Xoá") == JOptionPane.YES_NO_OPTION) {
                         listIngredientArray.remove(vt);
                         listQuantityChoice.remove(vt);
                         roundPanel[10].removeAll();
@@ -514,7 +544,7 @@ public class IngredientGUI extends JPanel {
                     }
                 }
             });
-            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(e);
+            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(i);
             roundPanel[10].add(billDetailPanel);
             roundPanel[10].repaint();
             roundPanel[10].revalidate();
@@ -557,7 +587,7 @@ public class IngredientGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("UNIT")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("Đơn vị")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
@@ -579,5 +609,19 @@ public class IngredientGUI extends JPanel {
         Day dor = Day.parseDay(label[5].getText());
         double grandTotal = 0;
         return new Receipt(receiptID, staffID, dor, grandTotal, supplierID, false);
+    }
+
+    public boolean checkInput() {
+        if (supplierID == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nhà cung cấp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (receiptDetails.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
     }
 }

@@ -62,6 +62,7 @@ public class SaleGUI extends JPanel {
     private Button btnSearchByFace;
 
     public SaleGUI(String staffID) {
+        System.gc();
         this.staffID = staffID;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -184,14 +185,15 @@ public class SaleGUI extends JPanel {
         });
         roundPanel5.add(txtSearch1);
 
+
         btnSearch1.setBackground(new Color(240, 240, 240));
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
-        btnSearch1.setIcon(new ImageIcon("img/search.png"));
+        btnSearch1.setIcon(new ImageIcon("img/icons/search.png"));
         btnSearch1.setFocusPainted(false);
         roundPanel5.add(btnSearch1);
 
-        roundPanel7.setLayout(new BorderLayout(65, 0));
+        roundPanel7.setLayout(new BorderLayout(10, 0));
         roundPanel7.setPreferredSize(new Dimension(350, 35));
         roundPanel2.add(roundPanel7);
 
@@ -217,27 +219,26 @@ public class SaleGUI extends JPanel {
         });
         roundPanel7.add(txtSearch2, BorderLayout.WEST);
 
-//        TODO: find customer by face button
-//        btnSearchByFace.setBackground(new Color(240, 240, 240));
-//        btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-//        btnSearchByFace.setPreferredSize(new Dimension(35, 35));
-//        btnSearchByFace.setIcon(new ImageIcon("img/face-scanner.png"));
-//        btnSearchByFace.setFocusPainted(false);
-//        btnSearchByFace.setColor(new Color(240, 240, 240));
-//        btnSearchByFace.setColorOver(new Color(0xA6A1A1));
-//        btnSearchByFace.setColorOver(new Color(0x2F2F2F));
-//        btnSearchByFace.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mousePressed(MouseEvent e) {
-//                findCustomerByFace();
-//            }
-//        });
-//        roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
+        btnSearchByFace.setBackground(new Color(240, 240, 240));
+        btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btnSearchByFace.setPreferredSize(new Dimension(40, 35));
+        btnSearchByFace.setFocusPainted(false);
+        btnSearchByFace.setColor(new Color(240, 240, 240));
+        btnSearchByFace.setColorOver(new Color(0xA6A1A1));
+        btnSearchByFace.setColorOver(new Color(0x2F2F2F));
+        btnSearchByFace.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                findCustomerByFace();
+            }
+        });
+        roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
 
         btnSearch2.setBackground(new Color(240, 240, 240));
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch2.setPreferredSize(new Dimension(35, 35));
-        btnSearch2.setIcon(new ImageIcon("img/search.png"));
+        btnSearch2.setIcon(new ImageIcon("img/icons/search.png"));
         btnSearch2.setFocusPainted(false);
         btnSearch2.setColor(new Color(240, 240, 240));
         btnSearch2.setColorOver(new Color(0xA6A1A1));
@@ -372,7 +373,7 @@ public class SaleGUI extends JPanel {
         btnPurchase.setRadius(15);
         btnPurchase.setFocusPainted(false);
         btnPurchase.setFont(fontTimesNewRoman);
-        btnPurchase.setIcon(new ImageIcon("img/plus.png"));
+        btnPurchase.setIcon(new ImageIcon("img/icons/plus.png"));
         btnPurchase.setColor(new Color(0x70E149));
         btnPurchase.setColorOver(new Color(0x5EFF00));
         btnPurchase.setColorClick(new Color(0x8AD242));
@@ -390,7 +391,7 @@ public class SaleGUI extends JPanel {
         btnCancel.setRadius(15);
         btnCancel.setFocusPainted(false);
         btnCancel.setFont(fontTimesNewRoman);
-        btnCancel.setIcon(new ImageIcon("img/remove.png"));
+        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
         btnCancel.setColor(new Color(0xFFBD3737));
         btnCancel.setColorOver(new Color(0xFF0000));
         btnCancel.setColorClick(new Color(0xB65858));
@@ -418,11 +419,11 @@ public class SaleGUI extends JPanel {
                 productlist.add(product);
             }
         }
-        refreshProducts(product -> true);
+        loadProducts(product -> true);
     }
-
+    private ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
+    private int sl = 0;
     public void addProductPanel(Product product, int index) {
-        ProductPanel productPanel = new ProductPanel();
         RoundPanel frameProduct = new RoundPanel();
         RoundPanel frameImg = new RoundPanel();
         JTextField categoryName = new JTextField();
@@ -430,12 +431,13 @@ public class SaleGUI extends JPanel {
         JTextField[] productName = new JTextField[2];
         Color color = new Color(0xB65858);
 
-        productPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
-        productPanel.setPreferredSize(new Dimension(185, 250));
-        productPanel.setBackground(color);
-        productPanel.setColor(color);
-        productPanel.setColorOver(new Color(25, 25, 25));
-        productPanel.addMouseListener(new MouseAdapter() {
+        productPanel[sl] = new ProductPanel();
+        productPanel[sl].setLayout(new FlowLayout(FlowLayout.CENTER, 2, 2));
+        productPanel[sl].setPreferredSize(new Dimension(185, 250));
+        productPanel[sl].setBackground(color);
+        productPanel[sl].setColor(color);
+        productPanel[sl].setColorOver(new Color(25, 25, 25));
+        productPanel[sl].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
                 if (productDetailsGUI != null) {
@@ -445,11 +447,12 @@ public class SaleGUI extends JPanel {
                 productDetailsGUI.setVisible(true);
             }
         });
-        roundPanel4.add(productPanel);
+        roundPanel4.add(productPanel[sl]);
 
         frameProduct.setPreferredSize(new Dimension(181, 246));
         frameProduct.setBackground(color);
-        productPanel.add(frameProduct);
+        productPanel[sl].add(frameProduct);
+        sl++;
 
         Font fontDialog = new Font("Dialog", Font.PLAIN, 15);
         Category category = categoryBLL.findCategoriesBy(Map.of("CATEGORY_ID", product.getCategoryID())).get(0);
@@ -505,19 +508,26 @@ public class SaleGUI extends JPanel {
 
     public void findCustomer() {
         if (txtSearch2.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter information in the search box", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập thông tin vào ô tìm kiếm", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         if (!txtSearch2.getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
             // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             txtSearch2.requestFocusInWindow();
             txtSearch2.selectAll();
-            JOptionPane.showMessageDialog(this, "Phone number is a sequence of non-negative integers", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
         List<Customer> customers = customerBLL.findCustomersBy(Map.of("PHONE", txtSearch2.getText()));
         if (customers.isEmpty()) {
-            if (JOptionPane.showConfirmDialog(null, "Phone number not found in the system, do you want to add a new one?", "Add new customer?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+            if (JOptionPane.showOptionDialog(null,
+                "Số điện thoại không tồn tại trong hệ thống, bạn có muốn thêm mới?",
+                "Thêm khách hàng mới?",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Thêm", "Huỷ"},
+                "Thêm") == JOptionPane.YES_OPTION) {
                 infoTxt[0].setText("");
                 new FrameCustomer(txtSearch2.getText()).setVisible(true);
             }
@@ -549,9 +559,18 @@ public class SaleGUI extends JPanel {
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa loại sản phẩm này?", "Warning", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    if (JOptionPane.showOptionDialog(null,
+                        "Bạn có chắc chắn muốn xoá sản phẩm khỏi hoá đơn này?",
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Xoá", "Huỷ"},
+                        "Xoá") == JOptionPane.YES_OPTION) {
                         listDetailBill.remove(index);
                         listQuantityChoice.remove(index);
+                        roundPanel9.repaint();
+                        roundPanel9.revalidate();
                         addProductToBill(listDetailBill, listQuantityChoice);
                     }
                 }
@@ -567,13 +586,13 @@ public class SaleGUI extends JPanel {
 
     public void purchase() {
         if (roundPanel4.getComponentCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Please select a product to pay", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để mua", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } else if (jTextField[1].getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter the amount received from the customer for payment", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Nhập số tiền nhận từ khách hàng để thanh toán", "Lỗi", JOptionPane.ERROR_MESSAGE);
             jTextField[1].requestFocusInWindow();
             jTextField[1].selectAll();
         } else if (Double.parseDouble(jTextField[2].getText().replaceAll("[^\\d-]+", "")) > 0.0) {
-            JOptionPane.showMessageDialog(this, "Not enough money", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Không đủ tiền", "Lỗi", JOptionPane.ERROR_MESSAGE);
             jTextField[1].requestFocusInWindow();
             jTextField[1].selectAll();
         } else {
@@ -594,13 +613,13 @@ public class SaleGUI extends JPanel {
             bill = new Bill(billID, customerID, staffID, date, 0.0, received, excess, false);
 
             if (billBLL.exists(bill))
-                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Hoá đơn đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (billBLL.exists(Map.of("BILL_ID", bill.getBillID())))
-                JOptionPane.showMessageDialog(this, "Bill already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Hoá đơn đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (billBLL.addBill(bill))
-                JOptionPane.showMessageDialog(this, "Successfully added new bill!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mua hàng thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new bill!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mua hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
 //            billBLL.updateBill(bill);
             double billDetail_total;
@@ -650,7 +669,22 @@ public class SaleGUI extends JPanel {
     public void refreshProducts(Function<Product, Boolean> condition) {
         roundPanel4.removeAll();
         roundPanel4.repaint();
-        roundPanel4.validate();
+        roundPanel4.revalidate();
+        int size = 0;
+        for (int i = 0; i < productlist.size(); i++) {
+            if (condition.apply(productlist.get(i))) {
+                roundPanel4.add(productPanel[i]);
+                size++;
+            }
+        }
+        int height = 256 * ((size / 3) + 1);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height));
+    }
+
+    public void loadProducts(Function<Product, Boolean> condition) {
+        roundPanel4.removeAll();
+        roundPanel4.repaint();
+        roundPanel4.revalidate();
         int size = 0;
         for (Product product : productlist) {
             if (condition.apply(product)) {

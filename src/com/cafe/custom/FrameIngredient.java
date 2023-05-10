@@ -5,78 +5,88 @@ import com.cafe.DTO.Ingredient;
 import com.cafe.DTO.Supplier;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.IngredientGUI;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
-public class FrameIngredient extends JFrame{
+public class FrameIngredient extends JFrame {
 
     private String[] data = new String[6];
     private IngredientGUI ingredientGUI;
-
-    private int index = 0;
+    private int index;
+    private Button minus;
+    private Button plus;
+    private Supplier supplier;
+    private Button confirm;
+    private Button minimize;
+    private Button exit;
+    private RoundPanel[] roundPanel;
+    private RoundPanel[] roundPanel1;
+    private JLabel label;
+    private JLabel[] label1;
+    private JTextField[] jTextField;
     public FrameIngredient(IngredientGUI ingredientGUI, String[] data, int index) {
+        System.gc();
         this.index = index;
         this.ingredientGUI = ingredientGUI;
-        for (int i = 0; i < data.length; i++) {
-            this.data[i] = data[i];
-        }
+        System.arraycopy(data, 0, this.data, 0, data.length);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
     }
 
+    public static void main(String[] arg) {
+        new FrameCustomer("0987654321").setVisible(true);
+    }
 
-    private Button minus;
-    private Button plus;
     public void initComponents() {
-        setSize(410,610);
+        setSize(410, 610);
         setLocationRelativeTo(null);
         setUndecorated(true);
 
-        roundPanel =  new RoundPanel[11];
-        label1 =  new JLabel[15];
+        roundPanel = new RoundPanel[11];
+        label1 = new JLabel[15];
         jTextField = new JTextField[8];
         roundPanel1 = new RoundPanel[11];
         minus = new Button();
         plus = new Button();
-        for( int i = 0; i < roundPanel.length; i++) {
+        for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
             roundPanel1[i] = new RoundPanel();
         }
 
-        for( int i = 0; i < jTextField.length; i++) {
+        for (int i = 0; i < jTextField.length; i++) {
             jTextField[i] = new JTextField();
         }
 
-        for( int i = 0; i < label1.length; i++) {
+        for (int i = 0; i < label1.length; i++) {
             label1[i] = new JLabel();
         }
 
         confirm = new Button();
-        panel = new JPanel();
         minimize = new Button();
         exit = new Button();
         label = new JLabel();
 
 
-        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+        roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         roundPanel[0].setBackground(new Color(68, 150, 60));
         this.add(roundPanel[0]);
 
-        roundPanel[1].setPreferredSize(new Dimension(400,30));
+        roundPanel[1].setPreferredSize(new Dimension(400, 30));
         roundPanel[1].setBackground(new Color(68, 150, 60));
-        roundPanel[1].setLayout(new FlowLayout(FlowLayout.RIGHT,5,5));
+        roundPanel[1].setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         roundPanel[0].add(roundPanel[1]);
 
 
-        roundPanel[2].setPreferredSize(new Dimension(400,565));
-        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER,3,3));
-        roundPanel[2].setBackground(new Color(240,240,240));
+        roundPanel[2].setPreferredSize(new Dimension(400, 565));
+        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
+        roundPanel[2].setBackground(new Color(240, 240, 240));
         roundPanel[0].add(roundPanel[2]);
 
-        roundPanel[3].setPreferredSize(new Dimension(394,559));
-        roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER,15,10));
+        roundPanel[3].setPreferredSize(new Dimension(394, 559));
+        roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
         roundPanel[3].setBackground(new Color(68, 150, 60));
         roundPanel[2].add(roundPanel[3]);
 
@@ -114,48 +124,48 @@ public class FrameIngredient extends JFrame{
         exit.setColorOver(new Color(0xB04848));
         exit.setColorClick(new Color(0xE79292));
 
-        roundPanel[4].setPreferredSize(new Dimension(370,60));
+        roundPanel[4].setPreferredSize(new Dimension(370, 60));
         roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[3].add(roundPanel[4]);
 
 
-        roundPanel[5].setPreferredSize(new Dimension(370,468));
-        roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER,20,20));
+        roundPanel[5].setPreferredSize(new Dimension(370, 468));
+        roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roundPanel[3].add(roundPanel[5]);
 
         label.setBackground(new Color(250, 250, 250));
-        label.setPreferredSize(new Dimension(300,50));
-        label.setFont(new Font("Tahoma", 1, 16));
+        label.setPreferredSize(new Dimension(300, 50));
+        label.setFont(new Font("Tahoma", Font.BOLD, 16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setText("NHẬP NGUYÊN LIỆU");
         roundPanel[4].add(label);
 
-        for(int i =0; i < 6; i++) {
-            roundPanel1[i].setPreferredSize(new Dimension(340,45));
-            roundPanel1[i].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
+        for (int i = 0; i < 6; i++) {
+            roundPanel1[i].setPreferredSize(new Dimension(340, 45));
+            roundPanel1[i].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             roundPanel[5].add(roundPanel1[i]);
 
             label1[i].setBackground(new Color(250, 250, 250));
-            label1[i].setPreferredSize(new Dimension(135,50));
+            label1[i].setPreferredSize(new Dimension(135, 50));
             label1[i].setFont(new Font("Times New Roman", Font.PLAIN, 16));
             label1[i].setHorizontalAlignment(SwingConstants.LEFT);
             roundPanel1[i].add(label1[i]);
         }
 
-        label1[1].setPreferredSize(new Dimension(70,50));
-        label1[2].setPreferredSize(new Dimension(90,50));
+        label1[1].setPreferredSize(new Dimension(70, 50));
+        label1[2].setPreferredSize(new Dimension(90, 50));
 
 
-        roundPanel1[4].setPreferredSize(new Dimension(340,45));
+        roundPanel1[4].setPreferredSize(new Dimension(340, 45));
         roundPanel[5].add(roundPanel1[4]);
 
 
-        label1[0].setText("INGREDIENNT_ID:");
-        label1[1].setText("NAME:");
-        label1[2].setText("QUANTITY:");
-        label1[3].setText("UNIT:");
-        label1[4].setText("UNIT_PRICE:");
-        label1[5].setText("SUPPLIERNAME:");
+        label1[0].setText("Mã nguyên liệu:");
+        label1[1].setText("Tên nguyên liệu:");
+        label1[2].setText("Số lượng:");
+        label1[3].setText("Đơn vị:");
+        label1[4].setText("Đơn giá:");
+        label1[5].setText("Tên nhà cung cấp:");
 
         jTextField[0].setFont(new Font("Times New Roman", Font.BOLD, 16));
         jTextField[0].setHorizontalAlignment(SwingConstants.CENTER);
@@ -191,8 +201,8 @@ public class FrameIngredient extends JFrame{
         label1[10].setPreferredSize(new Dimension(190, 40));
         roundPanel1[6].add(label1[10]);
 
-        roundPanel1[9].setPreferredSize(new Dimension(120,45));
-        roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        roundPanel1[9].setPreferredSize(new Dimension(120, 45));
+        roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[5].add(roundPanel1[9]);
 
         supplier = new SupplierBLL()
@@ -201,10 +211,10 @@ public class FrameIngredient extends JFrame{
 
         label1[6].setText(this.data[1]);
         label1[7].setText(this.data[2]);
-        label1[8].setText(this.data[3]);
+        label1[8].setText(VNString.currency(Double.parseDouble(this.data[3])));
         label1[9].setText(supplier.getName());
 
-        confirm.setIcon(new ImageIcon("img/add-user.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
         confirm.setBorderPainted(false);
         confirm.setText("THÊM");
         confirm.setFocusable(false);
@@ -214,7 +224,7 @@ public class FrameIngredient extends JFrame{
         confirm.setRadius(45);
         confirm.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-               pressConfirm();
+                pressConfirm();
             }
         });
         confirm.setColor(new Color(135, 255, 58));
@@ -222,8 +232,8 @@ public class FrameIngredient extends JFrame{
         confirm.setColorClick(new Color(0x2DFF00));
         roundPanel1[9].add(confirm);
 
-        roundPanel[6].setPreferredSize(new Dimension(220,40));
-        roundPanel[6].setLayout(new FlowLayout(FlowLayout.RIGHT,10,0));
+        roundPanel[6].setPreferredSize(new Dimension(220, 40));
+        roundPanel[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         roundPanel1[2].add(roundPanel[6]);
 
         minus.setBorder(null);
@@ -237,14 +247,14 @@ public class FrameIngredient extends JFrame{
                 minusPress();
             }
         });
-        minus.setColor(new Color(240,240,240));
+        minus.setColor(new Color(240, 240, 240));
         minus.setColorOver(new Color(0x737070));
         minus.setColorClick(new Color(0x737070));
         roundPanel[6].add(minus);
 
-        roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        roundPanel[7].setBackground(new Color(250,250,250));
-        roundPanel[7].setPreferredSize(new Dimension(50,35));
+        roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        roundPanel[7].setBackground(new Color(250, 250, 250));
+        roundPanel[7].setPreferredSize(new Dimension(50, 35));
         roundPanel[6].add(roundPanel[7]);
 
 
@@ -265,14 +275,15 @@ public class FrameIngredient extends JFrame{
                 plusPress();
             }
         });
-        plus.setColor(new Color(240,240,240));
+        plus.setColor(new Color(240, 240, 240));
         plus.setColorOver(new Color(0x737070));
         plus.setColorClick(new Color(0x737070));
         roundPanel[6].add(plus);
     }
+
     public void minusPress() {
         int a = Integer.parseInt(label1[11].getText());
-        if(a > 0) {
+        if (a > 0) {
             a--;
             label1[11].setText(Integer.toString(a));
         }
@@ -280,12 +291,11 @@ public class FrameIngredient extends JFrame{
 
     public void plusPress() {
         int a = Integer.parseInt(label1[11].getText());
-        if(a < 100) {
+        if (a < 100) {
             a++;
             label1[11].setText(Integer.toString(a));
         }
     }
-
 
     private void minimize() {
         setState(HomeGUI.ICONIFIED);
@@ -296,7 +306,7 @@ public class FrameIngredient extends JFrame{
     }
 
     private Ingredient checkOrderExits(String[] data) {
-        for(int i = 0; i < ingredientGUI.getReceiptDetails().size(); i++) {
+        for (int i = 0; i < ingredientGUI.getReceiptDetails().size(); i++) {
             if (data[1].equals(ingredientGUI.getReceiptDetails().get(i).getName())) {
                 return ingredientGUI.getReceiptDetails().get(i);
             }
@@ -304,37 +314,20 @@ public class FrameIngredient extends JFrame{
         return null;
     }
 
-
-    private Supplier supplier;
     public void pressConfirm() {
         int index = Integer.parseInt(label1[11].getText());
 
-        if(checkOrderExits(data)!=null){
+        if (checkOrderExits(data) != null) {
             //Cập nhật quantity
             int location = ingredientGUI.getReceiptDetails().indexOf(checkOrderExits(data));
             ingredientGUI.getListQuantityChoice().set(location, index);
-        }else{
-            Ingredient ingredient = new Ingredient(data[0],data[1],0,data[2],Double.parseDouble(data[3]),data[4],false);
+        } else {
+            Ingredient ingredient = new Ingredient(data[0], data[1], 0, data[2], Double.parseDouble(data[3]), data[4], false);
             ingredientGUI.getReceiptDetails().add(ingredient);
             ingredientGUI.getListQuantityChoice().add(index);
         }
         ingredientGUI.getRoundPanel().removeAll();
         ingredientGUI.addIngredient(ingredientGUI.getReceiptDetails(), ingredientGUI.getListQuantityChoice());
         this.dispose();
-    }
-
-    private Button confirm;
-    private Button minimize;
-    private Button exit;
-    private RoundPanel roundPanel[];
-    private RoundPanel roundPanel1[];
-    private JPanel panel;
-    private JLabel label;
-    private JLabel label1[];
-
-    private JTextField jTextField[];
-
-    public static void main(String[] arg) {
-        new FrameCustomer("0987654321").setVisible(true);
     }
 }

@@ -6,6 +6,7 @@ import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,6 +15,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -50,6 +53,7 @@ public class ProductGUI extends JPanel {
     private String chosenImg = null;
 
     public ProductGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -70,7 +74,7 @@ public class ProductGUI extends JPanel {
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
         imgProduct = new JLabel();
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 2).toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"});
         cbbCategoryID = new JComboBox<>(categoriesID.toArray());
         cbbCategoryIDSearch = new JComboBox<>(categoriesID.toArray());
         cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
@@ -131,7 +135,7 @@ public class ProductGUI extends JPanel {
         cbbSizeSearch.addItemListener(e -> sizeSearch());
         search.add(cbbSizeSearch);
 
-        dataTable = new DataTable(productBLL.getData(), columnNames.subList(0, columnNames.size() - 2).toArray(), e -> fillForm());
+        dataTable = new DataTable(productBLL.getData(), new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -144,10 +148,10 @@ public class ProductGUI extends JPanel {
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlProductConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "PRODUCT_ID" -> {
+                    jLabelsForm[i].setText("Mã sản phẩm: ");
                     jTextFieldsForm[index] = new JTextField(productBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -155,20 +159,46 @@ public class ProductGUI extends JPanel {
                     pnlProductConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
-                case "CATEGORY_ID" -> pnlProductConfiguration.add(cbbCategoryID);
-                case "SIZED" -> pnlProductConfiguration.add(cbbSize);
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên sản phẩm: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlProductConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "CATEGORY_ID" -> {
+                    jLabelsForm[i].setText("Mã thể loại: ");
+                    pnlProductConfiguration.add(cbbCategoryID);
+                }
+                case "SIZED" -> {
+                    jLabelsForm[i].setText("Size: ");
+                    pnlProductConfiguration.add(cbbSize);
+                }
+                case "COST" -> {
+                    jLabelsForm[i].setText("Giá: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlProductConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "IMAGE" -> {
-                    btChooseImg.setText("Choose an image");
+                    jLabelsForm[i].setText("Hình ảnh: ");
+                    btChooseImg.setText("Chọn hình ảnh");
                     btChooseImg.setCursor(new Cursor(Cursor.HAND_CURSOR));
                     btChooseImg.setFocusPainted(false);
                     btChooseImg.addActionListener(this::btnProductImageActionPerformed);
                     pnlProductConfiguration.add(btChooseImg);
                 }
                 default -> {
-                    jTextFieldsForm[index] = new JTextField();
-                    jTextFieldsForm[index].setText(null);
-                    pnlProductConfiguration.add(jTextFieldsForm[index]);
-                    index++;
                 }
             }
         }
@@ -189,8 +219,8 @@ public class ProductGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -211,8 +241,8 @@ public class ProductGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -231,8 +261,8 @@ public class ProductGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -253,8 +283,8 @@ public class ProductGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -282,13 +312,13 @@ public class ProductGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("CATEGORY_ID")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã thể loại")) {
             txtSearch.setVisible(false);
             cbbSizeSearch.setVisible(false);
             cbbCategoryIDSearch.setSelectedIndex(0);
             cbbCategoryIDSearch.setVisible(true);
             categoryIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("SIZED")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Size")) {
             txtSearch.setVisible(false);
             cbbCategoryIDSearch.setVisible(false);
             cbbSizeSearch.setSelectedIndex(0);
@@ -306,7 +336,16 @@ public class ProductGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(productBLL.getProductList());
         } else {
-            loadDataTable(productBLL.findProducts(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "PRODUCT_ID";
+                case 1 -> key = "NAME";
+                case 4 -> key = "COST";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(productBLL.findProducts(key, txtSearch.getText()));
         }
     }
 
@@ -319,7 +358,7 @@ public class ProductGUI extends JPanel {
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            chosenImg = "img/".concat(file.getName());
+            chosenImg = "img/products/" + file.getName();
             imgProduct.setIcon(new ImageIcon(chosenImg));
         }
     }
@@ -328,13 +367,13 @@ public class ProductGUI extends JPanel {
         if (checkInput()) {
             Product newProduct = getForm();
             if (productBLL.exists(newProduct))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.addProduct(newProduct))
-                JOptionPane.showMessageDialog(this, "Successfully added new product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm sản phẩm mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -348,13 +387,13 @@ public class ProductGUI extends JPanel {
             String currentSized = dataTable.getValueAt(selectedRow, 3).toString();
             boolean valueChanged = !newProduct.getName().equals(currentName) || !newProduct.getCategoryID().equals(currentCategoryID) || !newProduct.getSized().equals(currentSized);
             if (productBLL.exists(newProduct))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && productBLL.exists(Map.of("NAME", newProduct.getName(), "CATEGORY_ID", newProduct.getCategoryID(), "SIZED", newProduct.getSized())))
-                JOptionPane.showMessageDialog(this, "Product already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sản phẩm đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (productBLL.updateProduct(newProduct))
-                JOptionPane.showMessageDialog(this, "Successfully updated product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(productBLL.getProductList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -362,14 +401,20 @@ public class ProductGUI extends JPanel {
     }
 
     private void deleteProduct() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this product?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá sản phẩm này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Product product = new Product();
             product.setProductID(jTextFieldsForm[0].getText());
             if (productBLL.deleteProduct(product))
-                JOptionPane.showMessageDialog(this, "Successfully deleted product!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá sản phẩm thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete product!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá sản phẩm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -403,7 +448,7 @@ public class ProductGUI extends JPanel {
         jTextFieldsForm[1].setText(product[1]);
         cbbCategoryID.setSelectedItem(product[2]);
         cbbSize.setSelectedItem(product[3]);
-        jTextFieldsForm[2].setText(String.format("%.1f VND", Double.parseDouble(product[4])));
+        jTextFieldsForm[2].setText(VNString.currency(Double.parseDouble(product[4])));
         for (Product product1 : productBLL.getProductList()) {
             if (product1.getProductID().equals(product[0])) {
                 chosenImg = product1.getImage();
@@ -427,7 +472,7 @@ public class ProductGUI extends JPanel {
             switch (i) {
                 case 0 -> productID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
-                case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("(\\s|VND|VNĐ)", ""));
+                case 2 -> cost = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("\\D+", ""));
                 default -> {
                 }
             }
@@ -449,7 +494,7 @@ public class ProductGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -458,18 +503,11 @@ public class ProductGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[2].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
-            // Cost must be a double >= 0.0
-            jTextFieldsForm[2].requestFocusInWindow();
-            jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Cost must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên sản phẩm không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (chosenImg == null) {
-            JOptionPane.showMessageDialog(this, "Image can't be empty", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Hình ảnh sản phẩm không được trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
             btChooseImg.doClick();
             return false;
         }

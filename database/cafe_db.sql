@@ -42,15 +42,15 @@ CREATE TABLE `account` (
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
 ('AC000', 'admin', 'admin', 'DE00', 'ST00', b'0'),
-('AC001', 'dungboi', '123', 'DE01', 'ST01', b'0'),
-('AC010', 'zidan', '123', 'DE01', 'ST04', b'0'),
-('AC002', 'legiang', '123', 'DE04', 'ST08', b'0'),
-('AC003', 'longbott', '123', 'DE01', 'ST03', b'0'),
-('AC004', 'quangduy', '123', 'DE01', 'ST02', b'0'),
-('AC005', 'tienmanh', '123', 'DE03', 'ST06', b'0'),
-('AC006', 'vanlam', '123', 'DE05', 'ST07', b'0'),
-('AC007', 'xuanmai', '123', 'DE06', 'ST05', b'0'),
-('AC008', 'xuanphuc', '123', 'DE02', 'ST09', b'0');
+('AC001', 'dungboi', 'Dung123', 'DE01', 'ST01', b'0'),
+('AC010', 'zidan', 'Dan123', 'DE01', 'ST04', b'0'),
+('AC002', 'legiang', 'Giang123', 'DE04', 'ST08', b'0'),
+('AC003', 'longbott', 'Long123', 'DE01', 'ST03', b'0'),
+('AC004', 'quangduy', 'Duy123', 'DE01', 'ST02', b'0'),
+('AC005', 'tienmanh', 'Manh123', 'DE03', 'ST06', b'0'),
+('AC006', 'vanlam', 'Lam123', 'DE05', 'ST07', b'0'),
+('AC007', 'xuanmai', 'Mai123', 'DE06', 'ST05', b'0'),
+('AC008', 'xuanphuc', 'Phuc123', 'DE02', 'ST09', b'0');
 
 -- --------------------------------------------------------
 
@@ -224,7 +224,7 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBERSHIP`, `DOSUP`, `DELETED`) VALUES
 ('CUS000', 'VÃNG LAI', b'1', '1000-01-01', '', b'0', '1000-01-01', b'0'),
 ('CUS001', 'NGUYỄN VĂN NAM', b'1', '2000-12-01', '0862994282', b'0', '2020-09-08', b'0'),
-('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '096756326', b'1', '2021-02-07', b'0'),
+('CUS002', 'HOÀNG XUÂN BẮC', b'1', '2001-09-03', '0967563268', b'1', '2021-02-07', b'0'),
 ('CUS003', 'NGUYỄN THỊ THU HIỀN', b'0', '2004-05-04', '0981485618', b'0', '2021-05-06', b'1'),
 ('CUS004', 'NGUYỄN VĂN THẮNG', b'1', '1999-08-10', '0861149539', b'1', '2021-08-03', b'0'),
 ('CUS005', 'NGUYỄN THỊ YẾN NHI', b'0', '2004-12-08', '0392258127', b'1', '2022-03-19', b'0'),
@@ -444,71 +444,71 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`PRODUCT_ID`, `NAME`, `CATEGORY_ID`, `SIZED`, `COST`, `IMAGE`, `DELETED`) VALUES
-('PR001', 'PHIN SỮA ĐÁ', 'CA01', "S", 29000, 'img/PR001.jpg', b'0'),
-('PR002', 'PHIN SỮA ĐÁ', 'CA01', "M", 39000, 'img/PR002.jpg', b'0'),
-('PR003', 'PHIN SỮA ĐÁ', 'CA01', "L", 45000, 'img/PR003.jpg', b'0'),
-('PR004', 'PHIN ĐEN ĐÁ', 'CA01', "S", 29000, 'img/PR004.jpg', b'0'),
-('PR005', 'PHIN ĐEN ĐÁ', 'CA01', "M", 35000, 'img/PR005.jpg', b'0'),
-('PR006', 'PHIN ĐEN ĐÁ', 'CA01', "L", 39000, 'img/PR006.jpg', b'0'),
-('PR007', 'BẠC XỈU', 'CA01', "S", 29000, 'img/PR007.jpg', b'0'),
-('PR008', 'BẠC XỈU', 'CA01', "M", 39000, 'img/PR008.jpg', b'0'),
-('PR009', 'BẠC XỈU', 'CA01', "L", 45000, 'img/PR009.jpg', b'0'),
-('PR010', 'PHINDI HẠNH NHÂN', 'CA02', "S", 45000, 'img/PR010.jpg', b'0'),
-('PR011', 'PHINDI HẠNH NHÂN', 'CA02', "M", 49000, 'img/PR011.jpg', b'0'),
-('PR012', 'PHINDI HẠNH NHÂN', 'CA02', "L", 55000, 'img/PR012.jpg', b'0'),
-('PR013', 'PHINDI KEM SỮA', 'CA02', "S", 45000, 'img/PR013.jpg', b'0'),
-('PR014', 'PHINDI KEM SỮA', 'CA02', "M", 49000, 'img/PR014.jpg', b'0'),
-('PR015', 'PHINDI KEM SỮA', 'CA02', "L", 55000, 'img/PR015.jpg', b'0'),
-('PR016', 'PHINDI CHOCO', 'CA02', "S", 45000, 'img/PR016.jpg', b'0'),
-('PR017', 'PHINDI CHOCO', 'CA02', "M", 49000, 'img/PR017.jpg', b'0'),
-('PR018', 'PHINDI CHOCO', 'CA02', "L", 55000, 'img/PR018.jpg', b'0'),
-('PR019', 'BÁNH MÌ PATE', 'CA03', "null", 19000, 'img/PR019.jpg', b'0'),
-('PR020', 'BÁNH MÌ GÀ PHÔ MAI', 'CA03', "null", 19000, 'img/PR020.jpg', b'0'),
-('PR021', 'TRÀ SEN VÀNG', 'CA04', "S", 45000, 'img/PR021.jpg', b'0'),
-('PR022', 'TRÀ SEN VÀNG', 'CA04', "M", 55000, 'img/PR022.jpg', b'0'),
-('PR023', 'TRÀ SEN VÀNG', 'CA04', "L", 65000, 'img/PR023.jpg', b'0'),
-('PR024', 'TRÀ THẠCH ĐÀO', 'CA04', "S", 45000, 'img/PR024.jpg', b'0'),
-('PR025', 'TRÀ THẠCH ĐÀO', 'CA04', "M", 55000, 'img/PR025.jpg', b'0'),
-('PR026', 'TRÀ THẠCH ĐÀO', 'CA04', "L", 65000, 'img/PR026.jpg', b'0'),
-('PR027', 'TRÀ THANH ĐÀO', 'CA04', "S", 45000, 'img/PR027.jpg', b'0'),
-('PR028', 'TRÀ THANH ĐÀO', 'CA04', "M", 55000, 'img/PR028.jpg', b'0'),
-('PR029', 'TRÀ THANH ĐÀO', 'CA04', "L", 65000, 'img/PR029.jpg', b'0'),
-('PR030', 'TRÀ THẠCH VẢI', 'CA04', "S", 45000, 'img/PR030.jpg', b'0'),
-('PR031', 'TRÀ THẠCH VẢI', 'CA04', "M", 55000, 'img/PR031.jpg', b'0'),
-('PR032', 'TRÀ THẠCH VẢI', 'CA04', "L", 65000, 'img/PR032.jpg', b'0'),
-('PR033', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "S", 45000, 'img/PR033.jpg', b'0'),
-('PR034', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "M", 55000, 'img/PR034.jpg', b'0'),
-('PR035', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "L", 65000, 'img/PR035.jpg', b'0'),
-('PR036', 'BÁNH CHUỐI', 'CA05', "null", 29000, 'img/PR036.jpg', b'0'),
-('PR037', 'PHÔ MAI CHANH DÂY', 'CA05', "null", 29000, 'img/PR037.jpg', b'0'),
-('PR038', 'TIRAMISU', 'CA05', "null", 35000, 'img/PR038.jpg', b'0'),
-('PR039', 'MOUSSE ĐÀO', 'CA05', "null", 35000, 'img/PR039.jpg', b'0'),
-('PR040', 'PHÔ MAI TRÀ XANH', 'CA05', "null", 35000, 'img/PR040.jpg', b'0'),
-('PR041', 'PHÔ MAI CARAMEL', 'CA05', "null", 35000, 'img/PR041.jpg', b'0'),
-('PR042', 'PHÔ MAI CACAO', 'CA05', "null", 35000, 'img/PR042.jpg', b'0'),
-('PR043', 'FREEZE TRÀ XANH', 'CA06', "S", 55000, 'img/PR043.jpg', b'0'),
-('PR044', 'FREEZE TRÀ XANH', 'CA06', "M", 65000, 'img/PR044.jpg', b'0'),
-('PR045', 'FREEZE TRÀ XANH', 'CA06', "L", 69000, 'img/PR045.jpg', b'0'),
-('PR046', 'CARAMEL PHIN FREEZE', 'CA06', "S", 55000, 'img/PR046.jpg', b'0'),
-('PR047', 'CARAMEL PHIN FREEZE', 'CA06', "M", 65000, 'img/PR047.jpg', b'0'),
-('PR048', 'CARAMEL PHIN FREEZE', 'CA06', "L", 69000, 'img/PR048.jpg', b'0'),
-('PR049', 'COOKIES & CREAM', 'CA06', "S", 55000, 'img/PR049.jpg', b'0'),
-('PR050', 'COOKIES & CREAM', 'CA06', "M", 65000, 'img/PR050.jpg', b'0'),
-('PR051', 'COOKIES & CREAM', 'CA06', "L", 69000, 'img/PR051.jpg', b'0'),
-('PR052', 'FREEZE SÔ-CÔ-LA', 'CA06', "S", 55000, 'img/PR052.jpg', b'0'),
-('PR053', 'FREEZE SÔ-CÔ-LA', 'CA06', "M", 65000, 'img/PR053.jpg', b'0'),
-('PR054', 'FREEZE SÔ-CÔ-LA', 'CA06', "L", 69000, 'img/PR054.jpg', b'0'),
-('PR055', 'CLASSIC PHIN FREEZE', 'CA06', "S", 55000, 'img/PR055.jpg', b'0'),
-('PR056', 'CLASSIC PHIN FREEZE', 'CA06', "M", 65000, 'img/PR056.jpg', b'0'),
-('PR057', 'CLASSIC PHIN FREEZE', 'CA06', "L", 69000, 'img/PR057.jpg', b'0'),
-('PR058', 'TRÀ SỮA BẠC HÀ', 'CA07', "S", 54000, 'img/PR058.jpg', b'0'),
-('PR059', 'TRÀ SỮA BẠC HÀ', 'CA07', "M", 59000, 'img/PR059.jpg', b'0'),
-('PR060', 'TRÀ SỮA TRÀ XANH', 'CA07', "S", 54000, 'img/PR060.jpg', b'0'),
-('PR061', 'TRÀ SỮA TRÀ XANH', 'CA07', "M", 59000, 'img/PR061.jpg', b'0'),
-('PR062', 'TRÀ SỮA DÂU', 'CA07', "S", 54000, 'img/PR062.jpg', b'0'),
-('PR063', 'TRÀ SỮA DÂU', 'CA07', "M", 59000, 'img/PR063.jpg', b'0'),
-('PR064', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', "S", 54000, 'img/PR064.jpg', b'0'),
-('PR065', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', "M", 59000, 'img/PR065.jpg', b'0');
+('PR001', 'PHIN SỮA ĐÁ', 'CA01', "S", 29000, 'img/products/PR001.jpg', b'0'),
+('PR002', 'PHIN SỮA ĐÁ', 'CA01', "M", 39000, 'img/products/PR002.jpg', b'0'),
+('PR003', 'PHIN SỮA ĐÁ', 'CA01', "L", 45000, 'img/products/PR003.jpg', b'0'),
+('PR004', 'PHIN ĐEN ĐÁ', 'CA01', "S", 29000, 'img/products/PR004.jpg', b'0'),
+('PR005', 'PHIN ĐEN ĐÁ', 'CA01', "M", 35000, 'img/products/PR005.jpg', b'0'),
+('PR006', 'PHIN ĐEN ĐÁ', 'CA01', "L", 39000, 'img/products/PR006.jpg', b'0'),
+('PR007', 'BẠC XỈU', 'CA01', "S", 29000, 'img/products/PR007.jpg', b'0'),
+('PR008', 'BẠC XỈU', 'CA01', "M", 39000, 'img/products/PR008.jpg', b'0'),
+('PR009', 'BẠC XỈU', 'CA01', "L", 45000, 'img/products/PR009.jpg', b'0'),
+('PR010', 'PHINDI HẠNH NHÂN', 'CA02', "S", 45000, 'img/products/PR010.jpg', b'0'),
+('PR011', 'PHINDI HẠNH NHÂN', 'CA02', "M", 49000, 'img/products/PR011.jpg', b'0'),
+('PR012', 'PHINDI HẠNH NHÂN', 'CA02', "L", 55000, 'img/products/PR012.jpg', b'0'),
+('PR013', 'PHINDI KEM SỮA', 'CA02', "S", 45000, 'img/products/PR013.jpg', b'0'),
+('PR014', 'PHINDI KEM SỮA', 'CA02', "M", 49000, 'img/products/PR014.jpg', b'0'),
+('PR015', 'PHINDI KEM SỮA', 'CA02', "L", 55000, 'img/products/PR015.jpg', b'0'),
+('PR016', 'PHINDI CHOCO', 'CA02', "S", 45000, 'img/products/PR016.jpg', b'0'),
+('PR017', 'PHINDI CHOCO', 'CA02', "M", 49000, 'img/products/PR017.jpg', b'0'),
+('PR018', 'PHINDI CHOCO', 'CA02', "L", 55000, 'img/products/PR018.jpg', b'0'),
+('PR019', 'BÁNH MÌ PATE', 'CA03', "null", 19000, 'img/products/PR019.jpg', b'0'),
+('PR020', 'BÁNH MÌ GÀ PHÔ MAI', 'CA03', "null", 19000, 'img/products/PR020.jpg', b'0'),
+('PR021', 'TRÀ SEN VÀNG', 'CA04', "S", 45000, 'img/products/PR021.jpg', b'0'),
+('PR022', 'TRÀ SEN VÀNG', 'CA04', "M", 55000, 'img/products/PR022.jpg', b'0'),
+('PR023', 'TRÀ SEN VÀNG', 'CA04', "L", 65000, 'img/products/PR023.jpg', b'0'),
+('PR024', 'TRÀ THẠCH ĐÀO', 'CA04', "S", 45000, 'img/products/PR024.jpg', b'0'),
+('PR025', 'TRÀ THẠCH ĐÀO', 'CA04', "M", 55000, 'img/products/PR025.jpg', b'0'),
+('PR026', 'TRÀ THẠCH ĐÀO', 'CA04', "L", 65000, 'img/products/PR026.jpg', b'0'),
+('PR027', 'TRÀ THANH ĐÀO', 'CA04', "S", 45000, 'img/products/PR027.jpg', b'0'),
+('PR028', 'TRÀ THANH ĐÀO', 'CA04', "M", 55000, 'img/products/PR028.jpg', b'0'),
+('PR029', 'TRÀ THANH ĐÀO', 'CA04', "L", 65000, 'img/products/PR029.jpg', b'0'),
+('PR030', 'TRÀ THẠCH VẢI', 'CA04', "S", 45000, 'img/products/PR030.jpg', b'0'),
+('PR031', 'TRÀ THẠCH VẢI', 'CA04', "M", 55000, 'img/products/PR031.jpg', b'0'),
+('PR032', 'TRÀ THẠCH VẢI', 'CA04', "L", 65000, 'img/products/PR032.jpg', b'0'),
+('PR033', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "S", 45000, 'img/products/PR033.jpg', b'0'),
+('PR034', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "M", 55000, 'img/products/PR034.jpg', b'0'),
+('PR035', 'TRÀ XANH ĐẬU ĐỎ', 'CA04', "L", 65000, 'img/products/PR035.jpg', b'0'),
+('PR036', 'BÁNH CHUỐI', 'CA05', "null", 29000, 'img/products/PR036.jpg', b'0'),
+('PR037', 'PHÔ MAI CHANH DÂY', 'CA05', "null", 29000, 'img/products/PR037.jpg', b'0'),
+('PR038', 'TIRAMISU', 'CA05', "null", 35000, 'img/products/PR038.jpg', b'0'),
+('PR039', 'MOUSSE ĐÀO', 'CA05', "null", 35000, 'img/products/PR039.jpg', b'0'),
+('PR040', 'PHÔ MAI TRÀ XANH', 'CA05', "null", 35000, 'img/products/PR040.jpg', b'0'),
+('PR041', 'PHÔ MAI CARAMEL', 'CA05', "null", 35000, 'img/products/PR041.jpg', b'0'),
+('PR042', 'PHÔ MAI CACAO', 'CA05', "null", 35000, 'img/products/PR042.jpg', b'0'),
+('PR043', 'FREEZE TRÀ XANH', 'CA06', "S", 55000, 'img/products/PR043.jpg', b'0'),
+('PR044', 'FREEZE TRÀ XANH', 'CA06', "M", 65000, 'img/products/PR044.jpg', b'0'),
+('PR045', 'FREEZE TRÀ XANH', 'CA06', "L", 69000, 'img/products/PR045.jpg', b'0'),
+('PR046', 'CARAMEL PHIN FREEZE', 'CA06', "S", 55000, 'img/products/PR046.jpg', b'0'),
+('PR047', 'CARAMEL PHIN FREEZE', 'CA06', "M", 65000, 'img/products/PR047.jpg', b'0'),
+('PR048', 'CARAMEL PHIN FREEZE', 'CA06', "L", 69000, 'img/products/PR048.jpg', b'0'),
+('PR049', 'COOKIES & CREAM', 'CA06', "S", 55000, 'img/products/PR049.jpg', b'0'),
+('PR050', 'COOKIES & CREAM', 'CA06', "M", 65000, 'img/products/PR050.jpg', b'0'),
+('PR051', 'COOKIES & CREAM', 'CA06', "L", 69000, 'img/products/PR051.jpg', b'0'),
+('PR052', 'FREEZE SÔ-CÔ-LA', 'CA06', "S", 55000, 'img/products/PR052.jpg', b'0'),
+('PR053', 'FREEZE SÔ-CÔ-LA', 'CA06', "M", 65000, 'img/products/PR053.jpg', b'0'),
+('PR054', 'FREEZE SÔ-CÔ-LA', 'CA06', "L", 69000, 'img/products/PR054.jpg', b'0'),
+('PR055', 'CLASSIC PHIN FREEZE', 'CA06', "S", 55000, 'img/products/PR055.jpg', b'0'),
+('PR056', 'CLASSIC PHIN FREEZE', 'CA06', "M", 65000, 'img/products/PR056.jpg', b'0'),
+('PR057', 'CLASSIC PHIN FREEZE', 'CA06', "L", 69000, 'img/products/PR057.jpg', b'0'),
+('PR058', 'TRÀ SỮA BẠC HÀ', 'CA07', "S", 54000, 'img/products/PR058.jpg', b'0'),
+('PR059', 'TRÀ SỮA BẠC HÀ', 'CA07', "M", 59000, 'img/products/PR059.jpg', b'0'),
+('PR060', 'TRÀ SỮA TRÀ XANH', 'CA07', "S", 54000, 'img/products/PR060.jpg', b'0'),
+('PR061', 'TRÀ SỮA TRÀ XANH', 'CA07', "M", 59000, 'img/products/PR061.jpg', b'0'),
+('PR062', 'TRÀ SỮA DÂU', 'CA07', "S", 54000, 'img/products/PR062.jpg', b'0'),
+('PR063', 'TRÀ SỮA DÂU', 'CA07', "M", 59000, 'img/products/PR063.jpg', b'0'),
+('PR064', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', "S", 54000, 'img/products/PR064.jpg', b'0'),
+('PR065', 'TRÀ SỮA SÔ-CÔ-LA', 'CA07', "M", 59000, 'img/products/PR065.jpg', b'0');
 
 --
 -- Triggers `product`
@@ -613,7 +613,7 @@ INSERT INTO `receipt_details` (`RECEIPT_ID`, `INGREDIENT_ID`, `QUANTITY`) VALUES
 -- Triggers `receipt_details`
 --
 DELIMITER $$
-CREATE TRIGGER `InserReceipt_Details` AFTER INSERT ON `receipt_details` FOR EACH ROW BEGIN
+CREATE TRIGGER `InsertReceipt_Details` AFTER INSERT ON `receipt_details` FOR EACH ROW BEGIN
 UPDATE ingredient
 SET ingredient.QUANTITY = ingredient.QUANTITY + NEW.QUANTITY
 WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID;
@@ -706,6 +706,28 @@ INSERT INTO `receipt` (`RECEIPT_ID`, `STAFF_ID`, `DOR`, `GRAND_TOTAL`, `SUPPLIER
 ('REC060', 'ST06', '2022-01-01', 300000, 'SUP001',b'0'),
 ('REC061', 'ST06', '2023-01-01', 300000, 'SUP001',b'0'),
 ('REC062', 'ST06', '2023-03-01', 750000, 'SUP001',b'0');
+
+--
+-- Triggers `receipt`
+--
+DELIMITER $$
+CREATE TRIGGER `UpdateReceipt` AFTER UPDATE ON `receipt`
+ FOR EACH ROW BEGIN
+IF NEW.DELETED <> OLD.DELETED THEN
+	CREATE TEMPORARY TABLE my_temp_table ( INGREDIENT_ID VARCHAR(10) NOT NULL, QUANTITY DOUBLE NOT NULL, PRIMARY KEY (INGREDIENT_ID) );
+	INSERT INTO my_temp_table (INGREDIENT_ID, QUANTITY)
+    SELECT RD.INGREDIENT_ID, RD.QUANTITY
+    FROM receipt_details RD
+    WHERE RD.RECEIPT_ID = NEW.RECEIPT_ID;
+
+	UPDATE ingredient
+    SET ingredient.QUANTITY = ingredient.QUANTITY - (SELECT QUANTITY
+                                                     FROM my_temp_table WHERE my_temp_table.INGREDIENT_ID = ingredient.INGREDIENT_ID)
+    WHERE ingredient.INGREDIENT_ID IN (SELECT INGREDIENT_ID FROM my_temp_table);
+END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1249,15 +1271,44 @@ CREATE TABLE `staff` (
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
 ('ST00', 'ADMIN', b'0', '1000-01-01', '', '', '', 0, '1000-01-01', b'0'),
-('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '2019-1-1', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '2019-1-1', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
-('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '2019-1-1', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
-('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '2019-1-1', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
-('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '2019-2-2', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
-('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '2019-10-3', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
-('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
-('ST08', 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '2022-3-9', '0340734629', 'phucvu@gmail.com', 3100000, '2023-09-28', b'0'),
-('ST09', 'HOÀNG XUÂN PHÚC', b'1', '2001-04-11', '2022-5-10', '0963527895', 'sale@gmail.com', 2000000, '2023-08-17', b'0');
+('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '531 Nguyễn Oanh, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
+('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '514/26 Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
+('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '153 Lê Hoàng Phái, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
+('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '168 Lê Đức Thọ, Phường 15, Gò Vấp, Thành phố Hồ Chí Minh', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
+('ST06', 'ĐINH TIẾN MẠNH', b'1', '2002-09-20', '242 Nguyễn Văn Lượng, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0825367498', 'nhakho@gmail.com', 3100000, '2023-05-16', b'0'),
+('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '7 Phan Văn Trị, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
+('ST08', 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '190 Quang Trung, Phường 10, Gò Vấp, Thành phố Hồ Chí Minh', '0340734629', 'phucvu@gmail.com', 3100000, '2023-09-28', b'0'),
+('ST09', 'HOÀNG XUÂN PHÚC', b'1', '2001-04-11', '526 Lê Quang Định, Phường 1, Gò Vấp, Thành phố Hồ Chí Minh', '0963527895', 'sale@gmail.com', 2000000, '2023-08-17', b'0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statistic`
+--
+
+CREATE TABLE `statistic` (
+  `STATISTIC_ID` varchar(10) NOT NULL,
+  `DATE` date DEFAULT NULL,
+  `AMOUNT` double DEFAULT NULL,
+  `INGREDIENT_COST` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `statistic`
+--
+
+INSERT INTO `statistic` (`STATISTIC_ID`, `DATE`, `AMOUNT`, `INGREDIENT_COST`) VALUES
+('STAT0001', '2020-09-08', 239000, 150000),
+('STAT0002', '2021-02-07', 195000, 150000),
+('STAT0003', '2021-05-06', 110000, 100000),
+('STAT0004', '2021-08-03', 175000, 150000),
+('STAT0005', '2022-03-19', 173000, 150000),
+('STAT0006', '2022-03-28', 109000, 100000),
+('STAT0007', '2022-05-05', 135000, 100000),
+('STAT0008', '2022-09-08', 90000, 50000),
+('STAT0009', '2023-01-09', 277000, 150000),
+('STAT0010', '2023-03-07', 207000, 150000);
 
 -- --------------------------------------------------------
 

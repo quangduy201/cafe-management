@@ -6,12 +6,16 @@ import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.VNString;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -32,6 +36,8 @@ public class StaffGUI extends JPanel {
     private JPanel mode;
     private JPanel radiusBtGender;
     private JLabel[] jLabelsForm;
+    private JDateChooser[] jDateChooser;
+    private JTextField[] dateTextField;
     private JComboBox<Object> cbbSearchFilter;
     private JRadioButton rbMale;
     private JRadioButton rbMaleSearch;
@@ -45,6 +51,7 @@ public class StaffGUI extends JPanel {
     private Button btRef;
 
     public StaffGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -62,13 +69,15 @@ public class StaffGUI extends JPanel {
         mode = new JPanel();
         radiusBtGender = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(columnNames.subList(0, columnNames.size() - 1).toArray());
+        jDateChooser = new JDateChooser[2];
+        dateTextField = new JTextField[2];
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Địa chỉ", "Điện thoại", "Email", "Lương", "Ngày vào làm"});
         rbMale = new JRadioButton("Nam", true);
         rbMaleSearch = new JRadioButton("Nam", true);
         rbFemale = new JRadioButton("Nữ");
         rbFemaleSearch = new JRadioButton("Nữ");
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField[columnNames.size() - 2];
+        jTextFieldsForm = new JTextField[columnNames.size() - 4];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
@@ -131,7 +140,7 @@ public class StaffGUI extends JPanel {
         });
         search.add(txtSearch);
 
-        dataTable = new DataTable(staffBLL.getData(), columnNames.subList(0, columnNames.size() - 1).toArray(), e -> fillForm());
+        dataTable = new DataTable(staffBLL.getData(), new String[]{"Mã nhân viên", "Tên nhân viên", "Giới tính", "Ngày sinh", "Địa chỉ", "Điện thoại", "Email", "Lương", "Ngày vào làm"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -141,13 +150,32 @@ public class StaffGUI extends JPanel {
         pnlStaffConfiguration.setPreferredSize(new Dimension(635, 450));
         roundPanel2.add(pnlStaffConfiguration, BorderLayout.NORTH);
 
+        Dimension inputFieldsSize = new Dimension(200, 30);
+        for (int i = 0; i < 2; i++) {
+            jDateChooser[i] = new JDateChooser();
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(inputFieldsSize);
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            dateTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            dateTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            int index = i;
+            dateTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(dateTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+
         int index = 0;
         for (int i = 0; i < columnNames.size() - 1; i++) {
             jLabelsForm[i] = new JLabel();
-            jLabelsForm[i].setText(columnNames.get(i) + ": ");
             pnlStaffConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "STAFF_ID" -> {
+                    jLabelsForm[i].setText("Mã nhân viên: ");
                     jTextFieldsForm[index] = new JTextField(staffBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
@@ -155,7 +183,15 @@ public class StaffGUI extends JPanel {
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
+                case "NAME" -> {
+                    jLabelsForm[i].setText("Tên khách hàng: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
                 case "GENDER" -> {
+                    jLabelsForm[i].setText("Giới tính: ");
                     JPanel panel = new JPanel(new FlowLayout());
                     ButtonGroup buttonGroup = new ButtonGroup();
                     panel.setBackground(null);
@@ -167,11 +203,61 @@ public class StaffGUI extends JPanel {
                     panel.add(rbFemale);
                     pnlStaffConfiguration.add(panel);
                 }
-                default -> {
+                case "DOB" -> {
+                    jLabelsForm[i].setText("Ngày sinh: ");
+                    pnlStaffConfiguration.add(jDateChooser[0]);
+                }
+                case "ADDRESS" -> {
+                    jLabelsForm[i].setText("Địa chỉ: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
                     index++;
+                }
+                case "PHONE" -> {
+                    jLabelsForm[i].setText("Điện thoại: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "EMAIL" -> {
+                    jLabelsForm[i].setText("Email: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "SALARY" -> {
+                    jLabelsForm[i].setText("Lương: ");
+                    jTextFieldsForm[index] = new JTextField();
+                    jTextFieldsForm[index].setText(null);
+                    jTextFieldsForm[index].addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyTyped(KeyEvent e) {
+                            char c = e.getKeyChar();
+                            if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE) {
+                                e.consume();
+                            }
+                        }
+                    });
+                    pnlStaffConfiguration.add(jTextFieldsForm[index]);
+                    index++;
+                }
+                case "DOENTRY" -> {
+                    jLabelsForm[i].setText("Ngày vào làm: ");
+                    pnlStaffConfiguration.add(jDateChooser[1]);
+                }
+                default -> {
                 }
             }
         }
@@ -190,8 +276,8 @@ public class StaffGUI extends JPanel {
 
             btAdd.setBackground(new Color(35, 166, 97));
             btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/plus.png"));
-            btAdd.setText("  Add");
+            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
+            btAdd.setText("  Thêm");
             btAdd.setColor(new Color(240, 240, 240));
             btAdd.setColorClick(new Color(141, 222, 175));
             btAdd.setColorOver(new Color(35, 166, 97));
@@ -212,8 +298,8 @@ public class StaffGUI extends JPanel {
         if (decentralizationMode == 3) {
             btUpd.setBackground(new Color(35, 166, 97));
             btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/wrench.png"));
-            btUpd.setText("  Update");
+            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
+            btUpd.setText("  Sửa");
             btUpd.setColor(new Color(240, 240, 240));
             btUpd.setColorClick(new Color(141, 222, 175));
             btUpd.setColorOver(new Color(35, 166, 97));
@@ -232,8 +318,8 @@ public class StaffGUI extends JPanel {
 
             btDel.setBackground(new Color(35, 166, 97));
             btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/delete.png"));
-            btDel.setText("  Delete");
+            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
+            btDel.setText("  Xoá");
             btDel.setColor(new Color(240, 240, 240));
             btDel.setColorClick(new Color(141, 222, 175));
             btDel.setColorOver(new Color(35, 166, 97));
@@ -254,8 +340,8 @@ public class StaffGUI extends JPanel {
         if (decentralizationMode > 1) {
             btRef.setBackground(new Color(35, 166, 97));
             btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/refresh.png"));
-            btRef.setText("  Refresh");
+            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
+            btRef.setText("  Làm mới");
             btRef.setColor(new Color(240, 240, 240));
             btRef.setColorClick(new Color(141, 222, 175));
             btRef.setColorOver(new Color(35, 166, 97));
@@ -275,7 +361,7 @@ public class StaffGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("GENDER")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Giới tính")) {
             txtSearch.setVisible(false);
             radiusBtGender.setVisible(true);
             genderSearch();
@@ -295,7 +381,21 @@ public class StaffGUI extends JPanel {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(staffBLL.getStaffList());
         } else {
-            loadDataTable(staffBLL.findStaffs(Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString(), txtSearch.getText()));
+            String key = null;
+            switch (cbbSearchFilter.getSelectedIndex()){
+                case 0 -> key = "STAFF_ID";
+                case 1 -> key = "NAME";
+                case 3 -> key = "DOB";
+                case 4 -> key = "ADDRESS";
+                case 5 -> key = "PHONE";
+                case 6 -> key = "EMAIL";
+                case 7 -> key = "SALARY";
+                case 8 -> key = "DOENTRY";
+                default -> {
+                }
+            }
+            assert key != null;
+            loadDataTable(staffBLL.findStaffs(key, txtSearch.getText()));
         }
     }
 
@@ -309,13 +409,13 @@ public class StaffGUI extends JPanel {
             }
             assert newStaff != null;
             if (staffBLL.exists(newStaff))
-                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (staffBLL.exists(Map.of("PHONE", newStaff.getPhone())))
-                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (staffBLL.addStaff(newStaff))
-                JOptionPane.showMessageDialog(this, "Successfully added new staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhân viên mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new staff!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm nhân viên mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -333,13 +433,13 @@ public class StaffGUI extends JPanel {
             String currentPhone = dataTable.getValueAt(selectedRow, 5).toString();
             boolean valueChanged = !newStaff.getPhone().equals(currentPhone);
             if (staffBLL.exists(newStaff))
-                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (valueChanged && staffBLL.exists(Map.of("PHONE", newStaff.getPhone())))
-                JOptionPane.showMessageDialog(this, "Staff already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (staffBLL.updateStaff(newStaff))
-                JOptionPane.showMessageDialog(this, "Successfully updated staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to update staff!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Sửa nhân viên thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             loadDataTable(staffBLL.getStaffList());
             dataTable.setRowSelectionInterval(selectedRow, selectedRow);
             fillForm();
@@ -347,14 +447,20 @@ public class StaffGUI extends JPanel {
     }
 
     private void deleteStaff() {
-        if (JOptionPane.showConfirmDialog(this, "Are you sure to delete this staff?",
-            "Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+        if (JOptionPane.showOptionDialog(this,
+            "Bạn có chắc chắn muốn xoá nhân viên này?",
+            "Xác nhận",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            new String[]{"Xoá", "Huỷ"},
+            "Xoá") == JOptionPane.YES_OPTION) {
             Staff staff = new Staff();
             staff.setStaffID(jTextFieldsForm[0].getText());
             if (staffBLL.deleteStaff(staff))
-                JOptionPane.showMessageDialog(this, "Successfully deleted staff!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhân viên thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to delete staff!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Xoá nhân viên thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
         }
     }
@@ -367,6 +473,8 @@ public class StaffGUI extends JPanel {
         for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
+        jDateChooser[0].setDate(null);
+        jDateChooser[1].setDate(null);
         rbMale.setSelected(true);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
@@ -388,12 +496,18 @@ public class StaffGUI extends JPanel {
         } else {
             rbFemale.setSelected(true);
         }
-        jTextFieldsForm[2].setText(staff[3]);
-        jTextFieldsForm[3].setText(staff[4]);
-        jTextFieldsForm[4].setText(staff[5]);
-        jTextFieldsForm[5].setText(staff[6]);
-        jTextFieldsForm[6].setText(String.format("%.1f VND", Double.parseDouble(staff[7])));
-        jTextFieldsForm[7].setText(staff[8]);
+        jTextFieldsForm[2].setText(staff[4]);
+        jTextFieldsForm[3].setText(staff[5]);
+        jTextFieldsForm[4].setText(staff[6]);
+        jTextFieldsForm[5].setText(VNString.currency(Double.parseDouble(staff[7])));
+        try {
+            Day date = Day.parseDay(staff[3]);
+            jDateChooser[0].setDate(date.toDate());
+            date = Day.parseDay(staff[8]);
+            jDateChooser[1].setDate(date.toDate());
+        } catch (Exception ignored) {
+
+        }
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -413,16 +527,16 @@ public class StaffGUI extends JPanel {
             switch (i) {
                 case 0 -> staffID = jTextFieldsForm[i].getText();
                 case 1 -> name = jTextFieldsForm[i].getText().toUpperCase();
-                case 2 -> dateOfBirth = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
-                case 3 -> address = jTextFieldsForm[i].getText();
-                case 4 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
-                case 5 -> email = jTextFieldsForm[i].getText();
-                case 6 -> salary = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("(\\s|VND|VNĐ)", ""));
-                case 7 -> dateOfEntry = Day.parseDay(jTextFieldsForm[i].getText().replaceAll("/", "-"));
+                case 2 -> address = jTextFieldsForm[i].getText();
+                case 3 -> phone = jTextFieldsForm[i].getText().replaceAll("^\\+?84", "0");
+                case 4 -> email = jTextFieldsForm[i].getText();
+                case 5 -> salary = Double.parseDouble(jTextFieldsForm[i].getText().replaceAll("\\D+", ""));
                 default -> {
                 }
             }
         }
+        dateOfBirth = new Day(jDateChooser[0].getDate());
+        dateOfEntry = new Day(jDateChooser[1].getDate());
         gender = rbMale.isSelected();
         return new Staff(staffID, name, gender, dateOfBirth, address, phone, email, salary, dateOfEntry, false);
     }
@@ -440,7 +554,7 @@ public class StaffGUI extends JPanel {
     public boolean checkInput() {
         for (JTextField textField : jTextFieldsForm) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -449,59 +563,28 @@ public class StaffGUI extends JPanel {
             // Name can't contain "|"
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên nhân viên không thể chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            if (!jTextFieldsForm[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[2].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
+        if (!jTextFieldsForm[2].getText().matches("^[^|]+$")) {
+            // Address can't contain "|"
             jTextFieldsForm[2].requestFocusInWindow();
             jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Địa chỉ không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[3].getText().matches("^[^|]+$")) {
-            // Address can't contain "|"
+        if (!jTextFieldsForm[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextFieldsForm[3].requestFocusInWindow();
             jTextFieldsForm[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Address can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[4].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
-            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
+        if (!jTextFieldsForm[4].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
+            // Email must follow "username@domain.name"
             jTextFieldsForm[4].requestFocusInWindow();
             jTextFieldsForm[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[5].getText().matches("^\\w+(\\.\\w+)*@\\w+(\\.\\w+)+")) {
-            // Email must follow "username@domain.name"
-            jTextFieldsForm[5].requestFocusInWindow();
-            jTextFieldsForm[5].selectAll();
-            JOptionPane.showMessageDialog(this, "Email must follow the pattern \"username@domain.name\"", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[6].getText().matches("^(?=.*\\d)\\d*\\.?\\d*\\s*(VND|VNĐ)$")) {
-            // Salary must be a double >= 0
-            jTextFieldsForm[6].requestFocusInWindow();
-            jTextFieldsForm[6].selectAll();
-            JOptionPane.showMessageDialog(this, "Salary must be a non-negative real number", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            if (!jTextFieldsForm[7].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextFieldsForm[7].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
-            jTextFieldsForm[7].requestFocusInWindow();
-            jTextFieldsForm[7].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of entry must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Email phải theo định dạng \"username@domain.name\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

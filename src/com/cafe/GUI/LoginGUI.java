@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
 import com.cafe.DTO.Account;
+import com.cafe.main.CafeManagement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -243,12 +244,14 @@ public class LoginGUI extends JFrame {
         AccountBLL accountBLL = new AccountBLL();
         List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'", "DELETED = 0");
         if (accountList.size() == 0) {
-            JOptionPane.showMessageDialog(this, "Username or password is incorrect!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } else {
             Account account = accountList.get(0);
-            JOptionPane.showMessageDialog(this, "Login successful!", "Notification", JOptionPane.INFORMATION_MESSAGE);
-            new HomeGUI(account).setVisible(true);
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             dispose();
+//            CafeManagement.homeGUI = new HomeGUI(account);
+            CafeManagement.homeGUI.setAccount(account);
+            CafeManagement.homeGUI.setVisible(true);
         }
     }
 
@@ -258,5 +261,13 @@ public class LoginGUI extends JFrame {
 
     private void minimize() {
         setState(Frame.ICONIFIED);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        textField.setText("Username");
+        passwordField.setText("Password");
+        System.gc();
+        super.setVisible(b);
     }
 }

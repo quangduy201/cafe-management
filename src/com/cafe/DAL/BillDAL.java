@@ -30,8 +30,8 @@ public class BillDAL extends Manager {
                     row.get(2), // staffID
                     Day.parseDay(row.get(3)), // dateOfPurchase
                     Double.parseDouble(row.get(4)), // total
-                    Double.parseDouble(row.get(5)),
-                    Double.parseDouble(row.get(6)),
+                    Double.parseDouble(row.get(5)), // receive
+                    Double.parseDouble(row.get(6)), // excess
                     Boolean.parseBoolean(row.get(7)) // deleted
                 );
             } catch (Exception e) {
@@ -94,5 +94,32 @@ public class BillDAL extends Manager {
             System.out.println("Error occurred in BillDAL.searchBills(): " + e.getMessage());
         }
         return new ArrayList<>();
+    }
+
+    public List<Bill> searchBills(Day start, Day end) {
+        try {
+            String[] conditions = new String[]{
+                "DOPURCHASE BETWEEN '" + start.toMySQLString() + "' AND '" + end.toMySQLString() + "'",
+                "DELETED = 0"
+            };
+            return convertToBills(read(conditions));
+        } catch (Exception e) {
+            System.out.println("Error occurred in BillDAL.searchBills(): " + e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+    public Bill getTheLastBill() {
+        try {
+            return convertToBills(executeQuery("""
+                SELECT * FROM `bill`
+                WHERE DELETED = 0
+                ORDER BY DOPURCHASE DESC
+                LIMIT 1;
+                """)).get(0);
+        } catch (Exception e) {
+            System.out.println("Error occurred in BillDAL.getTheLastBill(): " + e.getMessage());
+        }
+        return new Bill();
     }
 }

@@ -29,6 +29,7 @@ public class FrameCustomer extends JFrame {
     private JLabel[] label1;
     private JTextField jTextField[];
     public FrameCustomer(String phone) {
+        System.gc();
         this.phone = phone;
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
@@ -155,13 +156,13 @@ public class FrameCustomer extends JFrame {
         roundPanel[5].add(roundPanel1[4]);
 
 
-        label1[0].setText("CUSTOMER_ID:");
-        label1[1].setText("NAME:");
-        label1[2].setText("GENDER:");
-        label1[3].setText("DOB:");
-        label1[4].setText("PHONE:");
-        label1[5].setText("MEMBERSHIP:");
-        label1[6].setText("DOSUP:");
+        label1[0].setText("Mã khách hàng:");
+        label1[1].setText("Tên khách hàng:");
+        label1[2].setText("Giới tính:");
+        label1[3].setText("Ngày sinh:");
+        label1[4].setText("Điện thoại:");
+        label1[5].setText("Thành viên:");
+        label1[6].setText("Ngày đăng ký:");
 
         jTextField[0].setFont(new Font("Times New Roman", Font.BOLD, 16));
         jTextField[0].setHorizontalAlignment(SwingConstants.CENTER);
@@ -209,7 +210,7 @@ public class FrameCustomer extends JFrame {
         roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[5].add(roundPanel1[9]);
 
-        confirm.setIcon(new ImageIcon("img/add-user.png"));
+        confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
         confirm.setBorderPainted(false);
         confirm.setText("THÊM");
         confirm.setFocusable(false);
@@ -262,20 +263,20 @@ public class FrameCustomer extends JFrame {
             }
             assert newCustomer != null;
             if (customerBLL.exists(newCustomer))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
-                JOptionPane.showMessageDialog(this, "Customer already existed!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.addCustomer(newCustomer))
-                JOptionPane.showMessageDialog(this, "Successfully added new customer!", "Notification", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
-                JOptionPane.showMessageDialog(this, "Failed to add new customer!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public boolean checkInput() {
         for (JTextField textField : jTextField) {
             if (textField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill in information!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 textField.requestFocusInWindow();
                 return false;
             }
@@ -284,7 +285,7 @@ public class FrameCustomer extends JFrame {
             // Name can't contain "|"
             jTextField[1].requestFocusInWindow();
             jTextField[1].selectAll();
-            JOptionPane.showMessageDialog(this, "Name can't contain \"|\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
@@ -296,14 +297,14 @@ public class FrameCustomer extends JFrame {
         } catch (Exception exception) {
             jTextField[2].requestFocusInWindow();
             jTextField[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of birth must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày sinh phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if (!jTextField[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
             // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextField[3].requestFocusInWindow();
             jTextField[3].selectAll();
-            JOptionPane.showMessageDialog(this, "Phone must start with \"0x\" or \"+84x\" or \"84x\"\nwhere \"x\" in {3, 5, 7, 8, 9}", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         try {
@@ -315,7 +316,7 @@ public class FrameCustomer extends JFrame {
         } catch (Exception exception) {
             jTextField[4].requestFocusInWindow();
             jTextField[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Date of sign up must follow one of these patterns:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ngày đăng ký phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
