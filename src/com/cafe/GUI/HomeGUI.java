@@ -741,4 +741,8 @@ public class HomeGUI extends JFrame {
         this.dispose();
         new LoginGUI();
     }
+
+    public Account getAccount() {
+        return account;
+    }
 }
