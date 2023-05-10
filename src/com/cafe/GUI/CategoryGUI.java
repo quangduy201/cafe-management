@@ -1,6 +1,7 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
+import com.cafe.BLL.ProductBLL;
 import com.cafe.DTO.Category;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -301,7 +302,9 @@ public class CategoryGUI extends JPanel {
             "Xoá") == JOptionPane.YES_OPTION) {
             Category category = new Category();
             category.setCategoryID(jTextFieldsForm[0].getText());
-            if (categoryBLL.deleteCategory(category))
+            if (categoryBLL.findCategories("CATEGORY_ID", category.getCategoryID()).get(0).getQuantity() > 0) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa thể loại có sản phẩm đang kinh doanh.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            } else if (categoryBLL.deleteCategory(category))
                 JOptionPane.showMessageDialog(this, "Xoá thể loại thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             else
                 JOptionPane.showMessageDialog(this, "Xoá thể loại thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);

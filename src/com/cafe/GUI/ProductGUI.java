@@ -50,7 +50,7 @@ public class ProductGUI extends JPanel {
     private Button btUpd;
     private Button btDel;
     private Button btRef;
-    private String chosenImg = null;
+    private String chosenImg = "img/products/PR001.jpg";
 
     public ProductGUI(int decentralizationMode) {
         System.gc();

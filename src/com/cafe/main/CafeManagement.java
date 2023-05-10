@@ -7,6 +7,9 @@ import com.cafe.DTO.Statistic;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.LoginGUI;
 import com.cafe.utils.Day;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+
+import javax.swing.*;
 
 public class CafeManagement {
     public static LoginGUI loginGUI;
@@ -16,6 +19,11 @@ public class CafeManagement {
     public static DiscountBLL discountBLL;
 
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            throw new RuntimeException(e);
+        }
         statisticBLL = new StatisticBLL();
         discountBLL = new DiscountBLL();
         statisticBLL.addStatisticsSinceTheLastStatistic();
@@ -23,6 +31,7 @@ public class CafeManagement {
         homeGUI = new HomeGUI(new AccountBLL().searchAccounts("ACCOUNT_ID = 'AC000'").get(0));
         threadTime = new Thread(CafeManagement::updateState);
         threadTime.start();
+
     }
 
     public static void updateState() {

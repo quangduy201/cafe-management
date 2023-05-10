@@ -221,8 +221,8 @@ public class BillGUI extends JPanel {
         btFaceSignUp = new Button();
         btFaceSignUp.setBackground(new Color(35, 166, 97));
         btFaceSignUp.setBorder(null);
-        btFaceSignUp.setIcon(new ImageIcon(new ImageIcon("img/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
-        btFaceSignUp.setText("Find Customer ");
+        btFaceSignUp.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btFaceSignUp.setText("Tìm hóa đơn");
         btFaceSignUp.setColor(new Color(240, 240, 240));
         btFaceSignUp.setColorClick(new Color(141, 222, 175));
         btFaceSignUp.setColorOver(new Color(35, 166, 97));
@@ -548,7 +548,7 @@ public class BillGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // Replace "C:\\example\\folder" with the path to your directory
-                    Runtime.getRuntime().exec("explorer.exe /select,C:\\example\\folder");
+                    Runtime.getRuntime().exec("explorer.exe /select");
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
