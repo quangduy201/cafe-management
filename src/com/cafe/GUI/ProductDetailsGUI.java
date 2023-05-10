@@ -39,6 +39,7 @@ public class ProductDetailsGUI extends JFrame {
     private Product getProduct;
 
     public ProductDetailsGUI(SaleGUI saleGUI, Product product, int quantity) {
+        System.gc();
         this.newProduct = product;
         this.saleGUI = saleGUI;
         this.quantity = quantity;

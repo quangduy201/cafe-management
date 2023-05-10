@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Properties;
 
 public class MySQL {
-    private final Connection conn;
-    private final Statement stmt;
+    private static final Connection conn;
+    private static Statement stmt;
 
-    public MySQL() throws SQLException {
+    static {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream("database/db.properties")) {
             properties.load(input);
@@ -23,7 +23,14 @@ public class MySQL {
         String dbUrl = properties.getProperty("db.url");
         String dbUsername = properties.getProperty("db.username");
         String dbPassword = properties.getProperty("db.password");
-        conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        try {
+            conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public MySQL() throws SQLException {
         stmt = conn.createStatement();
     }
 

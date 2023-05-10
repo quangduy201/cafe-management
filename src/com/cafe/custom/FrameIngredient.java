@@ -28,6 +28,7 @@ public class FrameIngredient extends JFrame {
     private JLabel[] label1;
     private JTextField[] jTextField;
     public FrameIngredient(IngredientGUI ingredientGUI, String[] data, int index) {
+        System.gc();
         this.index = index;
         this.ingredientGUI = ingredientGUI;
         System.arraycopy(data, 0, this.data, 0, data.length);

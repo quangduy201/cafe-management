@@ -50,6 +50,7 @@ public class ProductGUI extends JPanel {
     private String chosenImg = null;
 
     public ProductGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

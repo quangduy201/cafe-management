@@ -1,16 +1,18 @@
 package com.cafe.GUI;
 
-import com.cafe.BLL.BillDetailsBLL;
+import com.cafe.BLL.BillBLL;
 import com.cafe.BLL.CustomerBLL;
 import com.cafe.BLL.ReceiptDetailsBLL;
-import com.cafe.DTO.BillDetails;
+import com.cafe.BLL.StatisticBLL;
+import com.cafe.DTO.Bill;
 import com.cafe.DTO.Customer;
-import com.cafe.DTO.ReceiptDetails;
+import com.cafe.DTO.Statistic;
 import com.cafe.custom.ButtonStatic;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.ImageAvatar;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.VNString;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -19,10 +21,13 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StatisticGUI extends JPanel {
     public StatisticGUI(int decentralization) {
+        System.gc();
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -34,19 +39,17 @@ public class StatisticGUI extends JPanel {
     private ButtonStatic[] btFunction;
 
     private ImageAvatar[] imageAvatars;
-    private JLabel jLabel[];
+    private JLabel[] jLabel;
 
-    private ArrayList<Customer> customerArrayList = new ArrayList<>();
-    private ArrayList<BillDetails> billDetailsArrayList = new ArrayList<>();
-    private ArrayList<ReceiptDetails> receiptDetailsArrayList = new ArrayList<>();
-
+    private StatisticBLL statisticBLL;
     private CustomerBLL  customerBLL;
-    private BillDetailsBLL billDetailsBLL;
+    private BillBLL billBLL;
     private ReceiptDetailsBLL receiptDetailsBLL;
 
     public void initComponents() {
+        statisticBLL = new StatisticBLL();
         customerBLL = new CustomerBLL();
-        billDetailsBLL = new BillDetailsBLL();
+        billBLL = new BillBLL();
         receiptDetailsBLL = new ReceiptDetailsBLL();
         btFunction = new ButtonStatic[5];
         roundPanel = new RoundPanel[25];
@@ -59,18 +62,7 @@ public class StatisticGUI extends JPanel {
             roundPanel[i] = new RoundPanel();
         }
 
-        for (Customer customer : customerBLL.getCustomerList()) {
-            customerArrayList.add(customer);
-        }
-        for (BillDetails billDetails : billDetailsBLL.getBillDetailsList()) {
-            billDetailsArrayList.add(billDetails);
-        }
-        for (ReceiptDetails receiptDetails : receiptDetailsBLL.getReceiptDetailsList()) {
-            receiptDetailsArrayList.add(receiptDetails);
-        }
-
         statistic = new RoundPanel();
-
         statistic.setBackground(new Color(70, 67, 67));
         statistic.setLayout(new BorderLayout(0,0 ));
         this.add(statistic, BorderLayout.CENTER);
@@ -86,8 +78,6 @@ public class StatisticGUI extends JPanel {
         roundPanel[1].setPreferredSize(new Dimension(1000, 640));
         roundPanel[1].setAutoscrolls(true);
         statistic.add(roundPanel[1], BorderLayout.CENTER);
-
-
 
         roundPanel[2].setLayout(new FlowLayout(FlowLayout.LEFT,0,0));
         roundPanel[2].setPreferredSize(new Dimension(500, 30));
@@ -179,13 +169,15 @@ public class StatisticGUI extends JPanel {
             imageAvatars[i] = new ImageAvatar();
         }
         jPanel[0] = new JPanel();
-        int total = 0;
-        int expense = 0;
-        int profit = 0;
-        for (BillDetails billDetails: billDetailsArrayList) {
-            total += billDetails.getTotal();
+        double amount = 0;
+        double cost = 0;
+        double profit = 0;
+        Day today = new Day();
+        for (Statistic statistic1 : statisticBLL.findStatisticsBetween(new Day(1, 1, today.getYear()), today)) {
+            amount += statistic1.getAmount();
+            cost += statistic1.getIngredientCost();
         }
-        profit = total - expense;
+        profit = amount - cost;
 
         roundPanel[3].setLayout(new FlowLayout(FlowLayout.LEFT,10,0));
 //        roundPanel[3].setBackground(new Color(182, 24, 24));
@@ -233,13 +225,11 @@ public class StatisticGUI extends JPanel {
         roundPanel[7].setAutoscrolls(true);
         roundPanel[5].add(roundPanel[7]);
 
-
         roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         roundPanel[8].setBackground(new Color(112, 225, 73));
         roundPanel[8].setPreferredSize(new Dimension(200, 200));
         roundPanel[8].setAutoscrolls(true);
         roundPanel[5].add(roundPanel[8]);
-
 
         roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
         roundPanel[9].setBackground(new Color(112, 225, 73));
@@ -298,7 +288,7 @@ public class StatisticGUI extends JPanel {
         roundPanel[10].add(imageAvatars[0]);
 
         jLabel[6].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[6].setText(String.valueOf(customerArrayList.size()));
+        jLabel[6].setText(String.valueOf(customerBLL.getCustomerList().size()));
         jLabel[6].setForeground(new Color(255,255,255));
         jLabel[6].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[6].setHorizontalAlignment(SwingConstants.CENTER);
@@ -315,7 +305,7 @@ public class StatisticGUI extends JPanel {
         roundPanel[11].add(imageAvatars[1]);
 
         jLabel[7].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[7].setText(String.valueOf(receiptDetailsArrayList.size()));
+        jLabel[7].setText(String.valueOf(receiptDetailsBLL.getReceiptDetailsList().size()));
         jLabel[7].setForeground(new Color(255,255,255));
         jLabel[7].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[7].setHorizontalAlignment(SwingConstants.CENTER);
@@ -332,7 +322,7 @@ public class StatisticGUI extends JPanel {
         roundPanel[12].add(imageAvatars[2]);
 
         jLabel[8].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[8].setText(String.valueOf(billDetailsArrayList.size()));
+        jLabel[8].setText(String.valueOf(billBLL.getBillList().size()));
         jLabel[8].setForeground(new Color(255,255,255));
         jLabel[8].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[8].setHorizontalAlignment(SwingConstants.CENTER);
@@ -409,7 +399,7 @@ public class StatisticGUI extends JPanel {
         jLabel[11].setAutoscrolls(true);
         roundPanel[16].add(jLabel[11]);
 
-        jLabel[12].setText(total + " đ");
+        jLabel[12].setText(VNString.currency(amount));
         jLabel[12].setPreferredSize(new Dimension(150, 50));
         jLabel[12].setFont(new Font("Public Sans", Font.PLAIN, 16));
         jLabel[12].setHorizontalAlignment(SwingConstants.RIGHT);
@@ -423,7 +413,7 @@ public class StatisticGUI extends JPanel {
         jLabel[13].setAutoscrolls(true);
         roundPanel[17].add(jLabel[13]);
 
-        jLabel[14].setText("0 đ");
+        jLabel[14].setText(VNString.currency(cost));
         jLabel[14].setPreferredSize(new Dimension(150, 50));
         jLabel[14].setFont(new Font("Public Sans", Font.PLAIN, 16));
         jLabel[14].setHorizontalAlignment(SwingConstants.RIGHT);
@@ -444,7 +434,7 @@ public class StatisticGUI extends JPanel {
         jLabel[16].setAutoscrolls(true);
         roundPanel[19].add(jLabel[16]);
 
-        jLabel[17].setText(profit + " đ");
+        jLabel[17].setText(VNString.currency(profit));
         jLabel[17].setPreferredSize(new Dimension(150, 40));
         jLabel[17].setFont(new Font("Public Sans", Font.PLAIN, 16));
         jLabel[17].setHorizontalAlignment(SwingConstants.RIGHT);
@@ -547,7 +537,7 @@ public class StatisticGUI extends JPanel {
         jPanel[0].add(imageAvatars[0]);
 
         jLabel[1].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[1].setText(String.valueOf(customerArrayList.size()));
+        jLabel[1].setText(String.valueOf(customerBLL.getCustomerList().size()));
         jLabel[1].setForeground(new Color(255,255,255));
         jLabel[1].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[1].setHorizontalAlignment(SwingConstants.CENTER);
@@ -570,6 +560,18 @@ public class StatisticGUI extends JPanel {
         jScrollPane[0] = new JScrollPane(dataTable[0]);
         roundPanel[10].add(jScrollPane[0]);
         DefaultTableModel model = (DefaultTableModel) dataTable[0].getModel();
+        Day today = new Day();
+        List<Bill> bills = billBLL.findBillsBetween(new Day(1, 1, today.getYear() - 4), today);
+        Map<String, Integer> data = new HashMap<>();
+        for (Bill bill : bills) {
+            Integer number = data.get(bill.getCustomerID());
+            int count = number == null ? 0 : number;
+            data.put(bill.getCustomerID(), count + 1);
+        }
+        for (Map.Entry<String, Integer> entry : data.entrySet()) {
+            Customer customer = customerBLL.searchCustomers("CUSTOMER_ID = '" + entry.getKey() + "'").get(0);
+            model.addRow(new Object[]{customer.getName(), entry.getValue()});
+        }
 //        for (Ingredient ingredient : ingredientBLL.getIngredientList()) {
 //            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
 //        }
@@ -616,7 +618,7 @@ public class StatisticGUI extends JPanel {
         jPanel[1].add(imageAvatars[1]);
 
         jLabel[3].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[3].setText(String.valueOf(billDetailsArrayList.size()));
+        jLabel[3].setText(String.valueOf(receiptDetailsBLL.getReceiptDetailsList().size()));
         jLabel[3].setForeground(new Color(255,255,255));
         jLabel[3].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[3].setHorizontalAlignment(SwingConstants.CENTER);
@@ -682,7 +684,7 @@ public class StatisticGUI extends JPanel {
         jPanel[2].add(imageAvatars[2]);
 
         jLabel[5].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-        jLabel[5].setText(String.valueOf(receiptDetailsArrayList.size()));
+        jLabel[5].setText(String.valueOf(billBLL.getBillList().size()));
         jLabel[5].setForeground(new Color(255,255,255));
         jLabel[5].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[5].setHorizontalAlignment(SwingConstants.CENTER);

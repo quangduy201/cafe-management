@@ -7,6 +7,7 @@ public class ImportGUI extends JPanel {
     private int decentralizationMode;
 
     public ImportGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

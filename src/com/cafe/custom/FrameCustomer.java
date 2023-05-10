@@ -29,6 +29,7 @@ public class FrameCustomer extends JFrame {
     private JLabel[] label1;
     private JTextField jTextField[];
     public FrameCustomer(String phone) {
+        System.gc();
         this.phone = phone;
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));

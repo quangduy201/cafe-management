@@ -57,6 +57,7 @@ public class DiscountGUI extends JPanel {
     private JScrollPane scrollPane2;
 
     public DiscountGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         this.discountSelected = null;
         setLayout(new BorderLayout(10, 10));

@@ -62,6 +62,7 @@ public class SaleGUI extends JPanel {
     private Button btnSearchByFace;
 
     public SaleGUI(String staffID) {
+        System.gc();
         this.staffID = staffID;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

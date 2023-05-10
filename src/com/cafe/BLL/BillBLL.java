@@ -2,6 +2,7 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.BillDAL;
 import com.cafe.DTO.Bill;
+import com.cafe.utils.Day;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,10 @@ public class BillBLL extends Manager<Bill> {
 
     public List<Bill> searchBills(String... conditions) {
         return billDAL.searchBills(conditions);
+    }
+
+    public List<Bill> findBillsBetween(Day start, Day end) {
+        return billDAL.searchBills(start, end);
     }
 
     public List<Bill> findBills(String key, String value) {

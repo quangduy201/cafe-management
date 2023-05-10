@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
 import com.cafe.DTO.Account;
+import com.cafe.main.CafeManagement;
 
 import javax.swing.*;
 import java.awt.*;
@@ -247,8 +248,10 @@ public class LoginGUI extends JFrame {
         } else {
             Account account = accountList.get(0);
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            new HomeGUI(account).setVisible(true);
             dispose();
+//            CafeManagement.homeGUI = new HomeGUI(account);
+            CafeManagement.homeGUI.setAccount(account);
+            CafeManagement.homeGUI.setVisible(true);
         }
     }
 
@@ -258,5 +261,13 @@ public class LoginGUI extends JFrame {
 
     private void minimize() {
         setState(Frame.ICONIFIED);
+    }
+
+    @Override
+    public void setVisible(boolean b) {
+        textField.setText("Username");
+        passwordField.setText("Password");
+        System.gc();
+        super.setVisible(b);
     }
 }

@@ -613,7 +613,7 @@ INSERT INTO `receipt_details` (`RECEIPT_ID`, `INGREDIENT_ID`, `QUANTITY`) VALUES
 -- Triggers `receipt_details`
 --
 DELIMITER $$
-CREATE TRIGGER `InserReceipt_Details` AFTER INSERT ON `receipt_details` FOR EACH ROW BEGIN
+CREATE TRIGGER `InsertReceipt_Details` AFTER INSERT ON `receipt_details` FOR EACH ROW BEGIN
 UPDATE ingredient
 SET ingredient.QUANTITY = ingredient.QUANTITY + NEW.QUANTITY
 WHERE ingredient.INGREDIENT_ID = NEW.INGREDIENT_ID;
@@ -1258,6 +1258,35 @@ INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `E
 ('ST07', 'ĐẶNG VĂN LÂM', b'1', '2001-02-18', '2020-5-6', '0935627488', 'phache@gmail.com', 3100000, '2023-06-27', b'0'),
 ('ST08', 'NGUYỄN THỊ LỆ GIANG', b'0', '2000-05-27', '2022-3-9', '0340734629', 'phucvu@gmail.com', 3100000, '2023-09-28', b'0'),
 ('ST09', 'HOÀNG XUÂN PHÚC', b'1', '2001-04-11', '2022-5-10', '0963527895', 'sale@gmail.com', 2000000, '2023-08-17', b'0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `statistic`
+--
+
+CREATE TABLE `statistic` (
+  `STATISTIC_ID` varchar(10) NOT NULL,
+  `DATE` date DEFAULT NULL,
+  `AMOUNT` double DEFAULT NULL,
+  `INGREDIENT_COST` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `statistic`
+--
+
+INSERT INTO `statistic` (`STATISTIC_ID`, `DATE`, `AMOUNT`, `INGREDIENT_COST`) VALUES
+('STAT0001', '2020-09-08', 239000, 150000),
+('STAT0002', '2021-02-07', 195000, 150000),
+('STAT0003', '2021-05-06', 110000, 100000),
+('STAT0004', '2021-08-03', 175000, 150000),
+('STAT0005', '2022-03-19', 173000, 150000),
+('STAT0006', '2022-03-28', 109000, 100000),
+('STAT0007', '2022-05-05', 135000, 100000),
+('STAT0008', '2022-09-08', 90000, 50000),
+('STAT0009', '2023-01-09', 277000, 150000),
+('STAT0010', '2023-03-07', 207000, 150000);
 
 -- --------------------------------------------------------
 

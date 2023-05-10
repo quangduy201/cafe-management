@@ -43,6 +43,7 @@ public class BillGUI extends JPanel {
     private Button btFaceSignUp;
 
     public BillGUI() {
+        System.gc();
         setLayout(new BorderLayout());
         setBackground(new Color(70, 67, 67));
         initComponents();
@@ -461,6 +462,7 @@ public class BillGUI extends JPanel {
         clearDetails();
 
         if (inSaleMode) {
+
             for (Bill bill : billBLL.getBillList())
                 if (bill.getDateOfPurchase().isBetween(start, end))
                     model.addRow(new Object[]{bill.getBillID(), bill.getCustomerID(), bill.getStaffID(), bill.getDateOfPurchase(), bill.getTotal(), bill.getReceived(), bill.getExcess()});

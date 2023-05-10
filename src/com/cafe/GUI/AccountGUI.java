@@ -45,6 +45,7 @@ public class AccountGUI extends JPanel {
     private Button btRef;
 
     public AccountGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

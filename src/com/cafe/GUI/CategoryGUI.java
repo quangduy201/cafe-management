@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class CategoryGUI extends JPanel {
     private CategoryBLL categoryBLL = new CategoryBLL();
@@ -39,6 +38,7 @@ public class CategoryGUI extends JPanel {
     private Button btRef;
 
     public CategoryGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

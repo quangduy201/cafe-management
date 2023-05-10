@@ -41,6 +41,7 @@ public class DecentralizationGUI extends JPanel {
     private Button btRef;
 
     public DecentralizationGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));

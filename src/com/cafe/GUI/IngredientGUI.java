@@ -60,6 +60,7 @@ public class IngredientGUI extends JPanel {
     private FrameIngredient frameIngredient;
 
     public IngredientGUI(int decentralizationMode, String staffid) {
+        System.gc();
         this.staffid = staffid;
         this.decentralizationMode = decentralizationMode;
         this.supplierID = null;

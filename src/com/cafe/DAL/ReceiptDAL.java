@@ -87,4 +87,31 @@ public class ReceiptDAL extends Manager {
         }
         return new ArrayList<>();
     }
+
+    public List<Receipt> searchReceipts(Day start, Day end) {
+        try {
+            String[] conditions = new String[]{
+                "DOR BETWEEN '" + start.toMySQLString() + "' AND '" + end.toMySQLString() + "'",
+                "DELETED = 0"
+            };
+            return convertToReceipts(read(conditions));
+        } catch (Exception e) {
+            System.out.println("Error occurred in ReceiptDAL.searchReceipts(): " + e.getMessage());
+        }
+        return new ArrayList<>();
+    }
+
+    public Receipt getTheLastReceipt() {
+        try {
+            return convertToReceipts(executeQuery("""
+                SELECT * FROM `receipt`
+                WHERE DELETED = 0
+                ORDER BY DOR DESC
+                LIMIT 1;
+                """)).get(0);
+        } catch (Exception e) {
+            System.out.println("Error occurred in ReceiptDAL.getTheLastReceipt(): " + e.getMessage());
+        }
+        return new Receipt();
+    }
 }

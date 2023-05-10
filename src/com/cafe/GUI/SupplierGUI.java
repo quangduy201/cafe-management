@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class SupplierGUI extends JPanel {
     private SupplierBLL supplierBLL = new SupplierBLL();
@@ -41,6 +40,7 @@ public class SupplierGUI extends JPanel {
     private RoundPanel roundPanel[];
 
     public SupplierGUI(int decentralizationMode) {
+        System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(51, 51, 51));

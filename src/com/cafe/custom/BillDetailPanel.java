@@ -30,6 +30,7 @@ public class BillDetailPanel extends RoundPanel {
     private Button payment_img;
 
     public BillDetailPanel() {
+        System.gc();
         initComponents();
     }
 
