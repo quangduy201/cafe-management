@@ -14,6 +14,14 @@ import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 import com.cafe.utils.VNString;
 import com.toedter.calendar.JDateChooser;
+import org.apache.poi.sl.usermodel.Background;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -923,6 +931,8 @@ public class StatisticGUI extends JPanel {
         roundPanel[16].add(jScrollPane[3]);
     }
 
+
+
     private void changeCalender() {
         Day start = new Day(jDateChooser[0].getDate());
         Day end = new Day(jDateChooser[1].getDate());
@@ -934,9 +944,45 @@ public class StatisticGUI extends JPanel {
         cpButton.setColorOver(new Color(0xB2B2B2));
         btFunction[3].setColor(new Color(240,240,240));
         btFunction[3].setColorOver(new Color(240,240,240));
-        cpButton = btFunction[3];
-        roundPanel[1].removeAll();
-        roundPanel[1].revalidate();
-        roundPanel[1].repaint();
+        cpButton = btFunction[2];
+//        jTextField = new JTextField[2];
+//        jdateChooser = new JDateChooser[2];
+//        roundPanel[1].removeAll();
+//        roundPanel[1].revalidate();
+//        roundPanel[1].repaint();
+//        for (int i = 0; i < jTextField.length; i++) {
+//            jdateChooser[i] = new JDateChooser();
+//            jTextField[i] = ((JTextField) jdateChooser[i].getDateEditor().getUiComponent());
+//        }
+//        for (int i = 3; i < roundPanel.length; i++) {
+//            roundPanel[i] = new RoundPanel();
+//        }
+//        for (int i = 0; i < jLabel.length; i++) {
+//            jLabel[i] = new JLabel();
+//        }
+
+
+        roundPanel[3].setLayout(new BorderLayout( 10, 10));
+        roundPanel[3].setBackground(new Color(0, 0, 0));
+        roundPanel[3].setPreferredSize(new Dimension(1000, 640));
+        roundPanel[3].setAutoscrolls(true);
+        roundPanel[1].add(roundPanel[3]);
+
+        roundPanel[4].setLayout(new BorderLayout( 5, 0));
+        roundPanel[4].setPreferredSize(new Dimension(980, 390));
+        roundPanel[4].setAutoscrolls(true);
+        roundPanel[3].add(roundPanel[4], BorderLayout.NORTH);
+
+        roundPanel[5].setLayout(new BorderLayout( 5, 0));
+        roundPanel[5].setPreferredSize(new Dimension(680, 220));
+        roundPanel[5].setAutoscrolls(true);
+        roundPanel[3].add(roundPanel[5], BorderLayout.CENTER);
+
+        roundPanel[6].setLayout(new BorderLayout( 5, 0));
+        roundPanel[6].setPreferredSize(new Dimension(280, 220));
+        roundPanel[6].setAutoscrolls(true);
+        roundPanel[3].add(roundPanel[6], BorderLayout.EAST);
+
+
     }
 }
