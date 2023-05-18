@@ -79,13 +79,24 @@ public class StatisticBLL extends Manager<Statistic> {
         return customers.size();
     }
 
-    public double []getMonthStatistic(int month, int year) {
+    public double[] getMonthStatistic(int month, int year) {
         Day firstDay = new Day(1, month, year);
         Day lastDay = new Day(Day.numOfDays(month, year), month, year);
         double profit = getMonthProfit(firstDay, lastDay);
         double importCost = getMonthImportCost(firstDay, lastDay);
         double customers = getMonthCustomers(firstDay, lastDay);
         return new double[]{profit, importCost, customers};
+    }
+
+    public double[] getYearStatistic(int year) {
+        double[] yearStatistic = new double[3];
+        for (int i = 1; i <= 12; i++) {
+            double[] monthStatistic = getMonthStatistic(i, year);
+            yearStatistic[0] += monthStatistic[0];
+            yearStatistic[1] += monthStatistic[1];
+            yearStatistic[2] += monthStatistic[2];
+        }
+        return yearStatistic;
     }
 
     public void addStatisticsSinceTheLastStatistic() {
