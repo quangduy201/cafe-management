@@ -7,21 +7,12 @@ import com.cafe.BLL.StatisticBLL;
 import com.cafe.DTO.Bill;
 import com.cafe.DTO.Customer;
 import com.cafe.DTO.Statistic;
-import com.cafe.custom.ButtonStatic;
-import com.cafe.custom.DataTable;
-import com.cafe.custom.ImageAvatar;
-import com.cafe.custom.RoundPanel;
+import com.cafe.custom.*;
+import com.cafe.custom.Button;
 import com.cafe.utils.Day;
 import com.cafe.utils.VNString;
 import com.toedter.calendar.JDateChooser;
-import org.apache.poi.sl.usermodel.Background;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
+import com.cafe.custom.Button;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -939,50 +930,128 @@ public class StatisticGUI extends JPanel {
 
     }
 
+    private DataTable dataTables;
+    private JScrollPane jScrollPanes;
+    private Button jButton;
     public void btChart() {
         cpButton.setColor(new Color(0x646464));
         cpButton.setColorOver(new Color(0xB2B2B2));
-        btFunction[3].setColor(new Color(240,240,240));
-        btFunction[3].setColorOver(new Color(240,240,240));
-        cpButton = btFunction[2];
-//        jTextField = new JTextField[2];
-//        jdateChooser = new JDateChooser[2];
-//        roundPanel[1].removeAll();
-//        roundPanel[1].revalidate();
-//        roundPanel[1].repaint();
-//        for (int i = 0; i < jTextField.length; i++) {
-//            jdateChooser[i] = new JDateChooser();
-//            jTextField[i] = ((JTextField) jdateChooser[i].getDateEditor().getUiComponent());
-//        }
-//        for (int i = 3; i < roundPanel.length; i++) {
-//            roundPanel[i] = new RoundPanel();
-//        }
-//        for (int i = 0; i < jLabel.length; i++) {
-//            jLabel[i] = new JLabel();
-//        }
+        btFunction[3].setColor(new Color(240, 240, 240));
+        btFunction[3].setColorOver(new Color(240, 240, 240));
+        cpButton = btFunction[3];
+        jTextField = new JTextField[1];
+        jTextField[0] = new JTextField();
+        roundPanel[1].removeAll();
+        roundPanel[1].revalidate();
+        roundPanel[1].repaint();
+        jButton = new Button();
+        for (int i = 3; i < roundPanel.length; i++) {
+            roundPanel[i] = new RoundPanel();
+        }
+        for (int i = 0; i < jLabel.length; i++) {
+            jLabel[i] = new JLabel();
+        }
 
 
-        roundPanel[3].setLayout(new BorderLayout( 10, 10));
-        roundPanel[3].setBackground(new Color(0, 0, 0));
+        roundPanel[3].setLayout(new BorderLayout(10, 10));
+        roundPanel[3].setBackground(new Color(70, 67, 67));
         roundPanel[3].setPreferredSize(new Dimension(1000, 640));
         roundPanel[3].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[3]);
 
-        roundPanel[4].setLayout(new BorderLayout( 5, 0));
-        roundPanel[4].setPreferredSize(new Dimension(980, 390));
+        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER,0, 0));
+        roundPanel[4].setPreferredSize(new Dimension(980, 440));
         roundPanel[4].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[4], BorderLayout.NORTH);
 
-        roundPanel[5].setLayout(new BorderLayout( 5, 0));
-        roundPanel[5].setPreferredSize(new Dimension(680, 220));
+        roundPanel[5].setLayout(new BorderLayout(0, 5));
+        roundPanel[5].setPreferredSize(new Dimension(780, 170));
+        roundPanel[5].add(new JScrollPane(dataTables), BorderLayout.CENTER);
         roundPanel[5].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[5], BorderLayout.CENTER);
 
-        roundPanel[6].setLayout(new BorderLayout( 5, 0));
-        roundPanel[6].setPreferredSize(new Dimension(280, 220));
+        roundPanel[6].setLayout(new FlowLayout(FlowLayout.CENTER,0, 10));
+        roundPanel[6].setPreferredSize(new Dimension(180, 170));
         roundPanel[6].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[6], BorderLayout.EAST);
 
+        jLabel[2].setFont(new Font("Times New Roman", Font.BOLD, 20));
+        jLabel[2].setText("Doanh thu");
+        jLabel[2].setHorizontalAlignment(JLabel.CENTER);
+        jLabel[2].setPreferredSize(new Dimension(400, 30));
+        jLabel[2].setAutoscrolls(true);
+        roundPanel[9].add(jLabel[2]);
+
+
+        panelShadow1 = new PanelShadow();
+        chart = new CurveLineChart();
+        roundPanel[4].add(panelShadow1);
+
+        panelShadow1.setPreferredSize(new Dimension(1000, 440));
+        panelShadow1.setBackground(new java.awt.Color(34, 59, 69));
+        panelShadow1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panelShadow1.setColorGradient(new java.awt.Color(17, 38, 47));
+        panelShadow1.add(chart);
+
+        chart.setPreferredSize(new Dimension(980, 420));
+        chart.setForeground(new java.awt.Color(237, 237, 237));
+        chart.setFillColor(true);
+
+        chart.setTitle("Biểu đồ thống kê theo năm 2023");
+        chart.addLegend("Bán hàng ", Color.decode("#7b4397"), Color.decode("#dc2430"));
+        chart.addLegend("Nhập hàng", Color.decode("#e65c00"), Color.decode("#F9D423"));
+        chart.addLegend("Khách hàng", Color.decode("#0099F7"), Color.decode("#F11712"));
+
+        chart.addData(new ModelChart("January", new double[]{500, 50, 100}));
+        chart.addData(new ModelChart("February", new double[]{900, 20, 150}));
+        chart.addData(new ModelChart("March", new double[]{200, 50, 900}));
+        chart.addData(new ModelChart("April", new double[]{480, 30, 100}));
+        chart.addData(new ModelChart("May", new double[]{350, 540, 500}));
+        chart.addData(new ModelChart("June", new double[]{450, 800, 100}));
+        chart.addData(new ModelChart("July", new double[]{500, 50, 100}));
+        chart.addData(new ModelChart("August", new double[]{600, 300, 150}));
+        chart.addData(new ModelChart("September", new double[]{200, 50, 900}));
+        chart.addData(new ModelChart("October", new double[]{480, 700, 100}));
+        chart.addData(new ModelChart("November", new double[]{350, 540, 500}));
+        chart.addData(new ModelChart("December", new double[]{450, 800, 100}));
+        chart.start();
+
+        jLabel[0].setFont(new Font("Times New Roman", Font.BOLD, 20));
+        jLabel[0].setText("NĂM");
+        jLabel[0].setPreferredSize(new Dimension(180,30));
+        jLabel[0].setHorizontalAlignment(JLabel.CENTER);
+        jLabel[0].setAutoscrolls(true);
+        roundPanel[6].add(jLabel[0]);
+
+        jTextField[0].setFont(new Font("Times New Roman", Font.PLAIN, 16));
+        jTextField[0].setPreferredSize(new Dimension(100,35));
+        roundPanel[6].add(jTextField[0]);
+
+
+        jButton.setBorderPainted(false);
+        jButton.setFocusPainted(false);
+        jButton.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        jButton.setColor(new Color(0x70E149));
+        jButton.setColorOver(new Color(0x5EFF00));
+        jButton.setColorClick(new Color(0x8AD242));
+        jButton.setBorderColor(new Color(70, 67, 67));
+        jButton.setRadius(15);
+        jButton.setText("Thống Kê");
+        jButton.setPreferredSize(new Dimension(100, 40));
+        roundPanel[6].add(jButton);
+
+        jScrollPanes = new JScrollPane();
+        List<String> columnName1 = new ArrayList<>();
+        columnName1.add("Tên nguyên liệu");
+        columnName1.add("Số lượng");
+        columnName1.add("Đơn vị");
+        dataTables = new DataTable(null, columnName1.subList(0, columnName1.size()).toArray(), null);
+        jScrollPanes = new JScrollPane(dataTables);
+        roundPanel[5].add(jScrollPanes, BorderLayout.CENTER);
 
     }
+
+        private CurveLineChart chart;
+        private PanelShadow panelShadow1;
+
 }
