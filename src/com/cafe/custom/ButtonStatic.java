@@ -7,13 +7,13 @@ import java.awt.event.MouseEvent;
 
 public class ButtonStatic extends JButton {
 
-    public ButtonStatic(){
+    public ButtonStatic() {
         setContentAreaFilled(false);
         initComponent();
     }
 
     public void initComponent() {
-        this.addMouseListener(new MouseAdapter(){
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(colorOver);
@@ -33,9 +33,9 @@ public class ButtonStatic extends JButton {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(over){
+                if(over) {
                     setBackground(colorOver);
-                }else{
+                } else {
                     setBackground(color);
                 }
             }

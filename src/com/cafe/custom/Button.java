@@ -6,19 +6,19 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Button extends JButton {
-    public Button(){
+    public Button() {
         setContentAreaFilled(false);
         initComponent();
     }
 
-    public Button(Color color){
+    public Button(Color color) {
         this.borderColor = color;
         setContentAreaFilled(false);
         initComponent();
     }
 
     public void initComponent() {
-        this.addMouseListener(new MouseAdapter(){
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(colorOver);
@@ -38,9 +38,9 @@ public class Button extends JButton {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(over){
+                if(over) {
                     setBackground(colorOver);
-                }else{
+                } else {
                     setBackground(color);
                 }
             }

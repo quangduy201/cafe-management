@@ -337,7 +337,7 @@ public class ProductGUI extends JPanel {
             loadDataTable(productBLL.getProductList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "PRODUCT_ID";
                 case 1 -> key = "NAME";
                 case 4 -> key = "COST";

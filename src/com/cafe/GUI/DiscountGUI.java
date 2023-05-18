@@ -452,7 +452,7 @@ public class DiscountGUI extends JPanel {
             loadDataTableDis(discountBLL.getDiscountList());
         } else {
             String key = null;
-            switch (cbbSearchDis.getSelectedIndex()){
+            switch (cbbSearchDis.getSelectedIndex()) {
                 case 0 -> key = "DISCOUNT_ID";
                 case 1 -> key = "DISCOUNT_PERCENT";
                 case 2 -> key = "START_DATE";
@@ -470,7 +470,7 @@ public class DiscountGUI extends JPanel {
             loadDataTablePro(productBLL.getProductList());
         } else {
             String key = null;
-            switch (cbbSearchPro.getSelectedIndex()){
+            switch (cbbSearchPro.getSelectedIndex()) {
                 case 0 -> key = "PRODUCT_ID";
                 case 1 -> key = "NAME";
                 case 4 -> key = "COST";

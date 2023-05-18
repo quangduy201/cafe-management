@@ -342,7 +342,7 @@ public class DecentralizationGUI extends JPanel {
 
     private void comboboxSearch() {
         String key = null;
-        switch (cbbSearchFilter.getSelectedIndex()){
+        switch (cbbSearchFilter.getSelectedIndex()) {
             case 1 -> key = "IS_SALE";
             case 2 -> key = "IS_PRODUCT";
             case 3 -> key = "IS_CATEGORY";
@@ -390,7 +390,7 @@ public class DecentralizationGUI extends JPanel {
             loadDataTable(decentralizationBLL.getDecentralizationList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "DECENTRALIZATION_ID";
                 case 14 -> key = "DECENTRALIZATION_NAME";
                 default -> {

@@ -400,7 +400,7 @@ public class IngredientGUI extends JPanel {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "INGREDIENT_ID";
                 case 1 -> key = "NAME";
                 case 3 -> key = "UNIT_PRICE";
@@ -416,7 +416,7 @@ public class IngredientGUI extends JPanel {
             loadDataTable1(supplierBLL.getSupplierList());
         } else {
             String key = null;
-            switch (cbbSearchSupplier.getSelectedIndex()){
+            switch (cbbSearchSupplier.getSelectedIndex()) {
                 case 0 -> key = "SUPPLIER_ID";
                 case 1 -> key = "NAME";
                 case 2 -> key = "PHONE";

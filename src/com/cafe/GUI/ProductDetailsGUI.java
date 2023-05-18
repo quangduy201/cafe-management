@@ -189,7 +189,6 @@ public class ProductDetailsGUI extends JFrame {
 
         label[2].setText("Số lượng\t\t:");
         label[2].setPreferredSize(new Dimension(130, 35));
-        ;
         label[2].setFont(new Font("Times New Roman", Font.BOLD, 17));
         roundPanel[7].add(label[2]);
 
