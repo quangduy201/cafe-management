@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ProductPanel extends JPanel{
+public class ProductPanel extends JPanel {
     public ProductPanel() {
         setOpaque(false);
         addMouseListener(new MouseAdapter() {

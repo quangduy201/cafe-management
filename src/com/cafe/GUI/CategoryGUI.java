@@ -1,7 +1,6 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
-import com.cafe.BLL.ProductBLL;
 import com.cafe.DTO.Category;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -244,7 +243,7 @@ public class CategoryGUI extends JPanel {
             loadDataTable(categoryBLL.getCategoryList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "CATEGORY_ID";
                 case 1 -> key = "NAME";
                 case 2 -> key = "QUANTITY";

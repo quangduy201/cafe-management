@@ -73,7 +73,7 @@ public class Day {
         if (day1.month < day2.month)
             return calculateDays(day1, new Day(numOfDays(day1.month, day1.year), day1.month, day1.year))
                 + calculateDays(new Day(1, day1.month + 1, day1.year), day2);
-        return day2.date - day1.date;
+        return day2.date - day1.date + 1;
     }
 
     public static Day parseDay(String str) throws Exception {

@@ -280,7 +280,7 @@ public class SupplierGUI extends JPanel {
             loadDataTable(supplierBLL.getSupplierList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "SUPPLIER_ID";
                 case 1 -> key = "NAME";
                 case 2 -> key = "PHONE";

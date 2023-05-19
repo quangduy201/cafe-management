@@ -19,6 +19,10 @@ public class CafeManagement {
     public static DiscountBLL discountBLL;
 
     public static void main(String[] args) {
+        start();
+    }
+
+    public static void start() {
         try {
             UIManager.setLookAndFeel(new FlatIntelliJLaf());
         } catch (UnsupportedLookAndFeelException e) {
@@ -31,7 +35,6 @@ public class CafeManagement {
         homeGUI = new HomeGUI(new AccountBLL().searchAccounts("ACCOUNT_ID = 'AC000'").get(0));
         threadTime = new Thread(CafeManagement::updateState);
         threadTime.start();
-
     }
 
     public static void updateState() {
@@ -50,6 +53,7 @@ public class CafeManagement {
                 continue;
             }
             statisticBLL.addStatistic(statistic);
+            discountBLL.checkDateDiscount(new Day());
         }
     }
 }

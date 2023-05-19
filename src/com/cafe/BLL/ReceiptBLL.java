@@ -2,6 +2,7 @@ package com.cafe.BLL;
 
 import com.cafe.DAL.ReceiptDAL;
 import com.cafe.DTO.Receipt;
+import com.cafe.utils.Day;
 
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,10 @@ public class ReceiptBLL extends Manager<Receipt> {
 
     public List<Receipt> searchReceipts(String... conditions) {
         return receiptDAL.searchReceipts(conditions);
+    }
+
+    public List<Receipt> findReceiptsBetween(Day start, Day end) {
+        return receiptDAL.searchReceipts(start, end);
     }
 
     public List<Receipt> findReceiptsBy(Map<String, Object> conditions) {

@@ -182,18 +182,12 @@ public class BillDetailPanel extends RoundPanel {
         payment_quantity1.setPreferredSize(new Dimension(100, 40));
         payment_price.setPreferredSize(new Dimension(55, 40));
         payment_price1.setPreferredSize(new Dimension(60, 40));
-
-
-        ReceiptDetails data = new ReceiptDetailsBLL()
-            .findReceiptDetailsBy(Map.of("RECEIPT_ID", receiptDetails.getReceiptID()))
-            .get(0);
         Ingredient ingredient = new IngredientBLL()
-            .findIngredientsBy(Map.of("INGREDIENT_ID", data.getIngredientID()))
+            .findIngredientsBy(Map.of("INGREDIENT_ID", receiptDetails.getIngredientID()))
             .get(0);
-
         payment_name1.setText(ingredient.getName());
-        payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
-        payment_price1.setText(VNString.currency(data.getQuantity() * ingredient.getUnitPrice()));
+        payment_quantity1.setText(receiptDetails.getQuantity() + ingredient.getUnit());
+        payment_price1.setText(VNString.currency(receiptDetails.getQuantity() * ingredient.getUnitPrice()));
     }
 
     public void setIngredient(Ingredient ingredient, int index) {
