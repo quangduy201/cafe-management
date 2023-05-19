@@ -382,7 +382,7 @@ public class StaffGUI extends JPanel {
             loadDataTable(staffBLL.getStaffList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "STAFF_ID";
                 case 1 -> key = "NAME";
                 case 3 -> key = "DOB";

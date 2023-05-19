@@ -308,7 +308,7 @@ public class AccountGUI extends JPanel {
             loadDataTable(accountBLL.getAccountList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "ACCOUNT_ID";
                 case 1 -> key = "USERNAME";
                 case 2 -> key = "PASSWD";

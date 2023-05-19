@@ -74,7 +74,7 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
     }
 
     public int getIndex(DiscountDetails discountDetails) {
-        for (int i = 0; i < discountDetailsList.size(); i++){
+        for (int i = 0; i < discountDetailsList.size(); i++) {
             if (discountDetailsList.get(i).getDiscountID().equals(discountDetails.getDiscountID()) && discountDetailsList.get(i).getProductID().equals(discountDetails.getProductID())) {
                 return i;
             }

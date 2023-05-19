@@ -4,8 +4,10 @@ import com.cafe.DAL.StatisticDAL;
 import com.cafe.DTO.*;
 import com.cafe.utils.Day;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class StatisticBLL extends Manager<Statistic> {
     private StatisticDAL statisticDAL;
@@ -38,7 +40,7 @@ public class StatisticBLL extends Manager<Statistic> {
             amount += bill.getTotal();
             List<BillDetails> billDetailsList = billDetailsBLL.searchBillDetails("BILL_ID = '" + bill.getBillID() + "'");
             for (BillDetails billDetails : billDetailsList) {
-                List<Recipe> recipeList = recipeBLL.searchRecipes("RECIPE_ID = '" + billDetails.getProductID());
+                List<Recipe> recipeList = recipeBLL.searchRecipes("PRODUCT_ID = '" + billDetails.getProductID() + "'");
                 for (Recipe recipe : recipeList) {
                     Ingredient ingredient = ingredientBLL.searchIngredients("INGREDIENT_ID = '" + recipe.getIngredientID() + "'").get(0);
                     ingredientCost += ingredient.getUnitPrice() * recipe.getMass();
@@ -48,18 +50,53 @@ public class StatisticBLL extends Manager<Statistic> {
         return new Statistic(getAutoID(), day, amount, ingredientCost);
     }
 
-    public double getMonthProfit(int month, int year, double extraCost) {
-        Day firstDay = new Day(1, month, year);
-        Day lastDay = new Day(Day.numOfDays(month, year), month, year);
+    public double getMonthProfit(Day firstDay, Day lastDay) {
+        List<Statistic> statistics = findStatisticsBetween(firstDay, lastDay);
         double amount = 0.0;
-        double cost = extraCost;
-        while (!firstDay.equals(lastDay)) {
-            Statistic statistic = doStatistic(firstDay);
+        double cost = 0.0;
+        for (Statistic statistic : statistics) {
             amount += statistic.getAmount();
             cost += statistic.getIngredientCost();
-            firstDay = firstDay.after(1, 0, 0);
         }
         return amount - cost;
+    }
+
+    public double getMonthImportCost(Day firstDay, Day lastDay) {
+        List<Receipt> receipts = new ReceiptBLL().findReceiptsBetween(firstDay, lastDay);
+        double importCost = 0.0;
+        for (Receipt receipt : receipts) {
+            importCost += receipt.getGrandTotal();
+        }
+        return importCost;
+    }
+
+    public double getMonthCustomers(Day firstDay, Day lastDay) {
+        List<Bill> bills = new BillBLL().findBillsBetween(firstDay, lastDay);
+        Set<String> customers = new HashSet<>();
+        for (Bill bill : bills) {
+            customers.add(bill.getCustomerID());
+        }
+        return customers.size();
+    }
+
+    public double[] getMonthStatistic(int month, int year) {
+        Day firstDay = new Day(1, month, year);
+        Day lastDay = new Day(Day.numOfDays(month, year), month, year);
+        double profit = getMonthProfit(firstDay, lastDay);
+        double importCost = getMonthImportCost(firstDay, lastDay);
+        double customers = getMonthCustomers(firstDay, lastDay);
+        return new double[]{profit, importCost, customers};
+    }
+
+    public double[] getYearStatistic(int year) {
+        double[] yearStatistic = new double[3];
+        for (int i = 1; i <= 12; i++) {
+            double[] monthStatistic = getMonthStatistic(i, year);
+            yearStatistic[0] += monthStatistic[0];
+            yearStatistic[1] += monthStatistic[1];
+            yearStatistic[2] += monthStatistic[2];
+        }
+        return yearStatistic;
     }
 
     public void addStatisticsSinceTheLastStatistic() {
@@ -70,6 +107,7 @@ public class StatisticBLL extends Manager<Statistic> {
         for (int i = 0; i < numOfDays; ++i) {
             Statistic statistic = doStatistic(nextDay);
             if (statistic.getAmount() == 0.0 && statistic.getIngredientCost() == 0.0) {
+                nextDay = nextDay.after(1, 0, 0);
                 continue;
             }
             if (addStatistic(statistic)) {
@@ -120,7 +158,7 @@ public class StatisticBLL extends Manager<Statistic> {
     }
 
     public String getAutoID() {
-        return getAutoID("STAT", 4, searchStatistics());
+        return getAutoID("STAT", 4, searchStatistics("STATISTIC_ID != 'STAT0000'"));
     }
 
     @Override

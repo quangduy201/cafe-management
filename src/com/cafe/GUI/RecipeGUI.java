@@ -316,7 +316,7 @@ public class RecipeGUI extends JPanel {
             loadDataTable(recipeBLL.getRecipeList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "RECIPE_ID";
                 case 3 -> key = "MASS";
                 default -> {

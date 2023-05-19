@@ -454,7 +454,7 @@ public class CustomerGUI extends JPanel {
             loadDataTable(customerBLL.getCustomerList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "CUSTOMER_ID";
                 case 1 -> key = "NAME";
                 case 3 -> key = "DOB";
