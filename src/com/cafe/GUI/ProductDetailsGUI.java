@@ -1,7 +1,11 @@
 package com.cafe.GUI;
 
+import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.BLL.RecipeBLL;
+import com.cafe.DTO.Ingredient;
 import com.cafe.DTO.Product;
+import com.cafe.DTO.Recipe;
 import com.cafe.custom.Button;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.VNString;
@@ -13,11 +17,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 public class ProductDetailsGUI extends JFrame {
+    private static IngredientBLL ingredientBLL = new IngredientBLL();
+    public static List<Ingredient> ingredientList = ingredientBLL.getIngredientList();
+    private RecipeBLL recipeBLL = new RecipeBLL();
+    private int countProduct = 0;
     private Vector<String> sizeList;
     private Vector<String> costList;
     private RoundPanel frame;
@@ -349,19 +356,29 @@ public class ProductDetailsGUI extends JFrame {
         System.out.println(getProduct.toString());
 
         if (checkOrderExits(getProduct) != null) {
-            System.out.println("updating");
-            //Cập nhật quantity
             int location = saleGUI.getListDetailBill().indexOf(checkOrderExits(getProduct));
-            saleGUI.getListQuantityChoice().set(location, quantity);
-        } else {
-            System.out.println("add new");
-            saleGUI.getListDetailBill().add(getProduct);
-            saleGUI.getListQuantityChoice().add(quantity);
+            updateIngredient(getProduct.getProductID(), saleGUI.getListQuantityChoice().get(location));
         }
 
-        saleGUI.getRoundPanel9().removeAll();
-        saleGUI.addProductToBill(saleGUI.getListDetailBill(), saleGUI.getListQuantityChoice());
-        this.dispose();
+        if (availableQuantity(getProduct.getProductID(), quantity)) {
+            if (checkOrderExits(getProduct) != null) {
+                System.out.println("updating");
+                //Cập nhật quantity
+                int location = saleGUI.getListDetailBill().indexOf(checkOrderExits(getProduct));
+                saleGUI.getListQuantityChoice().set(location, quantity);
+            } else {
+                System.out.println("add new");
+                saleGUI.getListDetailBill().add(getProduct);
+                saleGUI.getListQuantityChoice().add(quantity);
+            }
+
+            saleGUI.getRoundPanel9().removeAll();
+            saleGUI.addProductToBill(saleGUI.getListDetailBill(), saleGUI.getListQuantityChoice());
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Chỉ còn " + countProduct + " sản phẩm", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     public int getQuantity() {
@@ -372,6 +389,60 @@ public class ProductDetailsGUI extends JFrame {
         this.quantity = quantity;
     }
 
+    public boolean availableQuantity(String product_ID, int quantity) {
+        List<Recipe> recipeList = recipeBLL.findRecipes("PRODUCT_ID", product_ID);
+        List<String> ingredients = new ArrayList<>();
+        List<Double> quantityIngredients = new ArrayList<>();
+        List<Double> massIngredients = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
+
+        for (Recipe recipe : recipeList) {
+            ingredients.add(recipe.getIngredientID());
+            massIngredients.add(recipe.getMass());
+        }
+
+        for (Ingredient ingredient : ingredientList) {
+            if (ingredients.contains(ingredient.getIngredientID())) {
+                quantityIngredients.add(ingredient.getQuantity());
+            }
+        }
+
+        for (int i=0; i<quantityIngredients.size(); i++) {
+            if (quantityIngredients.get(i) < massIngredients.get(i)) {
+                break;
+            } else {
+                list.add((int) (quantityIngredients.get(i)/massIngredients.get(i)));
+            }
+        }
+        Collections.sort(list);
+        countProduct = list.get(0);
+        if (countProduct > quantity) {
+            for (int i=0; i<quantityIngredients.size(); i++) {
+                quantityIngredients.set(i, quantityIngredients.get(i)-massIngredients.get(i)*quantity);
+            }
+            int i = 0;
+            for (Ingredient ingredient : ingredientList) {
+                if (ingredients.contains(ingredient.getIngredientID())) {
+                    ingredient.setQuantity(quantityIngredients.get(i));
+                    i++;
+                }
+            }
+            System.out.println(countProduct);
+            return true;
+        }
+        return false;
+    }
+
+    public void updateIngredient(String product_ID, int quantity) {
+        List<Recipe> recipeList = recipeBLL.findRecipes("PRODUCT_ID", product_ID);
+        for (Recipe recipe : recipeList) {
+            for (Ingredient ingredient : ingredientList) {
+                if (Objects.equals(recipe.getIngredientID(), ingredient.getIngredientID())) {
+                    ingredient.setQuantity(ingredient.getQuantity()+recipe.getMass()*quantity);
+                }
+            }
+        }
+    }
 //    public static void main(String[] arg) {
 //        new ProductDetailsGUI().setVisible(true);
 //    }

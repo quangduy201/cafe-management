@@ -10,9 +10,13 @@ import com.cafe.utils.Day;
 import com.cafe.utils.Excel;
 import com.cafe.utils.Tasks;
 import com.cafe.utils.VNString;
+import com.groupdocs.conversion.Converter;
+import com.groupdocs.conversion.options.convert.PdfConvertOptions;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -57,7 +61,7 @@ public class BillGUI extends JPanel {
     public void initComponents() {
         roundPanel = new RoundPanel[21];
         label = new JLabel[21];
-        button = new Button[4];
+        button = new Button[5];
         jScrollPane = new JScrollPane[2];
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
@@ -74,7 +78,7 @@ public class BillGUI extends JPanel {
         roundPanel[1].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[1]);
 
-        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
+        roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
 //        roundPanel[2].setBackground(new Color(145, 0, 0));
         roundPanel[2].setPreferredSize(new Dimension(410, 670));
         roundPanel[2].setAutoscrolls(true);
@@ -151,7 +155,7 @@ public class BillGUI extends JPanel {
         roundPanel[15].setAutoscrolls(true);
         roundPanel[5].add(roundPanel[15], BorderLayout.WEST);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             button[i] = new Button();
             button[i].setBorderPainted(false);
             button[i].setFocusPainted(false);
@@ -162,8 +166,14 @@ public class BillGUI extends JPanel {
             button[i].setBorderColor(new Color(70, 67, 67));
             button[i].setRadius(15);
             button[i].setPreferredSize(new Dimension(80, 40));
-            if (i >= 2) {
+            if (i == 2 || i == 3) {
                 button[i].setText("Xuất Excel");
+                button[i].setColor(new Color(240, 240, 240));
+                button[i].setPreferredSize(new Dimension(160, 40));
+                button[i].setIcon(new ImageIcon("img/icons/folder.png"));
+            }
+            if (i == 4) {
+                button[i].setText("Xuất PDF");
                 button[i].setColor(new Color(240, 240, 240));
                 button[i].setPreferredSize(new Dimension(160, 40));
                 button[i].setIcon(new ImageIcon("img/icons/folder.png"));
@@ -200,6 +210,23 @@ public class BillGUI extends JPanel {
                                     pressExcel(false,path);
                                 }
                             }
+                            case 4 -> {
+                                JFileChooser fc = new JFileChooser();
+                                fc.removeChoosableFileFilter(fc.getFileFilter());
+                                fc.setCurrentDirectory(new File("transaction/bills"));
+
+                                FileFilter filter = new FileNameExtensionFilter("xlsx", "xlsx");
+                                fc.setFileFilter(filter);
+                                int returnVal = fc.showOpenDialog(null);
+                                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                    File file = fc.getSelectedFile();
+                                    Converter converter = new Converter(file.getPath());
+                                    PdfConvertOptions options = new PdfConvertOptions();
+                                    converter.convert(file.getPath().replace("xlsx", "pdf"), options);
+
+                                    System.out.println("Done");
+                                }
+                            }
                         }
                     } catch (Exception ignored) {
 
@@ -211,6 +238,7 @@ public class BillGUI extends JPanel {
         roundPanel[15].add(button[1], BorderLayout.EAST);
         roundPanel[5].add(button[2], BorderLayout.EAST);
         roundPanel[2].add(button[3]);
+        roundPanel[2].add(button[4]);
 
         btFaceSignUp = new Button();
         btFaceSignUp.setBackground(new Color(35, 166, 97));
