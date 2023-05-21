@@ -17,8 +17,8 @@ public class MySQL {
         Properties properties = new Properties();
         try (InputStream input = new FileInputStream("database/db.properties")) {
             properties.load(input);
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         String dbUrl = properties.getProperty("db.url");
         String dbUsername = properties.getProperty("db.username");

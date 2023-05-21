@@ -8,14 +8,13 @@ import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.function.BiConsumer;
 
 public class ProductDetailsGUI extends JFrame {
     private Vector<String> sizeList;
@@ -112,39 +111,29 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[4].setPreferredSize(new Dimension(650, 50));
         frame.add(roundPanel[4]);
 
-        minimize.setBorderPainted(false);
-        minimize.setText("-");
-        minimize.setPreferredSize(new Dimension(45, 25));
-        minimize.setFocusPainted(false);
-        minimize.setBackground(new Color(0xF3F0F0));
-        minimize.setFont(new Font("Public Sans", Font.BOLD, 15));
-        minimize.setRadius(15);
+        BiConsumer<Button, List<Object>> configButton = (button, properties) -> {
+            button.setBorder(null);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setPreferredSize(new Dimension((Integer) properties.get(1), (Integer) properties.get(2)));
+            button.setRadius((Integer) properties.get(3));
+            button.setColor((Color) properties.get(4));
+            button.setColorOver((Color) properties.get(5));
+            button.setColorClick((Color) properties.get(6));
+            button.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent evt) {
+                    ((Runnable) properties.get(7)).run();
+                }
+            });
+        };
+        configButton.accept(minimize, List.of("-", 45, 25, 15, new Color(0xF3F0F0), new Color(0xC4BDBD), new Color(0x676161), (Runnable) this::minimize));
         roundPanel[0].add(minimize);
-        minimize.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                minimize();
-            }
-        });
-        minimize.setColor(new Color(0xF3F0F0));
-        minimize.setColorOver(new Color(0xC4BDBD));
-        minimize.setColorClick(new Color(0x676161));
-
-        exit.setBorderPainted(false);
-        exit.setText("X");
-        exit.setPreferredSize(new Dimension(45, 25));
-        exit.setFocusPainted(false);
-        exit.setBackground(new Color(0xFD1111));
-        exit.setFont(new Font("Public Sans", Font.BOLD, 15));
-        exit.setRadius(15);
+        configButton.accept(exit, List.of("X", 45, 25, 15, new Color(0xFD1111), new Color(0xB04848), new Color(0xE79292), (Runnable) this::exit));
         roundPanel[0].add(exit);
-        exit.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                exit();
-            }
-        });
-        exit.setColor(new Color(0xFD1111));
-        exit.setColorOver(new Color(0xB04848));
-        exit.setColorClick(new Color(0xE79292));
 
         text_product.setText("CHI TIẾT MUA HÀNG");
         //text_product.setBackground(new Color(240,240,240));
@@ -180,16 +169,19 @@ public class ProductDetailsGUI extends JFrame {
         label[0].setText("Tên sản phẩm\t:");
         label[0].setPreferredSize(new Dimension(130, 35));
         label[0].setFont(new Font("Times New Roman", Font.BOLD, 17));
+        label[0].setForeground(Color.BLACK);
         roundPanel[5].add(label[0]);
 
         label[1].setText("Giá\t\t\t:");
         label[1].setPreferredSize(new Dimension(130, 35));
         label[1].setFont(new Font("Times New Roman", Font.BOLD, 17));
+        label[1].setForeground(Color.BLACK);
         roundPanel[6].add(label[1]);
 
         label[2].setText("Số lượng\t\t:");
         label[2].setPreferredSize(new Dimension(130, 35));
         label[2].setFont(new Font("Times New Roman", Font.BOLD, 17));
+        label[2].setForeground(Color.BLACK);
         roundPanel[7].add(label[2]);
 
         roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -201,6 +193,7 @@ public class ProductDetailsGUI extends JFrame {
         label[3].setPreferredSize(new Dimension(400, 35));
         label[3].setHorizontalAlignment(JLabel.CENTER);
         label[3].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        label[3].setForeground(Color.BLACK);
         roundPanel[8].add(label[3]);
 
         roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -208,26 +201,14 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[9].setPreferredSize(new Dimension(150, 35));
         roundPanel[6].add(roundPanel[9]);
 
-
         label[4].setPreferredSize(new Dimension(150, 35));
         label[4].setHorizontalAlignment(JLabel.CENTER);
         label[4].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        label[4].setForeground(Color.BLACK);
         roundPanel[9].add(label[4]);
 
-        minus.setBorder(null);
-        minus.setText("-");
-        minus.setPreferredSize(new Dimension(35, 35));
-        minus.setFocusable(false);
+        configButton.accept(minus, List.of("-", 35, 35, 50, new Color(240, 240, 240), new Color(0x737070), new Color(0x737070), (Runnable) this::minusPress));
         minus.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        minus.setRadius(50);
-        minus.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                minusPress();
-            }
-        });
-        minus.setColor(new Color(240, 240, 240));
-        minus.setColorOver(new Color(0x737070));
-        minus.setColorClick(new Color(0x737070));
         roundPanel[7].add(minus);
 
         roundPanel[10].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -235,32 +216,20 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[10].setPreferredSize(new Dimension(50, 35));
         roundPanel[7].add(roundPanel[10]);
 
-
         label[5].setPreferredSize(new Dimension(50, 35));
         label[5].setHorizontalAlignment(JLabel.CENTER);
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 15));
+        label[5].setForeground(Color.BLACK);
         roundPanel[10].add(label[5]);
 
-        plus.setBorder(null);
-        plus.setText("+");
-        plus.setFocusable(false);
-        plus.setPreferredSize(new Dimension(35, 35));
+        configButton.accept(plus, List.of("+", 35, 35, 50, new Color(240, 240, 240), new Color(0x737070), new Color(0x737070), (Runnable) this::plusPress));
         plus.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        plus.setRadius(50);
-        plus.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                plusPress();
-            }
-        });
-        plus.setColor(new Color(240, 240, 240));
-        plus.setColorOver(new Color(0x737070));
-        plus.setColorClick(new Color(0x737070));
         roundPanel[7].add(plus);
 
         label[6].setText("Size:");
         label[6].setPreferredSize(new Dimension(50, 35));
-        ;
         label[6].setFont(new Font("Times New Roman", Font.BOLD, 17));
+        label[6].setForeground(Color.BLACK);
         roundPanel[7].add(label[6]);
 
         comboBoxProductSize.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -268,38 +237,20 @@ public class ProductDetailsGUI extends JFrame {
         comboBoxProductSize.setPreferredSize(new Dimension(100, 35));
         comboBoxProductSize.setBorder(null);
         comboBoxProductSize.setFocusable(false);
-        comboBoxProductSize.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectSize();
-            }
-        });
+        comboBoxProductSize.setBackground(new Color(240, 240, 240));
+        comboBoxProductSize.setForeground(Color.BLACK);
+        comboBoxProductSize.addActionListener(e -> selectSize());
         roundPanel[7].add(comboBoxProductSize);
 
-
+        configButton.accept(confirm, List.of("Xác nhận", 150, 50, 45, new Color(240, 240, 240), new Color(0x756969), new Color(0xA65B5B), (Runnable) this::pressConfirm));
         confirm.setIcon(new ImageIcon("img/icons/add-to-cart.png"));
-        confirm.setBorderPainted(false);
-        confirm.setText("Xác Nhận");
-        confirm.setFocusable(false);
-        confirm.setFocusPainted(false);
-        confirm.setPreferredSize(new Dimension(150, 50));
         confirm.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        confirm.setRadius(45);
-        confirm.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                pressConfirm();
-            }
-        });
-        confirm.setColor(new Color(240, 240, 240));
-        confirm.setColorOver(new Color(0x756969));
-        confirm.setColorClick(new Color(0xA65B5B));
         roundPanel[4].add(confirm);
-
     }
 
     public void minusPress() {
         int quantity = Integer.parseInt(label[5].getText());
-        if (quantity > 0) {
+        if (quantity > 1) {
             quantity--;
             label[5].setText(Integer.toString(quantity));
         }
@@ -371,8 +322,4 @@ public class ProductDetailsGUI extends JFrame {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-//    public static void main(String[] arg) {
-//        new ProductDetailsGUI().setVisible(true);
-//    }
 }

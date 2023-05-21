@@ -2,7 +2,6 @@ package com.cafe.custom;
 
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
-import com.cafe.BLL.ReceiptDetailsBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.utils.VNString;
@@ -58,19 +57,16 @@ public class BillDetailPanel extends RoundPanel {
 
         paymentFrame.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         paymentFrame.setPreferredSize(new Dimension(340, 75));
-        paymentFrame.setBackground(new Color(250, 250, 250));
         paymentFrame.setBorder(BorderFactory.createLineBorder(Color.black));
         this.add(paymentFrame);
 
 
         frame_name.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        frame_name.setBackground(new Color(250, 250, 250));
         frame_name.setPreferredSize(new Dimension(340, 30));
         paymentFrame.add(frame_name);
 
 
         frame_price.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        frame_price.setBackground(new Color(250, 250, 250));
         frame_price.setPreferredSize(new Dimension(340, 40));
         paymentFrame.add(frame_price);
 

@@ -3,6 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.AccountBLL;
 import com.cafe.DTO.Account;
 import com.cafe.main.CafeManagement;
+import com.cafe.utils.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,7 @@ public class LoginGUI extends JFrame {
     JButton exit = new JButton();
     JButton minimize = new JButton();
 
-    public LoginGUI() throws HeadlessException {
+    public LoginGUI() {
         initComponents();
         setVisible(true);
     }
@@ -117,7 +118,7 @@ public class LoginGUI extends JFrame {
 
         textField.setText("Username");
         textField.setBackground(new Color(0xffffff));
-        textField.setForeground(new Color(0x000000));
+        textField.setForeground(null);
         textField.setFont(new Font("open sans", Font.PLAIN, 15));
         textField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent ignoredEvt) {
@@ -138,7 +139,7 @@ public class LoginGUI extends JFrame {
 
         passwordField.setText("Password");
         passwordField.setBackground(new Color(0xffffff));
-        passwordField.setForeground(new Color(0x000000));
+        passwordField.setForeground(null);
         passwordField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent ignoredEvt) {
                 passwordFieldFocusGained(ignoredEvt);
@@ -158,7 +159,7 @@ public class LoginGUI extends JFrame {
 
         button.setText("Login");
         button.setBackground(new Color(44, 119, 44));
-        button.setForeground(new Color(0x000000));
+        button.setForeground(null);
         button.setPreferredSize(new Dimension(90, 40));
         button.setMaximumSize(new Dimension(90, 40));
         button.setMinimumSize(new Dimension(90, 40));
@@ -247,10 +248,15 @@ public class LoginGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         } else {
             Account account = accountList.get(0);
-            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                Thread thread = new Thread(() -> CafeManagement.homeGUI.setAccount(account));
+                thread.start();
+                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                thread.join();
+            } catch (Exception ignored) {
+
+            }
             dispose();
-//            CafeManagement.homeGUI = new HomeGUI(account);
-            CafeManagement.homeGUI.setAccount(account);
             CafeManagement.homeGUI.setVisible(true);
         }
     }
@@ -265,6 +271,7 @@ public class LoginGUI extends JFrame {
 
     @Override
     public void setVisible(boolean b) {
+        Settings.applyTheme("light");
         textField.setText("Username");
         passwordField.setText("Password");
         System.gc();

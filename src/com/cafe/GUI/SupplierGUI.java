@@ -13,8 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 
@@ -76,18 +74,15 @@ public class SupplierGUI extends JPanel {
         supplier.setBackground(new Color(70, 67, 67));
         this.add(supplier, BorderLayout.CENTER);
 
-        roundPanel1.setBackground(new Color(255, 255, 255));
         roundPanel1.setPreferredSize(new Dimension(635, 670));
         roundPanel1.setAutoscrolls(true);
         supplier.add(roundPanel1);
 
-        roundPanel[1].setBackground(new Color(255, 255, 255));
         roundPanel[1].setPreferredSize(new Dimension(635, 50));
         roundPanel[1].setAutoscrolls(true);
         roundPanel1.add(roundPanel[1]);
 
         roundPanel[2].setLayout(new BorderLayout(0, 10));
-        roundPanel[2].setBackground(new Color(255, 255, 255));
         roundPanel[2].setPreferredSize(new Dimension(620, 560));
         roundPanel[2].add(new JScrollPane(dataTable), BorderLayout.CENTER);
         roundPanel[2].setAutoscrolls(true);
@@ -95,13 +90,11 @@ public class SupplierGUI extends JPanel {
 
 
         roundPanel2.setLayout(new BorderLayout());
-        roundPanel2.setBackground(new Color(0xFFFFFF));
         roundPanel2.setPreferredSize(new Dimension(350, 670));
         roundPanel2.setAutoscrolls(true);
         supplier.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
-        search.setBackground(new Color(0xFFFFFF));
         search.setPreferredSize(new Dimension(635, 40));
         roundPanel[1].add(search, BorderLayout.NORTH);
 
@@ -133,7 +126,6 @@ public class SupplierGUI extends JPanel {
 
 
         pnlSupplierConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
-        pnlSupplierConfiguration.setBackground(new Color(0xFFFFFF));
         pnlSupplierConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlSupplierConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlSupplierConfiguration, BorderLayout.NORTH);
@@ -149,7 +141,7 @@ public class SupplierGUI extends JPanel {
                 jTextFieldsForm[i].setText(supplierBLL.getAutoID());
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
-                jTextFieldsForm[i].setDisabledTextColor(new Color(0x000000));
+                jTextFieldsForm[i].setDisabledTextColor(null);
             }
             else {
                 if ("NAME".equals(columnNames.get(i))) {
@@ -186,89 +178,20 @@ public class SupplierGUI extends JPanel {
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setBackground(new Color(0xFFFFFF));
             mode.setPreferredSize(new Dimension(635, 130));
             roundPanel2.add(mode, BorderLayout.SOUTH);
 
-            btAdd.setBackground(new Color(35, 166, 97));
-            btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
-            btAdd.setText("  Thêm");
-            btAdd.setColor(new Color(240, 240, 240));
-            btAdd.setColorClick(new Color(141, 222, 175));
-            btAdd.setColorOver(new Color(35, 166, 97));
-            btAdd.setFocusPainted(false);
-            btAdd.setRadius(20);
-            btAdd.setEnabled(true);
-            btAdd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btAdd.isEnabled()) {
-                        addSupplier();
-                    }
-                }
-            });
+            Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addSupplier));
             mode.add(btAdd);
         }
-
         if (decentralizationMode == 3) {
-            btUpd.setBackground(new Color(35, 166, 97));
-            btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Sửa");
-            btUpd.setColor(new Color(240, 240, 240));
-            btUpd.setColorClick(new Color(141, 222, 175));
-            btUpd.setColorOver(new Color(35, 166, 97));
-            btUpd.setFocusPainted(false);
-            btUpd.setRadius(20);
-            btUpd.setEnabled(false);
-            btUpd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btUpd.isEnabled()) {
-                        updateSupplier();
-                    }
-                }
-            });
+            Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateSupplier));
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteSupplier));
             mode.add(btUpd);
-
-            btDel.setBackground(new Color(35, 166, 97));
-            btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Xoá");
-            btDel.setColor(new Color(240, 240, 240));
-            btDel.setColorClick(new Color(141, 222, 175));
-            btDel.setColorOver(new Color(35, 166, 97));
-            btDel.setFocusPainted(false);
-            btDel.setRadius(20);
-            btDel.setEnabled(false);
-            btDel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btDel.isEnabled()) {
-                        deleteSupplier();
-                    }
-                }
-            });
             mode.add(btDel);
         }
-
         if (decentralizationMode > 1) {
-            btRef.setBackground(new Color(35, 166, 97));
-            btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Làm mới");
-            btRef.setColor(new Color(240, 240, 240));
-            btRef.setColorClick(new Color(141, 222, 175));
-            btRef.setColorOver(new Color(35, 166, 97));
-            btRef.setFocusPainted(false);
-            btRef.setRadius(20);
-            btRef.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    refreshForm();
-                }
-            });
+            Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
             dataTable.setRowSelectionInterval(0, 0);

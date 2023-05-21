@@ -9,10 +9,12 @@ import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.function.BiConsumer;
 
 public class FrameIngredient extends JFrame {
-
     private String[] data = new String[6];
     private IngredientGUI ingredientGUI;
     private int index;
@@ -27,6 +29,7 @@ public class FrameIngredient extends JFrame {
     private JLabel label;
     private JLabel[] label1;
     private JTextField[] jTextField;
+
     public FrameIngredient(IngredientGUI ingredientGUI, String[] data, int index) {
         System.gc();
         this.index = index;
@@ -34,10 +37,6 @@ public class FrameIngredient extends JFrame {
         System.arraycopy(data, 0, this.data, 0, data.length);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
-    }
-
-    public static void main(String[] arg) {
-        new FrameCustomer("0987654321").setVisible(true);
     }
 
     public void initComponents() {
@@ -69,7 +68,6 @@ public class FrameIngredient extends JFrame {
         exit = new Button();
         label = new JLabel();
 
-
         roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         roundPanel[0].setBackground(new Color(68, 150, 60));
         this.add(roundPanel[0]);
@@ -79,10 +77,8 @@ public class FrameIngredient extends JFrame {
         roundPanel[1].setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         roundPanel[0].add(roundPanel[1]);
 
-
         roundPanel[2].setPreferredSize(new Dimension(400, 565));
         roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-        roundPanel[2].setBackground(new Color(240, 240, 240));
         roundPanel[0].add(roundPanel[2]);
 
         roundPanel[3].setPreferredSize(new Dimension(394, 559));
@@ -90,50 +86,38 @@ public class FrameIngredient extends JFrame {
         roundPanel[3].setBackground(new Color(68, 150, 60));
         roundPanel[2].add(roundPanel[3]);
 
-        minimize.setBorder(null);
-        minimize.setText("-");
-        minimize.setPreferredSize(new Dimension(40, 25));
-        minimize.setFocusPainted(false);
-        minimize.setBackground(new Color(0xF3F0F0));
-        minimize.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        minimize.setRadius(15);
+        BiConsumer<Button, java.util.List<Object>> configButton = (button, properties) -> {
+            button.setBorder(null);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setPreferredSize(new Dimension((Integer) properties.get(1), (Integer) properties.get(2)));
+            button.setRadius((Integer) properties.get(3));
+            button.setColor((Color) properties.get(4));
+            button.setColorOver((Color) properties.get(5));
+            button.setColorClick((Color) properties.get(6));
+            button.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent evt) {
+                    ((Runnable) properties.get(7)).run();
+                }
+            });
+        };
+        configButton.accept(minimize, java.util.List.of("-", 40, 25, 15, new Color(0xF3F0F0), new Color(0xC4BDBD), new Color(0x676161), (Runnable) this::minimize));
         roundPanel[1].add(minimize);
-        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                minimize();
-            }
-        });
-        minimize.setColor(new Color(0xF3F0F0));
-        minimize.setColorOver(new Color(0xC4BDBD));
-        minimize.setColorClick(new Color(0x676161));
-
-        exit.setBorder(null);
-        exit.setText("X");
-        exit.setPreferredSize(new Dimension(40, 25));
-        exit.setFocusPainted(false);
-        exit.setBackground(new Color(0xFD1111));
-        exit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        exit.setRadius(15);
+        configButton.accept(exit, java.util.List.of("X", 40, 25, 15, new Color(0xFD1111), new Color(0xB04848), new Color(0xE79292), (Runnable) this::exit));
         roundPanel[1].add(exit);
-        exit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                exit();
-            }
-        });
-        exit.setColor(new Color(0xFD1111));
-        exit.setColorOver(new Color(0xB04848));
-        exit.setColorClick(new Color(0xE79292));
 
         roundPanel[4].setPreferredSize(new Dimension(370, 60));
         roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[3].add(roundPanel[4]);
 
-
         roundPanel[5].setPreferredSize(new Dimension(370, 468));
         roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roundPanel[3].add(roundPanel[5]);
 
-        label.setBackground(new Color(250, 250, 250));
         label.setPreferredSize(new Dimension(300, 50));
         label.setFont(new Font("Tahoma", Font.BOLD, 16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -145,7 +129,6 @@ public class FrameIngredient extends JFrame {
             roundPanel1[i].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             roundPanel[5].add(roundPanel1[i]);
 
-            label1[i].setBackground(new Color(250, 250, 250));
             label1[i].setPreferredSize(new Dimension(135, 50));
             label1[i].setFont(new Font("Times New Roman", Font.PLAIN, 16));
             label1[i].setHorizontalAlignment(SwingConstants.LEFT);
@@ -155,10 +138,8 @@ public class FrameIngredient extends JFrame {
         label1[1].setPreferredSize(new Dimension(70, 50));
         label1[2].setPreferredSize(new Dimension(90, 50));
 
-
         roundPanel1[4].setPreferredSize(new Dimension(340, 45));
         roundPanel[5].add(roundPanel1[4]);
-
 
         label1[0].setText("Mã nguyên liệu:");
         label1[1].setText("Tên nguyên liệu:");
@@ -171,7 +152,6 @@ public class FrameIngredient extends JFrame {
         jTextField[0].setHorizontalAlignment(SwingConstants.CENTER);
         jTextField[0].setPreferredSize(new Dimension(200, 40));
         jTextField[0].setText(this.data[0]);
-        jTextField[0].setBackground(new Color(240, 240, 240));
         jTextField[0].setBorder(BorderFactory.createEmptyBorder());
         jTextField[0].setEditable(false);
         roundPanel1[0].add(jTextField[0]);
@@ -214,49 +194,21 @@ public class FrameIngredient extends JFrame {
         label1[8].setText(VNString.currency(Double.parseDouble(this.data[3])));
         label1[9].setText(supplier.getName());
 
+        configButton.accept(confirm, java.util.List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::pressConfirm));
         confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
-        confirm.setBorderPainted(false);
-        confirm.setText("THÊM");
-        confirm.setFocusable(false);
-        confirm.setFocusPainted(false);
-        confirm.setPreferredSize(new Dimension(120, 45));
-        confirm.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        confirm.setRadius(45);
-        confirm.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                pressConfirm();
-            }
-        });
-        confirm.setColor(new Color(135, 255, 58));
-        confirm.setColorOver(new Color(0x499D20));
-        confirm.setColorClick(new Color(0x2DFF00));
         roundPanel1[9].add(confirm);
 
         roundPanel[6].setPreferredSize(new Dimension(220, 40));
         roundPanel[6].setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         roundPanel1[2].add(roundPanel[6]);
 
-        minus.setBorder(null);
-        minus.setText("-");
-        minus.setPreferredSize(new Dimension(35, 35));
-        minus.setFocusable(false);
-        minus.setFont(new java.awt.Font("Tahoma", Font.PLAIN, 16));
-        minus.setRadius(50);
-        minus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                minusPress();
-            }
-        });
-        minus.setColor(new Color(240, 240, 240));
-        minus.setColorOver(new Color(0x737070));
-        minus.setColorClick(new Color(0x737070));
+        configButton.accept(minus, java.util.List.of("-", 35, 35, 50, new Color(240, 240, 240), new Color(0x737070), new Color(0x737070), (Runnable) this::minusPress));
+        minus.setFont(new Font("Tahoma", Font.BOLD, 16));
         roundPanel[6].add(minus);
 
         roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        roundPanel[7].setBackground(new Color(250, 250, 250));
         roundPanel[7].setPreferredSize(new Dimension(50, 35));
         roundPanel[6].add(roundPanel[7]);
-
 
         label1[11].setPreferredSize(new Dimension(50, 35));
         label1[11].setText(String.valueOf(index));
@@ -264,36 +216,24 @@ public class FrameIngredient extends JFrame {
         label1[11].setFont(new Font("Times New Roman", Font.BOLD, 15));
         roundPanel[7].add(label1[11]);
 
-        plus.setBorder(null);
-        plus.setText("+");
-        plus.setFocusable(false);
-        plus.setPreferredSize(new Dimension(35, 35));
-        plus.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        plus.setRadius(50);
-        plus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                plusPress();
-            }
-        });
-        plus.setColor(new Color(240, 240, 240));
-        plus.setColorOver(new Color(0x737070));
-        plus.setColorClick(new Color(0x737070));
+        configButton.accept(plus, java.util.List.of("+", 35, 35, 50, new Color(240, 240, 240), new Color(0x737070), new Color(0x737070), (Runnable) this::plusPress));
+        plus.setFont(new Font("Tahoma", Font.BOLD, 16));
         roundPanel[6].add(plus);
     }
 
     public void minusPress() {
-        int a = Integer.parseInt(label1[11].getText());
-        if (a > 0) {
-            a--;
-            label1[11].setText(Integer.toString(a));
+        int quantity = Integer.parseInt(label1[11].getText());
+        if (quantity > 1) {
+            quantity--;
+            label1[11].setText(Integer.toString(quantity));
         }
     }
 
     public void plusPress() {
-        int a = Integer.parseInt(label1[11].getText());
-        if (a < 100) {
-            a++;
-            label1[11].setText(Integer.toString(a));
+        int quantity = Integer.parseInt(label1[11].getText());
+        if (quantity < 100) {
+            quantity++;
+            label1[11].setText(Integer.toString(quantity));
         }
     }
 

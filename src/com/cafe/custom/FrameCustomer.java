@@ -7,8 +7,12 @@ import com.cafe.utils.Day;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class FrameCustomer extends JFrame {
     private JRadioButton rbMale;
@@ -24,19 +28,15 @@ public class FrameCustomer extends JFrame {
     private Button exit;
     private RoundPanel[] roundPanel;
     private RoundPanel[] roundPanel1;
-    private JPanel panel;
     private JLabel label;
     private JLabel[] label1;
     private JTextField jTextField[];
+
     public FrameCustomer(String phone) {
         System.gc();
         this.phone = phone;
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
-    }
-
-    public static void main(String[] arg) {
-        new FrameCustomer("0987654321").setVisible(true);
     }
 
     public void initComponents() {
@@ -65,7 +65,6 @@ public class FrameCustomer extends JFrame {
         }
 
         confirm = new Button();
-        panel = new JPanel();
         minimize = new Button();
         exit = new Button();
         label = new JLabel();
@@ -83,7 +82,6 @@ public class FrameCustomer extends JFrame {
 
         roundPanel[2].setPreferredSize(new Dimension(400, 640));
         roundPanel[2].setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
-        roundPanel[2].setBackground(new Color(240, 240, 240));
         roundPanel[0].add(roundPanel[2]);
 
         roundPanel[3].setPreferredSize(new Dimension(394, 634));
@@ -91,39 +89,29 @@ public class FrameCustomer extends JFrame {
         roundPanel[3].setBackground(new Color(68, 150, 60));
         roundPanel[2].add(roundPanel[3]);
 
-        minimize.setBorder(null);
-        minimize.setText("-");
-        minimize.setPreferredSize(new Dimension(40, 25));
-        minimize.setFocusPainted(false);
-        minimize.setBackground(new Color(0xF3F0F0));
-        minimize.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        minimize.setRadius(15);
+        BiConsumer<Button, List<Object>> configButton = (button, properties) -> {
+            button.setBorder(null);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 16));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setPreferredSize(new Dimension((Integer) properties.get(1), (Integer) properties.get(2)));
+            button.setRadius((Integer) properties.get(3));
+            button.setColor((Color) properties.get(4));
+            button.setColorOver((Color) properties.get(5));
+            button.setColorClick((Color) properties.get(6));
+            button.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent evt) {
+                    ((Runnable) properties.get(7)).run();
+                }
+            });
+        };
+        configButton.accept(minimize, List.of("-", 40, 25, 15, new Color(0xF3F0F0), new Color(0xC4BDBD), new Color(0x676161), (Runnable) this::minimize));
         roundPanel[1].add(minimize);
-        minimize.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                minimize();
-            }
-        });
-        minimize.setColor(new Color(0xF3F0F0));
-        minimize.setColorOver(new Color(0xC4BDBD));
-        minimize.setColorClick(new Color(0x676161));
-
-        exit.setBorder(null);
-        exit.setText("X");
-        exit.setPreferredSize(new Dimension(40, 25));
-        exit.setFocusPainted(false);
-        exit.setBackground(new Color(0xFD1111));
-        exit.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        exit.setRadius(15);
+        configButton.accept(exit, List.of("X", 40, 25, 15, new Color(0xFD1111), new Color(0xB04848), new Color(0xE79292), (Runnable) this::exit));
         roundPanel[1].add(exit);
-        exit.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                exit();
-            }
-        });
-        exit.setColor(new Color(0xFD1111));
-        exit.setColorOver(new Color(0xB04848));
-        exit.setColorClick(new Color(0xE79292));
 
         roundPanel[4].setPreferredSize(new Dimension(370, 60));
         roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -133,7 +121,6 @@ public class FrameCustomer extends JFrame {
         roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roundPanel[3].add(roundPanel[5]);
 
-        label.setBackground(new Color(250, 250, 250));
         label.setPreferredSize(new Dimension(300, 50));
         label.setFont(new Font("Tahoma", Font.BOLD, 16));
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -145,7 +132,6 @@ public class FrameCustomer extends JFrame {
             roundPanel1[i].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
             roundPanel[5].add(roundPanel1[i]);
 
-            label1[i].setBackground(new Color(250, 250, 250));
             label1[i].setPreferredSize(new Dimension(120, 50));
             label1[i].setFont(new Font("Times New Roman", Font.PLAIN, 16));
             label1[i].setHorizontalAlignment(SwingConstants.LEFT);
@@ -168,7 +154,6 @@ public class FrameCustomer extends JFrame {
         jTextField[0].setHorizontalAlignment(SwingConstants.CENTER);
         jTextField[0].setPreferredSize(new Dimension(210, 40));
         jTextField[0].setText(customerBLL.getAutoID());
-        jTextField[0].setBackground(new Color(240, 240, 240));
         jTextField[0].setBorder(BorderFactory.createEmptyBorder());
         jTextField[0].setEditable(false);
         roundPanel1[0].add(jTextField[0]);
@@ -210,22 +195,8 @@ public class FrameCustomer extends JFrame {
         roundPanel1[9].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[5].add(roundPanel1[9]);
 
+        configButton.accept(confirm, List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::addCustomer));
         confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
-        confirm.setBorderPainted(false);
-        confirm.setText("THÊM");
-        confirm.setFocusable(false);
-        confirm.setFocusPainted(false);
-        confirm.setPreferredSize(new Dimension(120, 45));
-        confirm.setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        confirm.setRadius(45);
-        confirm.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                addCustomer();
-            }
-        });
-        confirm.setColor(new Color(135, 255, 58));
-        confirm.setColorOver(new Color(0x499D20));
-        confirm.setColorClick(new Color(0x2DFF00));
         roundPanel1[9].add(confirm);
     }
 
@@ -328,9 +299,5 @@ public class FrameCustomer extends JFrame {
 
     private void exit() {
         this.dispose();
-    }
-
-    public void pressConfirm() {
-
     }
 }

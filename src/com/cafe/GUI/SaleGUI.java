@@ -16,6 +16,7 @@ import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class SaleGUI extends JPanel {
@@ -185,7 +186,6 @@ public class SaleGUI extends JPanel {
         roundPanel5.add(txtSearch1);
 
 
-        btnSearch1.setBackground(new Color(240, 240, 240));
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
         btnSearch1.setIcon(new ImageIcon("img/icons/search.png"));
@@ -218,14 +218,12 @@ public class SaleGUI extends JPanel {
         });
         roundPanel7.add(txtSearch2, BorderLayout.WEST);
 
-        btnSearchByFace.setBackground(new Color(240, 240, 240));
         btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btnSearchByFace.setPreferredSize(new Dimension(40, 35));
         btnSearchByFace.setFocusPainted(false);
-        btnSearchByFace.setColor(new Color(240, 240, 240));
         btnSearchByFace.setColorOver(new Color(0xA6A1A1));
-        btnSearchByFace.setColorOver(new Color(0x2F2F2F));
+        btnSearchByFace.setColorClick(new Color(0x2F2F2F));
         btnSearchByFace.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -234,14 +232,12 @@ public class SaleGUI extends JPanel {
         });
         roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
 
-        btnSearch2.setBackground(new Color(240, 240, 240));
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch2.setPreferredSize(new Dimension(35, 35));
         btnSearch2.setIcon(new ImageIcon("img/icons/search.png"));
         btnSearch2.setFocusPainted(false);
-        btnSearch2.setColor(new Color(240, 240, 240));
         btnSearch2.setColorOver(new Color(0xA6A1A1));
-        btnSearch2.setColorOver(new Color(0x2F2F2F));
+        btnSearch2.setColorClick(new Color(0x2F2F2F));
         btnSearch2.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -270,7 +266,6 @@ public class SaleGUI extends JPanel {
             infoTxt[i].setBorder(BorderFactory.createEmptyBorder());
             infoTxt[i].setEditable(false);
             infoTxt[i].setFocusable(false);
-            infoTxt[i].setBackground(new Color(240, 240, 240));
             if (i == 0) {
                 infoLabel[i].setText("Tên khách hàng: ");
                 roundPanel8.add(infoLabel[i]);
@@ -287,7 +282,6 @@ public class SaleGUI extends JPanel {
         productScrollPane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         productScrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         roundPanel9.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        roundPanel9.setBackground(new Color(240, 240, 240));
         roundPanel9.setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel9.setPreferredSize(new Dimension(productScrollPane2.getWidth(), productScrollPane2.getHeight()));
         roundPanel2.add(productScrollPane2);
@@ -332,7 +326,6 @@ public class SaleGUI extends JPanel {
 
             if (i != 1) {
                 jTextField[i].setPreferredSize(new Dimension(123, 25));
-                jTextField[i].setBackground(new Color(240, 240, 240));
                 jTextField[i].setBorder(BorderFactory.createEmptyBorder());
                 jTextField[i].setEditable(false);
                 jTextField[i].setFocusable(false);
@@ -367,40 +360,31 @@ public class SaleGUI extends JPanel {
             }
         }
 
-        btnPurchase.setPreferredSize(new Dimension(135, 40));
-        btnPurchase.setBorderPainted(false);
-        btnPurchase.setRadius(15);
-        btnPurchase.setFocusPainted(false);
-        btnPurchase.setFont(fontTimesNewRoman);
-        btnPurchase.setIcon(new ImageIcon("img/icons/plus.png"));
-        btnPurchase.setColor(new Color(0x70E149));
-        btnPurchase.setColorOver(new Color(0x5EFF00));
-        btnPurchase.setColorClick(new Color(0x8AD242));
-        btnPurchase.setText("Thanh Toán");
-        btnPurchase.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                purchase();
-            }
-        });
+        BiConsumer<Button, List<Object>> configButton = (button, properties) -> {
+            button.setPreferredSize(new Dimension(135, 40));
+            button.setBorderPainted(false);
+            button.setRadius(15);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setColor((Color) properties.get(1));
+            button.setColorOver((Color) properties.get(2));
+            button.setColorClick((Color) properties.get(3));
+            button.setIcon(new ImageIcon((String) properties.get(4)));
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    ((Runnable) properties.get(5)).run();
+                }
+            });
+        };
+
+        configButton.accept(btnPurchase, List.of("Thanh toán", new Color(0x70E149), new Color(0x5EFF00), new Color(0x8AD242), "img/icons/plus.png", (Runnable) this::purchase));
         roundPanel11.add(btnPurchase);
 
-        btnCancel.setPreferredSize(new Dimension(135, 40));
-        btnCancel.setBorderPainted(false);
-        btnCancel.setRadius(15);
-        btnCancel.setFocusPainted(false);
-        btnCancel.setFont(fontTimesNewRoman);
-        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
-        btnCancel.setColor(new Color(0xFFBD3737));
-        btnCancel.setColorOver(new Color(0xFF0000));
-        btnCancel.setColorClick(new Color(0xB65858));
-        btnCancel.setText("Hủy");
-        btnCancel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                cancel();
-            }
-        });
+        configButton.accept(btnCancel, List.of("Hủy", new Color(0xFFBD3737), new Color(0xFF0000), new Color(0xB65858), "img/icons/remove.png", (Runnable) this::cancel));
         roundPanel11.add(btnCancel);
 
         productScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);

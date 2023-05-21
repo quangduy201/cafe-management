@@ -7,9 +7,7 @@ import com.cafe.DTO.Statistic;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.LoginGUI;
 import com.cafe.utils.Day;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-
-import javax.swing.*;
+import com.cafe.utils.Settings;
 
 public class CafeManagement {
     public static LoginGUI loginGUI;
@@ -23,11 +21,7 @@ public class CafeManagement {
     }
 
     public static void start() {
-        try {
-            UIManager.setLookAndFeel(new FlatIntelliJLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
-        }
+        Settings.applyTheme("light");
         statisticBLL = new StatisticBLL();
         discountBLL = new DiscountBLL();
         statisticBLL.addStatisticsSinceTheLastStatistic();

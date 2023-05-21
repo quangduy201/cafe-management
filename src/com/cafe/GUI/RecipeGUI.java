@@ -15,8 +15,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -75,10 +73,10 @@ public class RecipeGUI extends JPanel {
         cbbProductIDSearch = new JComboBox<>(productsID.toArray());
         cbbIngredientID = new JComboBox<>(ingredientsID.toArray());
         cbbIngredientIDSearch = new JComboBox<>(ingredientsID.toArray());
-        cbbUnit = new JComboBox<>(new String [] {"kg", "l", "bag"});
-        cbbUnitSearch = new JComboBox<>(new String [] {"kg", "l", "bag"});
+        cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
+        cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         txtSearch = new JTextField(20);
-        jTextFieldsForm = new JTextField [columnNames.size()-4];
+        jTextFieldsForm = new JTextField[columnNames.size() - 4];
         btAdd = new Button();
         btUpd = new Button();
         btRef = new Button();
@@ -95,13 +93,11 @@ public class RecipeGUI extends JPanel {
         recipe.add(roundPanel1);
 
         roundPanel2.setLayout(new BorderLayout());
-        roundPanel2.setBackground(new Color(0xFFFFFF));
         roundPanel2.setPreferredSize(new Dimension(350, 680));
         roundPanel2.setAutoscrolls(true);
         recipe.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
-        search.setBackground(new Color(0xFFFFFF));
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
@@ -139,7 +135,6 @@ public class RecipeGUI extends JPanel {
         roundPanel1.add(scrollPane);
 
         pnlRecipeConfiguration.setLayout(new GridLayout(5, 2, 20, 20));
-        pnlRecipeConfiguration.setBackground(new Color(0xFFFFFF));
         pnlRecipeConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlRecipeConfiguration.setPreferredSize(new Dimension(635, 250));
         roundPanel2.add(pnlRecipeConfiguration, BorderLayout.NORTH);
@@ -154,7 +149,7 @@ public class RecipeGUI extends JPanel {
                     jTextFieldsForm[index] = new JTextField(recipeBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
-                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    jTextFieldsForm[index].setDisabledTextColor(null);
                     pnlRecipeConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -193,75 +188,23 @@ public class RecipeGUI extends JPanel {
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 300));
-        showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setBackground(new Color(0xFFFFFF));
             mode.setPreferredSize(new Dimension(635, 130));
             roundPanel2.add(mode, BorderLayout.SOUTH);
 
-            btAdd.setBackground(new Color(35, 166, 97));
-            btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
-            btAdd.setText("  Thêm");
-            btAdd.setColor(new Color(240, 240, 240));
-            btAdd.setColorClick(new Color(141, 222, 175));
-            btAdd.setColorOver(new Color(35, 166, 97));
-            btAdd.setFocusPainted(false);
-            btAdd.setRadius(20);
-            btAdd.setEnabled(true);
-            btAdd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btAdd.isEnabled()) {
-                        addRecipe();
-                    }
-                }
-            });
+            Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addRecipe));
             mode.add(btAdd);
         }
-
         if (decentralizationMode == 3) {
-            btUpd.setBackground(new Color(35, 166, 97));
-            btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Sửa");
-            btUpd.setColor(new Color(240, 240, 240));
-            btUpd.setColorClick(new Color(141, 222, 175));
-            btUpd.setColorOver(new Color(35, 166, 97));
-            btUpd.setFocusPainted(false);
-            btUpd.setRadius(20);
-            btUpd.setEnabled(false);
-            btUpd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btUpd.isEnabled()) {
-                        updateRecipe();
-                    }
-                }
-            });
+            Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateRecipe));
             mode.add(btUpd);
         }
-
         if (decentralizationMode > 1) {
-            btRef.setBackground(new Color(35, 166, 97));
-            btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Làm mới");
-            btRef.setColor(new Color(240, 240, 240));
-            btRef.setColorClick(new Color(141, 222, 175));
-            btRef.setColorOver(new Color(35, 166, 97));
-            btRef.setFocusPainted(false);
-            btRef.setRadius(20);
-            btRef.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    refreshForm();
-                }
-            });
+            Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
             dataTable.setRowSelectionInterval(0, 0);

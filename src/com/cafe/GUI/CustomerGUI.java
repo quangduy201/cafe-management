@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class CustomerGUI extends JPanel {
     private CustomerBLL customerBLL = new CustomerBLL();
@@ -67,7 +68,6 @@ public class CustomerGUI extends JPanel {
 
     public void initComponents() {
         List<String> columnNames = customerBLL.getCustomerDAL().getColumnNames();
-        findCustomerByFace = new Button();
         customer = new RoundPanel();
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
@@ -108,13 +108,11 @@ public class CustomerGUI extends JPanel {
         customer.add(roundPanel1);
 
         roundPanel2.setLayout(new BorderLayout());
-        roundPanel2.setBackground(new Color(0xFFFFFF));
         roundPanel2.setPreferredSize(new Dimension(350, 680));
         roundPanel2.setAutoscrolls(true);
         customer.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
-        search.setBackground(new Color(0xFFFFFF));
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
@@ -172,7 +170,6 @@ public class CustomerGUI extends JPanel {
         roundPanel1.add(scrollPane);
 
         pnlCustomerConfiguration.setLayout(new GridLayout(7, 2, 20, 20));
-        pnlCustomerConfiguration.setBackground(new Color(0xFFFFFF));
         pnlCustomerConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlCustomerConfiguration.setPreferredSize(new Dimension(635, 350));
         roundPanel2.add(pnlCustomerConfiguration, BorderLayout.NORTH);
@@ -206,7 +203,7 @@ public class CustomerGUI extends JPanel {
                     jTextFieldsForm[index] = new JTextField(customerBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
-                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    jTextFieldsForm[index].setDisabledTextColor(null);
                     pnlCustomerConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
@@ -285,133 +282,59 @@ public class CustomerGUI extends JPanel {
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 200));
-        showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        btFaceSignUp = new Button();
-        btFaceSignUp.setBackground(new Color(35, 166, 97));
-        btFaceSignUp.setBorder(null);
-        btFaceSignUp.setIcon(new ImageIcon("img/icons/face-scanner.png"));
-        btFaceSignUp.setText("Sign up your face  ");
-        btFaceSignUp.setColor(new Color(240, 240, 240));
-        btFaceSignUp.setColorClick(new Color(141, 222, 175));
-        btFaceSignUp.setColorOver(new Color(35, 166, 97));
-        btFaceSignUp.setFocusPainted(false);
-        btFaceSignUp.setRadius(20);
-        btFaceSignUp.setEnabled(false);
-        btFaceSignUp.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                faceSignUp();
+        BiConsumer<Button, List<Object>> configButton = (button, properties) -> {
+            button.setBorder(null);
+            button.setBorderPainted(false);
+            button.setRadius(15);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setColor((Color) properties.get(1));
+            button.setColorOver((Color) properties.get(2));
+            button.setColorClick((Color) properties.get(3));
+            button.setEnabled((Boolean) properties.get(4));
+            if ((Boolean) properties.get(4)) {
+                button.setPreferredSize(new Dimension(150, 25));
+                button.setIcon(new ImageIcon(new ImageIcon((String) properties.get(5)).getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
+            } else {
+                button.setIcon(new ImageIcon((String) properties.get(5)));
             }
-        });
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    ((Runnable) properties.get(6)).run();
+                }
+            });
+        };
+        btFaceSignUp = new Button();
+        configButton.accept(btFaceSignUp, List.of("Đăng ký gương mặt  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), false, "img/icons/face-scanner.png", (Runnable) this::faceSignUp));
         showImg.add(btFaceSignUp);
 
-
-        findCustomerByFace.setBackground(new Color(35, 166, 97));
-        findCustomerByFace.setBorder(null);
-        findCustomerByFace.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH)));
-        findCustomerByFace.setText("Find Customer  ");
-        findCustomerByFace.setPreferredSize(new Dimension(150, 25));
-        findCustomerByFace.setColor(new Color(240, 240, 240));
-        findCustomerByFace.setColorClick(new Color(141, 222, 175));
-        findCustomerByFace.setColorOver(new Color(35, 166, 97));
-        findCustomerByFace.setFocusPainted(false);
-        findCustomerByFace.setRadius(20);
-        findCustomerByFace.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                findCustomerByFace();
-            }
-        });
+        findCustomerByFace = new Button();
+        configButton.accept(findCustomerByFace, List.of("Tìm khách hàng  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), true, "img/icons/face-scanner.png", (Runnable) this::findCustomerByFace));
         search.add(findCustomerByFace);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setBackground(new Color(0xFFFFFF));
             mode.setPreferredSize(new Dimension(635, 130));
             roundPanel2.add(mode, BorderLayout.SOUTH);
 
-            btAdd.setBackground(new Color(35, 166, 97));
-            btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
-            btAdd.setText("  Thêm");
-            btAdd.setColor(new Color(240, 240, 240));
-            btAdd.setColorClick(new Color(141, 222, 175));
-            btAdd.setColorOver(new Color(35, 166, 97));
-            btAdd.setFocusPainted(false);
-            btAdd.setRadius(20);
-            btAdd.setEnabled(true);
-            btAdd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btAdd.isEnabled()) {
-                        addCustomer();
-                    }
-                }
-            });
+            Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addCustomer));
             mode.add(btAdd);
         }
-
         if (decentralizationMode == 3) {
-            btUpd.setBackground(new Color(35, 166, 97));
-            btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Sửa");
-            btUpd.setColor(new Color(240, 240, 240));
-            btUpd.setColorClick(new Color(141, 222, 175));
-            btUpd.setColorOver(new Color(35, 166, 97));
-            btUpd.setFocusPainted(false);
-            btUpd.setRadius(20);
-            btUpd.setEnabled(false);
-            btUpd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btUpd.isEnabled()) {
-                        updateCustomer();
-                    }
-                }
-            });
+            Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateCustomer));
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteCustomer));
             mode.add(btUpd);
-
-            btDel.setBackground(new Color(35, 166, 97));
-            btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Xoá");
-            btDel.setColor(new Color(240, 240, 240));
-            btDel.setColorClick(new Color(141, 222, 175));
-            btDel.setColorOver(new Color(35, 166, 97));
-            btDel.setFocusPainted(false);
-            btDel.setRadius(20);
-            btDel.setEnabled(false);
-            btDel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btDel.isEnabled()) {
-                        deleteCustomer();
-                    }
-                }
-            });
             mode.add(btDel);
         }
-
         if (decentralizationMode > 1) {
-            btRef.setBackground(new Color(35, 166, 97));
-            btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Làm mới");
-            btRef.setColor(new Color(240, 240, 240));
-            btRef.setColorClick(new Color(141, 222, 175));
-            btRef.setColorOver(new Color(35, 166, 97));
-            btRef.setFocusPainted(false);
-            btRef.setRadius(20);
-            btRef.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    refreshForm();
-                }
-            });
+            Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
             dataTable.setRowSelectionInterval(0, 0);
@@ -441,7 +364,6 @@ public class CustomerGUI extends JPanel {
     private void genderSearch() {
         boolean gender = rbMaleSearch.isSelected();
         loadDataTable(customerBLL.findCustomers("GENDER", gender));
-
     }
 
     private void membershipSearch() {

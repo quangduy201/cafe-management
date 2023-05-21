@@ -4,8 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class Button extends JButton {
+    private boolean over;
+    private Color color;
+    private Color colorOver;
+    private Color colorClick;
+    private Color borderColor;
+    private int radius = 0;
+
     public Button() {
         setContentAreaFilled(false);
         initComponent();
@@ -15,6 +23,28 @@ public class Button extends JButton {
         this.borderColor = color;
         setContentAreaFilled(false);
         initComponent();
+    }
+
+    public static void configButton(Button button, List<Object> properties) {
+        button.setBorder(null);
+        button.setColor(new Color(240, 240, 240));
+        button.setColorClick(new Color(141, 222, 175));
+        button.setColorOver(new Color(35, 166, 97));
+        button.setBorderColor(Color.BLACK);
+        button.setForeground(Color.BLACK);
+        button.setFocusPainted(false);
+        button.setRadius(20);
+        button.setText((String) properties.get(0));
+        button.setIcon(new ImageIcon((String) properties.get(1)));
+        button.setEnabled((Boolean) properties.get(2));
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (button.isEnabled()) {
+                    ((Runnable) properties.get(3)).run();
+                }
+            }
+        });
     }
 
     public void initComponent() {
@@ -38,7 +68,7 @@ public class Button extends JButton {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(over) {
+                if (over) {
                     setBackground(colorOver);
                 } else {
                     setBackground(color);
@@ -64,8 +94,6 @@ public class Button extends JButton {
         setBackground(color);
     }
 
-
-
     public Color getColorOver() {
         return colorOver;
     }
@@ -88,7 +116,6 @@ public class Button extends JButton {
 
     public void setBorderColor(Color borderColor) {
         this.borderColor = borderColor;
-//        super.paintComponent(null);
     }
 
     public int getRadius() {
@@ -98,14 +125,6 @@ public class Button extends JButton {
     public void setRadius(int radius) {
         this.radius = radius;
     }
-
-
-    private boolean over;
-    private Color color;
-    private Color colorOver;
-    private Color colorClick;
-    private Color borderColor;
-    private int  radius = 0;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -117,9 +136,8 @@ public class Button extends JButton {
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         //Border set 2px
         g2.setColor(getBackground());
-        g2.fillRoundRect(2, 2, getWidth()-4, getHeight()-4, radius, radius);
+        g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, radius, radius);
 
         super.paintComponent(g);
     }
-
 }

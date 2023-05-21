@@ -9,15 +9,14 @@ import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
+import com.cafe.utils.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.function.BiConsumer;
 
 public class HomeGUI extends JFrame {
     private Account account;
@@ -55,6 +54,7 @@ public class HomeGUI extends JFrame {
     private int[] listCount = new int[3];
     private int totalHeight;
     private Color imageAvatarIcon;
+    int currentPanel = 1;
 
     public HomeGUI(Account account) {
         this.account = account;
@@ -78,6 +78,8 @@ public class HomeGUI extends JFrame {
         getUser();
         System.gc();
         initLeftMenu();
+        selectRoundPanel(1);
+        changeTheme();
     }
 
     private void getUser() {
@@ -138,9 +140,14 @@ public class HomeGUI extends JFrame {
             imageIcon[i] = new ImageAvatar();
         }
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exit();
+            }
+        });
         setUndecorated(true);
-//        setBackground(new Color(35, 166, 97));
 
         home.setLayout(new BorderLayout(10, 10));
         setContentPane(home);
@@ -153,51 +160,44 @@ public class HomeGUI extends JFrame {
         lbTime.setBounds(80, 10, 200, 30);
         lbTime.setFont(new Font("Public Sans", Font.PLAIN, 15));
         lbTime.setForeground(new Color(255, 255, 255));
-        lbTime.setText("jLabel2");
         north.add(lbTime);
 
+        Settings.theme = Settings.getTheme(Settings.loadTheme());
+        assert Settings.theme != null;
+        if (!Settings.theme.isDark())
+            themeButton.setSelected(true);
         themeButton.setBounds(1150, 10, 66, 34);
-        themeButton.addActionListener(e -> changeTheme());
-        themeButton.setSelected(true);
+        themeButton.addActionListener(e ->  {
+            changeTheme();
+            Settings.saveTheme();
+        });
         themeButton.setOnColor(new Color(0xFCE797));
         themeButton.setOffColor(new Color(0x504C4C));
         themeButton.setOnIcon(new ImageIcon("img/icons/sun.png"));
         themeButton.setOffIcon(new ImageIcon("img/icons/moon.png"));
         north.add(themeButton);
 
-        minimize.setText("-");
-        minimize.setBackground(new Color(0xF3F0F0));
-        minimize.setBounds(1235, 10, 50, 30);
-        minimize.setBorderPainted(false);
-        minimize.setFocusPainted(false);
-        minimize.setFont(new Font("Public Sans", Font.BOLD, 15));
-        minimize.setColor(new Color(0xF3F0F0));
-        minimize.setColorOver(new Color(0xC4BDBD));
-        minimize.setColorClick(new Color(0x676161));
-        minimize.setRadius(15);
-        minimize.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                minimize();
-            }
-        });
-        north.add(minimize);
-
-        exit.setText("X");
-        exit.setBackground(new Color(0xFD1111));
-        exit.setBounds(1290, 10, 50, 30);
-        exit.setBorderPainted(false);
-        exit.setFocusPainted(false);
-        exit.setFont(new Font("Public Sans", Font.BOLD, 15));
-        exit.setColor(new Color(0xFD1111));
-        exit.setColorOver(new Color(0xB04848));
-        exit.setColorClick(new Color(0xE79292));
-        exit.setRadius(15);
-        exit.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent evt) {
-                exit();
-            }
-        });
-        north.add(exit);
+        BiConsumer<Button, java.util.List<Object>> configButton = (button, properties) -> {
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Public Sans", Font.BOLD, 15));
+            button.setRadius(15);
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setBounds((Integer) properties.get(1), (Integer) properties.get(2), 50, 30);
+            button.setColor((Color) properties.get(3));
+            button.setColorOver((Color) properties.get(4));
+            button.setColorClick((Color) properties.get(5));
+            button.addMouseListener(new MouseAdapter() {
+                public void mousePressed(MouseEvent evt) {
+                    ((Runnable) properties.get(6)).run();
+                }
+            });
+            north.add(button);
+        };
+        configButton.accept(minimize, java.util.List.of("-", 1235, 10, new Color(0xF3F0F0), new Color(0xC4BDBD), new Color(0x676161), (Runnable) this::minimize));
+        configButton.accept(exit, java.util.List.of("X", 1290, 10, new Color(0xFD1111), new Color(0xB04848), new Color(0xE79292), (Runnable) this::exit));
 
         // home.center
         center.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -283,7 +283,7 @@ public class HomeGUI extends JFrame {
                 roundPanel[i].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
-                        roundPanelMousePressed(index);
+                        selectRoundPanel(index);
                     }
                 });
                 cate.add(roundPanel[i]);
@@ -365,7 +365,7 @@ public class HomeGUI extends JFrame {
                     roundPanel[i].addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            roundPanelMousePressed(index);
+                            selectRoundPanel(index);
                         }
                     });
                     rpContent[3].add(roundPanel[i]);
@@ -435,7 +435,7 @@ public class HomeGUI extends JFrame {
                     roundPanel[i].addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            roundPanelMousePressed(index);
+                            selectRoundPanel(index);
                         }
                     });
                     rpContent[6].add(roundPanel[i]);
@@ -505,7 +505,7 @@ public class HomeGUI extends JFrame {
                     roundPanel[i].addMouseListener(new MouseAdapter() {
                         @Override
                         public void mousePressed(MouseEvent e) {
-                            roundPanelMousePressed(index);
+                            selectRoundPanel(index);
                         }
                     });
                     rpContent[9].add(roundPanel[i]);
@@ -547,8 +547,10 @@ public class HomeGUI extends JFrame {
     }
 
     private void changeTheme() {
-        Color roundPanelBG, roundPanelColor, roundPanelColorOver, imageAvatarFG, labelBG, labelFG, currentBtnBG;
+        String theme;
+        Color rpContentBG, rpFolderBG, rpFolderFG, roundPanelBG, roundPanelColor, roundPanelColorOver, imageAvatarFG, labelBG, labelFG, currentBtnBG;
         if (themeButton.isSelected()) {
+            theme = "light";
             home.setBackground(new Color(240, 240, 240));
             north.setBackground(new Color(35, 166, 97));
             center.setBackground(new Color(240, 240, 240));
@@ -557,13 +559,9 @@ public class HomeGUI extends JFrame {
             info.setBackground(new Color(79, 194, 53));
             cate_frame.setBackground(new Color(79, 194, 53));
             cate.setBackground(new Color(79, 194, 53));
-            //       cate.setBackground(new Color(0, 0, 0));
-            rpContent[0].setBackground(new Color(79, 194, 53));
-            rpContent[3].setBackground(new Color(79, 194, 53));
-            rpContent[4].setBackground(new Color(79, 194, 53));
-            rpContent[6].setBackground(new Color(79, 194, 53));
-            rpContent[7].setBackground(new Color(79, 194, 53));
-            rpContent[9].setBackground(new Color(79, 194, 53));
+            rpContentBG = new Color(79, 194, 53);
+            rpFolderBG = new Color(240, 240, 240);
+            rpFolderFG = new Color(25, 25, 25);
             roundPanelBG = new Color(240, 240, 240);
             roundPanelColor = new Color(240, 240, 240);
             roundPanelColorOver = new Color(68, 150, 60);
@@ -573,20 +571,18 @@ public class HomeGUI extends JFrame {
             currentBtnBG = new Color(68, 150, 60);
             imageAvatarIcon = new Color(79, 194, 53);
         } else {
+            theme = "dark";
             home.setBackground(new Color(35, 166, 97));
             north.setBackground(new Color(70, 67, 67));
             center.setBackground(new Color(35, 166, 97));
             west.setBackground(new Color(35, 166, 97));
             east.setBackground(new Color(70, 67, 67));
             info.setBackground(new Color(70, 67, 67));
-            rpContent[0].setBackground(new Color(70, 67, 67));
-            rpContent[3].setBackground(new Color(70, 67, 67));
-            rpContent[4].setBackground(new Color(70, 67, 67));
-            rpContent[6].setBackground(new Color(70, 67, 67));
-            rpContent[7].setBackground(new Color(70, 67, 67));
-            rpContent[9].setBackground(new Color(70, 67, 67));
             cate_frame.setBackground(new Color(70, 67, 67));
             cate.setBackground(new Color(70, 67, 67));
+            rpContentBG = new Color(70, 67, 67);
+            rpFolderBG = new Color(60, 63, 65);
+            rpFolderFG = new Color(240, 240, 240);
             roundPanelBG = new Color(70, 67, 67);
             roundPanelColor = new Color(70, 67, 67);
             roundPanelColorOver = new Color(35, 166, 97);
@@ -596,6 +592,8 @@ public class HomeGUI extends JFrame {
             currentBtnBG = new Color(35, 166, 97);
             imageAvatarIcon = new Color(240, 240, 240, 255);
         }
+        Settings.applyTheme(theme);
+        selectRoundPanel(currentPanel);
         for (int i = 1; i < jLabel.length; i++) {
             roundPanel[i].setBackground(roundPanelBG);
             roundPanel[i].setColor(roundPanelColor);
@@ -605,14 +603,26 @@ public class HomeGUI extends JFrame {
             jLabel[i].setForeground(labelFG);
         }
 //        for (int i = 0; i < 3; i++) {
-////            imageIcon[i].setBackground(Color.BLUE);
-////            imageIcon[i].setOpaque(true);
+//            imageIcon[i].setBackground(Color.WHITE);
+//            imageIcon[i].setOpaque(true);
 //        }
+        rpContent[0].setBackground(rpContentBG);
+        rpContent[3].setBackground(rpContentBG);
+        rpContent[4].setBackground(rpContentBG);
+        rpContent[6].setBackground(rpContentBG);
+        rpContent[7].setBackground(rpContentBG);
+        rpContent[9].setBackground(rpContentBG);
+        rpContent[2].setBackground(rpFolderBG);
+        rpContent[5].setBackground(rpFolderBG);
+        rpContent[8].setBackground(rpFolderBG);
+        labelName[0].setForeground(rpFolderFG);
+        labelName[1].setForeground(rpFolderFG);
+        labelName[2].setForeground(rpFolderFG);
         if (currentBtn != null)
             currentBtn.setBackground(currentBtnBG);
     }
 
-    private void roundPanelMousePressed(int index) {
+    private void selectRoundPanel(int index) {
         Active(roundPanel[index]);
         JPanel panel = switch (index) {
             case 1 -> new SaleGUI(account.getStaffID());
@@ -632,6 +642,7 @@ public class HomeGUI extends JFrame {
             default -> null;
         };
         OpenChildForm(panel);
+        currentPanel = index;
     }
 
     private void Disable() {
