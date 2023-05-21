@@ -25,6 +25,7 @@ public class SaleGUI extends JPanel {
     private ProductBLL productBLL = new ProductBLL();
     private BillBLL billBLL = new BillBLL();
     private BillDetailsBLL billDetailsBLL = new BillDetailsBLL();
+    private CustomerBLL customerBLL = new CustomerBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
     private List<Object> categoryNameList;
     private ProductDetailsGUI productDetailsGUI;
@@ -517,7 +518,7 @@ public class SaleGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Số điện thoại không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        List<Customer> customers = new CustomerBLL().findCustomersBy(Map.of("PHONE", txtSearch2.getText()));
+        List<Customer> customers = customerBLL.findCustomersBy(Map.of("PHONE", txtSearch2.getText()));
         if (customers.isEmpty()) {
             if (JOptionPane.showOptionDialog(null,
                 "Số điện thoại không tồn tại trong hệ thống, bạn có muốn thêm mới?",
@@ -601,14 +602,14 @@ public class SaleGUI extends JPanel {
             String customerID = "CUS000";
             String customerName = infoTxt[0].getText();
             if (!customerName.equals(""))
-                customerID = new CustomerBLL().findCustomersBy(Map.of("NAME", customerName)).get(0).getCustomerID();
+                customerID = customerBLL.findCustomersBy(Map.of("NAME", customerName)).get(0).getCustomerID();
 
             SimpleDateFormat formatter = new SimpleDateFormat();
             formatter.applyPattern("yyyy-MM-dd");
             String staffID = this.staffID;
             Day date = new Day();
             double received = Double.parseDouble(jTextField[1].getText());
-            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("[^\\d-]+", ""));
+            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("\\D+", ""));
             bill = new Bill(billID, customerID, staffID, date, 0.0, received, excess, false);
 
             if (billBLL.exists(bill))
@@ -630,6 +631,7 @@ public class SaleGUI extends JPanel {
                 addbillDetails = new BillDetails(billID, product.getProductID(), listQuantityChoice.get(i), billDetail_total, billDetail_percent);
                 billDetailsBLL.addBillDetails(addbillDetails);
             }
+            cancel();
         }
     }
 

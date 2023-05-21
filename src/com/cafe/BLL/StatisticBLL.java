@@ -4,10 +4,7 @@ import com.cafe.DAL.StatisticDAL;
 import com.cafe.DTO.*;
 import com.cafe.utils.Day;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class StatisticBLL extends Manager<Statistic> {
     private StatisticDAL statisticDAL;
@@ -61,29 +58,25 @@ public class StatisticBLL extends Manager<Statistic> {
         return amount - cost;
     }
 
-    public double getMonthImportCost(Day firstDay, Day lastDay) {
-        List<Receipt> receipts = new ReceiptBLL().findReceiptsBetween(firstDay, lastDay);
-        double importCost = 0.0;
-        for (Receipt receipt : receipts) {
-            importCost += receipt.getGrandTotal();
+    public double getMonthIngredient(Day firstDay, Day lastDay) {
+        List<Statistic> statistics = findStatisticsBetween(firstDay, lastDay);
+        double cost = 0.0;
+        for (Statistic statistic : statistics) {
+            cost += statistic.getIngredientCost();
         }
-        return importCost;
+        return cost;
     }
 
     public double getMonthCustomers(Day firstDay, Day lastDay) {
         List<Bill> bills = new BillBLL().findBillsBetween(firstDay, lastDay);
-        Set<String> customers = new HashSet<>();
-        for (Bill bill : bills) {
-            customers.add(bill.getCustomerID());
-        }
-        return customers.size();
+        return bills.size();
     }
 
     public double[] getMonthStatistic(int month, int year) {
         Day firstDay = new Day(1, month, year);
         Day lastDay = new Day(Day.numOfDays(month, year), month, year);
         double profit = getMonthProfit(firstDay, lastDay);
-        double importCost = getMonthImportCost(firstDay, lastDay);
+        double importCost = getMonthIngredient(firstDay, lastDay);
         double customers = getMonthCustomers(firstDay, lastDay);
         return new double[]{profit, importCost, customers};
     }

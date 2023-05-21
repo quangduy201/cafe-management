@@ -293,21 +293,27 @@ public class CurveLineChart extends JComponent {
         add(panelLegend, "wrap");
     }
 
+    private LegendItem legend[] = new LegendItem[3];
+    public LegendItem getLegendItem(int i) {
+        return legend[i];
+    }
     public void addLegend(String name, Color color1, Color color2) {
         ModelLegend data = new ModelLegend(name, color1, color2);
         legends.add(data);
-        LegendItem legend = new LegendItem(data, legends.size() - 1);
-        legend.setForeground(getForeground());
-        legend.addActionListener((ActionEvent e) -> {
+        int indexs = legends.size() - 1;
+        legend[indexs] = new LegendItem(data, indexs);
+        legend[indexs].setForeground(getForeground());
+        legend[indexs].addActionListener((ActionEvent e) -> {
             if (animate > 0) {
-                startChange(legend.getIndex());
-                clearLegendSelected(legend);
+                startChange(legend[indexs].getIndex());
+                blankPlotChart.setMaxValues(maxValue[legend[indexs].getIndex()]);
+                clearLegendSelected(legend[indexs]);
             }
         });
         if (legends.size() - 1 == index) {
-            legend.setSelected(true);
+            legend[indexs].setSelected(true);
         }
-        panelLegend.add(legend);
+        panelLegend.add(legend[indexs]);
         panelLegend.repaint();
         panelLegend.revalidate();
     }
@@ -323,14 +329,19 @@ public class CurveLineChart extends JComponent {
             }
         }
     }
-
+    private Double maxValue[] = {0.0, 0.0 ,0.0};
     public void addData(ModelChart data) {
         model.add(data);
         blankPlotChart.setLabelCount(model.size());
-        double max = data.getMaxValues();
-        if (max > blankPlotChart.getMaxValues()) {
-            blankPlotChart.setMaxValues(max);
+        int sl = 0;
+        double max = 0;
+        while (sl < 3) {
+            max = model.get(model.size() - 1).getValues()[sl];
+            if(maxValue[sl] < max)
+                maxValue[sl] = max;
+            sl++;
         }
+        blankPlotChart.setMaxValues(maxValue[0]);
     }
 
     public void clear() {
@@ -354,9 +365,11 @@ public class CurveLineChart extends JComponent {
             animator.removeTarget(timingColor2);
             animatorChange.stop();
             animatorLabel.stop();
+            blankPlotChart.setMaxValues(maxValue[index]);
             selectedIndex = -1;
             alphaLable = 0f;
             currentPoint = 0;
+            System.out.println(index);
             animator.start();
         }
     }

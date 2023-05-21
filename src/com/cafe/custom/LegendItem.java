@@ -3,6 +3,7 @@ package com.cafe.custom;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 public class LegendItem extends JButton {
 
@@ -39,4 +40,6 @@ public class LegendItem extends JButton {
         g2.dispose();
         super.paintComponent(g);
     }
+
+
 }
