@@ -42,6 +42,7 @@ public class BillGUI extends JPanel {
     private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
     private ArrayList<BillDetails> listBillDetails = new ArrayList<>();
     private ArrayList<ReceiptDetails> listReceiptDetails = new ArrayList<>();
+    private Button btnCancel = new Button();
     private JDateChooser[] jDateChooser;
     private JTextField[] jTextField;
     private boolean inSaleMode = true;
@@ -278,6 +279,23 @@ public class BillGUI extends JPanel {
         label[4].setPreferredSize(new Dimension(105, 25));
         label[4].setAutoscrolls(true);
         roundPanel[8].add(label[4]);
+
+        btnCancel.setPreferredSize(new Dimension(100, 40));
+        btnCancel.setBorderPainted(false);
+        btnCancel.setRadius(15);
+        btnCancel.setFocusPainted(false);
+        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
+        btnCancel.setColor(new Color(0xFFBD3737));
+        btnCancel.setColorOver(new Color(0xFF0000));
+        btnCancel.setColorClick(new Color(0xB65858));
+        btnCancel.setText("Hủy");
+        btnCancel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                clickBtnCancel();
+            }
+        });
+        roundPanel[2].add(btnCancel);
 
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
         label[5].setHorizontalAlignment(JLabel.LEFT);
@@ -629,6 +647,21 @@ public class BillGUI extends JPanel {
         }
     }
 
+    public void clickBtnCancel() {
+//        if (inSaleMode) {
+//            Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
+//            if (Excel.writeToExcel(bill, path))
+//                JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+//            else
+//                JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+//        } else {
+//            Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
+//            if (Excel.writeToExcel(receipt, path))
+//                JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+//            else
+//                JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+//        }
+    }
     public void clearDetails() {
         for (int i = 3; i <= 15; i += 2) {
             label[i].setText("");
