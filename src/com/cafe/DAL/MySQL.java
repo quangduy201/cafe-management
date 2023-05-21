@@ -87,7 +87,6 @@ public class MySQL {
             }
             query = query.replaceFirst("\\?", stringValue);
         }
-        System.out.println(query);
         return query;
     }
 }

@@ -531,7 +531,11 @@ public class CustomerGUI extends JPanel {
             }
         }
         dateOfBirth = new Day(jDateChooser[0].getDate());
-        dateOfSup = new Day(jDateChooser[1].getDate());
+        if (jDateChooser[1].getDate() == null) {
+            dateOfSup = new Day(1,1,1000);
+        } else {
+            dateOfSup = new Day(jDateChooser[1].getDate());
+        }
         gender = rbMale.isSelected();
         membership = rbYes.isSelected();
         return new Customer(customerID, name, gender, dateOfBirth, phone, membership, dateOfSup, false);
@@ -556,6 +560,11 @@ public class CustomerGUI extends JPanel {
                 textField.requestFocusInWindow();
                 return false;
             }
+        }
+        if (jDateChooser[0].getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ngày sinh!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            jDateChooser[0].requestFocusInWindow();
+            return false;
         }
         if (!jTextFieldsForm[1].getText().matches("^[^|]+$")) {
             // Name can't contain "|"

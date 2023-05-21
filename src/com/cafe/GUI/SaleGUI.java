@@ -24,6 +24,8 @@ public class SaleGUI extends JPanel {
     private List<Integer> listQuantityChoice = new ArrayList<>();
     private List<Product> productlist = new ArrayList<>();
     private ProductBLL productBLL = new ProductBLL();
+    private RecipeBLL recipeBLL = new RecipeBLL();
+
     private BillBLL billBLL = new BillBLL();
     private BillDetailsBLL billDetailsBLL = new BillDetailsBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
@@ -550,6 +552,7 @@ public class SaleGUI extends JPanel {
                         null,
                         new String[]{"Xoá", "Huỷ"},
                         "Xoá") == JOptionPane.YES_OPTION) {
+                        updateIngredient(product.getProductID(), listQuantityChoice.get(index));
                         listDetailBill.remove(index);
                         listQuantityChoice.remove(index);
                         roundPanel9.repaint();
@@ -615,6 +618,7 @@ public class SaleGUI extends JPanel {
                 billDetailsBLL.addBillDetails(addbillDetails);
             }
         }
+        cancel();
     }
 
     public void cancel() {
@@ -685,5 +689,16 @@ public class SaleGUI extends JPanel {
         if (!text.isEmpty())
             change = Double.parseDouble(jTextField[0].getText().replaceAll("\\D+", "")) - Double.parseDouble(text);
         jTextField[2].setText(VNString.currency(change));
+    }
+
+    public void updateIngredient(String product_ID, int quantity) {
+        List<Recipe> recipeList = recipeBLL.findRecipes("PRODUCT_ID", product_ID);
+        for (Recipe recipe : recipeList) {
+            for (Ingredient ingredient : ProductDetailsGUI.ingredientList) {
+                if (Objects.equals(recipe.getIngredientID(), ingredient.getIngredientID())) {
+                    ingredient.setQuantity(ingredient.getQuantity()+recipe.getMass()*quantity);
+                }
+            }
+        }
     }
 }

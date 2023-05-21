@@ -4,17 +4,22 @@ import com.cafe.BLL.CustomerBLL;
 import com.cafe.DTO.Customer;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.utils.Day;
+import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class FrameCustomer extends JFrame {
+    private JDateChooser[] jDateChooser;
+    private JTextField[] dateTextField;
     private JRadioButton rbMale;
     private JRadioButton rbFemale;
     private JRadioButton rbYes;
@@ -52,8 +57,10 @@ public class FrameCustomer extends JFrame {
         rbNo = new JRadioButton("Không");
         roundPanel = new RoundPanel[10];
         label1 = new JLabel[10];
-        jTextField = new JTextField[5];
+        jTextField = new JTextField[3];
         roundPanel1 = new RoundPanel[10];
+        jDateChooser = new JDateChooser[2];
+        dateTextField = new JTextField[2];
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
             roundPanel1[i] = new RoundPanel();
@@ -113,6 +120,25 @@ public class FrameCustomer extends JFrame {
         configButton.accept(exit, List.of("X", 40, 25, 15, new Color(0xFD1111), new Color(0xB04848), new Color(0xE79292), (Runnable) this::exit));
         roundPanel[1].add(exit);
 
+        Dimension inputFieldsSize = new Dimension(210, 40);
+        for (int i = 0; i < 2; i++) {
+            jDateChooser[i] = new JDateChooser();
+            jDateChooser[i].setDateFormatString("dd/MM/yyyy");
+            jDateChooser[i].setPreferredSize(inputFieldsSize);
+            jDateChooser[i].setMinSelectableDate(new Day(1, 1, 1000).toDateSafe());
+            dateTextField[i] = (JTextField) jDateChooser[i].getDateEditor().getUiComponent();
+            dateTextField[i].setFont(new Font("Tahoma", Font.BOLD, 14));
+            int index = i;
+            dateTextField[i].addActionListener(e -> {
+                try {
+                    Day day = Day.parseDay(dateTextField[index].getText());
+                    jDateChooser[index].setDate(day.toDate());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
+
         roundPanel[4].setPreferredSize(new Dimension(370, 60));
         roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[3].add(roundPanel[4]);
@@ -162,18 +188,23 @@ public class FrameCustomer extends JFrame {
         jTextField[1].setPreferredSize(new Dimension(210, 40));
         roundPanel1[1].add(jTextField[1]);
 
+        roundPanel1[3].add(jDateChooser[0]);
+
         jTextField[2].setFont(new Font("Times New Roman", Font.PLAIN, 16));
         jTextField[2].setPreferredSize(new Dimension(210, 40));
-        roundPanel1[3].add(jTextField[2]);
+        jTextField[2].setText(phone);
+        jTextField[2].addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != '+') {
+                    e.consume();
+                }
+            }
+        });;
+        roundPanel1[4].add(jTextField[2]);
 
-        jTextField[3].setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jTextField[3].setPreferredSize(new Dimension(210, 40));
-        jTextField[3].setText(phone);
-        roundPanel1[4].add(jTextField[3]);
-
-        jTextField[4].setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jTextField[4].setPreferredSize(new Dimension(210, 40));
-        roundPanel1[6].add(jTextField[4]);
+        roundPanel1[6].add(jDateChooser[1]);
 
         roundPanel1[7].setPreferredSize(new Dimension(210, 40));
         roundPanel1[7].setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
@@ -212,12 +243,16 @@ public class FrameCustomer extends JFrame {
             switch (i) {
                 case 0 -> customerID = jTextField[i].getText();
                 case 1 -> name = jTextField[i].getText().toUpperCase();
-                case 2 -> dateOfBirth = Day.parseDay(jTextField[i].getText().replaceAll("/", "-"));
-                case 3 -> phone = jTextField[i].getText().replaceAll("^\\+?84", "0");
-                case 4 -> dateOfSup = Day.parseDay(jTextField[i].getText().replaceAll("/", "-"));
+                case 2 -> phone = jTextField[i].getText().replaceAll("^\\+?84", "0");
                 default -> {
                 }
             }
+        }
+        dateOfBirth = new Day(jDateChooser[0].getDate());
+        if (jDateChooser[1].getDate() == null) {
+            dateOfSup = new Day(1,1,1000);
+        } else {
+            dateOfSup = new Day(jDateChooser[1].getDate());
         }
         gender = rbMale.isSelected();
         membership = rbYes.isSelected();
@@ -237,9 +272,10 @@ public class FrameCustomer extends JFrame {
                 JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
                 JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            else if (customerBLL.addCustomer(newCustomer))
+            else if (customerBLL.addCustomer(newCustomer)) {
                 JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            else
+                this.dispose();
+            } else
                 JOptionPane.showMessageDialog(this, "Thêm khách hàng mới thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -252,6 +288,11 @@ public class FrameCustomer extends JFrame {
                 return false;
             }
         }
+        if (jDateChooser[0].getDate() == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập ngày sinh!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            jDateChooser[0].requestFocusInWindow();
+            return false;
+        }
         if (!jTextField[1].getText().matches("^[^|]+$")) {
             // Name can't contain "|"
             jTextField[1].requestFocusInWindow();
@@ -259,35 +300,11 @@ public class FrameCustomer extends JFrame {
             JOptionPane.showMessageDialog(this, "Tên khách hàng không được chứa \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        try {
-            if (!jTextField[2].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextField[2].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
+        if (!jTextField[2].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
+            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
             jTextField[2].requestFocusInWindow();
             jTextField[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Ngày sinh phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextField[3].getText().matches("^(\\+?84|0)[35789]\\d{8}$")) {
-            // Phone must start with "0x" or "+84x" or "84x" where "x" in {3, 5, 7, 8, 9}
-            jTextField[3].requestFocusInWindow();
-            jTextField[3].selectAll();
             JOptionPane.showMessageDialog(this, "Số điện thoại phải bắt đầu từ \"0x\" hoặc \"+84x\" hoặc \"84x\"\nvới \"x\" thuộc {3, 5, 7, 8, 9}", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        try {
-            if (!jTextField[4].getText().matches("^\\d{4}([-/])(0?[1-9]|1[0-2])\\1(0?[1-9]|[12][0-9]|3[01])$")) {
-                // Date must follow yyyy-MM-dd or yyyy/MM/dd
-                throw new Exception();
-            }
-            Day.parseDay(jTextField[4].getText().replaceAll("/", "-"));
-        } catch (Exception exception) {
-            jTextField[4].requestFocusInWindow();
-            jTextField[4].selectAll();
-            JOptionPane.showMessageDialog(this, "Ngày đăng ký phải theo định dạng:\n\"yyyy-MM-dd\"\n\"yyyy/MM/dd\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
