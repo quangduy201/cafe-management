@@ -2,13 +2,12 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.*;
 import com.cafe.DTO.*;
-import com.cafe.custom.*;
 import com.cafe.custom.Button;
+import com.cafe.custom.*;
 import com.cafe.utils.Day;
 import com.cafe.utils.Settings;
 import com.cafe.utils.VNString;
 import com.toedter.calendar.JDateChooser;
-import com.cafe.custom.Button;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -37,6 +36,7 @@ public class StatisticGUI extends JPanel {
     private JScrollPane[] jScrollPane;
     private JTextField[] jTextField;
     private JDateChooser[] jDateChooser;
+
     public StatisticGUI(int decentralization) {
         System.gc();
         setLayout(new BorderLayout(10, 10));
@@ -528,14 +528,14 @@ public class StatisticGUI extends JPanel {
             int count = number == null ? 0 : number;
             data.put(bill.getCustomerID(), count + 1);
             List<BillDetails> billDetails = billDetailsBLL.findBillDetailsBy(Map.of("BILL_ID", bill.getBillID()));
-            for ( BillDetails billDetail: billDetails) {
+            for (BillDetails billDetail : billDetails) {
 //                Product product = productBLL.searchProducts("PRODUCT_ID = '" + billDetail.getProductID() + "'").get(0);
                 Integer productNumber = productData.get(billDetail.getProductID());
                 int productCount = productNumber == null ? 0 : productNumber;
                 productData.put(billDetail.getProductID(), productCount + billDetail.getQuantity());
 
                 List<Recipe> recipes = recipeBLL.findRecipesBy(Map.of("PRODUCT_ID", billDetail.getProductID()));
-                for (Recipe recipe: recipes) {
+                for (Recipe recipe : recipes) {
                     Double realNumber = ingredientData.get(recipe.getIngredientID());
                     double quantity = realNumber == null ? 0.0 : realNumber;
                     ingredientData.put(recipe.getIngredientID(), quantity + (recipe.getMass() * billDetail.getQuantity()));
@@ -589,9 +589,9 @@ public class StatisticGUI extends JPanel {
         imageAvatars[1].setAutoscrolls(true);
         jPanel[1].add(imageAvatars[1]);
 
-        jLabel[3].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        jLabel[3].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         jLabel[3].setText(String.valueOf(ingredientData.size()));
-        jLabel[3].setForeground(new Color(255,255,255));
+        jLabel[3].setForeground(new Color(255, 255, 255));
         jLabel[3].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[3].setHorizontalAlignment(SwingConstants.CENTER);
         jLabel[3].setPreferredSize(new Dimension(150, 80));
@@ -660,9 +660,9 @@ public class StatisticGUI extends JPanel {
         imageAvatars[2].setAutoscrolls(true);
         jPanel[2].add(imageAvatars[2]);
 
-        jLabel[5].setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
+        jLabel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         jLabel[5].setText(String.valueOf(productData.size()));
-        jLabel[5].setForeground(new Color(255,255,255));
+        jLabel[5].setForeground(new Color(255, 255, 255));
         jLabel[5].setFont(new Font("Public Sans", Font.BOLD, 25));
         jLabel[5].setHorizontalAlignment(SwingConstants.CENTER);
         jLabel[5].setPreferredSize(new Dimension(150, 80));
@@ -921,12 +921,12 @@ public class StatisticGUI extends JPanel {
             int count = number == null ? 0 : number;
             data.put(bill.getCustomerID(), count + 1);
             List<BillDetails> billDetails = billDetailsBLL.findBillDetailsBy(Map.of("BILL_ID", bill.getBillID()));
-            for ( BillDetails billDetail: billDetails) {
+            for (BillDetails billDetail : billDetails) {
                 Integer productNumber = productData.get(billDetail.getProductID());
                 int productCount = productNumber == null ? 0 : productNumber;
                 productData.put(billDetail.getProductID(), productCount + billDetail.getQuantity());
                 List<Recipe> recipes = recipeBLL.findRecipesBy(Map.of("PRODUCT_ID", billDetail.getProductID()));
-                for (Recipe recipe: recipes) {
+                for (Recipe recipe : recipes) {
                     Double realNumber = ingredientData.get(recipe.getIngredientID());
                     double quantity = realNumber == null ? 0.0 : realNumber;
                     ingredientData.put(recipe.getIngredientID(), quantity + (recipe.getMass() * billDetail.getQuantity()));
@@ -935,7 +935,7 @@ public class StatisticGUI extends JPanel {
         }
         DefaultTableModel model = (DefaultTableModel) dataTable[0].getModel();
         model.setRowCount(0);
-        for (Statistic statistic: statistics) {
+        for (Statistic statistic : statistics) {
             Double staticNumber = statistic.getAmount() - statistic.getIngredientCost();
             model.addRow(new Object[]{statistic.getDate(), statistic.getAmount(), statistic.getIngredientCost(), staticNumber});
         }
@@ -963,7 +963,8 @@ public class StatisticGUI extends JPanel {
         }
     }
 
-    private Button []jButton = new Button[2];
+    private Button[] jButton = new Button[2];
+
     public void btChart() {
         cpButton.setColor(new Color(0x646464));
         cpButton.setColorOver(new Color(0xB2B2B2));
@@ -996,7 +997,7 @@ public class StatisticGUI extends JPanel {
         roundPanel[3].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[3]);
 
-        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER,0, 0));
+        roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[4].setPreferredSize(new Dimension(980, 440));
         roundPanel[4].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[4], BorderLayout.NORTH);
@@ -1017,7 +1018,7 @@ public class StatisticGUI extends JPanel {
 //        roundPanel[7].add(new JScrollPane(dataTable[2]), BorderLayout.CENTER);
 //        roundPanel[7].setAutoscrolls(true);
 
-        roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER,0, 10));
+        roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         roundPanel[8].setPreferredSize(new Dimension(180, 170));
         roundPanel[8].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[8], BorderLayout.EAST);
@@ -1044,36 +1045,36 @@ public class StatisticGUI extends JPanel {
         chart.setForeground(new java.awt.Color(237, 237, 237));
         chart.setFillColor(true);
 
-        chart.setTitle("Biểu đồ thống kê theo năm 2023");
+        chart.setTitle("Biểu đồ thống kê theo tháng trong năm 2023");
         chart.addLegend("Bán hàng ", Color.decode("#7b4397"), Color.decode("#dc2430"));
         chart.addLegend("Nguyên liệu", Color.decode("#e65c00"), Color.decode("#F9D423"));
         chart.addLegend("Khách hàng", Color.decode("#0099F7"), Color.decode("#F11712"));
 
         chart.clear();
-        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1,2023)));
-        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2,2023)));
-        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3,2023)));
-        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4,2023)));
-        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5,2023)));
-        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6,2023)));
-        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7,2023)));
-        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8,2023)));
-        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9,2023)));
-        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10,2023)));
-        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11,2023)));
-        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12,2023)));
+        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1, 2023)));
+        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2, 2023)));
+        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3, 2023)));
+        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4, 2023)));
+        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5, 2023)));
+        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6, 2023)));
+        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7, 2023)));
+        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8, 2023)));
+        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9, 2023)));
+        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10, 2023)));
+        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11, 2023)));
+        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12, 2023)));
         chart.start();
 
 
         jLabel[0].setFont(new Font("Times New Roman", Font.BOLD, 20));
         jLabel[0].setText("NĂM");
-        jLabel[0].setPreferredSize(new Dimension(180,30));
+        jLabel[0].setPreferredSize(new Dimension(180, 30));
         jLabel[0].setHorizontalAlignment(JLabel.CENTER);
         jLabel[0].setAutoscrolls(true);
         roundPanel[8].add(jLabel[0]);
 
         jTextField[0].setFont(new Font("Times New Roman", Font.PLAIN, 16));
-        jTextField[0].setPreferredSize(new Dimension(100,35));
+        jTextField[0].setPreferredSize(new Dimension(100, 35));
         roundPanel[8].add(jTextField[0]);
 
 
@@ -1150,7 +1151,7 @@ public class StatisticGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 roundPanel[5].removeAll();
-                roundPanel[5].revalidate();;
+                roundPanel[5].revalidate();
                 roundPanel[5].repaint();
                 roundPanel[5].add(jScrollPane[0], BorderLayout.CENTER);
             }
@@ -1160,7 +1161,7 @@ public class StatisticGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 roundPanel[5].removeAll();
-                roundPanel[5].revalidate();;
+                roundPanel[5].revalidate();
                 roundPanel[5].repaint();
                 roundPanel[5].add(jScrollPane[1], BorderLayout.CENTER);
             }
@@ -1170,13 +1171,13 @@ public class StatisticGUI extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 roundPanel[5].removeAll();
-                roundPanel[5].revalidate();;
+                roundPanel[5].revalidate();
                 roundPanel[5].repaint();
                 roundPanel[5].add(jScrollPane[2], BorderLayout.CENTER);
             }
         });
-        if(jTextField[0].getText().isEmpty()) this.today = new Day();
-        else this.today = new Day(1,1, Integer.parseInt(jTextField[0].getText()));
+        if (jTextField[0].getText().isEmpty()) this.today = new Day();
+        else this.today = new Day(1, 1, Integer.parseInt(jTextField[0].getText()));
         loadStatisticTable();
     }
 
@@ -1184,33 +1185,34 @@ public class StatisticGUI extends JPanel {
     private Day today;
 
     private boolean pennant = true;
+
     public void statistics() {
         chart.clear();
-        chart.setTitle("Biểu đồ thống kê theo tháng trong năm" + jTextField[0].getText());
-        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11,Integer.parseInt(jTextField[0].getText()))));
-        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12,Integer.parseInt(jTextField[0].getText()))));
+        chart.setTitle("Biểu đồ thống kê theo tháng trong năm " + jTextField[0].getText());
+        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11, Integer.parseInt(jTextField[0].getText()))));
+        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12, Integer.parseInt(jTextField[0].getText()))));
         chart.start();
-        if(jTextField[0].getText().isEmpty()) this.today = new Day();
-        else this.today = new Day(1,1, Integer.parseInt(jTextField[0].getText()));
+        if (jTextField[0].getText().isEmpty()) this.today = new Day();
+        else this.today = new Day(1, 1, Integer.parseInt(jTextField[0].getText()));
         pennant = true;
     }
 
     public void statisticYear() {
-        if(today.getYear() > 2030) newDay = new Day(1,1,today.getYear() - 10);
-        else newDay = new Day(1,1,2020);
+        if (today.getYear() > 2030) newDay = new Day(1, 1, today.getYear() - 10);
+        else newDay = new Day(1, 1, 2020);
         chart.clear();
-        chart.setTitle("Biểu đồ thống kê theo năm " + jTextField[0].getText());
-        for (int i = 2020 ; i <= today.getYear() ; i++) {
+        chart.setTitle("Biểu đồ thống kê theo tháng trong năm " + jTextField[0].getText());
+        for (int i = 2020; i <= today.getYear(); i++) {
             chart.addData(new ModelChart(String.valueOf(i), statisticBLL.getYearStatistic(i)));
         }
         chart.start();
@@ -1220,13 +1222,12 @@ public class StatisticGUI extends JPanel {
     public void loadStatisticTable() {
         List<Bill> bills;
         List<Statistic> statistics;
-        if(pennant) {
-            bills = billBLL.findBillsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
-            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
-        }
-        else {
-            bills = billBLL.findBillsBetween(new Day(1, 1 , newDay.getYear()), new Day(today.getDate(),today.getMonth(), today.getYear()));
-            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1 , newDay.getYear()), new Day(today.getDate(),today.getMonth(), today.getYear()));
+        if (pennant) {
+            bills = billBLL.findBillsBetween(new Day(1, 1, today.getYear()), new Day(31, 12, today.getYear()));
+            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1, today.getYear()), new Day(31, 12, today.getYear()));
+        } else {
+            bills = billBLL.findBillsBetween(new Day(1, 1, newDay.getYear()), new Day(today.getDate(), today.getMonth(), today.getYear()));
+            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1, newDay.getYear()), new Day(today.getDate(), today.getMonth(), today.getYear()));
         }
         Map<String, Integer> data = new HashMap<>();
         Map<String, Double> ingredientData = new HashMap<>();
@@ -1236,12 +1237,12 @@ public class StatisticGUI extends JPanel {
             int count = number == null ? 0 : number;
             data.put(bill.getCustomerID(), count + 1);
             List<BillDetails> billDetails = billDetailsBLL.findBillDetailsBy(Map.of("BILL_ID", bill.getBillID()));
-            for ( BillDetails billDetail: billDetails) {
+            for (BillDetails billDetail : billDetails) {
                 Integer productNumber = productData.get(billDetail.getProductID());
                 int productCount = productNumber == null ? 0 : productNumber;
                 productData.put(billDetail.getProductID(), productCount + billDetail.getQuantity());
                 List<Recipe> recipes = recipeBLL.findRecipesBy(Map.of("PRODUCT_ID", billDetail.getProductID()));
-                for (Recipe recipe: recipes) {
+                for (Recipe recipe : recipes) {
                     Double realNumber = ingredientData.get(recipe.getIngredientID());
                     double quantity = realNumber == null ? 0.0 : realNumber;
                     ingredientData.put(recipe.getIngredientID(), quantity + (recipe.getMass() * billDetail.getQuantity()));
@@ -1250,7 +1251,7 @@ public class StatisticGUI extends JPanel {
         }
         DefaultTableModel model = (DefaultTableModel) dataTable[0].getModel();
         model.setRowCount(0);
-        for (Statistic statistic: statistics) {
+        for (Statistic statistic : statistics) {
             Double staticNumber = statistic.getAmount() - statistic.getIngredientCost();
             model.addRow(new Object[]{statistic.getDate(), statistic.getAmount(), statistic.getIngredientCost(), staticNumber});
         }
@@ -1271,6 +1272,7 @@ public class StatisticGUI extends JPanel {
         }
 
     }
+
     private SupplierBLL supplierBLL = new SupplierBLL();
     private CurveLineChart chart;
     private PanelShadow panelShadow1;
