@@ -18,8 +18,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -102,7 +100,6 @@ public class DiscountGUI extends JPanel {
         this.add(discount, BorderLayout.CENTER);
 
         roundPanel[0].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        roundPanel[0].setBackground(new Color(255, 255, 255));
         roundPanel[0].setPreferredSize(new Dimension(380, 670));
         roundPanel[0].setAutoscrolls(true);
         discount.add(roundPanel[0], BorderLayout.WEST);
@@ -113,55 +110,46 @@ public class DiscountGUI extends JPanel {
         roundPanel[1].setAutoscrolls(true);
         discount.add(roundPanel[1], BorderLayout.CENTER);
 
-        roundPanel[2].setBackground(new Color(255, 255, 255));
         roundPanel[2].setPreferredSize(new Dimension(600, 310));
         roundPanel[2].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[2], BorderLayout.NORTH);
 
-        roundPanel[3].setBackground(new Color(255, 255, 255));
         roundPanel[3].setPreferredSize(new Dimension(600, 350));
         roundPanel[3].setAutoscrolls(true);
         roundPanel[1].add(roundPanel[3], BorderLayout.CENTER);
 
         roundPanel[4].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        roundPanel[4].setBackground(new Color(255, 255, 255));
         roundPanel[4].setPreferredSize(new Dimension(380, 200));
         roundPanel[4].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[4]);
 
         roundPanel[5].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 15));
-        roundPanel[5].setBackground(new Color(255, 255, 255));
         roundPanel[5].setPreferredSize(new Dimension(380, 340));
         roundPanel[5].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[5]);
 
         roundPanel[6].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        roundPanel[6].setBackground(new Color(255, 255, 255));
         roundPanel[6].setPreferredSize(new Dimension(380, 130));
         roundPanel[6].setAutoscrolls(true);
         roundPanel[0].add(roundPanel[6]);
 
         roundPanel[7].setLayout(new FlowLayout(FlowLayout.CENTER, 50, 0));
-//        roundPanel[7].setBackground(new Color(255, 255, 255));
         roundPanel[7].setPreferredSize(new Dimension(600, 40));
         roundPanel[7].setAutoscrolls(true);
         roundPanel[2].add(roundPanel[7]);
 
         roundPanel[8].setLayout(new BorderLayout(0, 0));
-//        roundPanel[8].setBackground(new Color(182, 24, 24));
         roundPanel[8].setPreferredSize(new Dimension(590, 255));
         roundPanel[8].setAutoscrolls(true);
         roundPanel[8].add(new JScrollPane(dataTable[0]), BorderLayout.CENTER);
         roundPanel[2].add(roundPanel[8]);
 
         roundPanel[9].setLayout(new FlowLayout(FlowLayout.CENTER, 50, 0));
-        // roundPanel[9].setBackground(new Color(182, 24, 24));
         roundPanel[9].setPreferredSize(new Dimension(600, 40));
         roundPanel[9].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[9]);
 
         roundPanel[10].setLayout(new BorderLayout(0, 0));
-//        roundPanel[10].setBackground(new Color(182, 24, 24));
         roundPanel[10].setPreferredSize(new Dimension(590, 295));
         roundPanel[10].add(new JScrollPane(dataTable[1]), BorderLayout.CENTER);
         roundPanel[10].setAutoscrolls(true);
@@ -209,8 +197,6 @@ public class DiscountGUI extends JPanel {
                 jTextFields[i].setEditable(false);
                 jTextFields[i].setFocusable(false);
                 jTextFields[i].setBorder(BorderFactory.createEmptyBorder());
-            } else {
-                jTextFields[i].setBorder(BorderFactory.createLineBorder(Color.black));
             }
         }
         for (int i = 0; i < columnNamesDis.size() - 1; i++) {
@@ -233,7 +219,7 @@ public class DiscountGUI extends JPanel {
                     label[i].setText("Ngày bắt đầu: ");
                     roundPanel[5].add(jDateChooser[i - 2]);
                 }
-                case"END_DATE" -> {
+                case "END_DATE" -> {
                     label[i].setText("Ngày kết thúc: ");
                     roundPanel[5].add(jDateChooser[i - 2]);
                 }
@@ -249,90 +235,20 @@ public class DiscountGUI extends JPanel {
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 40, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setBackground(new Color(0xFFFFFF));
             mode.setPreferredSize(new Dimension(380, 130));
             roundPanel[6].add(mode);
 
-            btAdd.setBackground(new Color(35, 166, 97));
-            btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
-            btAdd.setText("  Thêm");
-            btAdd.setColor(new Color(240, 240, 240));
-            btAdd.setColorClick(new Color(141, 222, 175));
-            btAdd.setColorOver(new Color(35, 166, 97));
-            btAdd.setFocusPainted(false);
-            btAdd.setRadius(20);
-            btAdd.setEnabled(true);
-            btAdd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btAdd.isEnabled()) {
-                        addDiscount();
-                    }
-                }
-            });
+            Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addDiscount));
             mode.add(btAdd);
         }
-
         if (decentralizationMode == 3) {
-            btUpd.setBackground(new Color(35, 166, 97));
-            btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Sửa");
-            btUpd.setColor(new Color(240, 240, 240));
-            btUpd.setColorClick(new Color(141, 222, 175));
-            btUpd.setColorOver(new Color(35, 166, 97));
-            btUpd.setFocusPainted(false);
-            btUpd.setRadius(20);
-            btUpd.setEnabled(false);
-            btUpd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btUpd.isEnabled()) {
-                        updateDiscount();
-                    }
-                }
-            });
+            Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateDiscount));
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteDiscount));
             mode.add(btUpd);
-
-            btDel.setBackground(new Color(35, 166, 97));
-            btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Xoá");
-            btDel.setColor(new Color(240, 240, 240));
-            btDel.setColorClick(new Color(141, 222, 175));
-            btDel.setColorOver(new Color(35, 166, 97));
-            btDel.setFocusPainted(false);
-            btDel.setRadius(20);
-            btDel.setEnabled(false);
-            btDel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btDel.isEnabled()) {
-                        deleteDiscount();
-                    }
-                }
-            });
             mode.add(btDel);
-
         }
-
         if (decentralizationMode > 1) {
-            btRef.setBackground(new Color(35, 166, 97));
-            btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Làm mới");
-            btRef.setColor(new Color(240, 240, 240));
-            btRef.setColorClick(new Color(141, 222, 175));
-            btRef.setColorOver(new Color(35, 166, 97));
-            btRef.setFocusPainted(false);
-            btRef.setRadius(20);
-            btRef.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    refreshForm();
-                }
-            });
+            Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         }
 
@@ -402,11 +318,6 @@ public class DiscountGUI extends JPanel {
         scrollPane1 = new JScrollPane(dataTable[0]);
         roundPanel[8].add(scrollPane1);
 
-        List<String> columnTablePro = new ArrayList<>(columnNamesPro.subList(0, columnNamesPro.size() - 3));
-        columnTablePro.add("OLD_PRICE");
-        columnTablePro.add("NEW_PRICE");
-        columnTablePro.add("");
-
         dataTable[1] = new DataTable(productBLL.getData(), new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá cũ", "Giá mới", ""}, e -> fillForm2(), true);
         scrollPane2 = new JScrollPane(dataTable[1]);
         roundPanel[10].add(scrollPane2);
@@ -452,7 +363,7 @@ public class DiscountGUI extends JPanel {
             loadDataTableDis(discountBLL.getDiscountList());
         } else {
             String key = null;
-            switch (cbbSearchDis.getSelectedIndex()){
+            switch (cbbSearchDis.getSelectedIndex()) {
                 case 0 -> key = "DISCOUNT_ID";
                 case 1 -> key = "DISCOUNT_PERCENT";
                 case 2 -> key = "START_DATE";
@@ -470,7 +381,7 @@ public class DiscountGUI extends JPanel {
             loadDataTablePro(productBLL.getProductList());
         } else {
             String key = null;
-            switch (cbbSearchPro.getSelectedIndex()){
+            switch (cbbSearchPro.getSelectedIndex()) {
                 case 0 -> key = "PRODUCT_ID";
                 case 1 -> key = "NAME";
                 case 4 -> key = "COST";

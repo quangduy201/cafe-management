@@ -8,8 +8,8 @@ public class Bill {
     private String staffID;
     private Day dateOfPurchase;
     private double total;
-    private  double received;
-    private  double excess;
+    private double received;
+    private double excess;
 
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 

@@ -66,6 +66,7 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
                 list.add(discountDetail);
         return list;
     }
+
     public List<DiscountDetails> findDiscountDetailsBy(Map<String, Object> conditions) {
         List<DiscountDetails> discountDetails = discountDetailsList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())
@@ -74,7 +75,7 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
     }
 
     public int getIndex(DiscountDetails discountDetails) {
-        for (int i = 0; i < discountDetailsList.size(); i++){
+        for (int i = 0; i < discountDetailsList.size(); i++) {
             if (discountDetailsList.get(i).getDiscountID().equals(discountDetails.getDiscountID()) && discountDetailsList.get(i).getProductID().equals(discountDetails.getProductID())) {
                 return i;
             }

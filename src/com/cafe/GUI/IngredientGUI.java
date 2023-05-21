@@ -20,10 +20,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 public class IngredientGUI extends JPanel {
 
@@ -41,7 +41,6 @@ public class IngredientGUI extends JPanel {
     private RoundPanel search;
     private RoundPanel search1;
     private JScrollPane scrollPane;
-    private RoundPanel pnlIngredientConfiguration;
     private JComboBox<Object> cbbSearchFilter;
     private JComboBox<Object> cbbSearchSupplier;
     private JComboBox<Object> cbbUnitSearch;
@@ -103,7 +102,6 @@ public class IngredientGUI extends JPanel {
         result.addAll(sublist1);
         search = new RoundPanel();
         search1 = new RoundPanel();
-        pnlIngredientConfiguration = new RoundPanel();
         cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
         cbbSearchSupplier = new JComboBox<>(new String[]{"Mã nhà cung cấp", "Tên nhà cung cấp", "Điện thoại", "Địa chỉ", "Email"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
@@ -119,43 +117,36 @@ public class IngredientGUI extends JPanel {
         ingredient.setBackground(new Color(70, 67, 67));
         this.add(ingredient, BorderLayout.CENTER);
 
-        roundPanel1.setBackground(new Color(255, 255, 255));
         roundPanel1.setPreferredSize(new Dimension(635, 670));
         roundPanel1.setAutoscrolls(true);
         ingredient.add(roundPanel1);
 
 
-        roundPanel[11].setBackground(new Color(255, 255, 255));
         roundPanel[11].setPreferredSize(new Dimension(635, 50));
         roundPanel[11].setAutoscrolls(true);
         roundPanel1.add(roundPanel[11]);
 
         roundPanel[12].setLayout(new BorderLayout(0, 10));
-        roundPanel[12].setBackground(new Color(255, 255, 255));
         roundPanel[12].setPreferredSize(new Dimension(620, 100));
         roundPanel[12].add(new JScrollPane(dataTable1), BorderLayout.CENTER);
         roundPanel[12].setAutoscrolls(true);
         roundPanel1.add(roundPanel[12]);
 
-        roundPanel[1].setBackground(new Color(255, 255, 255));
         roundPanel[1].setPreferredSize(new Dimension(635, 50));
         roundPanel[1].setAutoscrolls(true);
         roundPanel1.add(roundPanel[1]);
 
         roundPanel[2].setLayout(new BorderLayout(0, 10));
-        roundPanel[2].setBackground(new Color(255, 255, 255));
         roundPanel[2].setPreferredSize(new Dimension(620, 400));
         roundPanel[2].add(new JScrollPane(dataTable), BorderLayout.CENTER);
         roundPanel[2].setAutoscrolls(true);
         roundPanel1.add(roundPanel[2]);
-
 
         roundPanel2.setPreferredSize(new Dimension(350, 670));
         roundPanel2.setAutoscrolls(true);
         ingredient.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
-        search.setBackground(new Color(0xFFFFFF));
         search.setPreferredSize(new Dimension(635, 40));
         roundPanel[1].add(search, BorderLayout.NORTH);
 
@@ -186,7 +177,6 @@ public class IngredientGUI extends JPanel {
         search.add(cbbUnitSearch);
 
         search1.setLayout(new FlowLayout());
-        search1.setBackground(new Color(0xFFFFFF));
         search1.setPreferredSize(new Dimension(635, 40));
         roundPanel[11].add(search1, BorderLayout.NORTH);
 
@@ -273,7 +263,6 @@ public class IngredientGUI extends JPanel {
         label[3].setAutoscrolls(true);
         roundPanel[8].add(label[3]);
 
-
         label[4].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[4].setHorizontalAlignment(JLabel.LEFT);
         label[4].setText("Ngày:");
@@ -281,16 +270,9 @@ public class IngredientGUI extends JPanel {
         label[4].setAutoscrolls(true);
         roundPanel[8].add(label[4]);
 
-        LocalDate date = LocalDate.now();
-        String dateString = String.valueOf(date);
-        String[] dateArray = dateString.split("-");
-        String day = dateArray[2];
-        String month = dateArray[1];
-        String year = dateArray[0];
-
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 14));
         label[5].setHorizontalAlignment(JLabel.LEFT);
-        label[5].setText(year + "-" + month + "-" + day);
+        label[5].setText(new Day().toString());
         label[5].setPreferredSize(new Dimension(90, 30));
         label[5].setAutoscrolls(true);
         roundPanel[8].add(label[5]);
@@ -336,62 +318,40 @@ public class IngredientGUI extends JPanel {
         label[9].setAutoscrolls(true);
         roundPanel[6].add(label[9]);
 
-
-        pnlIngredientConfiguration.setLayout(new GridLayout(6, 2, 20, 20));
-        pnlIngredientConfiguration.setBackground(new Color(0xFFFFFF));
-        pnlIngredientConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlIngredientConfiguration.setPreferredSize(new Dimension(635, 300));
-        roundPanel2.add(pnlIngredientConfiguration, BorderLayout.NORTH);
-
-        btImport.setPreferredSize(new Dimension(135, 40));
-        btImport.setBorderPainted(false);
-        btImport.setRadius(15);
-        btImport.setFocusPainted(false);
-        btImport.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btImport.setIcon(new ImageIcon(("img/icons/plus.png")));
-        btImport.setColor(new Color(0x70E149));
-        btImport.setColorOver(new Color(0x5EFF00));
-        btImport.setColorClick(new Color(0x8AD242));
-        btImport.setText("Nhập Hàng");
-        btImport.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                try {
-                    pressImport();
-                } catch (Exception ignored) {
-
+        BiConsumer<Button, List<Object>> configButton = (button, properties) -> {
+            button.setPreferredSize(new Dimension(135, 40));
+            button.setBorderPainted(false);
+            button.setRadius(15);
+            button.setFocusPainted(false);
+            button.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+            button.setBorderColor(Color.BLACK);
+            button.setForeground(Color.BLACK);
+            button.setText((String) properties.get(0));
+            button.setColor((Color) properties.get(1));
+            button.setColorOver((Color) properties.get(2));
+            button.setColorClick((Color) properties.get(3));
+            button.setIcon(new ImageIcon((String) properties.get(4)));
+            button.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    ((Runnable) properties.get(5)).run();
                 }
-            }
-        });
+            });
+        };
+
+        configButton.accept(btImport, List.of("Nhập hàng", new Color(0x70E149), new Color(0x5EFF00), new Color(0x8AD242), "img/icons/plus.png", (Runnable) this::pressImport));
         roundPanel[7].add(btImport, BorderLayout.WEST);
 
-        btCancel.setPreferredSize(new Dimension(135, 40));
-        btCancel.setBorderPainted(false);
-        btCancel.setRadius(15);
-        btCancel.setFocusPainted(false);
-        btCancel.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        btCancel.setIcon(new ImageIcon(("img/icons/remove.png")));
-        btCancel.setColor(new Color(0xFFBD3737));
-        btCancel.setColorOver(new Color(0xFF0000));
-        btCancel.setColorClick(new Color(0xB65858));
-        btCancel.setText("Hủy");
-        btCancel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                pressCancel();
-            }
-        });
+        configButton.accept(btCancel, List.of("Hủy", new Color(0xFFBD3737), new Color(0xFF0000), new Color(0xB65858), "img/icons/remove.png", (Runnable) this::pressCancel));
         roundPanel[7].add(btCancel, BorderLayout.EAST);
-
 
         ingredientscrollPane.setPreferredSize(new Dimension(340, 420));
         ingredientscrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         roundPanel[10].setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        roundPanel[10].setBackground(new Color(240, 240, 240));
+//        roundPanel[10].setBackground(new Color(240, 240, 240));
         roundPanel[10].setBorder(BorderFactory.createLineBorder(Color.black));
         roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), 420));
         roundPanel[5].add(ingredientscrollPane);
-
     }
 
     public void searchIngredient() {
@@ -400,7 +360,7 @@ public class IngredientGUI extends JPanel {
             loadDataTable(ingredientBLL.getIngredientList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "INGREDIENT_ID";
                 case 1 -> key = "NAME";
                 case 3 -> key = "UNIT_PRICE";
@@ -416,7 +376,7 @@ public class IngredientGUI extends JPanel {
             loadDataTable1(supplierBLL.getSupplierList());
         } else {
             String key = null;
-            switch (cbbSearchSupplier.getSelectedIndex()){
+            switch (cbbSearchSupplier.getSelectedIndex()) {
                 case 0 -> key = "SUPPLIER_ID";
                 case 1 -> key = "NAME";
                 case 2 -> key = "PHONE";
@@ -474,7 +434,6 @@ public class IngredientGUI extends JPanel {
 
             loadDataTable(new ArrayList<>());
             loadDataTable1(supplierBLL.getSupplierList());
-
         }
     }
 

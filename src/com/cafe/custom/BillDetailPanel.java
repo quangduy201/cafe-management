@@ -2,7 +2,6 @@ package com.cafe.custom;
 
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
-import com.cafe.BLL.ReceiptDetailsBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.utils.VNString;
@@ -58,19 +57,16 @@ public class BillDetailPanel extends RoundPanel {
 
         paymentFrame.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         paymentFrame.setPreferredSize(new Dimension(340, 75));
-        paymentFrame.setBackground(new Color(250, 250, 250));
         paymentFrame.setBorder(BorderFactory.createLineBorder(Color.black));
         this.add(paymentFrame);
 
 
         frame_name.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        frame_name.setBackground(new Color(250, 250, 250));
         frame_name.setPreferredSize(new Dimension(340, 30));
         paymentFrame.add(frame_name);
 
 
         frame_price.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        frame_price.setBackground(new Color(250, 250, 250));
         frame_price.setPreferredSize(new Dimension(340, 40));
         paymentFrame.add(frame_price);
 
@@ -182,18 +178,12 @@ public class BillDetailPanel extends RoundPanel {
         payment_quantity1.setPreferredSize(new Dimension(100, 40));
         payment_price.setPreferredSize(new Dimension(55, 40));
         payment_price1.setPreferredSize(new Dimension(60, 40));
-
-
-        ReceiptDetails data = new ReceiptDetailsBLL()
-            .findReceiptDetailsBy(Map.of("RECEIPT_ID", receiptDetails.getReceiptID()))
-            .get(0);
         Ingredient ingredient = new IngredientBLL()
-            .findIngredientsBy(Map.of("INGREDIENT_ID", data.getIngredientID()))
+            .findIngredientsBy(Map.of("INGREDIENT_ID", receiptDetails.getIngredientID()))
             .get(0);
-
         payment_name1.setText(ingredient.getName());
-        payment_quantity1.setText(data.getQuantity() + ingredient.getUnit());
-        payment_price1.setText(VNString.currency(data.getQuantity() * ingredient.getUnitPrice()));
+        payment_quantity1.setText(receiptDetails.getQuantity() + ingredient.getUnit());
+        payment_price1.setText(VNString.currency(receiptDetails.getQuantity() * ingredient.getUnitPrice()));
     }
 
     public void setIngredient(Ingredient ingredient, int index) {

@@ -7,13 +7,21 @@ import java.awt.event.MouseEvent;
 
 public class ButtonStatic extends JButton {
 
-    public ButtonStatic(){
+    private boolean over;
+    private Color color;
+    private Color colorOver;
+    private Color colorClick;
+    private Color borderColor;
+    private int radius = 0;
+
+
+    public ButtonStatic() {
         setContentAreaFilled(false);
         initComponent();
     }
 
     public void initComponent() {
-        this.addMouseListener(new MouseAdapter(){
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 setBackground(colorOver);
@@ -33,9 +41,9 @@ public class ButtonStatic extends JButton {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if(over){
+                if (over) {
                     setBackground(colorOver);
-                }else{
+                } else {
                     setBackground(color);
                 }
             }
@@ -58,8 +66,6 @@ public class ButtonStatic extends JButton {
         this.color = color;
         setBackground(color);
     }
-
-
 
     public Color getColorOver() {
         return colorOver;
@@ -94,14 +100,6 @@ public class ButtonStatic extends JButton {
         this.radius = radius;
     }
 
-
-    private boolean over;
-    private Color color;
-    private Color colorOver;
-    private Color colorClick;
-    private Color borderColor;
-    private int  radius = 0;
-
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
@@ -112,7 +110,7 @@ public class ButtonStatic extends JButton {
         g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
         //Border set 2px
         g2.setColor(getBackground());
-        g2.fillRoundRect(2, 2, getWidth()-4, getHeight()-4, radius, radius);
+        g2.fillRoundRect(2, 2, getWidth() - 4, getHeight() - 4, radius, radius);
 
         super.paintComponent(g);
     }

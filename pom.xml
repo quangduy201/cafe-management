@@ -18,6 +18,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+
+        <repository>
+            <id>GroupDocs Artifact Repository</id>
+            <name>GroupDocs Artifact Repository</name>
+            <url>https://releases.groupdocs.com/java/repo/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
@@ -40,13 +54,6 @@
             <version>2.20.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.jfree/jfreechart -->
-        <dependency>
-            <groupId>org.jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-            <version>1.5.4</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.toedter/jcalendar -->
         <dependency>
             <groupId>com.toedter</groupId>
@@ -59,6 +66,27 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>3.1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.java.dev.timingframework/timingframework -->
+        <dependency>
+            <groupId>net.java.dev.timingframework</groupId>
+            <artifactId>timingframework</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout</artifactId>
+            <version>3.7.4</version>
+        </dependency>
+
+        <!-- https://releases.groupdocs.com/conversion/java/-->
+        <dependency>
+            <groupId>com.groupdocs</groupId>
+            <artifactId>groupdocs-conversion</artifactId>
+            <version>23.4</version>
         </dependency>
 
         <dependency>

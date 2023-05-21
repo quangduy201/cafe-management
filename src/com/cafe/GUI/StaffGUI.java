@@ -16,8 +16,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -95,13 +93,11 @@ public class StaffGUI extends JPanel {
         staff.add(roundPanel1);
 
         roundPanel2.setLayout(new BorderLayout());
-        roundPanel2.setBackground(new Color(0xFFFFFF));
         roundPanel2.setPreferredSize(new Dimension(350, 680));
         roundPanel2.setAutoscrolls(true);
         staff.add(roundPanel2);
 
         search.setLayout(new FlowLayout());
-        search.setBackground(new Color(0xFFFFFF));
         search.setPreferredSize(new Dimension(635, 35));
         roundPanel1.add(search, BorderLayout.NORTH);
 
@@ -145,7 +141,6 @@ public class StaffGUI extends JPanel {
         roundPanel1.add(scrollPane);
 
         pnlStaffConfiguration.setLayout(new GridLayout(9, 2, 20, 20));
-        pnlStaffConfiguration.setBackground(new Color(0xFFFFFF));
         pnlStaffConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
         pnlStaffConfiguration.setPreferredSize(new Dimension(635, 450));
         roundPanel2.add(pnlStaffConfiguration, BorderLayout.NORTH);
@@ -179,12 +174,12 @@ public class StaffGUI extends JPanel {
                     jTextFieldsForm[index] = new JTextField(staffBLL.getAutoID());
                     jTextFieldsForm[index].setEnabled(false);
                     jTextFieldsForm[index].setBorder(null);
-                    jTextFieldsForm[index].setDisabledTextColor(new Color(0x000000));
+                    jTextFieldsForm[index].setDisabledTextColor(null);
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
                     index++;
                 }
                 case "NAME" -> {
-                    jLabelsForm[i].setText("Tên khách hàng: ");
+                    jLabelsForm[i].setText("Tên nhân viên: ");
                     jTextFieldsForm[index] = new JTextField();
                     jTextFieldsForm[index].setText(null);
                     pnlStaffConfiguration.add(jTextFieldsForm[index]);
@@ -264,95 +259,25 @@ public class StaffGUI extends JPanel {
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         showImg.setPreferredSize(new Dimension(635, 100));
-        showImg.setBackground(new Color(0xFFFFFF));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
             mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setBackground(new Color(0xFFFFFF));
             mode.setPreferredSize(new Dimension(635, 130));
             roundPanel2.add(mode, BorderLayout.SOUTH);
 
-            btAdd.setBackground(new Color(35, 166, 97));
-            btAdd.setBorder(null);
-            btAdd.setIcon(new ImageIcon("img/icons/plus.png"));
-            btAdd.setText("  Thêm");
-            btAdd.setColor(new Color(240, 240, 240));
-            btAdd.setColorClick(new Color(141, 222, 175));
-            btAdd.setColorOver(new Color(35, 166, 97));
-            btAdd.setFocusPainted(false);
-            btAdd.setRadius(20);
-            btAdd.setEnabled(true);
-            btAdd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btAdd.isEnabled()) {
-                        addStaff();
-                    }
-                }
-            });
+            Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addStaff));
             mode.add(btAdd);
         }
-
         if (decentralizationMode == 3) {
-            btUpd.setBackground(new Color(35, 166, 97));
-            btUpd.setBorder(null);
-            btUpd.setIcon(new ImageIcon("img/icons/wrench.png"));
-            btUpd.setText("  Sửa");
-            btUpd.setColor(new Color(240, 240, 240));
-            btUpd.setColorClick(new Color(141, 222, 175));
-            btUpd.setColorOver(new Color(35, 166, 97));
-            btUpd.setFocusPainted(false);
-            btUpd.setRadius(20);
-            btUpd.setEnabled(false);
-            btUpd.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btUpd.isEnabled()) {
-                        updateStaff();
-                    }
-                }
-            });
+            Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateStaff));
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteStaff));
             mode.add(btUpd);
-
-            btDel.setBackground(new Color(35, 166, 97));
-            btDel.setBorder(null);
-            btDel.setIcon(new ImageIcon("img/icons/delete.png"));
-            btDel.setText("  Xoá");
-            btDel.setColor(new Color(240, 240, 240));
-            btDel.setColorClick(new Color(141, 222, 175));
-            btDel.setColorOver(new Color(35, 166, 97));
-            btDel.setFocusPainted(false);
-            btDel.setRadius(20);
-            btDel.setEnabled(false);
-            btDel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if (btDel.isEnabled()) {
-                        deleteStaff();
-                    }
-                }
-            });
             mode.add(btDel);
         }
-
         if (decentralizationMode > 1) {
-            btRef.setBackground(new Color(35, 166, 97));
-            btRef.setBorder(null);
-            btRef.setIcon(new ImageIcon("img/icons/refresh.png"));
-            btRef.setText("  Làm mới");
-            btRef.setColor(new Color(240, 240, 240));
-            btRef.setColorClick(new Color(141, 222, 175));
-            btRef.setColorOver(new Color(35, 166, 97));
-            btRef.setFocusPainted(false);
-            btRef.setRadius(20);
-            btRef.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-                    refreshForm();
-                }
-            });
+            Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
             dataTable.setRowSelectionInterval(0, 0);
@@ -382,7 +307,7 @@ public class StaffGUI extends JPanel {
             loadDataTable(staffBLL.getStaffList());
         } else {
             String key = null;
-            switch (cbbSearchFilter.getSelectedIndex()){
+            switch (cbbSearchFilter.getSelectedIndex()) {
                 case 0 -> key = "STAFF_ID";
                 case 1 -> key = "NAME";
                 case 3 -> key = "DOB";

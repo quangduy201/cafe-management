@@ -55,14 +55,17 @@ public class DataTable extends JTable {
             }
         });
     }
+
     public DataTable(Object[][] data, Object[] columnNames, ActionListener actionListener, Boolean checkbox) {
         super(new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-            public Class getColumnClass(int column) {
-                if (column == 6) {
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 6) {
                     return Boolean.class;
                 }
                 return String.class;
@@ -80,8 +83,7 @@ public class DataTable extends JTable {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                int row = rowAtPoint(e.getPoint());
-                lastSelectedRow = row;
+                lastSelectedRow = rowAtPoint(e.getPoint());
                 if (actionListener != null) {
                     actionListener.actionPerformed(null);
                 }

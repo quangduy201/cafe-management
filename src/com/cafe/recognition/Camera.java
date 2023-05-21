@@ -8,14 +8,11 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 
 public class Camera extends JFrame {
     public static final int CAMERA_WIDTH = 640;
@@ -40,7 +37,7 @@ public class Camera extends JFrame {
             public void windowClosing(WindowEvent e) {
 //                int message = JOptionPane.showConfirmDialog(null, "Do you want to close?\nThe model won't be trained.", "Exit", JOptionPane.YES_NO_OPTION);
 //                if (message == JOptionPane.YES_OPTION)
-                    active = false;
+                active = false;
             }
         });
         addKeyListener(new KeyAdapter() {
@@ -49,7 +46,7 @@ public class Camera extends JFrame {
                 if (e.getKeyChar() == 'q') {
 //                    int message = JOptionPane.showConfirmDialog(null, "Do you want to close?\nThe model won't be trained.", "Exit", JOptionPane.YES_NO_OPTION);
 //                    if (message == JOptionPane.YES_OPTION)
-                        active = false;
+                    active = false;
                 }
             }
         });
@@ -93,15 +90,13 @@ public class Camera extends JFrame {
         Imgproc.resize(image, image, new Size(CAMERA_WIDTH, CAMERA_HEIGHT));
         MatOfByte m = new MatOfByte();
         Imgcodecs.imencode(".jpg", image, m);
-        BufferedImage bufImage;
         try {
             if (loading) {
                 loading = false;
                 getContentPane().removeAll();
                 getContentPane().add(currentFrame);
             }
-            bufImage = ImageIO.read(new ByteArrayInputStream(m.toArray()));
-            currentFrame.setIcon(new ImageIcon(bufImage));
+            currentFrame.setIcon(new ImageIcon(m.toArray()));
             pack();
         } catch (Exception e) {
             e.printStackTrace();
