@@ -37,7 +37,7 @@ public class SupplierGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
-    private RoundPanel roundPanel[];
+    private RoundPanel[] roundPanel;
 
     public SupplierGUI(int decentralizationMode) {
         System.gc();
@@ -52,7 +52,7 @@ public class SupplierGUI extends JPanel {
         roundPanel1 = new RoundPanel();
         roundPanel2 = new RoundPanel();
         roundPanel = new RoundPanel[10];
-        for (int i = 0;  i < roundPanel.length; i++) {
+        for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
         }
         List<String> columnNames = supplierBLL.getSupplierDAL().getColumnNames();
@@ -98,10 +98,10 @@ public class SupplierGUI extends JPanel {
         search.setPreferredSize(new Dimension(635, 40));
         roundPanel[1].add(search, BorderLayout.NORTH);
 
-        cbbSearchFilter.setPreferredSize(new Dimension(120,30));
+        cbbSearchFilter.setPreferredSize(new Dimension(120, 30));
         search.add(cbbSearchFilter);
 
-        txtSearch.setPreferredSize(new Dimension(200,30));
+        txtSearch.setPreferredSize(new Dimension(200, 30));
         txtSearch.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -142,8 +142,7 @@ public class SupplierGUI extends JPanel {
                 jTextFieldsForm[i].setEnabled(false);
                 jTextFieldsForm[i].setBorder(null);
                 jTextFieldsForm[i].setDisabledTextColor(null);
-            }
-            else {
+            } else {
                 if ("NAME".equals(columnNames.get(i))) {
                     jLabelsForm[i].setText("Tên nhà cung cấp: ");
                 }
@@ -173,7 +172,7 @@ public class SupplierGUI extends JPanel {
 //        showImg.setPreferredSize(new Dimension(635, 100)); // TODO:
         showImg.setPreferredSize(new Dimension(635, 300));
         showImg.setBackground(new Color(0xFFFFFF));
-     //   roundPanel2.add(showImg, BorderLayout.CENTER);
+        //   roundPanel2.add(showImg, BorderLayout.CENTER);
 
         if (decentralizationMode > 1) {
             mode.setLayout(new GridLayout(2, 2, 20, 20));
@@ -198,6 +197,7 @@ public class SupplierGUI extends JPanel {
             fillForm();
         }
     }
+
     public void searchSuppliers() {
         if (txtSearch.getText().isEmpty()) {
             loadDataTable(supplierBLL.getSupplierList());

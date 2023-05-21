@@ -8,10 +8,10 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +35,7 @@ public class FrameCustomer extends JFrame {
     private RoundPanel[] roundPanel1;
     private JLabel label;
     private JLabel[] label1;
-    private JTextField jTextField[];
+    private JTextField[] jTextField;
 
     public FrameCustomer(String phone) {
         System.gc();
@@ -201,7 +201,7 @@ public class FrameCustomer extends JFrame {
                     e.consume();
                 }
             }
-        });;
+        });
         roundPanel1[4].add(jTextField[2]);
 
         roundPanel1[6].add(jDateChooser[1]);
@@ -250,7 +250,7 @@ public class FrameCustomer extends JFrame {
         }
         dateOfBirth = new Day(jDateChooser[0].getDate());
         if (jDateChooser[1].getDate() == null) {
-            dateOfSup = new Day(1,1,1000);
+            dateOfSup = new Day(1, 1, 1000);
         } else {
             dateOfSup = new Day(jDateChooser[1].getDate());
         }

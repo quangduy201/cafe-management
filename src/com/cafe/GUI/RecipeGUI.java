@@ -223,6 +223,7 @@ public class RecipeGUI extends JPanel {
     private void productIDSearch() {
         loadDataTable(recipeBLL.findRecipes("PRODUCT_ID", Objects.requireNonNull(cbbProductIDSearch.getSelectedItem()).toString()));
     }
+
     private void selectSearchFilter() {
         if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Đơn vị")) {
             txtSearch.setVisible(false);

@@ -4,6 +4,7 @@ public class ReceiptDetails {
     private String receiptID;
     private String ingredientID;
     private double quantity;
+
     public ReceiptDetails() {
     }
 

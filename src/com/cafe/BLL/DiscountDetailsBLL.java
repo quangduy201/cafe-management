@@ -66,6 +66,7 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
                 list.add(discountDetail);
         return list;
     }
+
     public List<DiscountDetails> findDiscountDetailsBy(Map<String, Object> conditions) {
         List<DiscountDetails> discountDetails = discountDetailsList;
         for (Map.Entry<String, Object> entry : conditions.entrySet())

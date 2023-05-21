@@ -55,6 +55,7 @@ public class DataTable extends JTable {
             }
         });
     }
+
     public DataTable(Object[][] data, Object[] columnNames, ActionListener actionListener, Boolean checkbox) {
         super(new DefaultTableModel(data, columnNames) {
             @Override

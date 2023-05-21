@@ -37,7 +37,7 @@ public class Camera extends JFrame {
             public void windowClosing(WindowEvent e) {
 //                int message = JOptionPane.showConfirmDialog(null, "Do you want to close?\nThe model won't be trained.", "Exit", JOptionPane.YES_NO_OPTION);
 //                if (message == JOptionPane.YES_OPTION)
-                    active = false;
+                active = false;
             }
         });
         addKeyListener(new KeyAdapter() {
@@ -46,7 +46,7 @@ public class Camera extends JFrame {
                 if (e.getKeyChar() == 'q') {
 //                    int message = JOptionPane.showConfirmDialog(null, "Do you want to close?\nThe model won't be trained.", "Exit", JOptionPane.YES_NO_OPTION);
 //                    if (message == JOptionPane.YES_OPTION)
-                        active = false;
+                    active = false;
                 }
             }
         });

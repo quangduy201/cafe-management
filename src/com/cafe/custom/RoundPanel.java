@@ -5,10 +5,11 @@ import java.awt.*;
 
 public class RoundPanel extends JPanel {
 
+    private Color borderColor;
+
     public RoundPanel() {
         setOpaque(false);
     }
-    private Color borderColor;
 
     public Color getBorderColor() {
         return borderColor;

@@ -62,6 +62,8 @@ public class SaleGUI extends JPanel {
     private Button btnPurchase;
     private Button btnCancel;
     private Button btnSearchByFace;
+    private final ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
+    private int sl = 0;
 
     public SaleGUI(String staffID) {
         System.gc();
@@ -406,8 +408,7 @@ public class SaleGUI extends JPanel {
         }
         loadProducts(product -> true);
     }
-    private ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
-    private int sl = 0;
+
     public void addProductPanel(Product product, int index) {
         RoundPanel frameProduct = new RoundPanel();
         RoundPanel frameImg = new RoundPanel();
@@ -679,7 +680,7 @@ public class SaleGUI extends JPanel {
                 size++;
             }
         }
-        Double height = 256 * Math.ceil( Double.valueOf(size) / 3);
+        Double height = 256 * Math.ceil(Double.valueOf(size) / 3);
         roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height.intValue()));
     }
 
@@ -696,7 +697,7 @@ public class SaleGUI extends JPanel {
         for (Recipe recipe : recipeList) {
             for (Ingredient ingredient : ProductDetailsGUI.ingredientList) {
                 if (Objects.equals(recipe.getIngredientID(), ingredient.getIngredientID())) {
-                    ingredient.setQuantity(ingredient.getQuantity()+recipe.getMass()*quantity);
+                    ingredient.setQuantity(ingredient.getQuantity() + recipe.getMass() * quantity);
                 }
             }
         }

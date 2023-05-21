@@ -257,16 +257,16 @@ public class CustomerGUI extends JPanel {
                     buttonGroup.add(rbYes);
                     buttonGroup.add(rbNo);
                     panel.add(rbYes);
-                    rbYes.addActionListener( e -> {
+                    rbYes.addActionListener(e -> {
                         if (rbYes.isSelected()) {
                             btFaceSignUp.setEnabled(true);
                         }
-                    } );
-                    rbNo.addActionListener( e -> {
+                    });
+                    rbNo.addActionListener(e -> {
                         if (rbNo.isSelected()) {
                             btFaceSignUp.setEnabled(false);
                         }
-                    } );
+                    });
                     rbNo.setSelected(true);
                     panel.add(rbNo);
                     pnlCustomerConfiguration.add(panel);
@@ -532,7 +532,7 @@ public class CustomerGUI extends JPanel {
         }
         dateOfBirth = new Day(jDateChooser[0].getDate());
         if (jDateChooser[1].getDate() == null) {
-            dateOfSup = new Day(1,1,1000);
+            dateOfSup = new Day(1, 1, 1000);
         } else {
             dateOfSup = new Day(jDateChooser[1].getDate());
         }

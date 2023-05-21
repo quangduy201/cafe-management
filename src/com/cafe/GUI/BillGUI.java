@@ -187,12 +187,8 @@ public class BillGUI extends JPanel {
                         switch (index) {
                             case 0 -> changeMode("SALE");
                             case 1 -> changeMode("IMPORT");
-                            case 2 -> {
-                                pressExcel(true);
-                            }
-                            case 3 -> {
-                                pressExcel(false);
-                            }
+                            case 2 -> pressExcel(true);
+                            case 3 -> pressExcel(false);
                             case 4 -> {
                                 JFileChooser fc = new JFileChooser();
                                 fc.removeChoosableFileFilter(fc.getFileFilter());

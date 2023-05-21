@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.util.function.BiConsumer;
 
 public class HomeGUI extends JFrame {
+    int currentPanel = 1;
     private Account account;
     private Staff staff;
     private Decentralization decentralization;
@@ -48,13 +49,10 @@ public class HomeGUI extends JFrame {
     private ImageAvatar[] imageIcon = new ImageAvatar[3];
     private int numberjpane;
     private ToggleSwitch themeButton;
-
     private String string = "img/icons/down.png";
-
     private int[] listCount = new int[3];
     private int totalHeight;
     private Color imageAvatarIcon;
-    int currentPanel = 1;
 
     public HomeGUI(Account account) {
         this.account = account;
@@ -167,7 +165,7 @@ public class HomeGUI extends JFrame {
         if (!Settings.theme.isDark())
             themeButton.setSelected(true);
         themeButton.setBounds(1150, 10, 66, 34);
-        themeButton.addActionListener(e ->  {
+        themeButton.addActionListener(e -> {
             changeTheme();
             Settings.saveTheme();
         });

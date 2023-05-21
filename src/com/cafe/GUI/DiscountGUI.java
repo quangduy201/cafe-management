@@ -219,7 +219,7 @@ public class DiscountGUI extends JPanel {
                     label[i].setText("Ngày bắt đầu: ");
                     roundPanel[5].add(jDateChooser[i - 2]);
                 }
-                case"END_DATE" -> {
+                case "END_DATE" -> {
                     label[i].setText("Ngày kết thúc: ");
                     roundPanel[5].add(jDateChooser[i - 2]);
                 }

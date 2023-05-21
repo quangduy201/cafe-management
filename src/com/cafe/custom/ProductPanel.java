@@ -6,28 +6,33 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ProductPanel extends JPanel {
+    private boolean over = false;
+    private boolean pressover;
+    private Color color;
+    private Color colorOver;
+
     public ProductPanel() {
         setOpaque(false);
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered (MouseEvent e) {
-                if(!pressover) {
+            public void mouseEntered(MouseEvent e) {
+                if (!pressover) {
                     setBackground(colorOver);
                     over = true;
                 }
             }
 
             @Override
-            public void mouseExited (MouseEvent e) {
-                if(!pressover) {
+            public void mouseExited(MouseEvent e) {
+                if (!pressover) {
                     setBackground(color);
                     over = false;
                 }
             }
 
             @Override
-            public void mouseReleased (MouseEvent e) {
-                if(!pressover) {
+            public void mouseReleased(MouseEvent e) {
+                if (!pressover) {
                     if (over) {
                         setBackground(colorOver);
                     } else {
@@ -38,10 +43,12 @@ public class ProductPanel extends JPanel {
         });
     }
 
-    private boolean over = false;
-
     public boolean isOver() {
         return over;
+    }
+
+    public void setOver(boolean over) {
+        this.over = over;
     }
 
     public boolean isPressover() {
@@ -50,15 +57,6 @@ public class ProductPanel extends JPanel {
 
     public void setPressover(boolean pressover) {
         this.pressover = pressover;
-    }
-
-    private boolean pressover;
-    private Color color;
-    private Color colorOver;
-
-
-    public void setOver(boolean over) {
-        this.over = over;
     }
 
     public Color getColor() {

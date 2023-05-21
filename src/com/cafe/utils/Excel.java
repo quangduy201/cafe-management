@@ -197,7 +197,7 @@ public class Excel {
         return true;
     }
 
-    public static boolean writeToExcel(Receipt receipt,String path) {
+    public static boolean writeToExcel(Receipt receipt, String path) {
         try {
             Files.createDirectories(Paths.get(path));
         } catch (Exception e) {

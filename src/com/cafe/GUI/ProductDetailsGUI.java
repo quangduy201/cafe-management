@@ -15,10 +15,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class ProductDetailsGUI extends JFrame {
@@ -360,18 +358,18 @@ public class ProductDetailsGUI extends JFrame {
             }
         }
 
-        for (int i=0; i<quantityIngredients.size(); i++) {
+        for (int i = 0; i < quantityIngredients.size(); i++) {
             if (quantityIngredients.get(i) < massIngredients.get(i)) {
                 break;
             } else {
-                list.add((int) (quantityIngredients.get(i)/massIngredients.get(i)));
+                list.add((int) (quantityIngredients.get(i) / massIngredients.get(i)));
             }
         }
         Collections.sort(list);
         countProduct = list.get(0);
         if (countProduct > quantity) {
-            for (int i=0; i<quantityIngredients.size(); i++) {
-                quantityIngredients.set(i, quantityIngredients.get(i)-massIngredients.get(i)*quantity);
+            for (int i = 0; i < quantityIngredients.size(); i++) {
+                quantityIngredients.set(i, quantityIngredients.get(i) - massIngredients.get(i) * quantity);
             }
             int i = 0;
             for (Ingredient ingredient : ingredientList) {
