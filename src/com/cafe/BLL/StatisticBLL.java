@@ -89,7 +89,7 @@ public class StatisticBLL extends Manager<Statistic> {
             yearStatistic[1] += monthStatistic[1];
             yearStatistic[2] += monthStatistic[2];
         }
-        return yearStatistic;
+        return new double[]{yearStatistic[0], yearStatistic[1], yearStatistic[2]};
     }
 
     public void addStatisticsSinceTheLastStatistic() {

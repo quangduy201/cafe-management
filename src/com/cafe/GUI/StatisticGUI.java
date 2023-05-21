@@ -1016,7 +1016,7 @@ public class StatisticGUI extends JPanel {
         }
     }
 
-    private Button jButton;
+    private Button []jButton = new Button[2];
     public void btChart() {
         cpButton.setColor(new Color(0x646464));
         cpButton.setColorOver(new Color(0xB2B2B2));
@@ -1030,7 +1030,8 @@ public class StatisticGUI extends JPanel {
         roundPanel[1].removeAll();
         roundPanel[1].revalidate();
         roundPanel[1].repaint();
-        jButton = new Button();
+        jButton[0] = new Button();
+        jButton[1] = new Button();
         for (int i = 3; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
         }
@@ -1098,7 +1099,7 @@ public class StatisticGUI extends JPanel {
 
         chart.setTitle("Biểu đồ thống kê theo năm 2023");
         chart.addLegend("Bán hàng ", Color.decode("#7b4397"), Color.decode("#dc2430"));
-        chart.addLegend("Nhập hàng", Color.decode("#e65c00"), Color.decode("#F9D423"));
+        chart.addLegend("Nguyên liệu", Color.decode("#e65c00"), Color.decode("#F9D423"));
         chart.addLegend("Khách hàng", Color.decode("#0099F7"), Color.decode("#F11712"));
 
         chart.clear();
@@ -1129,24 +1130,43 @@ public class StatisticGUI extends JPanel {
         roundPanel[8].add(jTextField[0]);
 
 
-        jButton.setBorderPainted(false);
-        jButton.setFocusPainted(false);
-        jButton.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-        jButton.setColor(new Color(0x70E149));
-        jButton.setColorOver(new Color(0x5EFF00));
-        jButton.setColorClick(new Color(0x8AD242));
-        jButton.setBorderColor(new Color(70, 67, 67));
-        jButton.addMouseListener(new MouseAdapter() {
+        jButton[0].setBorderPainted(false);
+        jButton[0].setFocusPainted(false);
+        jButton[0].setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        jButton[0].setColor(new Color(0x70E149));
+        jButton[0].setColorOver(new Color(0x5EFF00));
+        jButton[0].setColorClick(new Color(0x8AD242));
+        jButton[0].setBorderColor(new Color(70, 67, 67));
+        jButton[0].addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
-               statatics();
-               loadStaticTable();
+                statistics();
+                loadStatisticTable();
             }
         });
-        jButton.setRadius(15);
-        jButton.setText("Thống Kê");
-        jButton.setPreferredSize(new Dimension(100, 40));
-        roundPanel[8].add(jButton);
+        jButton[0].setRadius(15);
+        jButton[0].setText("Thống Kê");
+        jButton[0].setPreferredSize(new Dimension(100, 40));
+        roundPanel[8].add(jButton[0]);
+
+        jButton[1].setBorderPainted(false);
+        jButton[1].setFocusPainted(false);
+        jButton[1].setFont(new Font("Times New Roman", Font.PLAIN, 14));
+        jButton[1].setColor(new Color(0x70E149));
+        jButton[1].setColorOver(new Color(0x5EFF00));
+        jButton[1].setColorClick(new Color(0x8AD242));
+        jButton[1].setBorderColor(new Color(70, 67, 67));
+        jButton[1].addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                statisticYear();
+                loadStatisticTable();
+            }
+        });
+        jButton[1].setRadius(15);
+        jButton[1].setText("Thống Kê Theo Năm");
+        jButton[1].setPreferredSize(new Dimension(170, 40));
+        roundPanel[8].add(jButton[1]);
 
         List<String> columnName1 = new ArrayList<>();
         columnName1.add("Ngày tháng");
@@ -1206,13 +1226,18 @@ public class StatisticGUI extends JPanel {
                 roundPanel[5].add(jScrollPane[2], BorderLayout.CENTER);
             }
         });
-
-        loadStaticTable();
+        if(jTextField[0].getText().isEmpty()) this.today = new Day();
+        else this.today = new Day(1,1, Integer.parseInt(jTextField[0].getText()));
+        loadStatisticTable();
     }
 
-    public void statatics() {
+    private Day newDay;
+    private Day today;
+
+    private boolean pennant = true;
+    public void statistics() {
         chart.clear();
-        chart.setTitle("Biểu đồ thống kê theo năm " + jTextField[0].getText());
+        chart.setTitle("Biểu đồ thống kê theo tháng trong năm" + jTextField[0].getText());
         chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1,Integer.parseInt(jTextField[0].getText()))));
         chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2,Integer.parseInt(jTextField[0].getText()))));
         chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3,Integer.parseInt(jTextField[0].getText()))));
@@ -1226,14 +1251,34 @@ public class StatisticGUI extends JPanel {
         chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11,Integer.parseInt(jTextField[0].getText()))));
         chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12,Integer.parseInt(jTextField[0].getText()))));
         chart.start();
+        if(jTextField[0].getText().isEmpty()) this.today = new Day();
+        else this.today = new Day(1,1, Integer.parseInt(jTextField[0].getText()));
+        pennant = true;
     }
 
-    public void loadStaticTable() {
-        Day today;
-        if(jTextField[0].getText().isEmpty()) today = new Day();
-        else today = new Day(1,1, Integer.parseInt(jTextField[0].getText()));
-        List<Bill> bills = billBLL.findBillsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
-        List<Statistic> statistics = statisticBLL.findStatisticsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
+    public void statisticYear() {
+        if(today.getYear() > 2030) newDay = new Day(1,1,today.getYear() - 10);
+        else newDay = new Day(1,1,2020);
+        chart.clear();
+        chart.setTitle("Biểu đồ thống kê theo năm " + jTextField[0].getText());
+        for (int i = 2020 ; i <= today.getYear() ; i++) {
+            chart.addData(new ModelChart(String.valueOf(i), statisticBLL.getYearStatistic(i)));
+        }
+        chart.start();
+        pennant = false;
+    }
+
+    public void loadStatisticTable() {
+        List<Bill> bills;
+        List<Statistic> statistics;
+        if(pennant) {
+            bills = billBLL.findBillsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
+            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1 , today.getYear()), new Day(31,12, today.getYear()));
+        }
+        else {
+            bills = billBLL.findBillsBetween(new Day(1, 1 , newDay.getYear()), new Day(today.getDate(),today.getMonth(), today.getYear()));
+            statistics = statisticBLL.findStatisticsBetween(new Day(1, 1 , newDay.getYear()), new Day(today.getDate(),today.getMonth(), today.getYear()));
+        }
         Map<String, Integer> data = new HashMap<>();
         Map<String, Double> ingredientData = new HashMap<>();
         Map<String, Integer> productData = new HashMap<>();
