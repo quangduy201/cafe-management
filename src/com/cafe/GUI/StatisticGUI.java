@@ -512,7 +512,7 @@ public class StatisticGUI extends JPanel {
 
         jScrollPane[0] = new JScrollPane();
         List<String> columnNames = new ArrayList<>();
-        columnNames.add("Tên khách hàng");
+        columnNames.add("Mã khách hàng");
         columnNames.add("Số lần mua");
         dataTable[0] = new DataTable(null, columnNames.subList(0, columnNames.size()).toArray(), null);
         jScrollPane[0] = new JScrollPane(dataTable[0]);
@@ -544,7 +544,7 @@ public class StatisticGUI extends JPanel {
         }
         for (Map.Entry<String, Integer> entry : data.entrySet()) {
             Customer customer = customerBLL.searchCustomers("CUSTOMER_ID = '" + entry.getKey() + "'").get(0);
-            model.addRow(new Object[]{customer.getName(), entry.getValue()});
+            model.addRow(new Object[]{customer.getCustomerID(), entry.getValue()});
         }
 
 
@@ -607,7 +607,7 @@ public class StatisticGUI extends JPanel {
 
         jScrollPane[1] = new JScrollPane();
         List<String> columnNames1 = new ArrayList<>();
-        columnNames1.add("Tên nguyên liệu");
+        columnNames1.add("Mã nguyên liệu");
         columnNames1.add("Số lượng");
         columnNames1.add("Đơn vị");
         dataTable[1] = new DataTable(null, columnNames1.subList(0, columnNames1.size()).toArray(), null);
@@ -616,7 +616,7 @@ public class StatisticGUI extends JPanel {
         model = (DefaultTableModel) dataTable[1].getModel();
         for (Map.Entry<String, Double> entry : ingredientData.entrySet()) {
             Ingredient ingredient = ingredientBLL.searchIngredients("INGREDIENT_ID = '" + entry.getKey() + "'").get(0);
-            model.addRow(new Object[]{ingredient.getName(), entry.getValue(), ingredient.getUnit()});
+            model.addRow(new Object[]{ingredient.getIngredientID(), entry.getValue(), ingredient.getUnit()});
         }
 
         roundPanel[15].setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
@@ -678,7 +678,7 @@ public class StatisticGUI extends JPanel {
 
         jScrollPane[2] = new JScrollPane();
         List<String> columnNames2 = new ArrayList<>();
-        columnNames2.add("Tên sản phẩm");
+        columnNames2.add("Mã sản phẩm");
         columnNames2.add("Số lượng");
         columnNames2.add("Size");
         dataTable[2] = new DataTable(null, columnNames2.subList(0, columnNames2.size()).toArray(), null);
@@ -687,7 +687,7 @@ public class StatisticGUI extends JPanel {
         model = (DefaultTableModel) dataTable[2].getModel();
         for (Map.Entry<String, Integer> entry : productData.entrySet()) {
             Product product = productBLL.searchProducts("PRODUCT_ID = '" + entry.getKey() + "'").get(0);
-            model.addRow(new Object[]{product.getName(), entry.getValue(), product.getSized()});
+            model.addRow(new Object[]{product.getProductID(), entry.getValue(), product.getSized()});
         }
 
     }
