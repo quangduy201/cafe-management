@@ -3,7 +3,9 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-database/db.properties
+!target/cafe-management-1.0-SNAPSHOT.jar
+!target/haarcascade_frontalface_default.xml
+src/main/resources/database/db.properties
 config.properties
 
 ### IntelliJ IDEA ###
@@ -36,3 +38,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+/lib/groupdocs-conversion-23.4.jar

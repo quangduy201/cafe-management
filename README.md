@@ -14,6 +14,7 @@ ___
 
 - [Features](#features)
 - [Installation](#installation)
+- [How to use](#how-to-use)
 - [Contributors](#contributors)
 - [License](#license)
 - [External Dependencies](#external-dependencies)
@@ -26,8 +27,9 @@ The Cafe Management application includes the following features:
 
 - Customer authentication using face recognition.
 - Manage items which a real cafe has (e.g. products, staffs, customers, ingredients...).
-- Create, manage and export bills (selling products) and receipt (importing ingredients) to Excel.
+- Create, manage and export bills (selling products) and receipt (importing ingredients) to Excel or PDF.
 - Generate reports on sales, inventory and other metrics.
+- Have a curved line chart that represents the statistics of the cafe (monthly and annual profit, cost, customers).
 
 ___
 
@@ -43,6 +45,16 @@ To install the Cafe Management application, follow these steps:
 - Configure the file `db.properties` you just created to connect to database.
 - Build the project and run this [`CafeManagement`](src/com/cafe/main/CafeManagement.java) class.
 - Login with the default account: `username = 'admin'`, `password = 'admin'`
+
+___
+
+## How to use
+
+To run the application, just simply open Command Prompt or Powershell and run this file:
+
+```
+java -jar .\target\cafe-management-1.0-SNAPSHOT.jar
+```
 
 ___
 
@@ -65,8 +77,10 @@ ___
 - Apache POI 5.2.3
 - Apache Log4j 2.20.0
 - JCalendar 1.4
-- JFreeChart 1.5.4
 - FlatLaf 3.1.1
+- Timing Framework 1.0
+- MiGLayout 3.7.4
+- GroupDocs.Conversion 23.4
 - OpenCV 4.7.0
 
 ___

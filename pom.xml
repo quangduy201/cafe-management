@@ -18,6 +18,31 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.cafe.main.CafeManagement</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>central</id>
@@ -82,19 +107,24 @@
             <version>3.7.4</version>
         </dependency>
 
-        <!-- https://releases.groupdocs.com/conversion/java/-->
+        <!-- https://releases.groupdocs.com/conversion/java/ -->
         <dependency>
             <groupId>com.groupdocs</groupId>
             <artifactId>groupdocs-conversion</artifactId>
             <version>23.4</version>
         </dependency>
 
+        <!--
+        Install OpenCV:
+        1. Run the opencv-4.7.0-windows.exe to extract OpenCV library to your computer.
+        2. Open a terminal or command prompt and navigate to the root of your project.
+        3. Run the following command to install the JAR file into your local Maven repository:
+        mvn install:install-file -Dfile=lib/opencv-470.jar -DgroupId=org.opencv -DartifactId=opencv -Dversion=4.7.0 -Dpackaging=jar
+         -->
         <dependency>
             <groupId>org.opencv</groupId>
             <artifactId>opencv</artifactId>
             <version>4.7.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/opencv-470.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
