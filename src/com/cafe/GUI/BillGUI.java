@@ -280,22 +280,22 @@ public class BillGUI extends JPanel {
         label[4].setAutoscrolls(true);
         roundPanel[8].add(label[4]);
 
-        btnCancel.setPreferredSize(new Dimension(100, 40));
-        btnCancel.setBorderPainted(false);
-        btnCancel.setRadius(15);
-        btnCancel.setFocusPainted(false);
-        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
-        btnCancel.setColor(new Color(0xFFBD3737));
-        btnCancel.setColorOver(new Color(0xFF0000));
-        btnCancel.setColorClick(new Color(0xB65858));
-        btnCancel.setText("Hủy");
-        btnCancel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent mouseEvent) {
-                clickBtnCancel();
-            }
-        });
-        roundPanel[2].add(btnCancel);
+//        btnCancel.setPreferredSize(new Dimension(100, 40));
+//        btnCancel.setBorderPainted(false);
+//        btnCancel.setRadius(15);
+//        btnCancel.setFocusPainted(false);
+//        btnCancel.setIcon(new ImageIcon("img/icons/remove.png"));
+//        btnCancel.setColor(new Color(0xFFBD3737));
+//        btnCancel.setColorOver(new Color(0xFF0000));
+//        btnCancel.setColorClick(new Color(0xB65858));
+//        btnCancel.setText("Hủy");
+//        btnCancel.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mousePressed(MouseEvent mouseEvent) {
+//                clickBtnCancel();
+//            }
+//        });
+//        roundPanel[2].add(btnCancel);
 
         label[5].setFont(new Font("Times New Roman", Font.BOLD, 11));
         label[5].setHorizontalAlignment(JLabel.LEFT);
