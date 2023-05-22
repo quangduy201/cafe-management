@@ -26,8 +26,9 @@ The Cafe Management application includes the following features:
 
 - Customer authentication using face recognition.
 - Manage items which a real cafe has (e.g. products, staffs, customers, ingredients...).
-- Create, manage and export bills (selling products) and receipt (importing ingredients) to Excel.
+- Create, manage and export bills (selling products) and receipt (importing ingredients) to Excel or PDF.
 - Generate reports on sales, inventory and other metrics.
+- Have a curved line chart that represents the statistics of the cafe (monthly and annual profit, cost, customers).
 
 ___
 
@@ -65,8 +66,10 @@ ___
 - Apache POI 5.2.3
 - Apache Log4j 2.20.0
 - JCalendar 1.4
-- JFreeChart 1.5.4
 - FlatLaf 3.1.1
+- Timing Framework 1.0
+- MiGLayout 3.7.4
+- GroupDocs.Conversion 23.4
 - OpenCV 4.7.0
 
 ___
