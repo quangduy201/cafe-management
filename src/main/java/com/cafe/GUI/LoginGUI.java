@@ -3,6 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.AccountBLL;
 import com.cafe.DTO.Account;
 import com.cafe.main.CafeManagement;
+import com.cafe.utils.Resource;
 import com.cafe.utils.Settings;
 
 import javax.swing.*;
@@ -11,7 +12,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class LoginGUI extends JFrame {
-    ImageIcon logo = new ImageIcon("img/logo_cafe.png");
+    ImageIcon logo = Resource.loadImageIcon("img/logo_cafe.png");
     JPanel contentPane = new JPanel();
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();

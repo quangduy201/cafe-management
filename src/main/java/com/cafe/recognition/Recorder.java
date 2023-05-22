@@ -1,5 +1,6 @@
 package com.cafe.recognition;
 
+import com.cafe.utils.Resource;
 import org.apache.commons.io.FileUtils;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -10,6 +11,7 @@ import org.opencv.videoio.Videoio;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 public class Recorder {
     public static final int NUMBER_OF_PICTURES = 40;
@@ -24,7 +26,7 @@ public class Recorder {
         camera = new Camera(cameraName);
         detector = new Detector();
         try {
-            Files.createDirectories(Paths.get(FACE_DIRECTORY));
+            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(FACE_DIRECTORY))));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -71,7 +73,7 @@ public class Recorder {
     }
 
     public void takePictures(String customerID) {
-        String imageDirPath = FACE_DIRECTORY + "/" + customerID;
+        String imageDirPath = new File(Resource.getAbsolutePath(FACE_DIRECTORY), customerID).getPath();
         try {
             FileUtils.deleteDirectory(new File(imageDirPath));
             Files.createDirectories(Paths.get(imageDirPath));

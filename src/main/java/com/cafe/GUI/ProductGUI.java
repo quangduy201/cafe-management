@@ -6,6 +6,7 @@ import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -285,7 +286,7 @@ public class ProductGUI extends JPanel {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             chosenImg = "img/products/" + file.getName();
-            imgProduct.setIcon(new ImageIcon(chosenImg));
+            imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
         }
     }
 
@@ -381,7 +382,7 @@ public class ProductGUI extends JPanel {
                 break;
             }
         }
-        imgProduct.setIcon(new ImageIcon(chosenImg));
+        imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);

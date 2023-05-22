@@ -8,6 +8,7 @@ import com.cafe.DTO.Product;
 import com.cafe.DTO.Recipe;
 import com.cafe.custom.Button;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -154,7 +155,7 @@ public class ProductDetailsGUI extends JFrame {
         frameImg.setBackground(new Color(240, 240, 240));
         roundPanel[2].add(frameImg);
 
-        originalIcon = new ImageIcon(newProduct.getImage());
+        originalIcon = Resource.loadImageIcon(newProduct.getImage());
         slProductImg.setIcon(new ImageIcon(originalIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH)));
         frameImg.add(slProductImg);
 
@@ -250,7 +251,7 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[7].add(comboBoxProductSize);
 
         configButton.accept(confirm, List.of("Xác nhận", 150, 50, 45, new Color(240, 240, 240), new Color(0x756969), new Color(0xA65B5B), (Runnable) this::pressConfirm));
-        confirm.setIcon(new ImageIcon("img/icons/add-to-cart.png"));
+        confirm.setIcon(Resource.loadImageIcon("img/icons/add-to-cart.png"));
         confirm.setFont(new Font("Tahoma", Font.PLAIN, 16));
         roundPanel[4].add(confirm);
     }

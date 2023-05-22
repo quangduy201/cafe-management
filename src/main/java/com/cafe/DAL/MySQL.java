@@ -1,8 +1,10 @@
 package com.cafe.DAL;
 
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,12 +16,13 @@ public class MySQL {
     private static Statement stmt;
 
     static {
-        Properties properties = new Properties();
-        try (InputStream input = new FileInputStream("database/db.properties")) {
-            properties.load(input);
-        } catch (Exception e) {
-            e.printStackTrace();
+        Properties properties;
+        try {
+            properties = Resource.loadProperties("database/db.properties");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        assert properties != null;
         String dbUrl = properties.getProperty("db.url");
         String dbUsername = properties.getProperty("db.username");
         String dbPassword = properties.getProperty("db.password");

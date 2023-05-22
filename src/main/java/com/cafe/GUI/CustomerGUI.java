@@ -6,6 +6,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.cafe.utils.Tasks;
 import com.toedter.calendar.JDateChooser;
 
@@ -299,9 +300,9 @@ public class CustomerGUI extends JPanel {
             button.setEnabled((Boolean) properties.get(4));
             if ((Boolean) properties.get(4)) {
                 button.setPreferredSize(new Dimension(150, 25));
-                button.setIcon(new ImageIcon(new ImageIcon((String) properties.get(5)).getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
+                button.setIcon(new ImageIcon(Resource.loadImageIcon((String) properties.get(5)).getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));
             } else {
-                button.setIcon(new ImageIcon((String) properties.get(5)));
+                button.setIcon(Resource.loadImageIcon((String) properties.get(5)));
             }
             button.addMouseListener(new MouseAdapter() {
                 @Override

@@ -11,6 +11,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -155,7 +156,7 @@ public class DiscountGUI extends JPanel {
         roundPanel[10].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[10]);
 
-        labelimg.setIcon(new ImageIcon(new ImageIcon("img/icons/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+        labelimg.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         labelimg.setFocusable(false);
         labelimg.setPreferredSize(new Dimension(150, 150));
         roundPanel[4].add(labelimg);

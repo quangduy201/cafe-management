@@ -1,5 +1,6 @@
 package com.cafe.recognition;
 
+import com.cafe.utils.Resource;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -75,7 +76,7 @@ public class Camera extends JFrame {
             System.out.println("Failed to open the camera.");
             return;
         }
-        getContentPane().add(new JLabel(new ImageIcon("img/icons/loading.gif")));
+        getContentPane().add(new JLabel(Resource.loadImageIcon("img/icons/loading.gif")));
         setVisible(true);
         active = true;
         loading = true;

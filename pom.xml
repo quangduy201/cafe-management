@@ -31,7 +31,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.cafe.main.CafeManagement</mainClass>
@@ -115,12 +114,17 @@
             <version>23.4</version>
         </dependency>
 
+        <!--
+        Install OpenCV:
+        1. Run the opencv-4.7.0-windows.exe to extract OpenCV library to your computer.
+        2. Open a terminal or command prompt and navigate to the root of your project.
+        3. Run the following command to install the JAR file into your local Maven repository:
+        mvn install:install-file -Dfile=lib/opencv-470.jar -DgroupId=org.opencv -DartifactId=opencv -Dversion=4.7.0 -Dpackaging=jar
+         -->
         <dependency>
             <groupId>org.opencv</groupId>
             <artifactId>opencv</artifactId>
             <version>4.7.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/opencv-470.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

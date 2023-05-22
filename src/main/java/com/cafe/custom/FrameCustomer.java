@@ -4,6 +4,7 @@ import com.cafe.BLL.CustomerBLL;
 import com.cafe.DTO.Customer;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -227,7 +228,7 @@ public class FrameCustomer extends JFrame {
         roundPanel[5].add(roundPanel1[9]);
 
         configButton.accept(confirm, List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::addCustomer));
-        confirm.setIcon(new ImageIcon("img/icons/add-user.png"));
+        confirm.setIcon(Resource.loadImageIcon("img/icons/add-user.png"));
         roundPanel1[9].add(confirm);
     }
 

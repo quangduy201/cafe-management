@@ -5,6 +5,7 @@ import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.cafe.utils.Tasks;
 import com.cafe.utils.VNString;
 
@@ -193,7 +194,7 @@ public class SaleGUI extends JPanel {
 
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
-        btnSearch1.setIcon(new ImageIcon("img/icons/search.png"));
+        btnSearch1.setIcon(Resource.loadImageIcon("img/icons/search.png"));
         btnSearch1.setFocusPainted(false);
         roundPanel5.add(btnSearch1);
 
@@ -224,7 +225,7 @@ public class SaleGUI extends JPanel {
         roundPanel7.add(txtSearch2, BorderLayout.WEST);
 
         btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnSearchByFace.setIcon(new ImageIcon(new ImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btnSearchByFace.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btnSearchByFace.setPreferredSize(new Dimension(40, 35));
         btnSearchByFace.setFocusPainted(false);
         btnSearchByFace.setColorOver(new Color(0xA6A1A1));
@@ -239,7 +240,7 @@ public class SaleGUI extends JPanel {
 
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch2.setPreferredSize(new Dimension(35, 35));
-        btnSearch2.setIcon(new ImageIcon("img/icons/search.png"));
+        btnSearch2.setIcon(Resource.loadImageIcon("img/icons/search.png"));
         btnSearch2.setFocusPainted(false);
         btnSearch2.setColorOver(new Color(0xA6A1A1));
         btnSearch2.setColorClick(new Color(0x2F2F2F));
@@ -377,7 +378,7 @@ public class SaleGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(new ImageIcon((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -457,7 +458,7 @@ public class SaleGUI extends JPanel {
         frameImg.setBackground(color);
         frameProduct.add(frameImg);
 
-        ImageIcon originalImage = new ImageIcon(product.getImage());
+        ImageIcon originalImage = Resource.loadImageIcon(product.getImage());
         productImage.setIcon(new ImageIcon(originalImage.getImage().getScaledInstance(181, 165, Image.SCALE_SMOOTH)));
         frameImg.add(productImage);
 

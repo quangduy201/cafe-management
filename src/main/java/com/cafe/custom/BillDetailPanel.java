@@ -4,6 +4,7 @@ import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
+import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -115,7 +116,7 @@ public class BillDetailPanel extends RoundPanel {
         payment_price1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
         frame_price.add(payment_price1);
 
-        payment_img.setIcon(new ImageIcon(new ImageIcon("img/icons/remove.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+        payment_img.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/remove.png").getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
         payment_img.setFocusable(false);
         payment_img.setBorderPainted(false);
         payment_img.setFocusPainted(false);

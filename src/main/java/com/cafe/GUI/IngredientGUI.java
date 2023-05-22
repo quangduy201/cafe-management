@@ -11,6 +11,7 @@ import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -330,7 +331,7 @@ public class IngredientGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(new ImageIcon((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {

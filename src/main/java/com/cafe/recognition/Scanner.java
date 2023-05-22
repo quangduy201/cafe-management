@@ -2,6 +2,7 @@ package com.cafe.recognition;
 
 import com.cafe.BLL.CustomerBLL;
 import com.cafe.DTO.Customer;
+import com.cafe.utils.Resource;
 import org.opencv.core.Rect;
 import org.opencv.videoio.Videoio;
 
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 public class Scanner {
@@ -22,7 +24,7 @@ public class Scanner {
         detector = new Detector();
         recognizers = new HashMap<>();
         try {
-            Files.createDirectories(Paths.get(Recorder.FACE_DIRECTORY));
+            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(Recorder.FACE_DIRECTORY))));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -53,7 +55,7 @@ public class Scanner {
     }
 
     public void loadModels() {
-        File[] files = new File(Trainer.CLASSIFIER_DIRECTORY).listFiles();
+        File[] files = new File(Objects.requireNonNull(Resource.getAbsolutePath(Trainer.CLASSIFIER_DIRECTORY))).listFiles();
         assert files != null;
         for (File file : files) {
             String customerID = file.getName();

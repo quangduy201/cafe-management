@@ -14,6 +14,7 @@ ___
 
 - [Features](#features)
 - [Installation](#installation)
+- [How to use](#how-to-use)
 - [Contributors](#contributors)
 - [License](#license)
 - [External Dependencies](#external-dependencies)
@@ -44,6 +45,16 @@ To install the Cafe Management application, follow these steps:
 - Configure the file `db.properties` you just created to connect to database.
 - Build the project and run this [`CafeManagement`](src/com/cafe/main/CafeManagement.java) class.
 - Login with the default account: `username = 'admin'`, `password = 'admin'`
+
+___
+
+## How to use
+
+To run the application, just simply open Command Prompt or Powershell and run this file:
+
+```
+java -jar .\target\cafe-management-1.0-SNAPSHOT.jar
+```
 
 ___
 

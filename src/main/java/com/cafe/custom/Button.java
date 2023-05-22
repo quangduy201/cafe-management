@@ -1,5 +1,7 @@
 package com.cafe.custom;
 
+import com.cafe.utils.Resource;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -35,7 +37,7 @@ public class Button extends JButton {
         button.setFocusPainted(false);
         button.setRadius(20);
         button.setText((String) properties.get(0));
-        button.setIcon(new ImageIcon((String) properties.get(1)));
+        button.setIcon(Resource.loadImageIcon((String) properties.get(1)));
         button.setEnabled((Boolean) properties.get(2));
         button.addMouseListener(new MouseAdapter() {
             @Override

@@ -9,6 +9,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
+import com.cafe.utils.Resource;
 import com.cafe.utils.Settings;
 
 import javax.swing.*;
@@ -171,8 +172,8 @@ public class HomeGUI extends JFrame {
         });
         themeButton.setOnColor(new Color(0xFCE797));
         themeButton.setOffColor(new Color(0x504C4C));
-        themeButton.setOnIcon(new ImageIcon("img/icons/sun.png"));
-        themeButton.setOffIcon(new ImageIcon("img/icons/moon.png"));
+        themeButton.setOnIcon(Resource.loadImageIcon("img/icons/sun.png"));
+        themeButton.setOffIcon(Resource.loadImageIcon("img/icons/moon.png"));
         north.add(themeButton);
 
         BiConsumer<Button, java.util.List<Object>> configButton = (button, properties) -> {
@@ -246,7 +247,7 @@ public class HomeGUI extends JFrame {
         imageAvatar[0].setForeground(new Color(255, 255, 255));
         imageAvatar[0].setBorderSize(2);
         imageAvatar[0].setBounds(20, 10, 60, 60);
-        imageAvatar[0].setIcon(new ImageIcon("img/icons/bell-boy.png"));
+        imageAvatar[0].setIcon(Resource.loadImageIcon("img/icons/bell-boy.png"));
         info.add(imageAvatar[0]);
 
         lbName.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -317,7 +318,7 @@ public class HomeGUI extends JFrame {
                     if (numberContent != -1 && numberjpane != 0) {
 //                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
                         pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[0] * 50) / 5;
@@ -350,7 +351,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[0].setPreferredSize(new Dimension(30, 30));
             imageIcon[0].setBorderSize(2);
-            imageIcon[0].setIcon(new ImageIcon(string));
+            imageIcon[0].setIcon(Resource.loadImageIcon(string));
             rpContent[2].add(imageIcon[0]);
 
             for (int i = 5; i < 8; i++) {
@@ -388,7 +389,7 @@ public class HomeGUI extends JFrame {
                     if (numberContent != -1 && numberjpane != 1) {
 //                    string = "img/icons/up.png";
                         imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
                         pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[1] * 50) / 5;
@@ -420,7 +421,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[1].setPreferredSize(new Dimension(30, 30));
             imageIcon[1].setBorderSize(2);
-            imageIcon[1].setIcon(new ImageIcon(string));
+            imageIcon[1].setIcon(Resource.loadImageIcon(string));
             rpContent[5].add(imageIcon[1]);
 
             for (int i = 8; i < 10; i++) {
@@ -457,7 +458,7 @@ public class HomeGUI extends JFrame {
                 public void mousePressed(MouseEvent e) {
                     if (numberContent != -1 && numberjpane != 2) {
                         imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(new ImageIcon(string));
+                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
                         pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
                     }
                     totalHeight = (listCount[2] * 50) / 5;
@@ -490,7 +491,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[2].setPreferredSize(new Dimension(30, 30));
             imageIcon[2].setBorderSize(2);
-            imageIcon[2].setIcon(new ImageIcon("img/icons/down.png"));
+            imageIcon[2].setIcon(Resource.loadImageIcon("img/icons/down.png"));
             rpContent[8].add(imageIcon[2]);
 
             for (int i = 10; i < 15; i++) {
@@ -515,7 +516,7 @@ public class HomeGUI extends JFrame {
             if (mang[i] != 0) {
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
-                imageAvatar[i].setIcon(new ImageIcon(String.format("img/icons/%02d.png", i)));
+                imageAvatar[i].setIcon(Resource.loadImageIcon(String.format("img/icons/%02d.png", i)));
                 roundPanel[i].add(imageAvatar[i]);
 
                 jLabel[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -711,7 +712,7 @@ public class HomeGUI extends JFrame {
                 if (add > 0) coordinates = 36;
                 else coordinates = 72;
                 angle = angle + coordinates;
-                imageIcon[numberjpane].setIcon(rotateIcon(new ImageIcon(string), angle));
+                imageIcon[numberjpane].setIcon(rotateIcon(Resource.loadImageIcon(string), angle));
                 if (counter == 5) {
                     ((Timer) e.getSource()).stop();
                 }

@@ -1,11 +1,13 @@
 package com.cafe.recognition;
 
+import com.cafe.utils.Resource;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class Trainer {
         detector = new Detector();
         recognizer = new Recognizer();
         try {
-            Files.createDirectories(Paths.get(CLASSIFIER_DIRECTORY));
+            Files.createDirectories(Path.of(Objects.requireNonNull(Resource.getAbsolutePath(CLASSIFIER_DIRECTORY))));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -50,7 +52,8 @@ public class Trainer {
     }
 
     public void train(String customerID, double percentToSuccess) {
-        String imageDirPath = new File(FACE_DIRECTORY, customerID).getPath();
+        String imageDirPath = new File(Resource.getAbsolutePath(FACE_DIRECTORY), customerID).getPath();
+        System.out.println(imageDirPath);
         List<Mat> faceSamples = new ArrayList<>();
         List<Integer> labels = new ArrayList<>();
         List<Integer> errorImages = new ArrayList<>();
@@ -77,7 +80,7 @@ public class Trainer {
         MatOfInt labelsMat = new MatOfInt();
         labelsMat.fromList(labels);
         recognizer.model.train(faceSamples, labelsMat);
-        recognizer.model.save(new File(CLASSIFIER_DIRECTORY, customerID + ".xml").getPath());
+        recognizer.model.save(new File(Resource.getAbsolutePath(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
     }
 
     static {

@@ -1,5 +1,6 @@
 package com.cafe.recognition;
 
+import com.cafe.utils.Resource;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
@@ -12,7 +13,7 @@ public class Detector {
 
     public Detector() {
         classifier = new CascadeClassifier();
-        classifier.load("src/com/cafe/recognition/haarcascade_frontalface_default.xml");
+        classifier.load(Resource.loadFileOutsideJAR("haarcascade_frontalface_default.xml"));
         faces = new MatOfRect();
         gray = new Mat();
     }
