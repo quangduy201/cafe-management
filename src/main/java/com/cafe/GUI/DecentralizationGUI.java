@@ -33,7 +33,7 @@ public class DecentralizationGUI extends JPanel {
     private JPanel mode;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object>[] jComboBoxForm;
+    private JComboBox[] jComboBoxForm;
     private JComboBox<Object> jComboBoxSearch;
     private JTextField txtSearch;
     private JTextField[] jTextFieldsForm;
@@ -389,7 +389,7 @@ public class DecentralizationGUI extends JPanel {
         loadDataTable(decentralizationBLL.getDecentralizationList());
         jTextFieldsForm[0].setText(decentralizationBLL.getAutoID());
         jTextFieldsForm[1].setText(null);
-        for (JComboBox<Object> objectJComboBox : jComboBoxForm) {
+        for (JComboBox objectJComboBox : jComboBoxForm) {
             objectJComboBox.setSelectedIndex(0);
         }
         btAdd.setEnabled(true);
@@ -423,7 +423,7 @@ public class DecentralizationGUI extends JPanel {
         String decentralizationName;
         decentralizationID = jTextFieldsForm[0].getText();
         decentralizationName = jTextFieldsForm[1].getText();
-        for (JComboBox<Object> objectJComboBox : jComboBoxForm) {
+        for (JComboBox objectJComboBox : jComboBoxForm) {
             args.add(Objects.requireNonNull(objectJComboBox.getSelectedItem()).toString());
         }
         return new Decentralization(decentralizationID, args, decentralizationName, false);

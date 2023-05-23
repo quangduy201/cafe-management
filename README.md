@@ -14,7 +14,7 @@ ___
 
 - [Features](#features)
 - [Installation](#installation)
-- [How to use](#how-to-use)
+- [How to use](#Build-and-run)
 - [Contributors](#contributors)
 - [License](#license)
 - [External Dependencies](#external-dependencies)
@@ -48,11 +48,21 @@ To install the Cafe Management application, follow these steps:
 
 ___
 
-## How to use
+## Build and run
 
-To run the application, just simply open Command Prompt or Powershell and run this file:
+To build the JAR file from source, open Command Prompt or PowerShell and run:
 
+```powershell
+mvn clean package
 ```
+
+To use face recognition feature, you must copy haarcascade_frontalface_default.xml
+from [`src/main/`](src/main/)
+to [`target/`](target/)
+
+To run the application, open Command Prompt or PowerShell and run:
+
+```powershell
 java -jar .\target\cafe-management-1.0-SNAPSHOT.jar
 ```
 
