@@ -10,19 +10,6 @@ public class DecentralizationDAL extends Manager {
     public DecentralizationDAL() throws SQLException {
         super("decentralization",
             List.of("DECENTRALIZATION_ID",
-                "IS_SALE",
-                "IS_PRODUCT",
-                "IS_CATEGORY",
-                "IS_RECIPE",
-                "IS_IMPORT",
-                "IS_SUPPLIER",
-                "IS_BILL",
-                "IS_WAREHOUSES",
-                "IS_ACCOUNT",
-                "IS_STAFF",
-                "IS_CUSTOMER",
-                "IS_DISCOUNT",
-                "IS_DECENTRALIZE",
                 "DECENTRALIZATION_NAME",
                 "DELETED")
         );
@@ -33,42 +20,16 @@ public class DecentralizationDAL extends Manager {
             row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new Decentralization(
                 row.get(0), // decentralizationID
-                Integer.parseInt(row.get(1)), // isSale
-                Integer.parseInt(row.get(2)), // isProduct
-                Integer.parseInt(row.get(3)), // isCategory
-                Integer.parseInt(row.get(4)), // isRecipe
-                Integer.parseInt(row.get(5)), // isImport
-                Integer.parseInt(row.get(6)), // isSupplier
-                Integer.parseInt(row.get(7)), // isBill
-                Integer.parseInt(row.get(8)), // isWarehouses
-                Integer.parseInt(row.get(9)), // isAccount
-                Integer.parseInt(row.get(10)), // isStaff
-                Integer.parseInt(row.get(11)), // isCustomer
-                Integer.parseInt(row.get(12)), // isDiscount
-                Integer.parseInt(row.get(13)), // isDecentralization
-                row.get(14), // decentralizationName
-                Boolean.parseBoolean(row.get(15)) // deleted
+                row.get(1), // decentralizationName
+                Boolean.parseBoolean(row.get(2)) // deleted
             );
         });
     }
 
-    public int addDecentralization(Decentralization Decentralization) {
+    public int addDecentralization(Decentralization decentralization) {
         try {
-            return create(Decentralization.getDecentralizationID(),
-                Decentralization.getIsSale(),
-                Decentralization.getIsProduct(),
-                Decentralization.getIsCategory(),
-                Decentralization.getIsRecipe(),
-                Decentralization.getIsImport(),
-                Decentralization.getIsSupplier(),
-                Decentralization.getIsBill(),
-                Decentralization.getIsWarehouses(),
-                Decentralization.getIsAccount(),
-                Decentralization.getIsStaff(),
-                Decentralization.getIsCustomer(),
-                Decentralization.getIsDiscount(),
-                Decentralization.getIsDecentralization(),
-                Decentralization.getDecentralizationName(),
+            return create(decentralization.getDecentralizationID(),
+                decentralization.getDecentralizationName(),
                 false
             ); // decentralization khi tạo mặc định deleted = 0
         } catch (Exception e) {
@@ -80,20 +41,7 @@ public class DecentralizationDAL extends Manager {
     public int updateDecentralization(Decentralization decentralization) {
         try {
             List<Object> updateValues = new ArrayList<>();
-            updateValues.add(decentralization.getDecentralizationID());
-            updateValues.add(decentralization.getIsSale());
-            updateValues.add(decentralization.getIsProduct());
-            updateValues.add(decentralization.getIsCategory());
-            updateValues.add(decentralization.getIsRecipe());
-            updateValues.add(decentralization.getIsImport());
-            updateValues.add(decentralization.getIsSupplier());
-            updateValues.add(decentralization.getIsBill());
-            updateValues.add(decentralization.getIsWarehouses());
-            updateValues.add(decentralization.getIsAccount());
-            updateValues.add(decentralization.getIsStaff());
-            updateValues.add(decentralization.getIsCustomer());
-            updateValues.add(decentralization.getIsDiscount());
-            updateValues.add(decentralization.getIsDecentralization());
+            updateValues.add(decentralization.getDecentralizationID());;
             updateValues.add(decentralization.getDecentralizationName());
             updateValues.add(decentralization.isDeleted());
             return update(updateValues, "DECENTRALIZATION_ID = '" + decentralization.getDecentralizationID() + "'");

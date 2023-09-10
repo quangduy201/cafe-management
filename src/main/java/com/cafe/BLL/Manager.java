@@ -1,5 +1,7 @@
 package com.cafe.BLL;
 
+import com.cafe.DTO.Decentralization;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,4 +63,6 @@ public abstract class Manager<T> {
     }
 
     public abstract Object getValueByKey(T object, String key);
+
+//    public abstract Object getValueByKey(Decentralization decentralization, String key);
 }
