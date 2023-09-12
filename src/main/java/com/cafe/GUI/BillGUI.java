@@ -230,7 +230,7 @@ public class BillGUI extends JPanel {
         btFaceSignUp.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-//                findBillsByFace();
+                findBillsByFace();
             }
         });
         roundPanel[5].add(btFaceSignUp, BorderLayout.CENTER);
@@ -664,5 +664,11 @@ public class BillGUI extends JPanel {
         roundPanel[16].removeAll();
         roundPanel[16].repaint();
         roundPanel[16].revalidate();
+    }
+
+    public void findBillsByFace() {
+        Tasks tasks = new Tasks("Camera");
+        clearDetails();
+        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel(), "BILL")).start();
     }
 }

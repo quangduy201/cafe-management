@@ -216,6 +216,7 @@ public class ProductGUI extends JPanel {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addProduct));
             mode.add(btAdd);
         }
+
         if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateProduct));
             mode.add(btUpd);

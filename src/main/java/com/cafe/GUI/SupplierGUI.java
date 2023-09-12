@@ -184,6 +184,7 @@ public class SupplierGUI extends JPanel {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addSupplier));
             mode.add(btAdd);
         }
+
         if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateSupplier));
             mode.add(btUpd);

@@ -197,6 +197,7 @@ public class DecentralizationGUI extends JPanel {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addDecentralization));
             mode.add(btAdd);
         }
+
         if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateDecentralization));
             mode.add(btUpd);

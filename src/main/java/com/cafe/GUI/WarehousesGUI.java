@@ -212,6 +212,7 @@ public class WarehousesGUI extends JPanel {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addIngredient));
             mode.add(btAdd);
         }
+
         if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateIngredient));
             mode.add(btUpd);

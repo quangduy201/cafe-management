@@ -6,6 +6,7 @@ import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
+import com.cafe.utils.Tasks;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
@@ -232,7 +233,7 @@ public class SaleGUI extends JPanel {
         btnSearchByFace.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-//                findCustomerByFace();
+                findCustomerByFace();
             }
         });
         roundPanel7.add(btnSearchByFace, BorderLayout.EAST);
@@ -486,6 +487,11 @@ public class SaleGUI extends JPanel {
             productName[i].setHorizontalAlignment(JTextField.CENTER);
             frameProduct.add(productName[i]);
         }
+    }
+
+    public void findCustomerByFace() {
+        Tasks tasks = new Tasks("Camera");
+        new Thread(() -> tasks.detectAndRecognize(50.0, infoTxt[0])).start();
     }
 
     public void findCustomer() {

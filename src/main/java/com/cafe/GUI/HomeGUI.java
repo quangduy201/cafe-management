@@ -99,7 +99,6 @@ public class HomeGUI extends JFrame {
             if(decentralizationDetails.get(i).isCanADD() ||
                 decentralizationDetails.get(i).isCanEDIT() ||
                 decentralizationDetails.get(i).isCanREMOVE()) {
-                System.out.println(i);
                 switch (decentralizationDetails.get(i).getModuleID()) {
                     case "MOD01" ->  mang[1] = 1;
                     case "MOD02" ->  mang[2] = 1;
