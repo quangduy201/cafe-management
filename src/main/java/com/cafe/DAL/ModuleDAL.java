@@ -1,6 +1,5 @@
 package com.cafe.DAL;
 
-import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.Module;
 
 import java.sql.SQLException;
@@ -35,7 +34,7 @@ public class ModuleDAL extends Manager {
                 false
             ); // module khi tạo mặc định deleted = 0
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.addDecentralization(): " + e.getMessage());
+            System.out.println("Error occurred in ModuleDAL.addModule(): " + e.getMessage());
         }
         return 0;
     }
@@ -46,9 +45,9 @@ public class ModuleDAL extends Manager {
             updateValues.add(Module.getModuleID());;
             updateValues.add(Module.getModuleName());
             updateValues.add(Module.isDeleted());
-            return update(updateValues, "DECENTRALIZATION_ID = '" + Module.getModuleID() + "'");
+            return update(updateValues, "MODULE_ID = '" + Module.getModuleID() + "'");
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.updateDecentralization(): " + e.getMessage());
+            System.out.println("Error occurred in ModuleDAL.updateModule(): " + e.getMessage());
         }
         return 0;
     }
@@ -59,7 +58,7 @@ public class ModuleDAL extends Manager {
             updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDAL.deleteDecentralization(): " + e.getMessage());
+            System.out.println("Error occurred in ModuleDAL.deleteModule(): " + e.getMessage());
         }
         return 0;
     }

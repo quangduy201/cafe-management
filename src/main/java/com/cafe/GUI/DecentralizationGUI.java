@@ -4,14 +4,12 @@ import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.BLL.DecentralizationDetailBLL;
 import com.cafe.BLL.ModuleBLL;
-import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Module;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
-import com.cafe.main.CafeManagement;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -50,8 +48,6 @@ public class DecentralizationGUI extends JPanel {
     private Button btRef;
 
     private List<DecentralizationDetail> decentralizationDetail;
-
-
 
     public DecentralizationGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
@@ -153,7 +149,6 @@ public class DecentralizationGUI extends JPanel {
         jTextFieldsForm[1].setText(null);
         roundPanel3.add(jLabelsForm1[1]);
         roundPanel3.add(jTextFieldsForm[1]);
-
 
 
         int index2 = 0;
@@ -333,7 +328,6 @@ public class DecentralizationGUI extends JPanel {
         btDel.setEnabled(false);
     }
 
-
     public void fillForm() {
         for (int i = 0; i < 39; i++) {
             checkBox[i].setSelected(false);
@@ -390,7 +384,6 @@ public class DecentralizationGUI extends JPanel {
         return decentralizationDetails;
     }
 
-
     public void loadDataTable(List<Decentralization> decentralizationList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
@@ -419,6 +412,4 @@ public class DecentralizationGUI extends JPanel {
         }
         return true;
     }
-
-
 }

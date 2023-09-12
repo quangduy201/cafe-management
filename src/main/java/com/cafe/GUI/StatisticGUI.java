@@ -910,7 +910,6 @@ public class StatisticGUI extends JPanel {
         loadDatatable();
     }
 
-
     public void loadDatatable() {
         List<Bill> bills = billBLL.findBillsBetween(new Day(jDateChooser[0].getDate()), new Day(jDateChooser[1].getDate()));
         List<Statistic> statistics = statisticBLL.findStatisticsBetween(new Day(jDateChooser[0].getDate()), new Day(jDateChooser[1].getDate()));

@@ -1,12 +1,9 @@
 package com.cafe.DTO;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Decentralization {
     private String decentralizationID;
     private String decentralizationName;
-    private boolean deleted;
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Decentralization() {
     }
@@ -44,7 +41,6 @@ public class Decentralization {
     @Override
     public String toString() {
         return decentralizationID + " | " +
-            decentralizationName + " | " +
-            deleted +  " | ";
+            decentralizationName;
     }
 }

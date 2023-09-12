@@ -1,11 +1,12 @@
 package com.cafe.custom;
+
+import com.cafe.custom.blankchart.BlankPlotChart;
+import com.cafe.custom.blankchart.BlankPlotChatRender;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
-import com.cafe.custom.blankchart.BlankPlotChart;
-import com.cafe.custom.blankchart.BlankPlotChatRender;
 
 import javax.swing.*;
 import java.awt.*;

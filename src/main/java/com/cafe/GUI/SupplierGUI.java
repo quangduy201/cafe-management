@@ -70,7 +70,6 @@ public class SupplierGUI extends JPanel {
         btDel = new Button();
         btRef = new Button();
 
-
         supplier.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         supplier.setBackground(new Color(70, 67, 67));
         this.add(supplier, BorderLayout.CENTER);

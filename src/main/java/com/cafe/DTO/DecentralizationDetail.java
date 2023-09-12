@@ -1,10 +1,6 @@
 package com.cafe.DTO;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DecentralizationDetail {
-
     private String decentralizationID;
     private String moduleID;
     private boolean canADD;
@@ -13,7 +9,6 @@ public class DecentralizationDetail {
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public DecentralizationDetail() {
-
     }
 
     public DecentralizationDetail(String decentralizationID, String moduleID, boolean canADD, boolean canEDIT, boolean canREMOVE, boolean deleted) {
@@ -79,7 +74,6 @@ public class DecentralizationDetail {
              moduleID + " | " +
              canADD + " | " +
              canEDIT + " | " +
-             canREMOVE + " | " +
-             deleted +  " | ";
+             canREMOVE;
     }
 }

@@ -3,7 +3,7 @@ package com.cafe.DTO;
 public class Module {
     private String moduleID;
     private String moduleName;
-    private boolean deleted;
+    private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
     public Module() {
     }
@@ -41,7 +41,6 @@ public class Module {
     @Override
     public String toString() {
         return  moduleID + " | "  +
-            moduleName + " | " +
-            deleted +  " | ";
+            moduleName;
     }
 }

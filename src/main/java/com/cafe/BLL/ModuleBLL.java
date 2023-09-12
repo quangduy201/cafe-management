@@ -1,9 +1,6 @@
 package com.cafe.BLL;
 
-import com.cafe.DAL.DecentralizationDetailDAL;
 import com.cafe.DAL.ModuleDAL;
-import com.cafe.DTO.DecentralizationDetail;
-import com.cafe.DTO.Discount;
 import com.cafe.DTO.Module;
 
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ public class ModuleBLL extends Manager<Module> {
         return moduleDAL;
     }
 
-    public void setModule(ModuleDAL moduleDAL) {
+    public void setModuleDAL(ModuleDAL moduleDAL) {
         this.moduleDAL = moduleDAL;
     }
 

@@ -1,7 +1,6 @@
 package com.cafe.BLL;
 
 import com.cafe.DAL.DecentralizationDetailDAL;
-import com.cafe.DTO.Decentralization;
 import com.cafe.DTO.DecentralizationDetail;
 
 import java.util.ArrayList;
@@ -19,6 +18,14 @@ public class DecentralizationDetailBLL extends Manager<DecentralizationDetail>{
         } catch (Exception ignored) {
 
         }
+    }
+
+    public DecentralizationDetailDAL getDecentralizationDetailDAL() {
+        return decentralizationDetailDAL;
+    }
+
+    public void setDecentralizationDetailDAL(DecentralizationDetailDAL decentralizationDetailDAL) {
+        this.decentralizationDetailDAL = decentralizationDetailDAL;
     }
 
     public boolean addDecentralizationDetail(DecentralizationDetail decentralizationDetail) {
@@ -40,14 +47,6 @@ public class DecentralizationDetailBLL extends Manager<DecentralizationDetail>{
         return decentralizationDetailDAL.searchDecentralizationDetails(conditions);
     }
 
-    public DecentralizationDetailDAL getDecentralizationDAL() {
-        return decentralizationDetailDAL;
-    }
-
-    public void setDecentralizationDetailDAL(DecentralizationDetailDAL decentralizationDetailDAL) {
-        this.decentralizationDetailDAL = decentralizationDetailDAL;
-    }
-
     public List<DecentralizationDetail> findDecentralizationDetails(String key, String value) {
         List<DecentralizationDetail> list = new ArrayList<>();
         for (DecentralizationDetail decentralizationDetail : decentralizationDetailList) {
@@ -64,8 +63,6 @@ public class DecentralizationDetailBLL extends Manager<DecentralizationDetail>{
             decentralizationDetails = findObjectsBy(entry.getKey(), entry.getValue(), decentralizationDetails);
         return decentralizationDetails;
     }
-
-
 
     @Override
     public Object getValueByKey(DecentralizationDetail decentralizationDetail, String key) {

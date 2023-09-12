@@ -72,7 +72,7 @@ public class DecentralizationDetailDAL extends Manager {
             updateValues.add(true);
             return update(updateValues, conditions);
         } catch (Exception e) {
-            System.out.println("Error occurred in DecentralizationDetailDAL.deleteDecentralizationDetails(): " + e.getMessage());
+            System.out.println("Error occurred in DecentralizationDetailDAL.deleteDecentralizationDetail(): " + e.getMessage());
         }
         return 0;
     }

@@ -84,7 +84,6 @@ public class HomeGUI extends JFrame {
         changeTheme();
     }
 
-
     private void getUser() {
         decentralizationDetails = new DecentralizationDetailBLL()
             .searchDecentralizationDetail("DECENTRALIZATION_ID = '" + account.getDecentralizationID() + "'");
