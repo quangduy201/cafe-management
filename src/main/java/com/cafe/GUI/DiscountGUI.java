@@ -4,6 +4,7 @@ import com.cafe.BLL.CategoryBLL;
 import com.cafe.BLL.DiscountBLL;
 import com.cafe.BLL.DiscountDetailsBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Discount;
 import com.cafe.DTO.DiscountDetails;
 import com.cafe.DTO.Product;
@@ -29,7 +30,7 @@ public class DiscountGUI extends JPanel {
     private DiscountDetailsBLL discountDetailsBLL = new DiscountDetailsBLL();
     private ProductBLL productBLL = new ProductBLL();
     private CategoryBLL categoryBLL = new CategoryBLL();
-    private int decentralizationMode;
+    private DecentralizationDetail decentralizationMode;
     private Discount discountSelected;
     private JPanel discount;
     private RoundPanel[] roundPanel;
@@ -55,7 +56,7 @@ public class DiscountGUI extends JPanel {
     private JScrollPane scrollPane1;
     private JScrollPane scrollPane2;
 
-    public DiscountGUI(int decentralizationMode) {
+    public DiscountGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
         this.discountSelected = null;
@@ -233,26 +234,30 @@ public class DiscountGUI extends JPanel {
             }
         }
 
-        if (decentralizationMode > 1) {
-            mode.setLayout(new GridLayout(2, 2, 40, 20));
-            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setPreferredSize(new Dimension(380, 130));
-            roundPanel[6].add(mode);
+        mode.setLayout(new GridLayout(2, 2, 40, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mode.setPreferredSize(new Dimension(380, 130));
+        roundPanel[6].add(mode);
 
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addDiscount));
             mode.add(btAdd);
         }
-        if (decentralizationMode == 3) {
+
+        if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateDiscount));
-            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteDiscount));
             mode.add(btUpd);
+        }
+
+        if (decentralizationMode.isCanREMOVE()) {
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteDiscount));
             mode.add(btDel);
         }
-        if (decentralizationMode > 1) {
+
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         }
-
         roundPanel[7].add(cbbSearchDis);
         cbbSearchDis.addActionListener(e -> selectSearchDis());
 
@@ -557,7 +562,7 @@ public class DiscountGUI extends JPanel {
     }
 
     public void fillForm2() {
-        if (discountSelected != null && decentralizationMode == 3) {
+        if (discountSelected != null && decentralizationMode.isCanREMOVE()) {
             DefaultTableModel model = (DefaultTableModel) dataTable[1].getModel();
             Object[] rowData = model.getDataVector().elementAt(dataTable[1].getSelectedRow()).toArray();
             String[] data = new String[rowData.length];

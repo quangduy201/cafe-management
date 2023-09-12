@@ -5,15 +5,33 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
+
 public class Detector {
+    public static final String HAAR_CASCADE_PATH = "haarcascade_frontalface_default.xml";
     private CascadeClassifier classifier;
     private MatOfRect faces;
     private Mat gray;
     private Mat grayROI;
 
     public Detector() {
+        try {
+            Path haar = Path.of(Resource.loadFileOutsideJAR(HAAR_CASCADE_PATH));
+            if (Files.notExists(haar)) {
+                InputStream inputStream = Resource.loadXML(HAAR_CASCADE_PATH);
+                if (inputStream != null)
+                    Files.copy(inputStream, haar);
+            }
+            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(""))));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         classifier = new CascadeClassifier();
-        classifier.load(Resource.loadFileOutsideJAR("haarcascade_frontalface_default.xml"));
+        classifier.load(Resource.loadFileOutsideJAR(HAAR_CASCADE_PATH));
         faces = new MatOfRect();
         gray = new Mat();
     }

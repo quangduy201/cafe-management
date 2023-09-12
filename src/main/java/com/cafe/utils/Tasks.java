@@ -8,6 +8,8 @@ import com.cafe.custom.FrameCustomer;
 import com.cafe.recognition.Recorder;
 import com.cafe.recognition.Scanner;
 import com.cafe.recognition.Trainer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.opencv.opencv_java;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -105,6 +107,6 @@ public class Tasks {
     }
 
     static {
-        System.loadLibrary("libopencv_java470");
+        Loader.load(opencv_java.class);
     }
 }

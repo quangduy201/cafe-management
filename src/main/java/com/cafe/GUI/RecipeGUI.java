@@ -3,6 +3,7 @@ package com.cafe.GUI;
 import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ProductBLL;
 import com.cafe.BLL.RecipeBLL;
+import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Recipe;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -21,7 +22,7 @@ import java.util.Objects;
 
 public class RecipeGUI extends JPanel {
     private RecipeBLL recipeBLL = new RecipeBLL();
-    private int decentralizationMode;
+    private DecentralizationDetail decentralizationMode;
     private DataTable dataTable;
     private RoundPanel recipe;
     private RoundPanel roundPanel1;
@@ -45,7 +46,7 @@ public class RecipeGUI extends JPanel {
     private Button btUpd;
     private Button btRef;
 
-    public RecipeGUI(int decentralizationMode) {
+    public RecipeGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
@@ -190,20 +191,21 @@ public class RecipeGUI extends JPanel {
         showImg.setPreferredSize(new Dimension(635, 300));
         roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        if (decentralizationMode > 1) {
-            mode.setLayout(new GridLayout(2, 2, 20, 20));
-            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setPreferredSize(new Dimension(635, 130));
-            roundPanel2.add(mode, BorderLayout.SOUTH);
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mode.setPreferredSize(new Dimension(635, 130));
+        roundPanel2.add(mode, BorderLayout.SOUTH);
 
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addRecipe));
             mode.add(btAdd);
         }
-        if (decentralizationMode == 3) {
+
+        if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateRecipe));
             mode.add(btUpd);
         }
-        if (decentralizationMode > 1) {
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {

@@ -61,4 +61,6 @@ public abstract class Manager<T> {
     }
 
     public abstract Object getValueByKey(T object, String key);
+
+//    public abstract Object getValueByKey(Decentralization decentralization, String key);
 }

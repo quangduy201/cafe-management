@@ -18,7 +18,6 @@ public class Recognizer {
     public LBPHFaceRecognizer getModel() {
         return model;
     }
-
     public void setModel(LBPHFaceRecognizer model) {
         this.model = model;
     }

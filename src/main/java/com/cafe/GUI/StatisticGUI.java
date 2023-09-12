@@ -38,7 +38,7 @@ public class StatisticGUI extends JPanel {
     private JTextField[] jTextField;
     private JDateChooser[] jDateChooser;
 
-    public StatisticGUI(int decentralization) {
+    public StatisticGUI() {
         System.gc();
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(70, 67, 67));
@@ -909,7 +909,6 @@ public class StatisticGUI extends JPanel {
 
         loadDatatable();
     }
-
 
     public void loadDatatable() {
         List<Bill> bills = billBLL.findBillsBetween(new Day(jDateChooser[0].getDate()), new Day(jDateChooser[1].getDate()));

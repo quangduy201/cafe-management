@@ -91,7 +91,6 @@ public class Bill {
         this.excess = excess;
     }
 
-
     @Override
     public String toString() {
         return billID + " | " +

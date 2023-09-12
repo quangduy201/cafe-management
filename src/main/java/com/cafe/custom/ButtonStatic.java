@@ -14,7 +14,6 @@ public class ButtonStatic extends JButton {
     private Color borderColor;
     private int radius = 0;
 
-
     public ButtonStatic() {
         setContentAreaFilled(false);
         initComponent();

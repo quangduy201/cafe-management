@@ -3,9 +3,7 @@ package com.cafe.DAL;
 import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

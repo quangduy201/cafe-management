@@ -1,6 +1,8 @@
 package com.cafe.recognition;
 
 import com.cafe.utils.Resource;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.opencv.opencv_java;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -8,7 +10,6 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +85,6 @@ public class Trainer {
     }
 
     static {
-        System.loadLibrary("libopencv_java470");
+        Loader.load(opencv_java.class);
     }
 }

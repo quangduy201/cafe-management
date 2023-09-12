@@ -14,10 +14,9 @@ ___
 
 - [Features](#features)
 - [Installation](#installation)
-- [How to use](#Build-and-run)
 - [Contributors](#contributors)
-- [License](#license)
 - [External Dependencies](#external-dependencies)
+- [License](#license)
 
 ___
 
@@ -38,7 +37,6 @@ ___
 To install the Cafe Management application, follow these steps:
 
 - Clone the repository to your local machine.
-- Run the [`opencv-4.7.0-windows.exe`](opencv-4.7.0-windows.exe) file to extract the OpenCV library to your computer.
 - Import the project into your Java IDE as **Maven project** (e.g. IntelliJ, Eclipse).
 - Create a MySQL database and run this [`SQL`](database/cafe_db.sql) file.
 - Create a file named `db.properties` inside [`database`](database) based on [`db.properties.example`](database/db.properties.example).
@@ -55,10 +53,6 @@ To build the JAR file from source, open Command Prompt or PowerShell and run:
 ```powershell
 mvn clean package
 ```
-
-To use face recognition feature, you must copy haarcascade_frontalface_default.xml
-from [`src/main/`](src/main/)
-to [`target/`](target/)
 
 To run the application, open Command Prompt or PowerShell and run:
 

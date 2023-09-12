@@ -79,21 +79,6 @@ public class DecentralizationBLL extends Manager<Decentralization> {
 
     public boolean exists(Decentralization decentralization) {
         Map<String, Object> conditions = new HashMap<>(Map.of(
-            "IS_SALE", decentralization.getIsSale(),
-            "IS_PRODUCT", decentralization.getIsProduct(),
-            "IS_CATEGORY", decentralization.getIsCategory(),
-            "IS_RECIPE", decentralization.getIsRecipe(),
-            "IS_IMPORT", decentralization.getIsImport(),
-            "IS_SUPPLIER", decentralization.getIsSupplier(),
-            "IS_BILL", decentralization.getIsBill()
-        ));
-        conditions.putAll(Map.of(
-            "IS_WAREHOUSES", decentralization.getIsWarehouses(),
-            "IS_ACCOUNT", decentralization.getIsAccount(),
-            "IS_STAFF", decentralization.getIsStaff(),
-            "IS_CUSTOMER", decentralization.getIsCustomer(),
-            "IS_DISCOUNT", decentralization.getIsDiscount(),
-            "IS_DECENTRALIZE", decentralization.getIsDecentralization(),
             "DECENTRALIZATION_NAME", decentralization.getDecentralizationName()
         ));
         return !findDecentralizationsBy(conditions).isEmpty();
@@ -114,19 +99,6 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     public Object getValueByKey(Decentralization decentralization, String key) {
         return switch (key) {
             case "DECENTRALIZATION_ID" -> decentralization.getDecentralizationID();
-            case "IS_SALE" -> decentralization.getIsSale();
-            case "IS_PRODUCT" -> decentralization.getIsProduct();
-            case "IS_CATEGORY" -> decentralization.getIsCategory();
-            case "IS_RECIPE" -> decentralization.getIsRecipe();
-            case "IS_IMPORT" -> decentralization.getIsImport();
-            case "IS_SUPPLIER" -> decentralization.getIsSupplier();
-            case "IS_BILL" -> decentralization.getIsBill();
-            case "IS_WAREHOUSES" -> decentralization.getIsWarehouses();
-            case "IS_ACCOUNT" -> decentralization.getIsAccount();
-            case "IS_STAFF" -> decentralization.getIsStaff();
-            case "IS_CUSTOMER" -> decentralization.getIsCustomer();
-            case "IS_DISCOUNT" -> decentralization.getIsDiscount();
-            case "IS_DECENTRALIZE" -> decentralization.getIsDecentralization();
             case "DECENTRALIZATION_NAME" -> decentralization.getDecentralizationName();
             default -> null;
         };

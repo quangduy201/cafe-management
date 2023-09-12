@@ -5,7 +5,6 @@ public class DiscountDetails {
     private String productID;
     private boolean deleted; // khi đọc dữ liệu từ database sẽ so sánh rồi đổi thành kiểu boolean
 
-
     public DiscountDetails() {
     }
 

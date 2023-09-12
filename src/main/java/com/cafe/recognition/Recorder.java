@@ -2,6 +2,8 @@ package com.cafe.recognition;
 
 import com.cafe.utils.Resource;
 import org.apache.commons.io.FileUtils;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.opencv.opencv_java;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -120,6 +122,6 @@ public class Recorder {
     }
 
     static {
-        System.loadLibrary("libopencv_java470");
+        Loader.load(opencv_java.class);
     }
 }
