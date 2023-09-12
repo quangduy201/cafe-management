@@ -1,6 +1,7 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.SupplierBLL;
+import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class SupplierGUI extends JPanel {
     private SupplierBLL supplierBLL = new SupplierBLL();
-    private int decentralizationMode;
+    private DecentralizationDetail decentralizationMode;
     private DataTable dataTable;
     private RoundPanel supplier;
     private RoundPanel roundPanel1;
@@ -39,7 +40,7 @@ public class SupplierGUI extends JPanel {
 
     private RoundPanel[] roundPanel;
 
-    public SupplierGUI(int decentralizationMode) {
+    public SupplierGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
@@ -174,22 +175,26 @@ public class SupplierGUI extends JPanel {
         showImg.setBackground(new Color(0xFFFFFF));
         //   roundPanel2.add(showImg, BorderLayout.CENTER);
 
-        if (decentralizationMode > 1) {
-            mode.setLayout(new GridLayout(2, 2, 20, 20));
-            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setPreferredSize(new Dimension(635, 130));
-            roundPanel2.add(mode, BorderLayout.SOUTH);
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mode.setPreferredSize(new Dimension(635, 130));
+        roundPanel2.add(mode, BorderLayout.SOUTH);
 
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addSupplier));
             mode.add(btAdd);
         }
-        if (decentralizationMode == 3) {
+        if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateSupplier));
-            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteSupplier));
             mode.add(btUpd);
+        }
+
+        if (decentralizationMode.isCanREMOVE()) {
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteSupplier));
             mode.add(btDel);
         }
-        if (decentralizationMode > 1) {
+
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {

@@ -2,12 +2,12 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.CustomerBLL;
 import com.cafe.DTO.Customer;
+import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
-import com.cafe.utils.Tasks;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ import java.util.function.BiConsumer;
 
 public class CustomerGUI extends JPanel {
     private CustomerBLL customerBLL = new CustomerBLL();
-    private int decentralizationMode;
+    private DecentralizationDetail decentralizationMode;
     private DataTable dataTable;
     private RoundPanel customer;
     private RoundPanel roundPanel1;
@@ -59,7 +59,7 @@ public class CustomerGUI extends JPanel {
     private Button btFaceSignUp;
     private Button findCustomerByFace;
 
-    public CustomerGUI(int decentralizationMode) {
+    public CustomerGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
         setLayout(new BorderLayout(10, 10));
@@ -312,29 +312,33 @@ public class CustomerGUI extends JPanel {
             });
         };
         btFaceSignUp = new Button();
-        configButton.accept(btFaceSignUp, List.of("Đăng ký gương mặt  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), false, "img/icons/face-scanner.png", (Runnable) this::faceSignUp));
+//        configButton.accept(btFaceSignUp, List.of("Đăng ký gương mặt  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), false, "img/icons/face-scanner.png", (Runnable) this::faceSignUp));
         showImg.add(btFaceSignUp);
 
         findCustomerByFace = new Button();
-        configButton.accept(findCustomerByFace, List.of("Tìm khách hàng  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), true, "img/icons/face-scanner.png", (Runnable) this::findCustomerByFace));
+//        configButton.accept(findCustomerByFace, List.of("Tìm khách hàng  ", new Color(240, 240, 240), new Color(141, 222, 175), new Color(35, 166, 97), true, "img/icons/face-scanner.png", (Runnable) this::findCustomerByFace));
         search.add(findCustomerByFace);
 
-        if (decentralizationMode > 1) {
-            mode.setLayout(new GridLayout(2, 2, 20, 20));
-            mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            mode.setPreferredSize(new Dimension(635, 130));
-            roundPanel2.add(mode, BorderLayout.SOUTH);
+        mode.setLayout(new GridLayout(2, 2, 20, 20));
+        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mode.setPreferredSize(new Dimension(635, 130));
+        roundPanel2.add(mode, BorderLayout.SOUTH);
 
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addCustomer));
             mode.add(btAdd);
         }
-        if (decentralizationMode == 3) {
+        if (decentralizationMode.isCanEDIT()) {
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateCustomer));
-            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteCustomer));
             mode.add(btUpd);
+        }
+
+        if (decentralizationMode.isCanREMOVE()) {
+            Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteCustomer));
             mode.add(btDel);
         }
-        if (decentralizationMode > 1) {
+
+        if (decentralizationMode.isCanADD()) {
             Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
@@ -584,13 +588,7 @@ public class CustomerGUI extends JPanel {
         return true;
     }
 
-    public void faceSignUp() {
-        Tasks tasks = new Tasks("Camera");
-        new Thread(() -> tasks.recordAndTrain(jTextFieldsForm[0].getText(), 80)).start();
-    }
 
-    public void findCustomerByFace() {
-        Tasks tasks = new Tasks("Camera");
-        new Thread(() -> tasks.detectAndRecognize(50.0, (DefaultTableModel) dataTable.getModel(), "CUSTOMER")).start();
-    }
+
+
 }

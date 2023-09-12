@@ -4,10 +4,7 @@ import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.ReceiptBLL;
 import com.cafe.BLL.ReceiptDetailsBLL;
 import com.cafe.BLL.SupplierBLL;
-import com.cafe.DTO.Ingredient;
-import com.cafe.DTO.Receipt;
-import com.cafe.DTO.ReceiptDetails;
-import com.cafe.DTO.Supplier;
+import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
 import com.cafe.utils.Day;
@@ -32,7 +29,7 @@ public class IngredientGUI extends JPanel {
     private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
     private IngredientBLL ingredientBLL = new IngredientBLL();
     private SupplierBLL supplierBLL = new SupplierBLL();
-    private int decentralizationMode;
+    private DecentralizationDetail decentralizationMode;
     private String supplierID;
     private DataTable dataTable;
     private DataTable dataTable1;
@@ -59,7 +56,7 @@ public class IngredientGUI extends JPanel {
     private ReceiptDetailsBLL receiptDetailsBLL = new ReceiptDetailsBLL();
     private FrameIngredient frameIngredient;
 
-    public IngredientGUI(int decentralizationMode, String staffid) {
+    public IngredientGUI(DecentralizationDetail decentralizationMode, String staffid) {
         System.gc();
         this.staffid = staffid;
         this.decentralizationMode = decentralizationMode;

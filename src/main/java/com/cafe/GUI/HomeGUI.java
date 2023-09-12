@@ -1,9 +1,11 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.DecentralizationBLL;
+import com.cafe.BLL.DecentralizationDetailBLL;
 import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
 import com.cafe.DTO.Decentralization;
+import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Staff;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
@@ -24,7 +26,8 @@ public class HomeGUI extends JFrame {
     private Account account;
     private Staff staff;
     private Decentralization decentralization;
-    private int[] mang = new int[15];
+    private java.util.List<DecentralizationDetail> decentralizationDetails;
+    private int[] mang;
     private RoundPanel home;
     private Header north;
     private JPanel center;
@@ -81,27 +84,42 @@ public class HomeGUI extends JFrame {
         changeTheme();
     }
 
+
     private void getUser() {
+        decentralizationDetails = new DecentralizationDetailBLL()
+            .searchDecentralizationDetail("DECENTRALIZATION_ID = '" + account.getDecentralizationID() + "'");
         decentralization = new DecentralizationBLL()
             .searchDecentralization("DECENTRALIZATION_ID = '" + account.getDecentralizationID() + "'")
             .get(0);
         staff = new StaffBLL()
             .searchStaffs("STAFF_ID = '" + account.getStaffID() + "'")
             .get(0);
-        mang[1] = decentralization.getIsSale();
-        mang[2] = decentralization.getIsImport();
-        mang[3] = decentralization.getIsBill();
-        mang[4] = decentralization.getIsWarehouses();
-        mang[5] = decentralization.getIsProduct();
-        mang[6] = decentralization.getIsCategory();
-        mang[7] = decentralization.getIsRecipe();
-        mang[8] = decentralization.getIsDiscount();
-        mang[9] = decentralization.getIsDecentralization();
-        mang[10] = decentralization.getIsCustomer();
-        mang[11] = decentralization.getIsStaff();
-        mang[12] = decentralization.getIsAccount();
-        mang[13] = decentralization.getIsDecentralization();
-        mang[14] = decentralization.getIsSupplier();
+        mang = new int[15];
+        for (int i = 0; i < 13; i++) {
+            if(decentralizationDetails.get(i).isCanADD() ||
+                decentralizationDetails.get(i).isCanEDIT() ||
+                decentralizationDetails.get(i).isCanREMOVE()) {
+                System.out.println(i);
+                switch (decentralizationDetails.get(i).getModuleID()) {
+                    case "MOD01" ->  mang[1] = 1;
+                    case "MOD02" ->  mang[2] = 1;
+                    case "MOD03" ->  mang[3] = 1;
+                    case "MOD04" ->  mang[4] = 1;
+                    case "MOD05" ->  mang[5] = 1;
+                    case "MOD06" ->  mang[6] = 1;
+                    case "MOD07" ->  mang[7] = 1;
+                    case "MOD08" ->  mang[8] = 1;
+                    case "MOD09" ->  mang[10] = 1;
+                    case "MOD10" ->  mang[11] = 1;
+                    case "MOD11" ->  mang[12] = 1;
+                    case "MOD12" ->  {
+                        mang[13] = 1;
+                        mang[9] = 1;
+                    }
+                    case "MOD13" ->  mang[14] = 1;
+                }
+            }
+        }
     }
 
     private void initComponents() {
@@ -625,19 +643,19 @@ public class HomeGUI extends JFrame {
         Active(roundPanel[index]);
         JPanel panel = switch (index) {
             case 1 -> new SaleGUI(account.getStaffID());
-            case 2 -> new IngredientGUI(decentralization.getIsSupplier(), account.getStaffID());
+            case 2 -> new IngredientGUI(decentralizationDetails.get(1), account.getStaffID());
             case 3 -> new BillGUI();
-            case 4 -> new WarehousesGUI(decentralization.getIsWarehouses());
-            case 5 -> new ProductGUI(decentralization.getIsProduct());
-            case 6 -> new CategoryGUI(decentralization.getIsDecentralization());
-            case 7 -> new RecipeGUI(decentralization.getIsRecipe());
-            case 8 -> new DiscountGUI(decentralization.getIsDiscount());
-            case 9 -> new StatisticGUI(decentralization.getIsDecentralization());
-            case 10 -> new CustomerGUI(decentralization.getIsCustomer());
-            case 11 -> new StaffGUI(decentralization.getIsStaff());
-            case 12 -> new AccountGUI(decentralization.getIsAccount());
-            case 13 -> new DecentralizationGUI(decentralization.getIsDecentralization());
-            case 14 -> new SupplierGUI(decentralization.getIsSupplier());
+            case 4 -> new WarehousesGUI(decentralizationDetails.get(3));
+            case 5 -> new ProductGUI(decentralizationDetails.get(4));
+            case 6 -> new CategoryGUI(decentralizationDetails.get(5));
+            case 7 -> new RecipeGUI(decentralizationDetails.get(6));
+            case 8 -> new DiscountGUI(decentralizationDetails.get(7));
+            case 9 -> new StatisticGUI();
+            case 10 -> new CustomerGUI(decentralizationDetails.get(8));
+            case 11 -> new StaffGUI(decentralizationDetails.get(9));
+            case 12 -> new AccountGUI(decentralizationDetails.get(10));
+            case 13 -> new DecentralizationGUI(decentralizationDetails.get(11));
+            case 14 -> new SupplierGUI(decentralizationDetails.get(12));
             default -> null;
         };
         OpenChildForm(panel);
@@ -687,6 +705,7 @@ public class HomeGUI extends JFrame {
             new String[]{"Thoát", "Huỷ"},
             "Thoát");
         if (message == JOptionPane.YES_OPTION) {
+
             exit.setColor(new Color(0xFD1111));
             this.dispose();
             CafeManagement.loginGUI.setVisible(true);
