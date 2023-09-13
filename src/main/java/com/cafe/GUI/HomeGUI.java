@@ -45,7 +45,7 @@ public class HomeGUI extends JFrame {
     private JLabel lbTime;
     private JLabel[] jLabel = new JLabel[15];
     private RoundPanel[] rpContent = new RoundPanel[15];
-    private int numberContent = -1;
+    private int numberContent;
     private int addContent;
     private JLabel[] labelName = new JLabel[15];
     private ProductPanel[] roundPanel = new ProductPanel[15];
@@ -140,17 +140,20 @@ public class HomeGUI extends JFrame {
         cate = new RoundPanel();
         function = new RoundPanel();
 
+        roundPanel = new ProductPanel[15];
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new ProductPanel();
             imageAvatar[i] = new ImageAvatar();
             jLabel[i] = new JLabel();
         }
 
+        rpContent = new RoundPanel[15];
         for (int i = 0; i < rpContent.length; i++) {
             rpContent[i] = new RoundPanel();
             labelName[i] = new JLabel();
         }
 
+        imageIcon = new ImageAvatar[15];
         for (int i = 0; i < imageIcon.length; i++) {
             imageIcon[i] = new ImageAvatar();
         }
@@ -239,11 +242,14 @@ public class HomeGUI extends JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
         setLocationRelativeTo(null);
     }
+    private boolean isListening;
 
     public void initLeftMenu() {
         listCount[0] = 0;
         listCount[1] = 0;
         listCount[2] = 0;
+        numberContent = -1;
+        isListening = true;
 
         west.removeAll();
         west.revalidate();
@@ -259,6 +265,24 @@ public class HomeGUI extends JFrame {
         info.setPreferredSize(new Dimension(300, 80));
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(info, BorderLayout.NORTH);
+
+        roundPanel = new ProductPanel[15];
+        for (int i = 0; i < roundPanel.length; ++i) {
+            roundPanel[i] = new ProductPanel();
+            imageAvatar[i] = new ImageAvatar();
+            jLabel[i] = new JLabel();
+        }
+
+        rpContent = new RoundPanel[15];
+        for (int i = 0; i < rpContent.length; ++i) {
+            rpContent[i] = new RoundPanel();
+            labelName[i] = new JLabel();
+        }
+
+        imageIcon = new ImageAvatar[15];
+        for (int i = 0; i < imageIcon.length; ++i) {
+            imageIcon[i] = new ImageAvatar();
+        }
 
         imageAvatar[0].setForeground(new Color(255, 255, 255));
         imageAvatar[0].setBorderSize(2);
@@ -331,22 +355,26 @@ public class HomeGUI extends JFrame {
             rpContent[2].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 0) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 0) {
 //                    string = "img/icons/up.png";
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[0] * 50) / 5;
-                    if (rpContent[0].getHeight() == 45) {
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[0] * 50) / 5;
+                        if (rpContent[0].getHeight() == 45) {
 //                    string = string;
-                        numberjpane = 0;
-                        pressDelay(0, rpContent[0].getHeight(), totalHeight);
-                        numberContent = 0;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(0, rpContent[0].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            numberjpane = 0;
+                            pressDelay(0, rpContent[0].getHeight(), totalHeight);
+                            numberContent = 0;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(0, rpContent[0].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
@@ -402,21 +430,25 @@ public class HomeGUI extends JFrame {
             rpContent[5].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 1) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 1) {
 //                    string = "img/icons/up.png";
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[1] * 50) / 5;
-                    if (rpContent[4].getHeight() == 45) {
-                        numberjpane = 1;
-                        pressDelay(4, rpContent[4].getHeight(), totalHeight);
-                        numberContent = 4;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(4, rpContent[4].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[1] * 50) / 5;
+                        if (rpContent[4].getHeight() == 45) {
+                            numberjpane = 1;
+                            pressDelay(4, rpContent[4].getHeight(), totalHeight);
+                            numberContent = 4;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(4, rpContent[4].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
@@ -472,21 +504,25 @@ public class HomeGUI extends JFrame {
             rpContent[8].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 2) {
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[2] * 50) / 5;
-                    if (rpContent[7].getHeight() == 45) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 2) {
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[2] * 50) / 5;
+                        if (rpContent[7].getHeight() == 45) {
 //                    string = "img/icons/down.png";
-                        numberjpane = 2;
-                        pressDelay(7, rpContent[7].getHeight(), totalHeight);
-                        numberContent = 7;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(7, rpContent[7].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            numberjpane = 2;
+                            pressDelay(7, rpContent[7].getHeight(), totalHeight);
+                            numberContent = 7;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(7, rpContent[7].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
