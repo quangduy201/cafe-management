@@ -72,15 +72,16 @@
             <name>Maven Central</name>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
-
-        <repository>
-            <id>GroupDocs Artifact Repository</id>
-            <name>GroupDocs Artifact Repository</name>
-            <url>https://releases.groupdocs.com/java/repo/</url>
-        </repository>
     </repositories>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-base -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>21-ea+31</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
             <groupId>com.mysql</groupId>
@@ -130,12 +131,13 @@
             <version>3.7.4</version>
         </dependency>
 
-        <!-- https://releases.groupdocs.com/conversion/java/ -->
+        <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
         <dependency>
-            <groupId>com.groupdocs</groupId>
-            <artifactId>groupdocs-conversion</artifactId>
-            <version>23.4</version>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>3.0.0</version>
         </dependency>
+
 
         <!-- https://central.sonatype.com/artifact/org.bytedeco/opencv-platform -->
         <dependency>

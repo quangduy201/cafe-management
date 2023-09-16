@@ -20,7 +20,6 @@ public class MySQL {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        assert properties != null;
         String dbUrl = properties.getProperty("db.url");
         String dbUsername = properties.getProperty("db.username");
         String dbPassword = properties.getProperty("db.password");

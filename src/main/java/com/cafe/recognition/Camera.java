@@ -76,7 +76,7 @@ public class Camera extends JFrame {
             System.out.println("Failed to open the camera.");
             return;
         }
-        getContentPane().add(new JLabel(Resource.loadImageIcon("img/icons/loading.gif")));
+        getContentPane().add(new JLabel(Resource.loadImageIconIn("img/icons/loading.gif")));
         setVisible(true);
         active = true;
         loading = true;
@@ -100,7 +100,7 @@ public class Camera extends JFrame {
             currentFrame.setIcon(new ImageIcon(m.toArray()));
             pack();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

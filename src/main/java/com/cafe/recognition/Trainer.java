@@ -10,6 +10,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +25,7 @@ public class Trainer {
         detector = new Detector();
         recognizer = new Recognizer();
         try {
-            Files.createDirectories(Path.of(Objects.requireNonNull(Resource.getAbsolutePath(CLASSIFIER_DIRECTORY))));
+            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(CLASSIFIER_DIRECTORY)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -53,7 +54,7 @@ public class Trainer {
     }
 
     public void train(String customerID, double percentToSuccess) {
-        String imageDirPath = new File(Resource.getAbsolutePath(FACE_DIRECTORY), customerID).getPath();
+        String imageDirPath = new File(Resource.getResourceOutsideJAR(FACE_DIRECTORY), customerID).getPath();
         System.out.println(imageDirPath);
         List<Mat> faceSamples = new ArrayList<>();
         List<Integer> labels = new ArrayList<>();
@@ -72,7 +73,7 @@ public class Trainer {
             labels.add(label);
         }
         System.out.printf("Trained %d/%d images.%n", faceSamples.size(), numberOfImages);
-        if (faceSamples.size() == 0 || faceSamples.size() < numberOfImages * percentToSuccess / 100) {
+        if (faceSamples.isEmpty() || faceSamples.size() < numberOfImages * percentToSuccess / 100) {
             System.out.println("Can't train the model. Please sign up your face again.");
             return;
         } else if (faceSamples.size() != numberOfImages) {
@@ -81,7 +82,7 @@ public class Trainer {
         MatOfInt labelsMat = new MatOfInt();
         labelsMat.fromList(labels);
         recognizer.model.train(faceSamples, labelsMat);
-        recognizer.model.save(new File(Resource.getAbsolutePath(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
+        recognizer.model.save(new File(Resource.getResourceOutsideJAR(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
     }
 
     static {

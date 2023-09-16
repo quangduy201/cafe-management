@@ -157,7 +157,7 @@ public class DiscountGUI extends JPanel {
         roundPanel[10].setAutoscrolls(true);
         roundPanel[3].add(roundPanel[10]);
 
-        labelimg.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+        labelimg.setIcon(new ImageIcon(Resource.loadImageIconIn("img/icons/black-friday.png").getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         labelimg.setFocusable(false);
         labelimg.setPreferredSize(new Dimension(150, 150));
         roundPanel[4].add(labelimg);

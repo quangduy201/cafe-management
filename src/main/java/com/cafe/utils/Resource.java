@@ -21,7 +21,7 @@ public class Resource {
         return resource.getPath().substring(1);
     }
 
-    public static ImageIcon loadImageIcon(String relativePath) {
+    public static ImageIcon loadImageIconIn(String relativePath) {
         URL resource = Resource.class.getResource("/" + relativePath);
         if (resource == null) {
             System.out.println("Image not found: " + relativePath);
@@ -30,31 +30,35 @@ public class Resource {
         return new ImageIcon(resource);
     }
 
-    public static InputStream loadXML(String relativePath) {
+//    public static ImageIcon loadImageIcon(String absolutePath) {
+//
+//    }
+
+    public static InputStream loadInputStream(String relativePath) {
         InputStream inputStream = Resource.class.getResourceAsStream("/" + relativePath);
         if (inputStream == null) {
-            System.out.println("XML file not found: " + relativePath);
+            System.out.println("File not found: " + relativePath);
             return null;
         }
         return inputStream;
     }
 
     public static Properties loadProperties(String relativePath) throws IOException {
-        String resourcesRoot = "/" + relativePath;
-        InputStream inputStream = Resource.class.getResourceAsStream(resourcesRoot);
-        if (inputStream == null) {
-            System.out.println("Properties file not found: " + relativePath);
-            return null;
-        }
+        InputStream inputStream = loadInputStream(relativePath);
         Properties properties = new Properties();
         properties.load(inputStream);
-        inputStream.close();
+        if (inputStream != null)
+            inputStream.close();
         return properties;
     }
 
-    public static String loadFileOutsideJAR(String relativePath) {
+    public static String getPathOutsideJAR(String relativePath) {
         String jarPath = Resource.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         String jarFolder = new File(jarPath).getParent();
         return jarFolder + File.separator + relativePath;
+    }
+
+    public static String getResourceOutsideJAR(String relativePath) {
+        return getPathOutsideJAR("resources" + File.separator + relativePath);
     }
 }

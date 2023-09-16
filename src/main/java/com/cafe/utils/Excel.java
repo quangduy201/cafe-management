@@ -2,6 +2,9 @@ package com.cafe.utils;
 
 import com.cafe.BLL.*;
 import com.cafe.DTO.*;
+import com.cafe.GUI.IngredientGUI;
+import com.cafe.main.CafeManagement;
+import javafx.util.Pair;
 import org.apache.poi.ss.SpreadsheetVersion;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.AreaReference;
@@ -14,11 +17,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Excel {
@@ -30,37 +36,108 @@ public class Excel {
     private CellStyle underlineLeftCellStyle, underlineRightCellStyle, underlineCenterCellStyle;
     private CellStyle strikeoutLeftCellStyle, strikeoutRightCellStyle, strikeoutCenterCellStyle;
 
-    public Excel(String sheetName) {
-        workbook = new XSSFWorkbook();
-        sheet = workbook.createSheet(sheetName);
-        sheet.setDefaultRowHeightInPoints(18);
-        sheet.setDefaultColumnWidth(3);
+//    public Excel(String sheetName) {
+//        workbook = new XSSFWorkbook();
+//        sheet = workbook.createSheet(sheetName);
+//        sheet.setDefaultRowHeightInPoints(18);
+//        sheet.setDefaultColumnWidth(3);
+//
+//        Font commonFont = newFont((short) 9, false, false, false, Font.U_NONE);
+//        Font boldFont = newFont((short) 9, true, false, false, Font.U_NONE);
+//        Font italicFont = newFont((short) 9, false, true, false, Font.U_NONE);
+//        Font strikeoutFont = newFont((short) 9, false, false, true, Font.U_NONE);
+//        Font underlineFont = newFont((short) 9, false, false, false, Font.U_SINGLE);
+//
+//        commonLeftCellStyle = newCellStyle(commonFont, HorizontalAlignment.LEFT);
+//        commonRightCellStyle = newCellStyle(commonFont, HorizontalAlignment.RIGHT);
+//        commonCenterCellStyle = newCellStyle(commonFont, HorizontalAlignment.CENTER);
+//
+//        boldLeftCellStyle = newCellStyle(boldFont, HorizontalAlignment.LEFT);
+//        boldRightCellStyle = newCellStyle(boldFont, HorizontalAlignment.RIGHT);
+//        boldCenterCellStyle = newCellStyle(boldFont, HorizontalAlignment.CENTER);
+//
+//        italicLeftCellStyle = newCellStyle(italicFont, HorizontalAlignment.LEFT);
+//        italicRightCellStyle = newCellStyle(italicFont, HorizontalAlignment.RIGHT);
+//        italicCenterCellStyle = newCellStyle(italicFont, HorizontalAlignment.CENTER);
+//
+//        strikeoutLeftCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.LEFT);
+//        strikeoutRightCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.RIGHT);
+//        strikeoutCenterCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.CENTER);
+//
+//        underlineLeftCellStyle = newCellStyle(underlineFont, HorizontalAlignment.LEFT);
+//        underlineRightCellStyle = newCellStyle(underlineFont, HorizontalAlignment.RIGHT);
+//        underlineCenterCellStyle = newCellStyle(underlineFont, HorizontalAlignment.CENTER);
+//    }
 
-        Font commonFont = newFont((short) 9, false, false, false, Font.U_NONE);
-        Font boldFont = newFont((short) 9, true, false, false, Font.U_NONE);
-        Font italicFont = newFont((short) 9, false, true, false, Font.U_NONE);
-        Font strikeoutFont = newFont((short) 9, false, false, true, Font.U_NONE);
-        Font underlineFont = newFont((short) 9, false, false, false, Font.U_SINGLE);
+    public Excel(String path) {
+        try {
+            File file = new File(path);
+            workbook = new XSSFWorkbook(file);
+            sheet = workbook.getSheetAt(0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
-        commonLeftCellStyle = newCellStyle(commonFont, HorizontalAlignment.LEFT);
-        commonRightCellStyle = newCellStyle(commonFont, HorizontalAlignment.RIGHT);
-        commonCenterCellStyle = newCellStyle(commonFont, HorizontalAlignment.CENTER);
+    public static boolean importExcel(Supplier supplier, String path) {
+        Excel excel = new Excel(path);
+        int numColumns = excel.sheet.getRow(0).getPhysicalNumberOfCells();
+        if (numColumns != 2) {
+            JOptionPane.showMessageDialog(
+                null,
+                "Cần 2 cột \"Tên nguyên liệu\" và \"Số lượng\"",
+                "Lỗi định dạng",
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        //TODO: Check từ dòng 2, từ trái sang phải. nếu sai thì báo lỗi dòng mấy và cho user chọn bỏ qua hoặc dừng lại hoặc hủy bỏ
+//        System.out.println(numColumns);
+        List<Ingredient> ingredientList = new IngredientBLL().findIngredientsBy(Map.of("SUPPLIER_ID", supplier.getSupplierID()));
+        List<Ingredient> importedIngredients = new ArrayList<>();
+        int numRows = excel.sheet.getLastRowNum();
+        for (int i = 0; i <= numRows; ++i) {
+            Object ingredientName = excel.readCell(i, 0);
+            Object quantity = excel.readCell(i, 1);
 
-        boldLeftCellStyle = newCellStyle(boldFont, HorizontalAlignment.LEFT);
-        boldRightCellStyle = newCellStyle(boldFont, HorizontalAlignment.RIGHT);
-        boldCenterCellStyle = newCellStyle(boldFont, HorizontalAlignment.CENTER);
+            if (!(ingredientName instanceof String && quantity instanceof Double)) {
+                String message = "Tìm thấy lỗi ở dòng thứ " + (i + 1) + ":\n" +
+                                "\"" + ingredientName + " | " + quantity + "\"\n\n" +
+                                "Định dạng đúng: Chuỗi | Số";
+                String[] options = new String[]{"Bỏ qua", "Dừng lại", "Hủy bỏ"};
+                int choice = JOptionPane.showOptionDialog( null, message, "Lỗi định dạng",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, options, options[0]);
+                if (choice == 0) continue;
+                if (choice == 1) break;
+                if (choice == 2) return false;
+            }
 
-        italicLeftCellStyle = newCellStyle(italicFont, HorizontalAlignment.LEFT);
-        italicRightCellStyle = newCellStyle(italicFont, HorizontalAlignment.RIGHT);
-        italicCenterCellStyle = newCellStyle(italicFont, HorizontalAlignment.CENTER);
+            assert ingredientName instanceof String;
+            assert quantity instanceof Integer;
 
-        strikeoutLeftCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.LEFT);
-        strikeoutRightCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.RIGHT);
-        strikeoutCenterCellStyle = newCellStyle(strikeoutFont, HorizontalAlignment.CENTER);
+            String comparedName = VNString.removeAccent((String) ingredientName).toLowerCase();
+            IngredientGUI ingredientGUI = (IngredientGUI) CafeManagement.homeGUI.getCurrentGUI();
+            for (Ingredient ingredient : ingredientList) {
+                if (VNString.removeAccent(ingredient.getName()).toLowerCase().contains(comparedName)) {
+                    int index = ingredientGUI.findReceiptDetailsIndex(ingredient.getName());
+                    if (index == -1) {
+                        ingredientGUI.getReceiptDetails().add(new Pair<>(ingredient, (Integer) quantity));
+                    } else {
+                        Ingredient existingIngredient = ingredientGUI.getReceiptDetails().get(index).getKey();
+                        ingredientGUI.getReceiptDetails().set(index, new Pair<>(existingIngredient, (Integer) quantity));
+                    }
+                    ingredientGUI.getRoundPanel().removeAll();
+                    ingredientGUI.addIngredient(ingredientGUI.getReceiptDetails());
+                }
+            }
 
-        underlineLeftCellStyle = newCellStyle(underlineFont, HorizontalAlignment.LEFT);
-        underlineRightCellStyle = newCellStyle(underlineFont, HorizontalAlignment.RIGHT);
-        underlineCenterCellStyle = newCellStyle(underlineFont, HorizontalAlignment.CENTER);
+            System.out.println(ingredientName + " | " + quantity);
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Supplier supplier = new SupplierBLL().searchSuppliers("SUPPLIER_ID = 'SUP001'").get(0);
+        Excel.importExcel(supplier, "D:\\Workspace\\Project\\cafe-management\\target\\transaction\\import\\test.xlsx");
     }
 
     public static boolean writeToExcel(Bill bill, String path) {
@@ -545,5 +622,17 @@ public class Excel {
             case "Double" -> cell.setCellValue((Double) value);
             default -> cell.setCellValue(value.toString());
         }
+    }
+
+    public Object readCell(int row, int column) {
+        Cell cell = sheet.getRow(row).getCell(column);
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue();
+            case NUMERIC -> cell.getNumericCellValue();
+            case BOOLEAN -> cell.getBooleanCellValue();
+            case FORMULA -> cell.getCellFormula();
+            case ERROR -> cell.getErrorCellValue();
+            case _NONE, BLANK -> "";
+        };
     }
 }

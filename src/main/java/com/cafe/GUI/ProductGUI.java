@@ -292,7 +292,7 @@ public class ProductGUI extends JPanel {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             chosenImg = "img/products/" + file.getName();
-            imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
+            imgProduct.setIcon(Resource.loadImageIconIn(chosenImg));
         }
     }
 
@@ -388,7 +388,7 @@ public class ProductGUI extends JPanel {
                 break;
             }
         }
-        imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
+        imgProduct.setIcon(Resource.loadImageIconIn(chosenImg));
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);

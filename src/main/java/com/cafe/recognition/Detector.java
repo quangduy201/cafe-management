@@ -20,18 +20,18 @@ public class Detector {
 
     public Detector() {
         try {
-            Path haar = Path.of(Resource.loadFileOutsideJAR(HAAR_CASCADE_PATH));
+            Files.createDirectories(Paths.get(Resource.getPathOutsideJAR("resources")));
+            Path haar = Path.of(Resource.getResourceOutsideJAR(HAAR_CASCADE_PATH));
             if (Files.notExists(haar)) {
-                InputStream inputStream = Resource.loadXML(HAAR_CASCADE_PATH);
+                InputStream inputStream = Resource.loadInputStream(HAAR_CASCADE_PATH);
                 if (inputStream != null)
                     Files.copy(inputStream, haar);
             }
-            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(""))));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         classifier = new CascadeClassifier();
-        classifier.load(Resource.loadFileOutsideJAR(HAAR_CASCADE_PATH));
+        classifier.load(Resource.getResourceOutsideJAR(HAAR_CASCADE_PATH));
         faces = new MatOfRect();
         gray = new Mat();
     }

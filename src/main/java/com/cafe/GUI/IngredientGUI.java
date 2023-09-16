@@ -22,11 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import javafx.util.Pair;
 
 public class IngredientGUI extends JPanel {
 
-    private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
-    private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
+//    private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
+//    private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
+    // ingredient and its quantity
+    private List<Pair<Ingredient, Integer>> receiptDetails = new ArrayList<>();
     private IngredientBLL ingredientBLL = new IngredientBLL();
     private SupplierBLL supplierBLL = new SupplierBLL();
     private DecentralizationDetail decentralizationMode;
@@ -66,20 +69,28 @@ public class IngredientGUI extends JPanel {
         initComponents();
     }
 
-    public ArrayList<Ingredient> getReceiptDetails() {
+//    public ArrayList<Ingredient> getReceiptDetails() {
+//        return receiptDetails;
+//    }
+//
+//    public void setReceiptDetails(ArrayList<Ingredient> receiptDetails) {
+//        this.receiptDetails = receiptDetails;
+//    }
+//
+//    public ArrayList<Integer> getListQuantityChoice() {
+//        return listQuantityChoice;
+//    }
+//
+//    public void setListQuantityChoice(ArrayList<Integer> listQuantityChoice) {
+//        this.listQuantityChoice = listQuantityChoice;
+//    }
+
+    public List<Pair<Ingredient, Integer>> getReceiptDetails() {
         return receiptDetails;
     }
 
-    public void setReceiptDetails(ArrayList<Ingredient> receiptDetails) {
+    public void setReceiptDetails(List<Pair<Ingredient, Integer>> receiptDetails) {
         this.receiptDetails = receiptDetails;
-    }
-
-    public ArrayList<Integer> getListQuantityChoice() {
-        return listQuantityChoice;
-    }
-
-    public void setListQuantityChoice(ArrayList<Integer> listQuantityChoice) {
-        this.listQuantityChoice = listQuantityChoice;
     }
 
     public void initComponents() {
@@ -328,7 +339,7 @@ public class IngredientGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIconIn((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -419,9 +430,15 @@ public class IngredientGUI extends JPanel {
             else
                 JOptionPane.showMessageDialog(this, "Nhập hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
-            if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
-                for (int i = 0; i < receiptDetails.size(); i++) {
-                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+//            if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
+//                for (int i = 0; i < receiptDetails.size(); i++) {
+//                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+//                    receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
+//                }
+//            }
+            if (!receiptDetails.isEmpty()) {
+                for (Pair<Ingredient, Integer> receiptDetail : receiptDetails) {
+                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetail.getKey().getIngredientID(), receiptDetail.getValue());
                     receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
                 }
             }
@@ -437,8 +454,8 @@ public class IngredientGUI extends JPanel {
 
     public void pressCancel() {
         label[3].setText(receiptBLL.getAutoID());
-        receiptDetails = new ArrayList<>();
-        listQuantityChoice = new ArrayList<>();
+        receiptDetails.clear();
+//        listQuantityChoice.clear();
         roundPanel[10].removeAll();
         roundPanel[10].repaint();
         roundPanel[10].revalidate();
@@ -453,18 +470,74 @@ public class IngredientGUI extends JPanel {
         this.roundPanel[10] = roundPanel;
     }
 
-    public void addIngredient(ArrayList<Ingredient> listIngredientArray, ArrayList<Integer> listQuantityChoice) {
-        this.receiptDetails = listIngredientArray;
+//    public void addIngredient(ArrayList<Ingredient> listIngredientArray, ArrayList<Integer> listQuantityChoice) {
+//        this.receiptDetails = listIngredientArray;
+//        if (this.receiptDetails.size() > 5) {
+//            int tall = 80 * this.receiptDetails.size();
+//            roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
+//        }
+//        double totalPrice = 0.0;
+//        for (int i = 0; i < listIngredientArray.size(); i++) {
+//            int vt = i;
+//            BillDetailPanel billDetailPanel = new BillDetailPanel();
+//            billDetailPanel.setIngredient(receiptDetails.get(i), listQuantityChoice.get(i));
+//            Ingredient ingredient = listIngredientArray.get(i);
+//            String[] ingredientString = new String[6];
+//            ingredientString[0] = ingredient.getIngredientID();
+//            ingredientString[1] = ingredient.getName();
+//            ingredientString[2] = ingredient.getUnit();
+//            ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
+//            ingredientString[4] = ingredient.getSupplierID();
+//
+//            int index = listQuantityChoice.get(i);
+//
+//            billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    new FrameIngredient(IngredientGUI.this, ingredientString, index).setVisible(true);
+//                }
+//            });
+//
+//            billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    if (JOptionPane.showOptionDialog(null,
+//                        "Bạn có chắc chắn muốn xoá nguyên liệu này?",
+//                        "Xác nhận",
+//                        JOptionPane.YES_NO_OPTION,
+//                        JOptionPane.QUESTION_MESSAGE,
+//                        null,
+//                        new String[]{"Xoá", "Huỷ"},
+//                        "Xoá") == JOptionPane.YES_NO_OPTION) {
+//                        listIngredientArray.remove(vt);
+//                        listQuantityChoice.remove(vt);
+//                        roundPanel[10].removeAll();
+//                        roundPanel[10].repaint();
+//                        roundPanel[10].revalidate();
+//                        addIngredient(listIngredientArray, listQuantityChoice);
+//                    }
+//                }
+//            });
+//            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(i);
+//            roundPanel[10].add(billDetailPanel);
+//            roundPanel[10].repaint();
+//            roundPanel[10].revalidate();
+//        }
+//        label[9].setText(VNString.currency(totalPrice));
+//    }
+
+    public void addIngredient(List<Pair<Ingredient, Integer>> ingredientsAndQuantity) {
+        this.receiptDetails = ingredientsAndQuantity;
         if (this.receiptDetails.size() > 5) {
             int tall = 80 * this.receiptDetails.size();
             roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
         double totalPrice = 0.0;
-        for (int i = 0; i < listIngredientArray.size(); i++) {
-            int vt = i;
+        for (int i = 0; i < ingredientsAndQuantity.size(); i++) {
+            int index = i;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
-            billDetailPanel.setIngredient(receiptDetails.get(i), listQuantityChoice.get(i));
-            Ingredient ingredient = listIngredientArray.get(i);
+            billDetailPanel.setIngredient(receiptDetails.get(i).getKey(), receiptDetails.get(i).getValue());
+            Ingredient ingredient = receiptDetails.get(i).getKey();
             String[] ingredientString = new String[6];
             ingredientString[0] = ingredient.getIngredientID();
             ingredientString[1] = ingredient.getName();
@@ -472,12 +545,12 @@ public class IngredientGUI extends JPanel {
             ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
             ingredientString[4] = ingredient.getSupplierID();
 
-            int index = listQuantityChoice.get(i);
+            int quantity = receiptDetails.get(i).getValue();
 
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new FrameIngredient(IngredientGUI.this, ingredientString, index).setVisible(true);
+                    new FrameIngredient(ingredientString, quantity).setVisible(true);
                 }
             });
 
@@ -492,16 +565,15 @@ public class IngredientGUI extends JPanel {
                         null,
                         new String[]{"Xoá", "Huỷ"},
                         "Xoá") == JOptionPane.YES_NO_OPTION) {
-                        listIngredientArray.remove(vt);
-                        listQuantityChoice.remove(vt);
+                        receiptDetails.remove(index);
                         roundPanel[10].removeAll();
                         roundPanel[10].repaint();
                         roundPanel[10].revalidate();
-                        addIngredient(listIngredientArray, listQuantityChoice);
+                        addIngredient(receiptDetails);
                     }
                 }
             });
-            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(i);
+            totalPrice += ingredient.getUnitPrice() * quantity;
             roundPanel[10].add(billDetailPanel);
             roundPanel[10].repaint();
             roundPanel[10].revalidate();
@@ -519,7 +591,7 @@ public class IngredientGUI extends JPanel {
         if (frameIngredient != null) {
             frameIngredient.dispose();
         }
-        frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
+        frameIngredient = new FrameIngredient(data, 1);
         frameIngredient.setVisible(true);
     }
 
@@ -580,5 +652,20 @@ public class IngredientGUI extends JPanel {
         }
 
         return true;
+    }
+
+    public int findReceiptDetailsIndex(String ingredientName) {
+        for (int i = 0; i < receiptDetails.size(); ++i) {
+            Ingredient ingredient = receiptDetails.get(i).getKey();
+            if (ingredient.getName().equals(ingredientName))
+                return i;
+        }
+        return -1;
+    }
+
+    public void changeTheQuantityOfReceiptDetails(String ingredientName, int quantity) {
+        int index = findReceiptDetailsIndex(ingredientName);
+        Ingredient ingredient = receiptDetails.get(index).getKey();
+        receiptDetails.set(index, new Pair<>(ingredient, quantity));
     }
 }

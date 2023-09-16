@@ -28,7 +28,7 @@ public class Recorder {
         camera = new Camera(cameraName);
         detector = new Detector();
         try {
-            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(FACE_DIRECTORY))));
+            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(FACE_DIRECTORY)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -75,7 +75,7 @@ public class Recorder {
     }
 
     public void takePictures(String customerID) {
-        String imageDirPath = new File(Resource.getAbsolutePath(FACE_DIRECTORY), customerID).getPath();
+        String imageDirPath = new File(Resource.getResourceOutsideJAR(FACE_DIRECTORY), customerID).getPath();
         try {
             FileUtils.deleteDirectory(new File(imageDirPath));
             Files.createDirectories(Paths.get(imageDirPath));
@@ -87,7 +87,7 @@ public class Recorder {
             try {
                 Thread.sleep(CAPTURE_INTERVAL);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
             if (grayROI != null) {
                 String filename = String.format("%s/%03d.jpg", imageDirPath, count);

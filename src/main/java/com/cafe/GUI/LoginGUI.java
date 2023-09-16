@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class LoginGUI extends JFrame {
-    ImageIcon logo = Resource.loadImageIcon("img/logo_cafe.png");
+    ImageIcon logo = Resource.loadImageIconIn("img/logo_cafe.png");
     JPanel contentPane = new JPanel();
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
