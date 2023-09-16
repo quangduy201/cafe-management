@@ -48,6 +48,8 @@ public class IngredientGUI extends JPanel {
     private Button btreceipt;
     private Button btImport;
     private Button btCancel;
+
+    private Button btexcel;
     private RoundPanel[] roundPanel;
     private JLabel[] label;
     private String staffid;
@@ -109,6 +111,7 @@ public class IngredientGUI extends JPanel {
         btImport = new Button();
         btsupplier = new Button();
         btreceipt = new Button();
+        btexcel = new Button();
         ingredientscrollPane = new JScrollPane(roundPanel[10]);
 
         ingredient.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -342,6 +345,10 @@ public class IngredientGUI extends JPanel {
 
         configButton.accept(btCancel, List.of("Hủy", new Color(0xFFBD3737), new Color(0xFF0000), new Color(0xB65858), "img/icons/remove.png", (Runnable) this::pressCancel));
         roundPanel[7].add(btCancel, BorderLayout.EAST);
+
+        configButton.accept(btexcel, List.of("Nhập excel", new Color(0x70E149), new Color(0x5EFF00), new Color(0x8AD242), "img/icons/folder.png", (Runnable) this::pressexcel));
+        btexcel.setPreferredSize(new Dimension(200,40));
+        roundPanel1.add(btexcel);
 
         ingredientscrollPane.setPreferredSize(new Dimension(340, 420));
         ingredientscrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -580,5 +587,9 @@ public class IngredientGUI extends JPanel {
         }
 
         return true;
+    }
+
+    public void pressexcel() {
+
     }
 }

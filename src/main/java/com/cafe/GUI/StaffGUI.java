@@ -88,15 +88,15 @@ public class StaffGUI extends JPanel {
 
         roundPanel1.setLayout(new BorderLayout(0, 10));
         roundPanel1.setBackground(new Color(70, 67, 67));
-        roundPanel1.setPreferredSize(new Dimension(635, 680));
+        roundPanel1.setPreferredSize(new Dimension(1000, 680));
         roundPanel1.setAutoscrolls(true);
         roundPanel1.add(new JScrollPane(dataTable), BorderLayout.CENTER);
         staff.add(roundPanel1);
 
         roundPanel2.setLayout(new BorderLayout());
-        roundPanel2.setPreferredSize(new Dimension(350, 680));
+        roundPanel2.setPreferredSize(new Dimension(350, 400));
         roundPanel2.setAutoscrolls(true);
-        staff.add(roundPanel2);
+        roundPanel1.add(roundPanel2, BorderLayout.SOUTH);
 
         search.setLayout(new FlowLayout());
         search.setPreferredSize(new Dimension(635, 35));
@@ -141,10 +141,10 @@ public class StaffGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        pnlStaffConfiguration.setLayout(new GridLayout(9, 2, 20, 20));
-        pnlStaffConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlStaffConfiguration.setPreferredSize(new Dimension(635, 450));
-        roundPanel2.add(pnlStaffConfiguration, BorderLayout.NORTH);
+        pnlStaffConfiguration.setLayout(new GridLayout(9, 2, 20, 10));
+        pnlStaffConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        pnlStaffConfiguration.setPreferredSize(new Dimension(435, 400));
+        roundPanel2.add(pnlStaffConfiguration, BorderLayout.WEST);
 
         Dimension inputFieldsSize = new Dimension(200, 30);
         for (int i = 0; i < 2; i++) {
@@ -257,32 +257,39 @@ public class StaffGUI extends JPanel {
                 }
             }
         }
+
+
+    //    mode.setLayout(new GridLayout(2, 2, 20, 20));
+          mode.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+    //    mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mode.setPreferredSize(new Dimension(200, 230));
+        roundPanel2.add(mode, BorderLayout.CENTER);
+
         showImg.setLayout(new FlowLayout());
         showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 100));
-        roundPanel2.add(showImg, BorderLayout.CENTER);
-
-        mode.setLayout(new GridLayout(2, 2, 20, 20));
-        mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        mode.setPreferredSize(new Dimension(635, 130));
-        roundPanel2.add(mode, BorderLayout.SOUTH);
+        showImg.setPreferredSize(new Dimension(450, 220));
+        mode.add(showImg);
 
         if (decentralizationMode.isCanADD()) {
+            btAdd.setPreferredSize(new Dimension(150, 50));
             Button.configButton(btAdd, List.of("  Thêm", "img/icons/plus.png", true, (Runnable) this::addStaff));
             mode.add(btAdd);
         }
 
         if (decentralizationMode.isCanEDIT()) {
+            btUpd.setPreferredSize(new Dimension(150, 50));
             Button.configButton(btUpd, List.of("  Sửa", "img/icons/wrench.png", false, (Runnable) this::updateStaff));
             mode.add(btUpd);
         }
 
         if (decentralizationMode.isCanREMOVE()) {
+            btDel.setPreferredSize(new Dimension(150, 50));
             Button.configButton(btDel, List.of("  Xóa", "img/icons/delete.png", false, (Runnable) this::deleteStaff));
             mode.add(btDel);
         }
 
         if (decentralizationMode.isCanADD()) {
+            btRef.setPreferredSize(new Dimension(150, 50));
             Button.configButton(btRef, List.of("  Làm mới", "img/icons/refresh.png", true, (Runnable) this::refreshForm));
             mode.add(btRef);
         } else {
