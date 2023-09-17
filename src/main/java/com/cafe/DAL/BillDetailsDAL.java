@@ -12,6 +12,7 @@ public class BillDetailsDAL extends Manager {
             List.of("BILL_ID",
                 "PRODUCT_ID",
                 "QUANTITY",
+                "NOTE",
                 "TOTAL",
                 "PERCENT")
         );
@@ -22,8 +23,9 @@ public class BillDetailsDAL extends Manager {
             row.get(0), // billID
             row.get(1), // productID
             Integer.parseInt(row.get(2)), // quantity
-            Double.parseDouble(row.get(3)), // total
-            Double.parseDouble(row.get(4)) // percent
+            row.get(3), // note
+            Double.parseDouble(row.get(4)), // total
+            Double.parseDouble(row.get(5)) // percent
         ));
     }
 
@@ -32,6 +34,7 @@ public class BillDetailsDAL extends Manager {
             return create(billDetails.getBillID(),
                 billDetails.getProductID(),
                 billDetails.getQuantity(),
+                billDetails.getNote(),
                 billDetails.getTotal(),
                 billDetails.getPercent()
             );

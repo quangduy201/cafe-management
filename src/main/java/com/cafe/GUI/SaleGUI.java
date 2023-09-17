@@ -8,6 +8,7 @@ import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
 import com.cafe.utils.Tasks;
 import com.cafe.utils.VNString;
+import com.groupdocs.conversion.internal.c.a.i.internal.bouncycastle.math.ec.custom.sec.S;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -20,9 +21,12 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+
 public class SaleGUI extends JPanel {
     private List<Product> listDetailBill = new ArrayList<>();
     private List<Integer> listQuantityChoice = new ArrayList<>();
+    private List<String> listDiscountNote = new ArrayList<>();
+    private List<Integer> listCost = new ArrayList<>();
     private List<Product> productlist = new ArrayList<>();
     private ProductBLL productBLL = new ProductBLL();
     private RecipeBLL recipeBLL = new RecipeBLL();
@@ -64,6 +68,7 @@ public class SaleGUI extends JPanel {
     private Button btnPurchase;
     private Button btnCancel;
     private Button btnSearchByFace;
+
     private final ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
     private int sl = 0;
 
@@ -89,6 +94,21 @@ public class SaleGUI extends JPanel {
 
     public void setListQuantityChoice(List<Integer> listQuantityChoice) {
         this.listQuantityChoice = listQuantityChoice;
+    }
+
+    public List<Integer> getListCost() {
+        return listCost;
+    }
+
+    public void setListCost (List<Integer> listCost) {
+        this.listCost = listCost;
+    }
+    public List<String> getListDiscountNote() {
+        return listDiscountNote;
+    }
+
+    public void setListDiscountNote (List<String> listDiscountNote) {
+        this.listDiscountNote = listDiscountNote;
     }
 
     public RoundPanel getRoundPanel9() {
@@ -431,7 +451,7 @@ public class SaleGUI extends JPanel {
                 if (productDetailsGUI != null) {
                     productDetailsGUI.dispose();
                 }
-                productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, product, index);
+                productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, product, index, "");
                 productDetailsGUI.setVisible(true);
             }
         });
@@ -535,13 +555,13 @@ public class SaleGUI extends JPanel {
         for (int i = 0; i < listDetailBill.size(); i++) {
             BillDetailPanel billDetailPanel = new BillDetailPanel();
             Product product = listDetailBill.get(i);
-            billDetailPanel.setData(listDetailBill.get(i), listQuantityChoice.get(i));
+            billDetailPanel.setData(listDetailBill.get(i), listQuantityChoice.get(i), listCost.get(i));
 
             int index = i;
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new ProductDetailsGUI(SaleGUI.this, product, listQuantityChoice.get(index)).setVisible(true);
+                    new ProductDetailsGUI(SaleGUI.this, product, listQuantityChoice.get(index), listDiscountNote.get(index)).setVisible(true);
                 }
             });
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
@@ -564,7 +584,7 @@ public class SaleGUI extends JPanel {
                     }
                 }
             });
-            totalPrice += product.getCost() * listQuantityChoice.get(i);
+            totalPrice += listCost.get(i) * listQuantityChoice.get(i);
             roundPanel9.add(billDetailPanel);
             roundPanel9.repaint();
             roundPanel9.revalidate();
@@ -598,7 +618,7 @@ public class SaleGUI extends JPanel {
             String staffID = this.staffID;
             Day date = new Day();
             double received = Double.parseDouble(jTextField[1].getText());
-            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("\\D+", ""));
+            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("\\D+", "")) * -1;
             bill = new Bill(billID, customerID, staffID, date, 0.0, received, excess, false);
 
             if (billBLL.exists(bill))
@@ -615,9 +635,9 @@ public class SaleGUI extends JPanel {
             double billDetail_percent;
             for (int i = 0; i < listDetailBill.size(); i++) {
                 Product product = listDetailBill.get(i);
-                billDetail_total = product.getCost();
+                billDetail_total = listCost.get(i) ;
                 billDetail_percent = 0.0;
-                addbillDetails = new BillDetails(billID, product.getProductID(), listQuantityChoice.get(i), billDetail_total, billDetail_percent);
+                addbillDetails = new BillDetails(billID, product.getProductID(), listQuantityChoice.get(i), listDiscountNote.get(i), billDetail_total, billDetail_percent);
                 billDetailsBLL.addBillDetails(addbillDetails);
             }
             cancel();
@@ -679,7 +699,7 @@ public class SaleGUI extends JPanel {
         int size = 0;
         for (Product product : productlist) {
             if (condition.apply(product)) {
-                addProductPanel(product, size);
+                addProductPanel(product, 1);
                 size++;
             }
         }

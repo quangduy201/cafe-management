@@ -139,11 +139,11 @@ public class BillDetailPanel extends RoundPanel {
         this.payment_img = payment_img;
     }
 
-    public void setData(Product data, int quantity) {
+    public void setData(Product data, int quantity, int Coat) {
         payment_name1.setText(data.getName());
         payment_size1.setText(data.getSized());
         payment_quantity1.setText(String.valueOf(quantity));
-        double total = quantity * data.getCost();
+        double total = quantity * Coat;
         payment_price1.setText(VNString.currency(total));
     }
 
@@ -156,7 +156,7 @@ public class BillDetailPanel extends RoundPanel {
         payment_name1.setText(data.getName());
         payment_size1.setText(data.getSized());
         payment_quantity1.setText(String.valueOf(billDetails.getQuantity()));
-        double total = billDetails.getQuantity() * data.getCost();
+        double total = billDetails.getQuantity() * billDetails.getTotal();
         payment_price1.setText(VNString.currency(total));
         frame_price.remove(payment_img);
     }
