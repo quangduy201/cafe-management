@@ -7,6 +7,7 @@ import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
 import com.cafe.utils.Excel;
 import com.cafe.utils.Resource;
@@ -492,7 +493,7 @@ public class IngredientGUI extends JPanel {
             ingredientString[0] = ingredient.getIngredientID();
             ingredientString[1] = ingredient.getName();
             ingredientString[2] = ingredient.getUnit();
-            ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
+            ingredientString[3] = String.valueOf(ingredient.getUnitPrice());
             ingredientString[4] = ingredient.getSupplierID();
 
             int quantity = receiptDetails.get(i).getValue();
@@ -619,6 +620,10 @@ public class IngredientGUI extends JPanel {
     }
 
     public void pressExcel() {
+        if (!btExcel.isEnabled()) {
+            JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Vui lòng chọn nhà cung cấp.");
+            return;
+        }
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setAcceptAllFileFilterUsed(false);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2023 at 06:13 PM
+-- Generation Time: Sep 17, 2023 at 08:35 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -41,16 +41,16 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`) VALUES
-('AC000', 'admin', 'admin', 'DE00', 'ST00', b'0'),
-('AC001', 'dungboi', 'Dung123', 'DE01', 'ST01', b'0'),
-('AC002', 'legiang', 'Giang123', 'DE04', 'ST08', b'0'),
-('AC003', 'longbott', 'Long123', 'DE01', 'ST03', b'0'),
-('AC004', 'quangduy', 'Duy123', 'DE01', 'ST02', b'0'),
-('AC005', 'tienmanh', 'Manh123', 'DE03', 'ST06', b'0'),
-('AC006', 'vanlam', 'Lam123', 'DE05', 'ST07', b'0'),
-('AC007', 'xuanmai', 'Mai123', 'DE06', 'ST05', b'0'),
-('AC008', 'xuanphuc', 'Phuc123', 'DE02', 'ST09', b'0'),
-('AC010', 'zidan', 'Dan123', 'DE01', 'ST04', b'0');
+('AC000', 'admin', '$2a$12$M5/5k6V35X4mMpJGsQt.iedCMPFUoYjg3Zc6EieI3Vk1jCzmP7DIK', 'DE00', 'ST00', b'0'),
+('AC001', 'dungboi', '$2a$12$HfgvD9Bxqj6qLEau5LHIgeJF/6.Q8hZJLCMY4ifXdZicR4WEcJuL.', 'DE01', 'ST01', b'0'),
+('AC002', 'legiang', '$2a$12$8dap4qPQJdd1vLg.15f8LOANHgCub.OiFGrKTZPfkKr7hn.qJkjHu', 'DE04', 'ST08', b'0'),
+('AC003', 'longbott', '$2a$12$nSJarCa4EbKiXdB8ZCF.PugAcDUMf4xoHktH8qM7fG29mHhq473wW', 'DE01', 'ST03', b'0'),
+('AC004', 'quangduy', '$2a$12$qy5MYOE2tkTnjajbPVtDEeZ.kG2pqNRKdAYbNzDOPRL/Zmii/8n.6', 'DE01', 'ST02', b'0'),
+('AC005', 'tienmanh', '$2a$12$7428aqGRJCYz2Q1ra5ICv.o9IibmmKHn8bcJPYgliCnRik4JVbMJq', 'DE03', 'ST06', b'0'),
+('AC006', 'vanlam', '$2a$12$WgDWMjvY1lZULS3wx55XSOSiKCRM9ZpNFMDF5nQb8MhSjVkezFJhq', 'DE05', 'ST07', b'0'),
+('AC007', 'xuanmai', '$2a$12$tZG1ysVnAbDOMp/l5p9M7uTe3tP0eLRI0KlH7oI.QehdvPn8pYN/i', 'DE06', 'ST05', b'0'),
+('AC008', 'xuanphuc', '$2a$12$Wg1nxmH.Hntg3oglsvaOnuT917yLbE2aJqStC650.iQkcNwf0m9Ae', 'DE02', 'ST09', b'0'),
+('AC010', 'zidan', '$2a$12$LahHArr1/FYJPc0KeysyLeZc..6..8vaYp4/duTB/5qf1L6GxvNnm', 'DE01', 'ST04', b'0');
 
 -- --------------------------------------------------------
 
@@ -83,7 +83,9 @@ INSERT INTO `bill` (`BILL_ID`, `CUSTOMER_ID`, `STAFF_ID`, `DOPURCHASE`, `TOTAL`,
 ('BI0007', 'CUS007', 'ST05', '2022-05-05', 135000, 300000, -165000, b'0'),
 ('BI0008', 'CUS008', 'ST05', '2022-09-08', 90000, 300000, -210000, b'0'),
 ('BI0009', 'CUS009', 'ST05', '2023-01-09', 277000, 300000, -23000, b'0'),
-('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, 300000, -93000, b'0');
+('BI0010', 'CUS010', 'ST05', '2023-03-07', 207000, 300000, -93000, b'0'),
+('BI0011', 'CUS011', 'ST02', '2023-09-18', 116000, 120000, -4000, b'0'),
+('BI0012', 'CUS000', 'ST00', '2023-09-18', 86400, 100000, -13600, b'0');
 
 --
 -- Triggers `bill`
@@ -124,9 +126,9 @@ CREATE TABLE `bill_details` (
 --
 
 INSERT INTO `bill_details` (`BILL_ID`, `PRODUCT_ID`, `QUANTITY`, `NOTE`, `TOTAL`, `PERCENT`) VALUES
-('BI0001', 'PR001', 3, '', 87000, 0),
+('BI0001', 'PR001', 3, '2 ly ít sữa', 87000, 0),
 ('BI0001', 'PR004', 2, '', 58000, 0),
-('BI0001', 'PR009', 1, '', 45000, 0),
+('BI0001', 'PR009', 1, 'nhiều sữa', 45000, 0),
 ('BI0001', 'PR011', 1, '', 49000, 0),
 ('BI0002', 'PR023', 2, '', 130000, 0),
 ('BI0002', 'PR035', 1, '', 65000, 0),
@@ -144,7 +146,11 @@ INSERT INTO `bill_details` (`BILL_ID`, `PRODUCT_ID`, `QUANTITY`, `NOTE`, `TOTAL`
 ('BI0009', 'PR027', 2, '', 90000, 0),
 ('BI0009', 'PR051', 1, '', 69000, 0),
 ('BI0009', 'PR063', 2, '', 59000, 0),
-('BI0010', 'PR045', 3, '', 207000, 0);
+('BI0010', 'PR045', 3, '', 207000, 0),
+('BI0011', 'PR004', 3, '1 ly ít đá, nhiều đường', 29000, 0),
+('BI0011', 'PR007', 1, 'nhiều sữa', 29000, 0),
+('BI0012', 'PR062', 1, '', 43200, 0),
+('BI0012', 'PR064', 1, 'nhiều trân châu', 43200, 0);
 
 --
 -- Triggers `bill_details`
@@ -232,7 +238,8 @@ INSERT INTO `customer` (`CUSTOMER_ID`, `NAME`, `GENDER`, `DOB`, `PHONE`, `MEMBER
 ('CUS007', 'NGUYỄN THI DIỆU CHI', b'0', '2000-04-09', '0378367833', b'0', '2022-05-05', b'1'),
 ('CUS008', 'NGUYỄN THỊ THANH NHÀN', b'0', '2001-08-03', '0323373316', b'1', '2022-09-08', b'0'),
 ('CUS009', 'NGUYỄN TRUNG TÍN', b'1', '2002-06-20', '0357118533', b'0', '2023-01-09', b'1'),
-('CUS010', 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', b'0');
+('CUS010', 'ĐINH XUÂN HOÀI', b'1', '2004-07-06', '0964745278', b'1', '2023-03-07', b'0'),
+('CUS011', 'ĐINH QUANG DUY', b'1', '2003-01-20', '0938111523', b'1', '2023-09-17', b'0');
 
 -- --------------------------------------------------------
 
@@ -394,7 +401,8 @@ INSERT INTO `discount` (`DISCOUNT_ID`, `DISCOUNT_PERCENT`, `START_DATE`, `END_DA
 ('DIS001', 5, '2023-08-03', '2023-08-10', b'1', b'0'),
 ('DIS002', 10, '2023-04-29', '2023-05-01', b'1', b'0'),
 ('DIS003', 5, '2023-10-20', '2023-10-21', b'1', b'0'),
-('DIS004', 5, '2023-12-25', '2023-12-25', b'1', b'0');
+('DIS004', 5, '2023-12-25', '2023-12-25', b'1', b'0'),
+('DIS005', 20, '2023-09-18', '2023-09-25', b'0', b'0');
 
 -- --------------------------------------------------------
 
@@ -434,7 +442,21 @@ INSERT INTO `discount_details` (`DISCOUNT_ID`, `PRODUCT_ID`, `DELETED`) VALUES
 ('DIS003', 'PR057', b'0'),
 ('DIS004', 'PR061', b'0'),
 ('DIS004', 'PR063', b'0'),
-('DIS004', 'PR065', b'0');
+('DIS004', 'PR065', b'0'),
+('DIS005', 'PR052', b'0'),
+('DIS005', 'PR053', b'0'),
+('DIS005', 'PR054', b'0'),
+('DIS005', 'PR055', b'0'),
+('DIS005', 'PR056', b'0'),
+('DIS005', 'PR057', b'0'),
+('DIS005', 'PR058', b'0'),
+('DIS005', 'PR059', b'0'),
+('DIS005', 'PR060', b'0'),
+('DIS005', 'PR061', b'0'),
+('DIS005', 'PR062', b'0'),
+('DIS005', 'PR063', b'0'),
+('DIS005', 'PR064', b'0'),
+('DIS005', 'PR065', b'0');
 
 -- --------------------------------------------------------
 
@@ -457,21 +479,21 @@ CREATE TABLE `ingredient` (
 --
 
 INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `UNIT_PRICE`, `SUPPLIER_ID`, `DELETED`) VALUES
-('ING001', 'BỘT CAFE NGUYÊN CHẤT', 10, 'kg', 30000, 'SUP001', b'0'),
-('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
-('ING003', 'SỮA ĐẶC', 10, 'l', 30000, 'SUP001', b'0'),
-('ING004', 'ĐÁ', 10, 'bag', 30000, 'SUP001', b'0'),
-('ING005', 'NƯỚC', 10, 'l', 30000, 'SUP001', b'0'),
-('ING006', 'MUỐI', 10, 'kg', 30000, 'SUP001', b'0'),
-('ING007', 'ĐƯỜNG CÁT', 10, 'kg', 30000, 'SUP001', b'0'),
-('ING008', 'SYRUP HẠNH NHÂN', 10, 'l', 30000, 'SUP001', b'0'),
+('ING001', 'BỘT CAFE NGUYÊN CHẤT', 9.87, 'kg', 30000, 'SUP001', b'0'),
+('ING002', 'SỮA TƯƠI KHÔNG ĐƯỜNG', 9.97, 'l', 30000, 'SUP001', b'0'),
+('ING003', 'SỮA ĐẶC', 9.580000000000002, 'l', 30000, 'SUP001', b'0'),
+('ING004', 'ĐÁ', 9.92, 'bag', 30000, 'SUP001', b'0'),
+('ING005', 'NƯỚC', 8.909999999999998, 'l', 30000, 'SUP001', b'0'),
+('ING006', 'MUỐI', 9.994, 'kg', 30000, 'SUP001', b'0'),
+('ING007', 'ĐƯỜNG CÁT', 9.585, 'kg', 30000, 'SUP001', b'0'),
+('ING008', 'SYRUP HẠNH NHÂN', 9.99, 'l', 30000, 'SUP001', b'0'),
 ('ING009', 'SYRUP ĐƯỜNG', 10, 'l', 30000, 'SUP001', b'0'),
 ('ING010', 'SỮA TƯƠI MILKLAB', 10, 'l', 30000, 'SUP001', b'0'),
 ('ING011', 'CÀ PHÊ TRUYỀN THỐNG SHIN', 10, 'kg', 30000, 'SUP001', b'0'),
 ('ING012', 'THẠCH CAFE', 10, 'kg', 30000, 'SUP001', b'0'),
 ('ING013', 'SYRUP ĐƯỜNG ĐEN HÀN QUỐC', 10, 'l', 30000, 'SUP001', b'0'),
-('ING014', 'KEM SỮA', 10, 'l', 30000, 'SUP001', b'0'),
-('ING015', 'SỐT CHOCOLA', 10, 'l', 30000, 'SUP001', b'0'),
+('ING014', 'KEM SỮA', 9.879999999999999, 'l', 30000, 'SUP001', b'0'),
+('ING015', 'SỐT CHOCOLA', 9.915, 'l', 30000, 'SUP001', b'0'),
 ('ING016', 'PATE', 10, 'kg', 30000, 'SUP002', b'0'),
 ('ING017', 'TƯƠNG ỚT', 10, 'l', 30000, 'SUP002', b'0'),
 ('ING018', 'CHÀ BÔNG', 10, 'kg', 30000, 'SUP002', b'0'),
@@ -497,7 +519,7 @@ INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `UNIT_PRI
 ('ING038', 'ĐẬU ĐỎ', 10, 'kg', 30000, 'SUP001', b'0'),
 ('ING039', 'BÁNH MÌ SANDWICH', 4, 'kg', 30000, 'SUP001', b'0'),
 ('ING040', 'BỘT MÌ', 3, 'kg', 30000, 'SUP001', b'0'),
-('ING041', 'BỘT BẮP', 3, 'kg', 30000, 'SUP001', b'0'),
+('ING041', 'BỘT BẮP', 2.9800000000000004, 'kg', 30000, 'SUP001', b'0'),
 ('ING042', 'BƠ', 3, 'kg', 30000, 'SUP001', b'0'),
 ('ING043', 'CHUỐI SỨ', 24, 'quả', 30000, 'SUP001', b'0'),
 ('ING044', 'CHANH DÂY', 30, 'quả', 30000, 'SUP001', b'0'),
@@ -517,8 +539,8 @@ INSERT INTO `ingredient` (`INGREDIENT_ID`, `NAME`, `QUANTITY`, `UNIT`, `UNIT_PRI
 ('ING058', 'SỮA CHUA KHÔNG ĐƯỜNG', 10, 'kg', 30000, 'SUP001', b'0'),
 ('ING059', 'BỘT QUẾ', 3, 'kg', 30000, 'SUP001', b'0'),
 ('ING060', 'SYRUP BẠC HÀ', 5, 'l', 30000, 'SUP001', b'0'),
-('ING061', 'BỘT DÂU', 7, 'kg', 30000, 'SUP001', b'0'),
-('ING062', 'SYRUP DÂU', 10, 'l', 30000, 'SUP001', b'0');
+('ING061', 'BỘT DÂU', 6.94, 'kg', 30000, 'SUP001', b'0'),
+('ING062', 'SYRUP DÂU', 9.92, 'l', 30000, 'SUP001', b'0');
 
 -- --------------------------------------------------------
 
@@ -1332,9 +1354,9 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`STAFF_ID`, `NAME`, `GENDER`, `DOB`, `ADDRESS`, `PHONE`, `EMAIL`, `SALARY`, `DOENTRY`, `DELETED`) VALUES
-('ST00', 'ADMIN', b'0', '1000-01-01', '', '', '', 0, '1000-01-01', b'0'),
+('ST00', 'ADMIN', b'0', '1000-01-01', '', '', 'admin@gmail.com', 0, '1000-01-01', b'0'),
 ('ST01', 'NGUYỄN TIẾN DŨNG', b'1', '2003-12-19', '531 Nguyễn Oanh, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0812535278', 'dungboi@gmail.com', 0, '1000-01-01', b'0'),
-('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0834527892', 'quangduy@gmail.com', 0, '1000-01-01', b'0'),
+('ST02', 'ĐINH QUANG DUY', b'1', '2023-01-20', '1A Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0834527892', 'duydinh2012003@gmail.com', 0, '1000-01-01', b'0'),
 ('ST03', 'NGUYỄN HOÀNG LONG', b'1', '2003-08-30', '514/26 Lê Đức Thọ, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0359872569', 'longbot@gmail.com', 0, '1000-01-01', b'0'),
 ('ST04', 'NGUYỄN ZI ĐAN', b'1', '2003-03-06', '153 Lê Hoàng Phái, Phường 17, Gò Vấp, Thành phố Hồ Chí Minh', '0970352875', 'zidan@gmail.com', 0, '1000-01-01', b'0'),
 ('ST05', 'NGUYỄN THỊ XUÂN MAI', b'0', '2002-06-19', '168 Lê Đức Thọ, Phường 15, Gò Vấp, Thành phố Hồ Chí Minh', '0367834257', 'thungan@gmail.com', 3100000, '2023-09-15', b'0'),
@@ -1371,7 +1393,8 @@ INSERT INTO `statistic` (`STATISTIC_ID`, `DATE`, `AMOUNT`, `INGREDIENT_COST`) VA
 ('STAT0007', '2022-05-05', 135000, 8250),
 ('STAT0008', '2022-09-08', 90000, 215820),
 ('STAT0009', '2023-01-09', 277000, 55170),
-('STAT0010', '2023-03-07', 207000, 49110);
+('STAT0010', '2023-03-07', 207000, 49110),
+('STAT0011', '2023-09-18', 116000, 10710);
 
 -- --------------------------------------------------------
 

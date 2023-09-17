@@ -6,7 +6,6 @@ import com.cafe.custom.Button;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
-import com.groupdocs.conversion.internal.c.a.t.private_.ms.System.Security.Cryptography.S;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -122,8 +123,14 @@ public class PDF {
         }
         List<BillDetails> billDetailsList = new BillDetailsBLL().searchBillDetails("BILL_ID = '" + bill.getBillID() + "'");
         int billSize = billDetailsList.size();
+        int numberOfNotes = 0;
+        for (BillDetails billDetails : billDetailsList) {
+            if (!billDetails.getNote().isEmpty())
+                numberOfNotes++;
+        }
+        int extraLines = numberOfNotes <= 2 ? 0 : numberOfNotes - 2;
         File file = new File(path + "/" + bill.getBillID() + ".pdf");
-        PDF pdf = new PDF(15, 11 + billSize, 20F, 15F);
+        PDF pdf = new PDF(15, 11 + billSize + extraLines, 20F, 15F);
 
         pdf.addTextAt("HÓA ĐƠN", 6.5F, 2, pdf.boldFont, 14);
 
@@ -150,7 +157,7 @@ public class PDF {
         ProductBLL productBLL = new ProductBLL();
         for (int i = 0; i < billSize; ++i) {
             BillDetails billDetails = billDetailsList.get(i);
-            Product product = productBLL.searchProducts("PRODUCT_ID = '" + billDetails.getProductID() + "'").get(0);
+            Product product = productBLL.findProductsBy(Map.of("PRODUCT_ID", billDetails.getProductID())).get(0);
             String[] data = new String[7];
             data[0] = String.valueOf(i + 1);
             data[1] = product.getName();
@@ -178,6 +185,16 @@ public class PDF {
             tableData.add(data);
         }
         pdf.addTable(tableData, 7F,  5.3F, 6F, new float[]{1, 2, 6, 7, 8, 10, 12, 14});
+
+        pdf.addTextAt("Ghi chú:", 1, 8 + billSize, pdf.boldFont, 7);
+        for (int i = 0; i < billSize; ++i) {
+            BillDetails billDetails = billDetailsList.get(i);
+            Product product = productBLL.findProductsBy(Map.of("PRODUCT_ID", billDetails.getProductID())).get(0);
+            String note = billDetails.getNote();
+            if (!note.isEmpty()) {
+                pdf.addTextAt("- " + product.getName() + ": " + note, 2, 9 + billSize + i, pdf.regularFont, 6);
+            }
+        }
 
         pdf.addTextAt("Tổng tiền:", 9, 8 + billSize, pdf.boldFont, 7);
         pdf.addTextAt(VNString.currency(bill.getTotal()), 11, 8 + billSize, pdf.regularFont, 6);

@@ -1,5 +1,6 @@
 package com.cafe.recognition;
 
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.Resource;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.opencv.opencv_java;
@@ -7,6 +8,7 @@ import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.imgcodecs.Imgcodecs;
 
+import javax.swing.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -74,7 +76,7 @@ public class Trainer {
         }
         System.out.printf("Trained %d/%d images.%n", faceSamples.size(), numberOfImages);
         if (faceSamples.isEmpty() || faceSamples.size() < numberOfImages * percentToSuccess / 100) {
-            System.out.println("Can't train the model. Please sign up your face again.");
+            JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Không thể xử lý được khuôn mặt.\nHãy thử đăng ký gương mặt lại.");
             return;
         } else if (faceSamples.size() != numberOfImages) {
             System.out.println("Error images: " + errorImages);
@@ -83,6 +85,7 @@ public class Trainer {
         labelsMat.fromList(labels);
         recognizer.model.train(faceSamples, labelsMat);
         recognizer.model.save(new File(Resource.getResourceOutsideJAR(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
+        JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đăng ký gương mặt thành công.");
     }
 
     static {

@@ -365,13 +365,13 @@ public class RecipeGUI extends JPanel {
         double mass;
         String unit;
         recipeID = jTextFieldsForm[0].getText();
-        for(Ingredient ingredient : ingredientList) {
-            if (ingredient.getName().equals(cbbIngredientNameSearch.getSelectedItem())) {
+        for (Ingredient ingredient : ingredientList) {
+            if (ingredient.getName().equals(cbbIngredientName.getSelectedItem())) {
                 ingredientID = Objects.requireNonNull(ingredient.getIngredientID());
             }
         }
-        for(Product product : productList) {
-            if (product.getName().equals(cbbProductNameSearch.getSelectedItem())) {
+        for (Product product : productList) {
+            if (product.getName().equals(cbbProductName.getSelectedItem())) {
                 productID = Objects.requireNonNull(product.getProductID());
             }
         }

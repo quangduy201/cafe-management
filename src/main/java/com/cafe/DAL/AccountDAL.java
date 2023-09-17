@@ -47,6 +47,15 @@ public class AccountDAL extends Manager {
         return 0;
     }
 
+    @Override
+    public int create(Object... values) throws SQLException {
+        String query = String.format("""
+            INSERT INTO `%s` (`ACCOUNT_ID`, `USERNAME`, `PASSWD`, `DECENTRALIZATION_ID`, `STAFF_ID`, `DELETED`)
+            VALUES ('%s', '%s', '%s', '%s', '%s', b'0');""",
+            getTableName(), values[0], values[1], values[2], values[3], values[4]);
+        return executeUpdate(query);
+    }
+
     public int updateAccount(Account account) {
         try {
             List<Object> updateValues = new ArrayList<>();

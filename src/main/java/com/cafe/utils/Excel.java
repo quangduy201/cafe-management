@@ -63,7 +63,7 @@ public class Excel {
         List<Ingredient> ingredientList = new IngredientBLL().findIngredientsBy(Map.of("SUPPLIER_ID", supplier.getSupplierID()));
         List<Pair<Ingredient, Integer>> receiptDetailsList = new ArrayList<>();
         int numRows = excel.sheet.getLastRowNum();
-        for (int i = 0; i <= numRows; ++i) {
+        for (int i = 1; i <= numRows; ++i) {
             Object ingredientName = excel.readCell(i, 0);
             Object quantity = excel.readCell(i, 1);
 

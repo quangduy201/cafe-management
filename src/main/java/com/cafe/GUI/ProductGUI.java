@@ -295,7 +295,7 @@ public class ProductGUI extends JPanel {
     private void btnProductImageActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.removeChoosableFileFilter(fc.getFileFilter());
-        fc.setCurrentDirectory(new File("img"));
+        fc.setCurrentDirectory(new File(Objects.requireNonNull(Resource.getAbsolutePath("img/products"))));
         FileFilter filter = new FileNameExtensionFilter("Images (.jpeg, .jpg, .png)", "jpeg", "jpg", "png");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this);

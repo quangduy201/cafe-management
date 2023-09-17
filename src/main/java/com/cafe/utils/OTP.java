@@ -58,7 +58,7 @@ public class OTP {
             activeOTPs.remove(index);
     }
 
-    public static void sendOTP(String toEmail, String otp) {
+    public static void sendEmail(String toEmail, String emailSubject, String emailBody) {
         // Email configuration
         String email = "dinhduy2012003@gmail.com";
         String password = "vmkfsxyivzhthkxj";
@@ -76,23 +76,30 @@ public class OTP {
                 return new PasswordAuthentication(email, password);
             }
         });
-        session.setDebug(true);
 
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("Đặt lại mật khẩu King Cafe");
-
-            String emailBody = "Mã OTP để thiết lập lại mật khẩu của bạn là: " + otp;
+            message.setSubject(emailSubject);
             message.setText(emailBody);
-
             Transport.send(message);
-
             System.out.println("Email sent successfully.");
         } catch (MessagingException e) {
             JOptionPane.showMessageDialog(CafeManagement.loginGUI, "Hệ thống bị lỗi, vui lòng thử lại sau.");
         }
+    }
+
+    public static void sendOTP(String toEmail, String otp) {
+        String emailSubject = "Đặt lại mật khẩu King Cafe";
+        String emailBody = "Mã OTP để thiết lập lại mật khẩu của bạn là: " + otp;
+        sendEmail(toEmail, emailSubject, emailBody);
+    }
+
+    public static void sendPassword(String toEmail, String password) {
+        String emailSubject = "Mật khẩu mặc định King Cafe";
+        String emailBody = "Không được cung cấp mật khẩu này cho bất cứ ai: " + password;
+        sendEmail(toEmail, emailSubject, emailBody);
     }
 
     public static void countdown(String otp, int time) {

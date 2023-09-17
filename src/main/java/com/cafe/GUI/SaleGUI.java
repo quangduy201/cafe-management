@@ -8,7 +8,6 @@ import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
 import com.cafe.utils.Tasks;
 import com.cafe.utils.VNString;
-import com.groupdocs.conversion.internal.c.a.i.internal.bouncycastle.math.ec.custom.sec.S;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -642,7 +641,7 @@ public class SaleGUI extends JPanel {
             }
             cancel();
         }
-        cancel();
+//        cancel();
     }
 
     public void cancel() {
