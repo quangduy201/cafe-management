@@ -1,17 +1,17 @@
 package com.cafe.GUI;
 
-import com.cafe.BLL.IngredientBLL;
-import com.cafe.BLL.ProductBLL;
-import com.cafe.BLL.RecipeBLL;
-import com.cafe.DTO.Ingredient;
-import com.cafe.DTO.Product;
-import com.cafe.DTO.Recipe;
+import com.cafe.BLL.*;
+import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.RoundPanel;
 import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -27,6 +27,7 @@ public class ProductDetailsGUI extends JFrame {
     private int countProduct = 0;
     private Vector<String> sizeList;
     private Vector<String> costList;
+    private Vector<String> discountList;
     private RoundPanel frame;
     private Button minimize;
     private Button exit;
@@ -38,36 +39,88 @@ public class ProductDetailsGUI extends JFrame {
     private RoundPanel frameImg;
     private ImageIcon originalIcon;
     private JLabel slProductImg;
+    private JLabel labelDiscount;
+    private JLabel slDiscount;
+
+    private JLabel labelDiscountKey;
+    private JLabel labelDiscountValue;
+
+    private RoundPanel rpNote;
+    private RoundPanel rpTextNote;
+
+    private JLabel labelNote;
+
+    private  JTextArea jTextNote;
+
     private JLabel[] label;
     private SaleGUI saleGUI;
     private JComboBox<String> comboBoxProductSize;
     private int quantity;
+    private double discountCost;
+
+    private String saveNote;
     private Product newProduct;
     private Product getProduct;
 
-    public ProductDetailsGUI(SaleGUI saleGUI, Product product, int quantity) {
+    private List<Discount> discount;
+    private List<DiscountDetails> discountDetail;
+    private double amount;
+    private boolean quantity1 = false;
+
+    public ProductDetailsGUI(SaleGUI saleGUI, Product product, int quantity, String saveNote) {
         System.gc();
         this.newProduct = product;
         this.saleGUI = saleGUI;
         this.quantity = quantity;
+        discount = new DiscountBLL()
+            .searchDiscounts("STATUS = '" + 0 + "'");
+        if (!discount.isEmpty()) {
+            discountDetail = new DiscountDetailsBLL()
+                .searchDiscountDetails("DISCOUNT_ID = '" + discount.get(0).getDiscountID() + "'");
+        }
         initComponents();
         sizeList = new Vector<>();
         costList = new Vector<>();
+        discountList = new Vector<>();
+        amount = 1;
         List<Product> products = new ProductBLL().findProductsBy(Map.of("NAME", product.getName()));
         for (Product product1 : products) {
+            quantity1 = false;
+            if (!discount.isEmpty()) {
+                for (DiscountDetails discountDetails : discountDetail) {
+                    if (discountDetails.getProductID().equals(product1.getProductID())) {
+                        amount = (double) (100 - discount.get(0).getDiscountPercent()) / 100;
+                        costList.add(VNString.currency(product1.getCost() * amount));
+                        discountList.add(String.valueOf(discount.get(0).getDiscountPercent()));
+                        quantity1 = true;
+                        break;
+                    }
+                }
+            }
+            if (!quantity1) {
+                costList.add(VNString.currency(product1.getCost()));
+                discountList.add("0");
+            }
             sizeList.add(product1.getSized());
-            costList.add(VNString.currency(product1.getCost()));
         }
         comboBoxProductSize.setModel(new DefaultComboBoxModel<>(sizeList));
+        slDiscount.setText(discountList.get(0) + "%");
         label[4].setText(costList.get(0));
-        label[5].setText("1");
+        label[5].setText(String.valueOf(quantity));
+        System.out.println(saveNote);
+        jTextNote.setText(saveNote);
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
     }
 
     public void initComponents() {
-        setSize(650, 540);
+        setSize(650, 600);
         setLocationRelativeTo(null);
         setUndecorated(true);
+
+        labelDiscount = new JLabel();
+        slDiscount = new JLabel();
+        labelDiscountKey = new JLabel();
+        labelDiscountValue = new JLabel();
 
         frame = new RoundPanel();
         exit = new Button();
@@ -82,6 +135,10 @@ public class ProductDetailsGUI extends JFrame {
         minus = new Button();
         plus = new Button();
         comboBoxProductSize = new JComboBox<>();
+        rpNote = new RoundPanel();
+        labelNote = new JLabel();
+        jTextNote = new JTextArea();
+        rpTextNote = new RoundPanel();
 
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
@@ -110,7 +167,7 @@ public class ProductDetailsGUI extends JFrame {
 
         roundPanel[3].setLayout(new FlowLayout(FlowLayout.CENTER));
         roundPanel[3].setBackground(new Color(68, 150, 60));
-        roundPanel[3].setPreferredSize(new Dimension(650, 170));
+        roundPanel[3].setPreferredSize(new Dimension(650, 230));
 //        roundPanel[3].setBackground(new Color(145, 0, 0));
         frame.add(roundPanel[3]);
 
@@ -155,7 +212,7 @@ public class ProductDetailsGUI extends JFrame {
         frameImg.setBackground(new Color(240, 240, 240));
         roundPanel[2].add(frameImg);
 
-        originalIcon = Resource.loadImageIcon(newProduct.getImage());
+        originalIcon = Resource.loadImageIconIn(newProduct.getImage());
         slProductImg.setIcon(new ImageIcon(originalIcon.getImage().getScaledInstance(300, 200, Image.SCALE_SMOOTH)));
         frameImg.add(slProductImg);
 
@@ -168,6 +225,11 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[6].setBackground(new Color(68, 150, 60));
         roundPanel[6].setPreferredSize(new Dimension(650, 50));
         roundPanel[3].add(roundPanel[6]);
+
+        rpNote.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        rpNote.setBackground(new Color(68, 150, 60));
+        rpNote.setPreferredSize(new Dimension(650, 50));
+        roundPanel[3].add(rpNote);
 
         roundPanel[7].setLayout(new FlowLayout(FlowLayout.LEFT, 20, 10));
         roundPanel[7].setBackground(new Color(68, 150, 60));
@@ -186,11 +248,47 @@ public class ProductDetailsGUI extends JFrame {
         label[1].setForeground(Color.BLACK);
         roundPanel[6].add(label[1]);
 
+
         label[2].setText("Số lượng\t\t:");
         label[2].setPreferredSize(new Dimension(130, 35));
         label[2].setFont(new Font("Times New Roman", Font.BOLD, 17));
         label[2].setForeground(Color.BLACK);
         roundPanel[7].add(label[2]);
+
+        labelNote.setText("Ghi chú\t\t:");
+        labelNote.setPreferredSize(new Dimension(130, 35));
+        labelNote.setFont(new Font("Times New Roman", Font.BOLD, 17));
+        labelNote.setForeground(Color.BLACK);
+        rpNote.add(labelNote);
+
+        rpTextNote.setLayout(new FlowLayout(FlowLayout.CENTER,0,5));
+        rpTextNote.setPreferredSize(new Dimension(450, 30));
+        rpTextNote.setBackground(new Color(255, 255, 255));
+        rpNote.add(rpTextNote);
+
+        jTextNote.setPreferredSize(new Dimension(420, 30));
+        jTextNote.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        jTextNote.setForeground(Color.BLACK);
+        PlainDocument doc = (PlainDocument) jTextNote.getDocument();
+
+        doc.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
+                // Check if the resulting text length would exceed 20 characters
+                if (fb.getDocument().getLength() + text.length() <= 60) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                // Check if the resulting text length would exceed 20 characters
+                if (fb.getDocument().getLength() - length + text.length() <= 60) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        rpTextNote.add(jTextNote);
 
         roundPanel[8].setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
         roundPanel[8].setBackground(new Color(240, 240, 240));
@@ -208,6 +306,19 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[9].setBackground(new Color(240, 240, 240));
         roundPanel[9].setPreferredSize(new Dimension(150, 35));
         roundPanel[6].add(roundPanel[9]);
+
+        labelDiscount.setText("Giảm giá\t\t:");
+        labelDiscount.setPreferredSize(new Dimension(130, 35));
+        labelDiscount.setFont(new Font("Times New Roman", Font.BOLD, 17));
+        labelDiscount.setForeground(Color.BLACK);
+        roundPanel[6].add(labelDiscount);
+
+        slDiscount.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        slDiscount.setPreferredSize(new Dimension(50, 35));
+        slDiscount.setFont(new Font("Times New Roman", Font.BOLD, 17));
+        slDiscount.setForeground(Color.BLACK);
+        roundPanel[6].add(slDiscount);
+
 
         label[4].setPreferredSize(new Dimension(150, 35));
         label[4].setHorizontalAlignment(JLabel.CENTER);
@@ -251,7 +362,7 @@ public class ProductDetailsGUI extends JFrame {
         roundPanel[7].add(comboBoxProductSize);
 
         configButton.accept(confirm, List.of("Xác nhận", 150, 50, 45, new Color(240, 240, 240), new Color(0x756969), new Color(0xA65B5B), (Runnable) this::pressConfirm));
-        confirm.setIcon(Resource.loadImageIcon("img/icons/add-to-cart.png"));
+        confirm.setIcon(Resource.loadImageIconIn("img/icons/add-to-cart.png"));
         confirm.setFont(new Font("Tahoma", Font.PLAIN, 16));
         roundPanel[4].add(confirm);
     }
@@ -285,6 +396,7 @@ public class ProductDetailsGUI extends JFrame {
             if (comboBoxProductSize.getSelectedItem().toString().equals(sizeList.get(i))) {
                 // this.price = (String) costList.get(i);
                 label[4].setText(costList.get(i));
+                slDiscount.setText(discountList.get(i) + "%");
                 break;
             }
         }
@@ -305,8 +417,8 @@ public class ProductDetailsGUI extends JFrame {
             .searchProducts("NAME = '" + newProduct.getName() + "'", "SIZED = '" + comboBoxProductSize.getSelectedItem().toString() + "'")
             .get(0);
         int quantity = Integer.parseInt(label[5].getText());
-        System.out.println(getProduct.toString());
-
+        discountCost = getProduct.getCost() * amount;
+        saveNote = jTextNote.getText();
         if (checkOrderExits(getProduct) != null) {
             int location = saleGUI.getListDetailBill().indexOf(checkOrderExits(getProduct));
             updateIngredient(getProduct.getProductID(), saleGUI.getListQuantityChoice().get(location));
@@ -318,10 +430,14 @@ public class ProductDetailsGUI extends JFrame {
                 //Cập nhật quantity
                 int location = saleGUI.getListDetailBill().indexOf(checkOrderExits(getProduct));
                 saleGUI.getListQuantityChoice().set(location, quantity);
+                saleGUI.getListCost().set(location,(int) discountCost);
+                saleGUI.getListDiscountNote().set(location, saveNote);
             } else {
                 System.out.println("add new");
                 saleGUI.getListDetailBill().add(getProduct);
                 saleGUI.getListQuantityChoice().add(quantity);
+                saleGUI.getListCost().add((int) discountCost);
+                saleGUI.getListDiscountNote().add(saveNote);
             }
 
             saleGUI.getRoundPanel9().removeAll();

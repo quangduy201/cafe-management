@@ -161,7 +161,7 @@ public class StatisticGUI extends JPanel {
             label.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
             label.setAutoscrolls(true);
             label.setPreferredSize(new Dimension((Integer) properties.get(0), (Integer) properties.get(1)));
-            label.setIcon(new ImageIcon(Resource.loadImageIcon((String) properties.get(2)).getImage().getScaledInstance((Integer) properties.get(3), (Integer) properties.get(4), Image.SCALE_SMOOTH)));
+            label.setIcon(new ImageIcon(Resource.loadImageIconIn((String) properties.get(2)).getImage().getScaledInstance((Integer) properties.get(3), (Integer) properties.get(4), Image.SCALE_SMOOTH)));
         };
         configLabel.accept(jLabel[0], List.of(125, 350, "img/icons/Up_arrow.png", 125, 250));
         roundPanel[4].add(jLabel[0]);
@@ -224,7 +224,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[0].setPreferredSize(new Dimension(75, 75));
         imageAvatars[0].setBorderSize(2);
         imageAvatars[0].setForeground(new Color(255, 255, 255));
-        imageAvatars[0].setIcon(Resource.loadImageIcon("img/icons/Customer.png"));
+        imageAvatars[0].setIcon(Resource.loadImageIconIn("img/icons/Customer.png"));
         imageAvatars[0].setAutoscrolls(true);
         roundPanel[10].add(imageAvatars[0]);
 
@@ -240,7 +240,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[1].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         imageAvatars[1].setPreferredSize(new Dimension(75, 75));
         imageAvatars[1].setBorderSize(2);
-        imageAvatars[1].setIcon(Resource.loadImageIcon("img/icons/ReceivedNote.png"));
+        imageAvatars[1].setIcon(Resource.loadImageIconIn("img/icons/ReceivedNote.png"));
         imageAvatars[1].setForeground(new Color(255, 255, 255));
         imageAvatars[1].setAutoscrolls(true);
         roundPanel[11].add(imageAvatars[1]);
@@ -257,7 +257,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[2].setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         imageAvatars[2].setPreferredSize(new Dimension(75, 75));
         imageAvatars[2].setBorderSize(2);
-        imageAvatars[2].setIcon(Resource.loadImageIcon("img/icons/Bill.png"));
+        imageAvatars[2].setIcon(Resource.loadImageIconIn("img/icons/Bill.png"));
         imageAvatars[2].setForeground(new Color(255, 255, 255));
         imageAvatars[2].setAutoscrolls(true);
         roundPanel[12].add(imageAvatars[2]);
@@ -490,7 +490,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[0].setPreferredSize(new Dimension(60, 60));
         imageAvatars[0].setBorderSize(2);
         imageAvatars[0].setForeground(new Color(255, 255, 255));
-        imageAvatars[0].setIcon(Resource.loadImageIcon("img/icons/Customer.png"));
+        imageAvatars[0].setIcon(Resource.loadImageIconIn("img/icons/Customer.png"));
         imageAvatars[0].setAutoscrolls(true);
         jPanel[0].add(imageAvatars[0]);
 
@@ -586,7 +586,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[1].setPreferredSize(new Dimension(60, 60));
         imageAvatars[1].setBorderSize(2);
         imageAvatars[1].setForeground(new Color(255, 255, 255));
-        imageAvatars[1].setIcon(Resource.loadImageIcon("img/icons/ReceivedNote.png"));
+        imageAvatars[1].setIcon(Resource.loadImageIconIn("img/icons/ReceivedNote.png"));
         imageAvatars[1].setAutoscrolls(true);
         jPanel[1].add(imageAvatars[1]);
 
@@ -657,7 +657,7 @@ public class StatisticGUI extends JPanel {
         imageAvatars[2].setPreferredSize(new Dimension(60, 60));
         imageAvatars[2].setBorderSize(2);
         imageAvatars[2].setForeground(new Color(255, 255, 255));
-        imageAvatars[2].setIcon(Resource.loadImageIcon("img/icons/Bill.png"));
+        imageAvatars[2].setIcon(Resource.loadImageIconIn("img/icons/Bill.png"));
         imageAvatars[2].setAutoscrolls(true);
         jPanel[2].add(imageAvatars[2]);
 
@@ -771,7 +771,7 @@ public class StatisticGUI extends JPanel {
                     jDateChooser[index].setDate(day.toDate());
 
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

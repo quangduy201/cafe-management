@@ -2,6 +2,7 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.CategoryBLL;
 import com.cafe.BLL.ProductBLL;
+import com.cafe.DTO.Category;
 import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Product;
 import com.cafe.custom.Button;
@@ -21,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,8 +42,8 @@ public class ProductGUI extends JPanel {
     private JLabel[] jLabelsForm;
     private JLabel imgProduct;
     private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object> cbbCategoryID;
-    private JComboBox<Object> cbbCategoryIDSearch;
+    private JComboBox<Object> cbbCategoryName;
+    private JComboBox<Object> cbbCategoryNameSearch;
     private JComboBox<Object> cbbSize;
     private JComboBox<Object> cbbSizeSearch;
     private JTextField txtSearch;
@@ -61,10 +63,12 @@ public class ProductGUI extends JPanel {
         initComponents();
     }
 
+    private List<Category> categoryList = new ArrayList<>();
     public void initComponents() {
         List<String> columnNames = productBLL.getProductDAL().getColumnNames();
         CategoryBLL categoryBLL = new CategoryBLL();
-        List<Object> categoriesID = categoryBLL.getObjectsProperty("CATEGORY_ID", categoryBLL.getCategoryList());
+        List<Object> categoriesName = categoryBLL.getObjectsProperty("NAME", categoryBLL.getCategoryList());
+        categoryList = new CategoryBLL().getCategoryList();
 
         product = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -75,9 +79,9 @@ public class ProductGUI extends JPanel {
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
         imgProduct = new JLabel();
-        cbbSearchFilter = new JComboBox<>(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"});
-        cbbCategoryID = new JComboBox<>(categoriesID.toArray());
-        cbbCategoryIDSearch = new JComboBox<>(categoriesID.toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã sản phẩm", "Tên sản phẩm", "Tên thể loại", "Size", "Giá"});
+        cbbCategoryName = new JComboBox<>(categoriesName.toArray());
+        cbbCategoryNameSearch = new JComboBox<>(categoriesName.toArray());
         cbbSize = new JComboBox<>(new String[]{"null", "S", "M", "L"});
         cbbSizeSearch = new JComboBox<>(new String[]{"null", "S", "M", "L"});
         txtSearch = new JTextField(20);
@@ -127,14 +131,14 @@ public class ProductGUI extends JPanel {
             }
         });
         search.add(txtSearch);
-        cbbCategoryIDSearch.setVisible(false);
-        cbbCategoryIDSearch.addItemListener(e -> categoryIDSearch());
-        search.add(cbbCategoryIDSearch);
+        cbbCategoryNameSearch.setVisible(false);
+        cbbCategoryNameSearch.addItemListener(e -> categoryIDSearch());
+        search.add(cbbCategoryNameSearch);
         cbbSizeSearch.setVisible(false);
         cbbSizeSearch.addItemListener(e -> sizeSearch());
         search.add(cbbSizeSearch);
 
-        dataTable = new DataTable(productBLL.getData(), new String[]{"Mã sản phẩm", "Tên sản phẩm", "Mã thể loại", "Size", "Giá"}, e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã sản phẩm", "Tên sản phẩm", "Tên thể loại", "Size", "Giá"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -165,8 +169,8 @@ public class ProductGUI extends JPanel {
                     index++;
                 }
                 case "CATEGORY_ID" -> {
-                    jLabelsForm[i].setText("Mã thể loại: ");
-                    pnlProductConfiguration.add(cbbCategoryID);
+                    jLabelsForm[i].setText("Tên thể loại: ");
+                    pnlProductConfiguration.add(cbbCategoryName);
                 }
                 case "SIZED" -> {
                     jLabelsForm[i].setText("Size: ");
@@ -234,10 +238,16 @@ public class ProductGUI extends JPanel {
             dataTable.setRowSelectionInterval(0, 0);
             fillForm();
         }
+        loadDataTable(productBLL.getProductList());
     }
 
     private void categoryIDSearch() {
-        loadDataTable(productBLL.findProducts("CATEGORY_ID", Objects.requireNonNull(cbbCategoryIDSearch.getSelectedItem()).toString()));
+        for(Category category : categoryList) {
+            if (category.getName().equals(cbbCategoryNameSearch.getSelectedItem())) {
+                loadDataTable(productBLL.findProducts("CATEGORY_ID", Objects.requireNonNull(category.getCategoryID())));
+                break;
+            }
+        }
     }
 
     private void sizeSearch() {
@@ -245,21 +255,21 @@ public class ProductGUI extends JPanel {
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã thể loại")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên thể loại")) {
             txtSearch.setVisible(false);
             cbbSizeSearch.setVisible(false);
-            cbbCategoryIDSearch.setSelectedIndex(0);
-            cbbCategoryIDSearch.setVisible(true);
+            cbbCategoryNameSearch.setSelectedIndex(0);
+            cbbCategoryNameSearch.setVisible(true);
             categoryIDSearch();
         } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Size")) {
             txtSearch.setVisible(false);
-            cbbCategoryIDSearch.setVisible(false);
+            cbbCategoryNameSearch.setVisible(false);
             cbbSizeSearch.setSelectedIndex(0);
             cbbSizeSearch.setVisible(true);
             sizeSearch();
         } else {
             cbbSizeSearch.setVisible(false);
-            cbbCategoryIDSearch.setVisible(false);
+            cbbCategoryNameSearch.setVisible(false);
             txtSearch.setVisible(true);
             searchProducts();
         }
@@ -285,14 +295,14 @@ public class ProductGUI extends JPanel {
     private void btnProductImageActionPerformed(ActionEvent evt) {
         JFileChooser fc = new JFileChooser();
         fc.removeChoosableFileFilter(fc.getFileFilter());
-        fc.setCurrentDirectory(new File("img"));
+        fc.setCurrentDirectory(new File(Objects.requireNonNull(Resource.getAbsolutePath("img/products"))));
         FileFilter filter = new FileNameExtensionFilter("Images (.jpeg, .jpg, .png)", "jpeg", "jpg", "png");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             chosenImg = "img/products/" + file.getName();
-            imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
+            imgProduct.setIcon(Resource.loadImageIconIn(chosenImg));
         }
     }
 
@@ -360,7 +370,7 @@ public class ProductGUI extends JPanel {
         for (int i = 1; i < jTextFieldsForm.length; i++) {
             jTextFieldsForm[i].setText(null);
         }
-        cbbCategoryID.setSelectedIndex(0);
+        cbbCategoryName.setSelectedIndex(0);
         cbbSize.setSelectedIndex(0);
         chosenImg = null;
         imgProduct.setIcon(null);
@@ -379,7 +389,7 @@ public class ProductGUI extends JPanel {
         String[] product = String.join(" | ", data).split(" \\| ");
         jTextFieldsForm[0].setText(product[0]);
         jTextFieldsForm[1].setText(product[1]);
-        cbbCategoryID.setSelectedItem(product[2]);
+        cbbCategoryName.setSelectedItem(product[2]);
         cbbSize.setSelectedItem(product[3]);
         jTextFieldsForm[2].setText(VNString.currency(Double.parseDouble(product[4])));
         for (Product product1 : productBLL.getProductList()) {
@@ -388,7 +398,7 @@ public class ProductGUI extends JPanel {
                 break;
             }
         }
-        imgProduct.setIcon(Resource.loadImageIcon(chosenImg));
+        imgProduct.setIcon(Resource.loadImageIconIn(chosenImg));
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -397,7 +407,7 @@ public class ProductGUI extends JPanel {
     public Product getForm() {
         String productID = null;
         String name = null;
-        String categoryID;
+        String categoryID = null;
         String size;
         String image;
         double cost = 0;
@@ -410,7 +420,12 @@ public class ProductGUI extends JPanel {
                 }
             }
         }
-        categoryID = Objects.requireNonNull(cbbCategoryID.getSelectedItem()).toString();
+        for (Category category: categoryList) {
+            if (category.getName().equals(cbbCategoryName.getSelectedItem())) {
+                categoryID = Objects.requireNonNull(category.getCategoryID());
+                break;
+            }
+        }
         size = Objects.requireNonNull(cbbSize.getSelectedItem()).toString();
         image = chosenImg;
         return new Product(productID, name, categoryID, size, cost, image, false);
@@ -420,7 +435,12 @@ public class ProductGUI extends JPanel {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Product product : productList) {
-            model.addRow(new Object[]{product.getProductID(), product.getName(), product.getCategoryID(), product.getSized(), product.getCost()});
+            for (Category category: categoryList) {
+                if (category.getCategoryID().equals(product.getCategoryID())) {
+                    model.addRow(new Object[]{product.getProductID(), product.getName(), category.getName(), product.getSized(), product.getCost()});
+                    break;
+                }
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.cafe.DTO;
 public class BillDetails {
     private String billID;
     private String productID;
+    private String note;
     private int quantity;
     private double total;
     private double percent;
@@ -10,12 +11,21 @@ public class BillDetails {
     public BillDetails() {
     }
 
-    public BillDetails(String billID, String productID, int quantity, double total, double percent) {
+    public BillDetails(String billID, String productID, int quantity, String note, double total, double percent) {
         this.billID = billID;
         this.productID = productID;
         this.quantity = quantity;
+        this.note = note;
         this.total = total;
         this.percent = percent;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getBillID() {
@@ -63,6 +73,7 @@ public class BillDetails {
         return billID + " | " +
             productID + " | " +
             quantity + " | " +
+            note + " | " +
             total + " | " +
             percent;
     }

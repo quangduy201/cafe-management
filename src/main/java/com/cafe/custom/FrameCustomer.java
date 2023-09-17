@@ -135,7 +135,7 @@ public class FrameCustomer extends JFrame {
                     Day day = Day.parseDay(dateTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
@@ -228,7 +228,7 @@ public class FrameCustomer extends JFrame {
         roundPanel[5].add(roundPanel1[9]);
 
         configButton.accept(confirm, List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::addCustomer));
-        confirm.setIcon(Resource.loadImageIcon("img/icons/add-user.png"));
+        confirm.setIcon(Resource.loadImageIconIn("img/icons/add-user.png"));
         roundPanel1[9].add(confirm);
     }
 

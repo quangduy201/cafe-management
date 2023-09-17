@@ -45,7 +45,7 @@ public class HomeGUI extends JFrame {
     private JLabel lbTime;
     private JLabel[] jLabel = new JLabel[15];
     private RoundPanel[] rpContent = new RoundPanel[15];
-    private int numberContent = -1;
+    private int numberContent;
     private int addContent;
     private JLabel[] labelName = new JLabel[15];
     private ProductPanel[] roundPanel = new ProductPanel[15];
@@ -120,6 +120,10 @@ public class HomeGUI extends JFrame {
         }
     }
 
+    public JPanel getCurrentGUI() {
+        return (JPanel) function.getComponent(0);
+    }
+
     private void initComponents() {
         home = new RoundPanel();
         north = new Header();
@@ -140,17 +144,20 @@ public class HomeGUI extends JFrame {
         cate = new RoundPanel();
         function = new RoundPanel();
 
+        roundPanel = new ProductPanel[15];
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new ProductPanel();
             imageAvatar[i] = new ImageAvatar();
             jLabel[i] = new JLabel();
         }
 
+        rpContent = new RoundPanel[15];
         for (int i = 0; i < rpContent.length; i++) {
             rpContent[i] = new RoundPanel();
             labelName[i] = new JLabel();
         }
 
+        imageIcon = new ImageAvatar[15];
         for (int i = 0; i < imageIcon.length; i++) {
             imageIcon[i] = new ImageAvatar();
         }
@@ -188,8 +195,8 @@ public class HomeGUI extends JFrame {
         });
         themeButton.setOnColor(new Color(0xFCE797));
         themeButton.setOffColor(new Color(0x504C4C));
-        themeButton.setOnIcon(Resource.loadImageIcon("img/icons/sun.png"));
-        themeButton.setOffIcon(Resource.loadImageIcon("img/icons/moon.png"));
+        themeButton.setOnIcon(Resource.loadImageIconIn("img/icons/sun.png"));
+        themeButton.setOffIcon(Resource.loadImageIconIn("img/icons/moon.png"));
         north.add(themeButton);
 
         BiConsumer<Button, java.util.List<Object>> configButton = (button, properties) -> {
@@ -239,11 +246,14 @@ public class HomeGUI extends JFrame {
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
         setLocationRelativeTo(null);
     }
+    private boolean isListening;
 
     public void initLeftMenu() {
         listCount[0] = 0;
         listCount[1] = 0;
         listCount[2] = 0;
+        numberContent = -1;
+        isListening = true;
 
         west.removeAll();
         west.revalidate();
@@ -260,10 +270,28 @@ public class HomeGUI extends JFrame {
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
         west.add(info, BorderLayout.NORTH);
 
+        roundPanel = new ProductPanel[15];
+        for (int i = 0; i < roundPanel.length; ++i) {
+            roundPanel[i] = new ProductPanel();
+            imageAvatar[i] = new ImageAvatar();
+            jLabel[i] = new JLabel();
+        }
+
+        rpContent = new RoundPanel[15];
+        for (int i = 0; i < rpContent.length; ++i) {
+            rpContent[i] = new RoundPanel();
+            labelName[i] = new JLabel();
+        }
+
+        imageIcon = new ImageAvatar[15];
+        for (int i = 0; i < imageIcon.length; ++i) {
+            imageIcon[i] = new ImageAvatar();
+        }
+
         imageAvatar[0].setForeground(new Color(255, 255, 255));
         imageAvatar[0].setBorderSize(2);
         imageAvatar[0].setBounds(20, 10, 60, 60);
-        imageAvatar[0].setIcon(Resource.loadImageIcon("img/icons/bell-boy.png"));
+        imageAvatar[0].setIcon(Resource.loadImageIconIn("img/icons/bell-boy.png"));
         info.add(imageAvatar[0]);
 
         lbName.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -331,22 +359,26 @@ public class HomeGUI extends JFrame {
             rpContent[2].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 0) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 0) {
 //                    string = "img/icons/up.png";
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[0] * 50) / 5;
-                    if (rpContent[0].getHeight() == 45) {
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIconIn(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[0] * 50) / 5;
+                        if (rpContent[0].getHeight() == 45) {
 //                    string = string;
-                        numberjpane = 0;
-                        pressDelay(0, rpContent[0].getHeight(), totalHeight);
-                        numberContent = 0;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(0, rpContent[0].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            numberjpane = 0;
+                            pressDelay(0, rpContent[0].getHeight(), totalHeight);
+                            numberContent = 0;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(0, rpContent[0].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
@@ -367,7 +399,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[0].setPreferredSize(new Dimension(30, 30));
             imageIcon[0].setBorderSize(2);
-            imageIcon[0].setIcon(Resource.loadImageIcon(string));
+            imageIcon[0].setIcon(Resource.loadImageIconIn(string));
             rpContent[2].add(imageIcon[0]);
 
             for (int i = 5; i < 8; i++) {
@@ -402,21 +434,25 @@ public class HomeGUI extends JFrame {
             rpContent[5].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 1) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 1) {
 //                    string = "img/icons/up.png";
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[1] * 50) / 5;
-                    if (rpContent[4].getHeight() == 45) {
-                        numberjpane = 1;
-                        pressDelay(4, rpContent[4].getHeight(), totalHeight);
-                        numberContent = 4;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(4, rpContent[4].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIconIn(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[1] * 50) / 5;
+                        if (rpContent[4].getHeight() == 45) {
+                            numberjpane = 1;
+                            pressDelay(4, rpContent[4].getHeight(), totalHeight);
+                            numberContent = 4;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(4, rpContent[4].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
@@ -437,7 +473,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[1].setPreferredSize(new Dimension(30, 30));
             imageIcon[1].setBorderSize(2);
-            imageIcon[1].setIcon(Resource.loadImageIcon(string));
+            imageIcon[1].setIcon(Resource.loadImageIconIn(string));
             rpContent[5].add(imageIcon[1]);
 
             for (int i = 8; i < 10; i++) {
@@ -472,21 +508,25 @@ public class HomeGUI extends JFrame {
             rpContent[8].addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    if (numberContent != -1 && numberjpane != 2) {
-                        imageIcon[numberjpane].setIcon(null);
-                        imageIcon[numberjpane].setIcon(Resource.loadImageIcon(string));
-                        pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
-                    }
-                    totalHeight = (listCount[2] * 50) / 5;
-                    if (rpContent[7].getHeight() == 45) {
+                    if (isListening) {
+                        isListening = false;
+                        if (numberContent != -1 && numberjpane != 2) {
+                            imageIcon[numberjpane].setIcon(null);
+                            imageIcon[numberjpane].setIcon(Resource.loadImageIconIn(string));
+                            pressDelay(numberContent, rpContent[numberContent].getHeight(), addContent);
+                        }
+                        totalHeight = (listCount[2] * 50) / 5;
+                        if (rpContent[7].getHeight() == 45) {
 //                    string = "img/icons/down.png";
-                        numberjpane = 2;
-                        pressDelay(7, rpContent[7].getHeight(), totalHeight);
-                        numberContent = 7;
-                        addContent = -totalHeight;
-                    } else {
-                        pressDelay(7, rpContent[7].getHeight(), -totalHeight);
-                        numberContent = -1;
+                            numberjpane = 2;
+                            pressDelay(7, rpContent[7].getHeight(), totalHeight);
+                            numberContent = 7;
+                            addContent = -totalHeight;
+                        } else {
+                            pressDelay(7, rpContent[7].getHeight(), -totalHeight);
+                            numberContent = -1;
+                        }
+                        isListening = true;
                     }
                 }
             });
@@ -507,7 +547,7 @@ public class HomeGUI extends JFrame {
 
             imageIcon[2].setPreferredSize(new Dimension(30, 30));
             imageIcon[2].setBorderSize(2);
-            imageIcon[2].setIcon(Resource.loadImageIcon("img/icons/down.png"));
+            imageIcon[2].setIcon(Resource.loadImageIconIn("img/icons/down.png"));
             rpContent[8].add(imageIcon[2]);
 
             for (int i = 10; i < 15; i++) {
@@ -532,7 +572,7 @@ public class HomeGUI extends JFrame {
             if (mang[i] != 0) {
                 imageAvatar[i].setPreferredSize(new Dimension(30, 30));
                 imageAvatar[i].setBorderSize(2);
-                imageAvatar[i].setIcon(Resource.loadImageIcon(String.format("img/icons/%02d.png", i)));
+                imageAvatar[i].setIcon(Resource.loadImageIconIn(String.format("img/icons/%02d.png", i)));
                 roundPanel[i].add(imageAvatar[i]);
 
                 jLabel[i].setFont(new Font("Times New Roman", Font.PLAIN, 18));
@@ -729,7 +769,7 @@ public class HomeGUI extends JFrame {
                 if (add > 0) coordinates = 36;
                 else coordinates = 72;
                 angle = angle + coordinates;
-                imageIcon[numberjpane].setIcon(rotateIcon(Resource.loadImageIcon(string), angle));
+                imageIcon[numberjpane].setIcon(rotateIcon(Resource.loadImageIconIn(string), angle));
                 if (counter == 5) {
                     ((Timer) e.getSource()).stop();
                 }

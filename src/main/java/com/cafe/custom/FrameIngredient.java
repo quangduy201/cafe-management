@@ -5,8 +5,10 @@ import com.cafe.DTO.Ingredient;
 import com.cafe.DTO.Supplier;
 import com.cafe.GUI.HomeGUI;
 import com.cafe.GUI.IngredientGUI;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,6 @@ import java.util.function.BiConsumer;
 
 public class FrameIngredient extends JFrame {
     private String[] data = new String[6];
-    private IngredientGUI ingredientGUI;
     private int index;
     private Button minus;
     private Button plus;
@@ -31,10 +32,9 @@ public class FrameIngredient extends JFrame {
     private JLabel[] label1;
     private JTextField[] jTextField;
 
-    public FrameIngredient(IngredientGUI ingredientGUI, String[] data, int index) {
+    public FrameIngredient(String[] data, int index) {
         System.gc();
         this.index = index;
-        this.ingredientGUI = ingredientGUI;
         System.arraycopy(data, 0, this.data, 0, data.length);
         initComponents();
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 15, 15));
@@ -196,7 +196,7 @@ public class FrameIngredient extends JFrame {
         label1[9].setText(supplier.getName());
 
         configButton.accept(confirm, java.util.List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::pressConfirm));
-        confirm.setIcon(Resource.loadImageIcon("img/icons/add-user.png"));
+        confirm.setIcon(Resource.loadImageIconIn("img/icons/add-user.png"));
         roundPanel1[9].add(confirm);
 
         roundPanel[6].setPreferredSize(new Dimension(220, 40));
@@ -246,29 +246,19 @@ public class FrameIngredient extends JFrame {
         this.dispose();
     }
 
-    private Ingredient checkOrderExits(String[] data) {
-        for (int i = 0; i < ingredientGUI.getReceiptDetails().size(); i++) {
-            if (data[1].equals(ingredientGUI.getReceiptDetails().get(i).getName())) {
-                return ingredientGUI.getReceiptDetails().get(i);
-            }
-        }
-        return null;
-    }
-
     public void pressConfirm() {
-        int index = Integer.parseInt(label1[11].getText());
-
-        if (checkOrderExits(data) != null) {
-            //Cập nhật quantity
-            int location = ingredientGUI.getReceiptDetails().indexOf(checkOrderExits(data));
-            ingredientGUI.getListQuantityChoice().set(location, index);
-        } else {
+        IngredientGUI ingredientGUI = (IngredientGUI) CafeManagement.homeGUI.getCurrentGUI();
+        int quantity = Integer.parseInt(label1[11].getText());
+        int index = ingredientGUI.findReceiptDetailsIndex(data[1]);
+        if (index == -1) {
             Ingredient ingredient = new Ingredient(data[0], data[1], 0, data[2], Double.parseDouble(data[3]), data[4], false);
-            ingredientGUI.getReceiptDetails().add(ingredient);
-            ingredientGUI.getListQuantityChoice().add(index);
+            ingredientGUI.getReceiptDetails().add(new Pair<>(ingredient, quantity));
+        } else {
+            Ingredient ingredient = ingredientGUI.getReceiptDetails().get(index).getKey();
+            ingredientGUI.getReceiptDetails().set(index, new Pair<>(ingredient, quantity));
         }
         ingredientGUI.getRoundPanel().removeAll();
-        ingredientGUI.addIngredient(ingredientGUI.getReceiptDetails(), ingredientGUI.getListQuantityChoice());
+        ingredientGUI.addIngredient(ingredientGUI.getReceiptDetails());
         this.dispose();
     }
 }

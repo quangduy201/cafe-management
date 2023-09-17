@@ -50,6 +50,11 @@ public class AccountBLL extends Manager<Account> {
         return accountDAL.updateAccount(account) != 0;
     }
 
+    public boolean updateAccountPassword(Account account) {
+        accountList.set(getIndex(account, "ACCOUNT_ID", accountList), account);
+        return accountDAL.updateAccountPassword(account) != 0;
+    }
+
     public boolean deleteAccount(Account account) {
         accountList.remove(getIndex(account, "ACCOUNT_ID", accountList));
         return accountDAL.deleteAccount("ACCOUNT_ID = '" + account.getAccountID() + "'") != 0;
@@ -79,7 +84,6 @@ public class AccountBLL extends Manager<Account> {
     public boolean exists(Account account) {
         return !findAccountsBy(Map.of(
             "USERNAME", account.getUsername(),
-            "PASSWD", account.getPassword(),
             "DECENTRALIZATION_ID", account.getDecentralizationID(),
             "STAFF_ID", account.getStaffID()
         )).isEmpty();

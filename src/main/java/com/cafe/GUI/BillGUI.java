@@ -6,19 +6,18 @@ import com.cafe.custom.BillDetailPanel;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.*;
-import com.groupdocs.conversion.Converter;
-import com.groupdocs.conversion.options.convert.PdfConvertOptions;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.*;
 
@@ -54,7 +53,7 @@ public class BillGUI extends JPanel {
     public void initComponents() {
         roundPanel = new RoundPanel[21];
         label = new JLabel[21];
-        button = new Button[5];
+        button = new Button[4];
         jScrollPane = new JScrollPane[2];
         for (int i = 0; i < roundPanel.length; i++) {
             roundPanel[i] = new RoundPanel();
@@ -147,7 +146,7 @@ public class BillGUI extends JPanel {
         roundPanel[15].setAutoscrolls(true);
         roundPanel[5].add(roundPanel[15], BorderLayout.WEST);
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             button[i] = new Button();
             button[i].setBorderPainted(false);
             button[i].setFocusPainted(false);
@@ -160,16 +159,10 @@ public class BillGUI extends JPanel {
             button[i].setRadius(15);
             button[i].setPreferredSize(new Dimension(80, 40));
             if (i == 2 || i == 3) {
-                button[i].setText("Xuất Excel");
-                button[i].setColor(new Color(240, 240, 240));
-                button[i].setPreferredSize(new Dimension(160, 40));
-                button[i].setIcon(Resource.loadImageIcon("img/icons/folder.png"));
-            }
-            if (i == 4) {
                 button[i].setText("Xuất PDF");
                 button[i].setColor(new Color(240, 240, 240));
                 button[i].setPreferredSize(new Dimension(160, 40));
-                button[i].setIcon(Resource.loadImageIcon("img/icons/folder.png"));
+                button[i].setIcon(Resource.loadImageIconIn("img/icons/folder.png"));
             }
             switch (i) {
                 case 0 -> button[i].setText("Bán");
@@ -183,28 +176,11 @@ public class BillGUI extends JPanel {
                         switch (index) {
                             case 0 -> changeMode("SALE");
                             case 1 -> changeMode("IMPORT");
-                            case 2 -> pressExcel(true);
-                            case 3 -> pressExcel(false);
-                            case 4 -> {
-                                JFileChooser fc = new JFileChooser();
-                                fc.removeChoosableFileFilter(fc.getFileFilter());
-                                fc.setCurrentDirectory(new File(Objects.requireNonNull(Resource.getAbsolutePath("transaction/bills"))));
-
-                                FileFilter filter = new FileNameExtensionFilter("xlsx", "xlsx");
-                                fc.setFileFilter(filter);
-                                int returnVal = fc.showOpenDialog(null);
-                                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                                    File file = fc.getSelectedFile();
-                                    Converter converter = new Converter(file.getPath());
-                                    PdfConvertOptions options = new PdfConvertOptions();
-                                    converter.convert(file.getPath().replace("xlsx", "pdf"), options);
-
-                                    System.out.println("Done");
-                                }
-                            }
+                            case 2 -> pressPDF(true);
+                            case 3 -> pressPDF(false);
                         }
-                    } catch (Exception ignored) {
-
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
                     }
                 }
             });
@@ -213,12 +189,11 @@ public class BillGUI extends JPanel {
         roundPanel[15].add(button[1], BorderLayout.EAST);
         roundPanel[5].add(button[2], BorderLayout.EAST);
         roundPanel[2].add(button[3]);
-        roundPanel[2].add(button[4]);
 
         btFaceSignUp = new Button();
         btFaceSignUp.setBackground(new Color(35, 166, 97));
         btFaceSignUp.setBorder(null);
-        btFaceSignUp.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btFaceSignUp.setIcon(new ImageIcon(Resource.loadImageIconIn("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btFaceSignUp.setText("Tìm hóa đơn");
         btFaceSignUp.setColor(new Color(240, 240, 240));
         btFaceSignUp.setColorClick(new Color(141, 222, 175));
@@ -279,7 +254,7 @@ public class BillGUI extends JPanel {
 //        btnCancel.setBorderPainted(false);
 //        btnCancel.setRadius(15);
 //        btnCancel.setFocusPainted(false);
-//        btnCancel.setIcon(Resource.loadImageIcon("img/icons/remove.png"));
+//        btnCancel.setIcon(Resource.loadImageIconIn("img/icons/remove.png"));
 //        btnCancel.setColor(new Color(0xFFBD3737));
 //        btnCancel.setColorOver(new Color(0xFF0000));
 //        btnCancel.setColorClick(new Color(0xB65858));
@@ -553,19 +528,25 @@ public class BillGUI extends JPanel {
         inSaleMode = false;
     }
 
-    public void pressExcel(boolean all) {
+    public void pressPDF(boolean all) {
+        try {
+            Files.createDirectories(Paths.get(Resource.getPathOutsideJAR("transaction/export/bill")));
+            Files.createDirectories(Paths.get(Resource.getPathOutsideJAR("transaction/export/receipt")));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        fileChooser.setCurrentDirectory(new File(Objects.requireNonNull(Resource.getAbsolutePath("transaction"))));
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setCurrentDirectory(new File(Resource.getPathOutsideJAR("transaction/export")));
         if (all) {
             Day from = new Day(jDateChooser[0].getDate());
             Day to = new Day(jDateChooser[1].getDate());
             if (dataTable.getModel().getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            int message = JOptionPane.showOptionDialog(null,
-                "Xuất dữ liệu từ ngày " + from + " đến " + to + " sang Excel?", "Xuất dữ liệu?",
+            int message = JOptionPane.showOptionDialog(CafeManagement.homeGUI,
+                "Xuất dữ liệu từ ngày " + from + " đến " + to + " sang PDF?", "Xuất dữ liệu?",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
@@ -574,7 +555,7 @@ public class BillGUI extends JPanel {
             if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
                 return;
             }
-            if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(CafeManagement.homeGUI) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             File selectedFile = fileChooser.getSelectedFile();
@@ -588,29 +569,29 @@ public class BillGUI extends JPanel {
                     Vector<?> vector = (Vector<?>) row;
                     bills.add(billBLL.searchBills("BILL_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
-                if (Excel.writeBillsToExcel(bills, from, to, path))
-                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (PDF.exportBillsPDF(bills, from, to, path))
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất bảng hóa đơn sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 List<Receipt> receipts = new ArrayList<>();
                 for (Object row : data) {
                     Vector<?> vector = (Vector<?>) row;
                     receipts.add(receiptBLL.searchReceipts("RECEIPT_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
-                if (Excel.writeReceiptsToExcel(receipts, from, to, path))
-                    JOptionPane.showMessageDialog(null, "Printed table to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (PDF.exportReceiptsPDF(receipts, from, to, path))
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất bảng phiếu nhập hàng sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang Excel thât bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             String id = label[3].getText();
-            if (id.equals("")) {
-                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            if (id.isEmpty()) {
+                JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            int message = JOptionPane.showOptionDialog(null,
-                "Xuất dữ liệu của " + id + " sang Excel?",
+            int message = JOptionPane.showOptionDialog(CafeManagement.homeGUI,
+                "Xuất dữ liệu của " + id + " sang PDF?",
                 "Xuất dữ liệu?",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -620,7 +601,7 @@ public class BillGUI extends JPanel {
             if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
                 return;
             }
-            if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(CafeManagement.homeGUI) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             File selectedFile = fileChooser.getSelectedFile();
@@ -628,16 +609,16 @@ public class BillGUI extends JPanel {
 
             if (inSaleMode) {
                 Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
-                if (Excel.writeToExcel(bill, path))
-                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (PDF.exportPDF(bill, path))
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu của hoá đơn " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
-                if (Excel.writeToExcel(receipt, path))
-                    JOptionPane.showMessageDialog(null, "Printed " + id + " to Excel.", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (PDF.exportPDF(receipt, path))
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang Excel thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

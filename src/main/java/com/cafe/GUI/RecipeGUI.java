@@ -1,10 +1,7 @@
 package com.cafe.GUI;
 
-import com.cafe.BLL.IngredientBLL;
-import com.cafe.BLL.ProductBLL;
-import com.cafe.BLL.RecipeBLL;
-import com.cafe.DTO.DecentralizationDetail;
-import com.cafe.DTO.Recipe;
+import com.cafe.BLL.*;
+import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
@@ -16,9 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 public class RecipeGUI extends JPanel {
     private RecipeBLL recipeBLL = new RecipeBLL();
@@ -34,10 +30,10 @@ public class RecipeGUI extends JPanel {
     private JPanel mode;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object> cbbProductID;
-    private JComboBox<Object> cbbProductIDSearch;
-    private JComboBox<Object> cbbIngredientID;
-    private JComboBox<Object> cbbIngredientIDSearch;
+    private JComboBox<Object> cbbProductName;
+    private JComboBox<Object> cbbProductNameSearch;
+    private JComboBox<Object> cbbIngredientName;
+    private JComboBox<Object> cbbIngredientNameSearch;
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
@@ -46,6 +42,7 @@ public class RecipeGUI extends JPanel {
     private Button btUpd;
     private Button btRef;
 
+
     public RecipeGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
@@ -53,13 +50,17 @@ public class RecipeGUI extends JPanel {
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
+    private List<Product> productList = new ArrayList<>();
+    private List<Ingredient> ingredientList = new ArrayList<>();
 
     public void initComponents() {
         List<String> columnNames = recipeBLL.getRecipeDAL().getColumnNames();
         ProductBLL productBLL = new ProductBLL();
         IngredientBLL ingredientBLL = new IngredientBLL();
-        List<Object> productsID = productBLL.getObjectsProperty("PRODUCT_ID", productBLL.getProductList());
-        List<Object> ingredientsID = ingredientBLL.getObjectsProperty("INGREDIENT_ID", ingredientBLL.getIngredientList());
+        List<Object> productsName = productBLL.getObjectsProperty("NAME", productBLL.getProductList());
+        List<Object> ingredientsName = ingredientBLL.getObjectsProperty("NAME", ingredientBLL.getIngredientList());
+        productList = new ProductBLL().getProductList();
+        ingredientList = new IngredientBLL().getIngredientList();
 
         recipe = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -69,11 +70,11 @@ public class RecipeGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(new String[]{"Mã công thức", "Mã sản phẩm", "Mã nguyên liệu", "Định lượng", "Đơn vị"});
-        cbbProductID = new JComboBox<>(productsID.toArray());
-        cbbProductIDSearch = new JComboBox<>(productsID.toArray());
-        cbbIngredientID = new JComboBox<>(ingredientsID.toArray());
-        cbbIngredientIDSearch = new JComboBox<>(ingredientsID.toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã công thức", "Tên sản phẩm", "Tên nguyên liệu", "Định lượng", "Đơn vị"});
+        cbbProductName = new JComboBox<>(productsName.toArray());
+        cbbProductNameSearch = new JComboBox<>(productsName.toArray());
+        cbbIngredientName = new JComboBox<>(ingredientsName.toArray());
+        cbbIngredientNameSearch = new JComboBox<>(ingredientsName.toArray());
         cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
         txtSearch = new JTextField(20);
@@ -121,17 +122,17 @@ public class RecipeGUI extends JPanel {
             }
         });
         search.add(txtSearch);
-        cbbProductIDSearch.setVisible(false);
-        cbbProductIDSearch.addItemListener(e -> productIDSearch());
-        search.add(cbbProductIDSearch);
-        cbbIngredientIDSearch.setVisible(false);
-        cbbIngredientIDSearch.addItemListener(e -> ingredientIDSearch());
-        search.add(cbbIngredientIDSearch);
+        cbbProductNameSearch.setVisible(false);
+        cbbProductNameSearch.addItemListener(e -> productIDSearch());
+        search.add(cbbProductNameSearch);
+        cbbIngredientNameSearch.setVisible(false);
+        cbbIngredientNameSearch.addItemListener(e -> ingredientIDSearch());
+        search.add(cbbIngredientNameSearch);
         cbbUnitSearch.setVisible(false);
         cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(recipeBLL.getData(), new String[]{"Mã công thức", "Mã sản phẩm", "Mã nguyên liệu", "Định lượng", "Đơn vị"}, e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã công thức", "Ten sản phẩm", "Ten nguyên liệu", "Định lượng", "Đơn vị"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -155,12 +156,12 @@ public class RecipeGUI extends JPanel {
                     index++;
                 }
                 case "PRODUCT_ID" -> {
-                    jLabelsForm[i].setText("Mã sản phẩm: ");
-                    pnlRecipeConfiguration.add(cbbProductID);
+                    jLabelsForm[i].setText("Tên sản phẩm: ");
+                    pnlRecipeConfiguration.add(cbbProductName);
                 }
                 case "INGREDIENT_ID" -> {
-                    jLabelsForm[i].setText("Mã nguyên liệu: ");
-                    pnlRecipeConfiguration.add(cbbIngredientID);
+                    jLabelsForm[i].setText("Tên nguyên liệu: ");
+                    pnlRecipeConfiguration.add(cbbIngredientName);
                 }
                 case "MASS" -> {
                     jLabelsForm[i].setText("Định lượng: ");
@@ -212,6 +213,7 @@ public class RecipeGUI extends JPanel {
             dataTable.setRowSelectionInterval(0, 0);
             fillForm();
         }
+        refreshForm();
     }
 
     private void unitSearch() {
@@ -219,38 +221,48 @@ public class RecipeGUI extends JPanel {
     }
 
     private void ingredientIDSearch() {
-        loadDataTable(recipeBLL.findRecipes("INGREDIENT_ID", Objects.requireNonNull(cbbIngredientIDSearch.getSelectedItem()).toString()));
+        for(Ingredient ingredient : ingredientList) {
+            if (ingredient.getName().equals(cbbIngredientNameSearch.getSelectedItem())) {
+                loadDataTable(recipeBLL.findRecipes("INGREDIENT_ID", Objects.requireNonNull(ingredient.getIngredientID())));
+                break;
+            }
+        }
     }
 
     private void productIDSearch() {
-        loadDataTable(recipeBLL.findRecipes("PRODUCT_ID", Objects.requireNonNull(cbbProductIDSearch.getSelectedItem()).toString()));
+        for(Product product : productList) {
+            if (product.getName().equals(cbbProductNameSearch.getSelectedItem())) {
+                loadDataTable(recipeBLL.findRecipes("PRODUCT_ID", Objects.requireNonNull(product.getProductID())));
+                break;
+            }
+        }
     }
 
     private void selectSearchFilter() {
         if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Đơn vị")) {
             txtSearch.setVisible(false);
-            cbbIngredientIDSearch.setVisible(false);
-            cbbProductIDSearch.setVisible(false);
+            cbbIngredientNameSearch.setVisible(false);
+            cbbProductNameSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
             unitSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nguyên liệu")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên nguyên liệu")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
-            cbbProductIDSearch.setVisible(false);
-            cbbIngredientIDSearch.setSelectedIndex(0);
-            cbbIngredientIDSearch.setVisible(true);
+            cbbProductNameSearch.setVisible(false);
+            cbbIngredientNameSearch.setSelectedIndex(0);
+            cbbIngredientNameSearch.setVisible(true);
             ingredientIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã sản phẩm")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên sản phẩm")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
-            cbbIngredientIDSearch.setVisible(false);
-            cbbProductIDSearch.setSelectedIndex(0);
-            cbbProductIDSearch.setVisible(true);
+            cbbIngredientNameSearch.setVisible(false);
+            cbbProductNameSearch.setSelectedIndex(0);
+            cbbProductNameSearch.setVisible(true);
             productIDSearch();
         } else {
-            cbbIngredientIDSearch.setVisible(false);
-            cbbProductIDSearch.setVisible(false);
+            cbbIngredientNameSearch.setVisible(false);
+            cbbProductNameSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             txtSearch.setVisible(true);
             searchRecipes();
@@ -292,8 +304,14 @@ public class RecipeGUI extends JPanel {
         if (checkInput()) {
             Recipe newRecipe = getForm();
             int selectedRow = dataTable.getSelectedRow();
-            String currentProductID = dataTable.getValueAt(selectedRow, 1).toString();
-            String currentIngredientID = dataTable.getValueAt(selectedRow, 2).toString();
+            product = new ProductBLL()
+                .searchProducts("NAME = '" + dataTable.getValueAt(selectedRow, 1).toString() + "'")
+                .get(0);
+            ingredient = new IngredientBLL()
+                .searchIngredients("NAME = '" + dataTable.getValueAt(selectedRow, 2).toString() + "'")
+                .get(0);
+            String currentProductID = product.getProductID();
+            String currentIngredientID = ingredient.getIngredientID();
             boolean valueChanged = !newRecipe.getProductID().equals(currentProductID) || !newRecipe.getIngredientID().equals(currentIngredientID);
             if (recipeBLL.exists(newRecipe))
                 JOptionPane.showMessageDialog(this, "Công thức đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -315,8 +333,8 @@ public class RecipeGUI extends JPanel {
         loadDataTable(recipeBLL.getRecipeList());
         jTextFieldsForm[0].setText(recipeBLL.getAutoID());
         jTextFieldsForm[1].setText(null);
-        cbbProductID.setSelectedItem(0);
-        cbbIngredientID.setSelectedItem(0);
+        cbbProductName.setSelectedItem(0);
+        cbbIngredientName.setSelectedItem(0);
         cbbUnit.setSelectedItem(0);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
@@ -330,9 +348,10 @@ public class RecipeGUI extends JPanel {
             data[i] = rowData[i].toString();
         }
         String[] recipe = String.join(" | ", data).split(" \\| ");
+
         jTextFieldsForm[0].setText(recipe[0]);
-        cbbProductID.setSelectedItem(recipe[1]);
-        cbbIngredientID.setSelectedItem(recipe[2]);
+        cbbProductName.setSelectedItem(recipe[1]);
+        cbbIngredientName.setSelectedItem(recipe[2]);
         jTextFieldsForm[1].setText(recipe[3]);
         cbbUnit.setSelectedItem(recipe[4]);
         btAdd.setEnabled(false);
@@ -341,23 +360,48 @@ public class RecipeGUI extends JPanel {
 
     public Recipe getForm() {
         String recipeID;
-        String productID;
-        String ingredientID;
+        String productID = null;
+        String ingredientID = null;
         double mass;
         String unit;
         recipeID = jTextFieldsForm[0].getText();
-        productID = Objects.requireNonNull(cbbProductID.getSelectedItem()).toString();
-        ingredientID = Objects.requireNonNull(cbbIngredientID.getSelectedItem()).toString();
+        for (Ingredient ingredient : ingredientList) {
+            if (ingredient.getName().equals(cbbIngredientName.getSelectedItem())) {
+                ingredientID = Objects.requireNonNull(ingredient.getIngredientID());
+            }
+        }
+        for (Product product : productList) {
+            if (product.getName().equals(cbbProductName.getSelectedItem())) {
+                productID = Objects.requireNonNull(product.getProductID());
+            }
+        }
+        System.out.println(ingredientID + productID);
         mass = Double.parseDouble(jTextFieldsForm[1].getText());
         unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
         return new Recipe(recipeID, productID, ingredientID, mass, unit, false);
     }
 
+    private String productName;
+    private Product product;
+    private Ingredient ingredient;
+    private String ingredientName;
     public void loadDataTable(List<Recipe> recipeList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Recipe recipe : recipeList) {
-            model.addRow(new Object[]{recipe.getRecipeID(), recipe.getProductID(), recipe.getIngredientID(), recipe.getMass(), recipe.getUnit()});
+            for(Ingredient ingredient : ingredientList) {
+                if (ingredient.getIngredientID().equals(recipe.getIngredientID())) {
+                    ingredientName = ingredient.getName();
+                    break;
+                }
+            }
+            for(Product product : productList) {
+                if (product.getProductID().equals(recipe.getProductID())) {
+                    productName = product.getName();
+                    break;
+                }
+            }
+            model.addRow(new Object[]{recipe.getRecipeID(), productName, ingredientName, recipe.getMass(), recipe.getUnit()});
         }
     }
 

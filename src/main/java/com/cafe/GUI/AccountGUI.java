@@ -3,17 +3,19 @@ package com.cafe.GUI;
 import com.cafe.BLL.AccountBLL;
 import com.cafe.BLL.DecentralizationBLL;
 import com.cafe.BLL.StaffBLL;
-import com.cafe.DTO.Account;
-import com.cafe.DTO.DecentralizationDetail;
+import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.utils.OTP;
+import com.cafe.utils.Password;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -43,6 +45,9 @@ public class AccountGUI extends JPanel {
     private Button btDel;
     private Button btRef;
 
+    private RoundPanel rpPassWord;
+    private Button btpassWord;
+
     public AccountGUI(DecentralizationDetail decentralizationMode) {
         System.gc();
         this.decentralizationMode = decentralizationMode;
@@ -50,13 +55,17 @@ public class AccountGUI extends JPanel {
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
+    private List<Decentralization> decentralizationList = new ArrayList<>();
+    private List<Staff> staffList = new ArrayList<>();
 
     public void initComponents() {
         List<String> columnNames = accountBLL.getAccountDAL().getColumnNames();
         DecentralizationBLL decentralizationBLL = new DecentralizationBLL();
         StaffBLL staffBLL = new StaffBLL();
-        List<Object> decentralizationsID = decentralizationBLL.getObjectsProperty("DECENTRALIZATION_ID", decentralizationBLL.getDecentralizationList());
-        List<Object> staffsID = staffBLL.getObjectsProperty("STAFF_ID", staffBLL.getStaffList());
+        List<Object> decentralizationName = decentralizationBLL.getObjectsProperty("DECENTRALIZATION_NAME", decentralizationBLL.getDecentralizationList());
+        List<Object> staffsName = staffBLL.getObjectsProperty("NAME", staffBLL.getStaffList());
+        decentralizationList = new DecentralizationBLL().getDecentralizationList();
+        staffList = new StaffBLL().getStaffList();
 
         account = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -66,17 +75,19 @@ public class AccountGUI extends JPanel {
         showImg = new JPanel();
         mode = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"});
-        cbbDecentralizationID = new JComboBox<>(decentralizationsID.toArray());
-        cbbDecentralizationIDSearch = new JComboBox<>(decentralizationsID.toArray());
-        cbbStaffID = new JComboBox<>(staffsID.toArray());
-        cbbStaffIDSearch = new JComboBox<>(staffsID.toArray());
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã tài khoản", "Tên đăng nhập", "Tên quyền", "Tên nhân viên"});
+        cbbDecentralizationID = new JComboBox<>(decentralizationName.toArray());
+        cbbDecentralizationIDSearch = new JComboBox<>(decentralizationName.toArray());
+        cbbStaffID = new JComboBox<>(staffsName.toArray());
+        cbbStaffIDSearch = new JComboBox<>(staffsName.toArray());
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[columnNames.size() - 3];
         btAdd = new Button();
         btUpd = new Button();
         btDel = new Button();
         btRef = new Button();
+        rpPassWord = new RoundPanel();
+        btpassWord = new Button();
 
         account.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
         account.setBackground(new Color(70, 67, 67));
@@ -124,7 +135,7 @@ public class AccountGUI extends JPanel {
         cbbStaffIDSearch.addItemListener(e -> staffIDSearch());
         search.add(cbbStaffIDSearch);
 
-        dataTable = new DataTable(accountBLL.getData(), new String[]{"Mã tài khoản", "Tên đăng nhập", "Mật khẩu", "Mã quyền", "Mã nhân viên"}, e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã tài khoản", "Tên đăng nhập", "Tên quyền", "Tên nhân viên"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -134,10 +145,10 @@ public class AccountGUI extends JPanel {
         roundPanel2.add(pnlAccountConfiguration, BorderLayout.NORTH);
 
         for (int i = 0; i < columnNames.size() - 1; i++) {
-            jLabelsForm[i] = new JLabel();
-            pnlAccountConfiguration.add(jLabelsForm[i]);
             switch (columnNames.get(i)) {
                 case "ACCOUNT_ID" -> {
+                    jLabelsForm[i] = new JLabel();
+                    pnlAccountConfiguration.add(jLabelsForm[i]);
                     jLabelsForm[i].setText("Mã tài khoản: ");
                     jTextFieldsForm[i] = new JTextField(accountBLL.getAutoID());
                     jTextFieldsForm[i].setEnabled(false);
@@ -146,23 +157,23 @@ public class AccountGUI extends JPanel {
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
                 }
                 case "USERNAME" -> {
+                    jLabelsForm[i] = new JLabel();
+                    pnlAccountConfiguration.add(jLabelsForm[i]);
                     jLabelsForm[i].setText("Tên đăng nhập: ");
                     jTextFieldsForm[i] = new JTextField();
                     jTextFieldsForm[i].setText(null);
                     pnlAccountConfiguration.add(jTextFieldsForm[i]);
                 }
-                case "PASSWD" -> {
-                    jLabelsForm[i].setText("Mật khẩu: ");
-                    jTextFieldsForm[i] = new JTextField();
-                    jTextFieldsForm[i].setText(null);
-                    pnlAccountConfiguration.add(jTextFieldsForm[i]);
-                }
                 case "DECENTRALIZATION_ID" -> {
-                    jLabelsForm[i].setText("Mã quyền: ");
+                    jLabelsForm[i] = new JLabel();
+                    pnlAccountConfiguration.add(jLabelsForm[i]);
+                    jLabelsForm[i].setText("Tên quyền: ");
                     pnlAccountConfiguration.add(cbbDecentralizationID);
                 }
                 case "STAFF_ID" -> {
-                    jLabelsForm[i].setText("Mã nhân viên: ");
+                    jLabelsForm[i] = new JLabel();
+                    pnlAccountConfiguration.add(jLabelsForm[i]);
+                    jLabelsForm[i].setText("Tên nhân viên: ");
                     pnlAccountConfiguration.add(cbbStaffID);
                 }
                 default -> {
@@ -170,10 +181,15 @@ public class AccountGUI extends JPanel {
             }
         }
 
-        showImg.setLayout(new FlowLayout());
-        showImg.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        showImg.setPreferredSize(new Dimension(635, 300));
-        roundPanel2.add(showImg, BorderLayout.CENTER);
+//
+//        btpassWord.setText("Đặt lại mật khẩu");
+//        btpassWord.setPreferredSize(new Dimension(200, 50));
+//        rpPassWord.add(btpassWord);
+
+        rpPassWord.setLayout(new BorderLayout());
+        rpPassWord.setPreferredSize(new Dimension(635, 300));
+        rpPassWord.setAutoscrolls(true);
+        roundPanel2.add(rpPassWord, BorderLayout.CENTER);
 
         mode.setLayout(new GridLayout(2, 2, 20, 20));
         mode.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -202,24 +218,33 @@ public class AccountGUI extends JPanel {
             dataTable.setRowSelectionInterval(0, 0);
             fillForm();
         }
+        loadDataTable(accountBLL.getAccountList());
     }
 
     private void decentralizationIDSearch() {
-        loadDataTable(accountBLL.findAccounts("DECENTRALIZATION_ID", Objects.requireNonNull(cbbDecentralizationIDSearch.getSelectedItem()).toString()));
+        for(Decentralization decentralization : decentralizationList) {
+            if (decentralization.getDecentralizationName().equals(cbbDecentralizationIDSearch.getSelectedItem())) {
+                loadDataTable(accountBLL.findAccounts("DECENTRALIZATION_ID", Objects.requireNonNull(decentralization.getDecentralizationID())));
+            }
+        }
     }
 
     private void staffIDSearch() {
-        loadDataTable(accountBLL.findAccounts("STAFF_ID", Objects.requireNonNull(cbbStaffIDSearch.getSelectedItem()).toString()));
+        for(Staff staff : staffList) {
+            if (staff.getName().equals(cbbStaffIDSearch.getSelectedItem())) {
+                loadDataTable(accountBLL.findAccounts("STAFF_ID", Objects.requireNonNull(staff.getStaffID())));
+            }
+        }
     }
 
     private void selectSearchFilter() {
-        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã quyền")) {
+        if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên quyền")) {
             txtSearch.setVisible(false);
             cbbStaffIDSearch.setVisible(false);
             cbbDecentralizationIDSearch.setSelectedIndex(0);
             cbbDecentralizationIDSearch.setVisible(true);
             decentralizationIDSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhân viên")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên nhân viên")) {
             txtSearch.setVisible(false);
             cbbDecentralizationIDSearch.setVisible(false);
             cbbStaffIDSearch.setSelectedIndex(0);
@@ -253,12 +278,17 @@ public class AccountGUI extends JPanel {
     public void addAccount() {
         if (checkInput()) {
             Account newAccount = getForm();
+            String randomPassword = Password.generateRandomPassword(8);
+            newAccount.setPassword("first" + Password.hashPassword(randomPassword));
             if (accountBLL.exists(newAccount))
                 JOptionPane.showMessageDialog(this, "Tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (accountBLL.exists(Map.of("USERNAME", newAccount.getUsername())))
                 JOptionPane.showMessageDialog(this, "Tên tài khoản đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            else if (accountBLL.addAccount(newAccount))
+            else if (accountBLL.addAccount(newAccount)) {
                 JOptionPane.showMessageDialog(this, "Thêm tài khoản mới thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                Staff staff = new StaffBLL().findStaffsBy(Map.of("STAFF_ID", newAccount.getStaffID())).get(0);
+                OTP.sendPassword(staff.getEmail(), randomPassword);
+            }
             else
                 JOptionPane.showMessageDialog(this, "Thêm tài khoản mới không thành công!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             refreshForm();
@@ -309,7 +339,7 @@ public class AccountGUI extends JPanel {
         txtSearch.setText(null);
         loadDataTable(accountBLL.getAccountList());
         jTextFieldsForm[0].setText(accountBLL.getAutoID());
-        for (int i = 1; i < jTextFieldsForm.length; i++) {
+        for (int i = 1; i < jTextFieldsForm.length - 1; i++) {
             jTextFieldsForm[i].setText(null);
         }
         cbbDecentralizationID.setSelectedIndex(0);
@@ -329,9 +359,8 @@ public class AccountGUI extends JPanel {
         String[] account = String.join(" | ", data).split(" \\| ");
         jTextFieldsForm[0].setText(account[0]);
         jTextFieldsForm[1].setText(account[1]);
-        jTextFieldsForm[2].setText(account[2]);
-        cbbDecentralizationID.setSelectedItem(account[3]);
-        cbbStaffID.setSelectedItem(account[4]);
+        cbbDecentralizationID.setSelectedItem(account[2]);
+        cbbStaffID.setSelectedItem(account[3]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -341,35 +370,56 @@ public class AccountGUI extends JPanel {
         String accountID = null;
         String username = null;
         String password = null;
-        String decentralizationID;
-        String staffID;
+        String decentralizationID = null;
+        String staffID = null;
         for (int i = 0; i < jTextFieldsForm.length; i++) {
             switch (i) {
                 case 0 -> accountID = jTextFieldsForm[i].getText();
                 case 1 -> username = jTextFieldsForm[i].getText();
-                case 2 -> password = jTextFieldsForm[i].getText();
+//                case 2 -> password = jTextFieldsForm[i].getText();
                 default -> {
                 }
             }
         }
-        decentralizationID = Objects.requireNonNull(cbbDecentralizationID.getSelectedItem()).toString();
-        staffID = Objects.requireNonNull(cbbStaffID.getSelectedItem()).toString();
+        for (Staff staff : staffList) {
+            if (staff.getName().equals(cbbStaffID.getSelectedItem())) {
+                staffID = staff.getStaffID();
+            }
+        }
+
+        for (Decentralization decentralization : decentralizationList) {
+            if (decentralization.getDecentralizationName().equals(cbbDecentralizationID.getSelectedItem())) {
+                decentralizationID = decentralization.getDecentralizationID();
+            }
+        }
         return new Account(accountID, username, password, decentralizationID, staffID, false);
     }
 
+    private String decentralizationName;
+    private String staffName;
     public void loadDataTable(List<Account> accountList) {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Account account : accountList) {
-            model.addRow(new Object[]{account.getAccountID(), account.getUsername(), account.getPassword(), account.getDecentralizationID(), account.getStaffID()});
+            for (Decentralization decentralization: decentralizationList) {
+                if (decentralization.getDecentralizationID().equals(account.getDecentralizationID())) {
+                    decentralizationName = decentralization.getDecentralizationName();
+                }
+            }
+            for (Staff staff: staffList) {
+                if (staff.getStaffID().equals(account.getStaffID())) {
+                    staffName = staff.getName();
+                }
+            }
+            model.addRow(new Object[]{account.getAccountID(), account.getUsername(), decentralizationName, staffName});
         }
     }
 
     public boolean checkInput() {
-        for (JTextField textField : jTextFieldsForm) {
-            if (textField.getText().isEmpty()) {
+        for (int i = 0; i < jTextFieldsForm.length - 1; ++i) {
+            if (jTextFieldsForm[i].getText().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                textField.requestFocusInWindow();
+                jTextFieldsForm[i].requestFocusInWindow();
                 return false;
             }
         }
@@ -378,14 +428,6 @@ public class AccountGUI extends JPanel {
             jTextFieldsForm[1].requestFocusInWindow();
             jTextFieldsForm[1].selectAll();
             JOptionPane.showMessageDialog(this, "Tên tài khoản không được chứa \" \" or \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (!jTextFieldsForm[2].getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\s|]{3,32}$")) {
-            // Password can't contain " " or "|"
-            // Password must contain at lease 1 lower-case, 1 upper-case and 1 number
-            jTextFieldsForm[2].requestFocusInWindow();
-            jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa \" \" or \"|\"\nMật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa and 1 chữ số", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;

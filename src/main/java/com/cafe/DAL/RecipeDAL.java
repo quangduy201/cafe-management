@@ -82,4 +82,12 @@ public class RecipeDAL extends Manager {
         }
         return new ArrayList<>();
     }
+
+//    public List<List<String>> getFullRecipeTable() {
+//        try {
+//            return executeQuery("");
+//        } catch (Exception e) {
+//
+//        }
+//    }
 }

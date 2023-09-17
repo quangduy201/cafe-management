@@ -18,7 +18,7 @@ public class Settings {
             properties.setProperty("theme", theme.isDark() ? "dark" : "light");
             properties.store(outputStream, "Theme Information");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 

@@ -24,7 +24,7 @@ public class Scanner {
         detector = new Detector();
         recognizers = new HashMap<>();
         try {
-            Files.createDirectories(Paths.get(Objects.requireNonNull(Resource.getAbsolutePath(Recorder.FACE_DIRECTORY))));
+            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(Recorder.FACE_DIRECTORY)));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -55,7 +55,7 @@ public class Scanner {
     }
 
     public void loadModels() {
-        File[] files = new File(Objects.requireNonNull(Resource.getAbsolutePath(Trainer.CLASSIFIER_DIRECTORY))).listFiles();
+        File[] files = new File(Objects.requireNonNull(Resource.getResourceOutsideJAR(Trainer.CLASSIFIER_DIRECTORY))).listFiles();
         assert files != null;
         for (File file : files) {
             String customerID = file.getName();

@@ -20,9 +20,12 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+
 public class SaleGUI extends JPanel {
     private List<Product> listDetailBill = new ArrayList<>();
     private List<Integer> listQuantityChoice = new ArrayList<>();
+    private List<String> listDiscountNote = new ArrayList<>();
+    private List<Integer> listCost = new ArrayList<>();
     private List<Product> productlist = new ArrayList<>();
     private ProductBLL productBLL = new ProductBLL();
     private RecipeBLL recipeBLL = new RecipeBLL();
@@ -64,6 +67,7 @@ public class SaleGUI extends JPanel {
     private Button btnPurchase;
     private Button btnCancel;
     private Button btnSearchByFace;
+
     private final ProductPanel[] productPanel = new ProductPanel[productBLL.findProductsBy(Map.of()).size()];
     private int sl = 0;
 
@@ -89,6 +93,21 @@ public class SaleGUI extends JPanel {
 
     public void setListQuantityChoice(List<Integer> listQuantityChoice) {
         this.listQuantityChoice = listQuantityChoice;
+    }
+
+    public List<Integer> getListCost() {
+        return listCost;
+    }
+
+    public void setListCost (List<Integer> listCost) {
+        this.listCost = listCost;
+    }
+    public List<String> getListDiscountNote() {
+        return listDiscountNote;
+    }
+
+    public void setListDiscountNote (List<String> listDiscountNote) {
+        this.listDiscountNote = listDiscountNote;
     }
 
     public RoundPanel getRoundPanel9() {
@@ -194,7 +213,7 @@ public class SaleGUI extends JPanel {
 
         btnSearch1.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch1.setPreferredSize(new Dimension(35, 35));
-        btnSearch1.setIcon(Resource.loadImageIcon("img/icons/search.png"));
+        btnSearch1.setIcon(Resource.loadImageIconIn("img/icons/search.png"));
         btnSearch1.setFocusPainted(false);
         roundPanel5.add(btnSearch1);
 
@@ -225,7 +244,7 @@ public class SaleGUI extends JPanel {
         roundPanel7.add(txtSearch2, BorderLayout.WEST);
 
         btnSearchByFace.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnSearchByFace.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btnSearchByFace.setIcon(new ImageIcon(Resource.loadImageIconIn("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btnSearchByFace.setPreferredSize(new Dimension(40, 35));
         btnSearchByFace.setFocusPainted(false);
         btnSearchByFace.setColorOver(new Color(0xA6A1A1));
@@ -240,7 +259,7 @@ public class SaleGUI extends JPanel {
 
         btnSearch2.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnSearch2.setPreferredSize(new Dimension(35, 35));
-        btnSearch2.setIcon(Resource.loadImageIcon("img/icons/search.png"));
+        btnSearch2.setIcon(Resource.loadImageIconIn("img/icons/search.png"));
         btnSearch2.setFocusPainted(false);
         btnSearch2.setColorOver(new Color(0xA6A1A1));
         btnSearch2.setColorClick(new Color(0x2F2F2F));
@@ -378,7 +397,7 @@ public class SaleGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIconIn((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -431,7 +450,7 @@ public class SaleGUI extends JPanel {
                 if (productDetailsGUI != null) {
                     productDetailsGUI.dispose();
                 }
-                productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, product, index);
+                productDetailsGUI = new ProductDetailsGUI(SaleGUI.this, product, index, "");
                 productDetailsGUI.setVisible(true);
             }
         });
@@ -458,7 +477,7 @@ public class SaleGUI extends JPanel {
         frameImg.setBackground(color);
         frameProduct.add(frameImg);
 
-        ImageIcon originalImage = Resource.loadImageIcon(product.getImage());
+        ImageIcon originalImage = Resource.loadImageIconIn(product.getImage());
         productImage.setIcon(new ImageIcon(originalImage.getImage().getScaledInstance(181, 165, Image.SCALE_SMOOTH)));
         frameImg.add(productImage);
 
@@ -535,13 +554,13 @@ public class SaleGUI extends JPanel {
         for (int i = 0; i < listDetailBill.size(); i++) {
             BillDetailPanel billDetailPanel = new BillDetailPanel();
             Product product = listDetailBill.get(i);
-            billDetailPanel.setData(listDetailBill.get(i), listQuantityChoice.get(i));
+            billDetailPanel.setData(listDetailBill.get(i), listQuantityChoice.get(i), listCost.get(i));
 
             int index = i;
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new ProductDetailsGUI(SaleGUI.this, product, listQuantityChoice.get(index)).setVisible(true);
+                    new ProductDetailsGUI(SaleGUI.this, product, listQuantityChoice.get(index), listDiscountNote.get(index)).setVisible(true);
                 }
             });
             billDetailPanel.getPayment_img().addMouseListener(new MouseAdapter() {
@@ -564,7 +583,7 @@ public class SaleGUI extends JPanel {
                     }
                 }
             });
-            totalPrice += product.getCost() * listQuantityChoice.get(i);
+            totalPrice += listCost.get(i) * listQuantityChoice.get(i);
             roundPanel9.add(billDetailPanel);
             roundPanel9.repaint();
             roundPanel9.revalidate();
@@ -590,7 +609,7 @@ public class SaleGUI extends JPanel {
             String billID = billBLL.getAutoID();
             String customerID = "CUS000";
             String customerName = infoTxt[0].getText();
-            if (!customerName.equals(""))
+            if (!customerName.isEmpty())
                 customerID = customerBLL.findCustomersBy(Map.of("NAME", customerName)).get(0).getCustomerID();
 
             SimpleDateFormat formatter = new SimpleDateFormat();
@@ -598,7 +617,7 @@ public class SaleGUI extends JPanel {
             String staffID = this.staffID;
             Day date = new Day();
             double received = Double.parseDouble(jTextField[1].getText());
-            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("\\D+", ""));
+            double excess = Double.parseDouble(jTextField[2].getText().replaceAll("\\D+", "")) * -1;
             bill = new Bill(billID, customerID, staffID, date, 0.0, received, excess, false);
 
             if (billBLL.exists(bill))
@@ -615,14 +634,14 @@ public class SaleGUI extends JPanel {
             double billDetail_percent;
             for (int i = 0; i < listDetailBill.size(); i++) {
                 Product product = listDetailBill.get(i);
-                billDetail_total = product.getCost();
+                billDetail_total = listCost.get(i) ;
                 billDetail_percent = 0.0;
-                addbillDetails = new BillDetails(billID, product.getProductID(), listQuantityChoice.get(i), billDetail_total, billDetail_percent);
+                addbillDetails = new BillDetails(billID, product.getProductID(), listQuantityChoice.get(i), listDiscountNote.get(i), billDetail_total, billDetail_percent);
                 billDetailsBLL.addBillDetails(addbillDetails);
             }
             cancel();
         }
-        cancel();
+//        cancel();
     }
 
     public void cancel() {
@@ -668,8 +687,8 @@ public class SaleGUI extends JPanel {
                 size++;
             }
         }
-        Double height = 256 * Math.ceil(Double.valueOf(size) / 3);
-        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height.intValue()));
+        double height = 256 * Math.ceil((double) size / 3);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), (int) height));
     }
 
     public void loadProducts(Function<Product, Boolean> condition) {
@@ -679,12 +698,12 @@ public class SaleGUI extends JPanel {
         int size = 0;
         for (Product product : productlist) {
             if (condition.apply(product)) {
-                addProductPanel(product, size);
+                addProductPanel(product, 1);
                 size++;
             }
         }
-        Double height = 256 * Math.ceil(Double.valueOf(size) / 3);
-        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), height.intValue()));
+        double height = 256 * Math.ceil((double) size / 3);
+        roundPanel4.setPreferredSize(new Dimension(productScrollPane1.getWidth(), (int) height));
     }
 
     public void calculate() {

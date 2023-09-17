@@ -7,26 +7,35 @@ import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.*;
 import com.cafe.custom.Button;
 import com.cafe.custom.*;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.Day;
+import com.cafe.utils.Excel;
 import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import javafx.util.Pair;
 
 public class IngredientGUI extends JPanel {
 
-    private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
-    private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
+//    private ArrayList<Ingredient> receiptDetails = new ArrayList<>();
+//    private ArrayList<Integer> listQuantityChoice = new ArrayList<>();
+    // ingredient and its quantity
+    private List<Pair<Ingredient, Integer>> receiptDetails = new ArrayList<>();
     private IngredientBLL ingredientBLL = new IngredientBLL();
     private SupplierBLL supplierBLL = new SupplierBLL();
     private DecentralizationDetail decentralizationMode;
@@ -48,6 +57,8 @@ public class IngredientGUI extends JPanel {
     private Button btreceipt;
     private Button btImport;
     private Button btCancel;
+
+    private Button btExcel;
     private RoundPanel[] roundPanel;
     private JLabel[] label;
     private String staffid;
@@ -66,20 +77,28 @@ public class IngredientGUI extends JPanel {
         initComponents();
     }
 
-    public ArrayList<Ingredient> getReceiptDetails() {
+//    public ArrayList<Ingredient> getReceiptDetails() {
+//        return receiptDetails;
+//    }
+//
+//    public void setReceiptDetails(ArrayList<Ingredient> receiptDetails) {
+//        this.receiptDetails = receiptDetails;
+//    }
+//
+//    public ArrayList<Integer> getListQuantityChoice() {
+//        return listQuantityChoice;
+//    }
+//
+//    public void setListQuantityChoice(ArrayList<Integer> listQuantityChoice) {
+//        this.listQuantityChoice = listQuantityChoice;
+//    }
+
+    public List<Pair<Ingredient, Integer>> getReceiptDetails() {
         return receiptDetails;
     }
 
-    public void setReceiptDetails(ArrayList<Ingredient> receiptDetails) {
+    public void setReceiptDetails(List<Pair<Ingredient, Integer>> receiptDetails) {
         this.receiptDetails = receiptDetails;
-    }
-
-    public ArrayList<Integer> getListQuantityChoice() {
-        return listQuantityChoice;
-    }
-
-    public void setListQuantityChoice(ArrayList<Integer> listQuantityChoice) {
-        this.listQuantityChoice = listQuantityChoice;
     }
 
     public void initComponents() {
@@ -109,6 +128,7 @@ public class IngredientGUI extends JPanel {
         btImport = new Button();
         btsupplier = new Button();
         btreceipt = new Button();
+        btExcel = new Button();
         ingredientscrollPane = new JScrollPane(roundPanel[10]);
 
         ingredient.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0));
@@ -328,7 +348,7 @@ public class IngredientGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIconIn((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -342,6 +362,11 @@ public class IngredientGUI extends JPanel {
 
         configButton.accept(btCancel, List.of("Hủy", new Color(0xFFBD3737), new Color(0xFF0000), new Color(0xB65858), "img/icons/remove.png", (Runnable) this::pressCancel));
         roundPanel[7].add(btCancel, BorderLayout.EAST);
+
+        configButton.accept(btExcel, List.of("Nhập Excel", new Color(0x70E149), new Color(0x5EFF00), new Color(0x8AD242), "img/icons/folder.png", (Runnable) this::pressExcel));
+        btExcel.setPreferredSize(new Dimension(200,40));
+        btExcel.setEnabled(false);
+        roundPanel1.add(btExcel);
 
         ingredientscrollPane.setPreferredSize(new Dimension(340, 420));
         ingredientscrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -419,9 +444,9 @@ public class IngredientGUI extends JPanel {
             else
                 JOptionPane.showMessageDialog(this, "Nhập hàng thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 
-            if (!receiptDetails.isEmpty() && !listQuantityChoice.isEmpty()) {
-                for (int i = 0; i < receiptDetails.size(); i++) {
-                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetails.get(i).getIngredientID(), listQuantityChoice.get(i));
+            if (!receiptDetails.isEmpty()) {
+                for (Pair<Ingredient, Integer> receiptDetail : receiptDetails) {
+                    ReceiptDetails newReceiptDetails = new ReceiptDetails(newReceipt.getReceiptID(), receiptDetail.getKey().getIngredientID(), receiptDetail.getValue());
                     receiptDetailsBLL.addReceiptDetails(newReceiptDetails);
                 }
             }
@@ -437,8 +462,7 @@ public class IngredientGUI extends JPanel {
 
     public void pressCancel() {
         label[3].setText(receiptBLL.getAutoID());
-        receiptDetails = new ArrayList<>();
-        listQuantityChoice = new ArrayList<>();
+        receiptDetails.clear();
         roundPanel[10].removeAll();
         roundPanel[10].repaint();
         roundPanel[10].revalidate();
@@ -453,31 +477,31 @@ public class IngredientGUI extends JPanel {
         this.roundPanel[10] = roundPanel;
     }
 
-    public void addIngredient(ArrayList<Ingredient> listIngredientArray, ArrayList<Integer> listQuantityChoice) {
-        this.receiptDetails = listIngredientArray;
+    public void addIngredient(List<Pair<Ingredient, Integer>> ingredientsAndQuantity) {
+        this.receiptDetails = ingredientsAndQuantity;
         if (this.receiptDetails.size() > 5) {
             int tall = 80 * this.receiptDetails.size();
             roundPanel[10].setPreferredSize(new Dimension(ingredientscrollPane.getWidth(), tall));
         }
         double totalPrice = 0.0;
-        for (int i = 0; i < listIngredientArray.size(); i++) {
-            int vt = i;
+        for (int i = 0; i < ingredientsAndQuantity.size(); i++) {
+            int index = i;
             BillDetailPanel billDetailPanel = new BillDetailPanel();
-            billDetailPanel.setIngredient(receiptDetails.get(i), listQuantityChoice.get(i));
-            Ingredient ingredient = listIngredientArray.get(i);
+            billDetailPanel.setIngredient(receiptDetails.get(i).getKey(), receiptDetails.get(i).getValue());
+            Ingredient ingredient = receiptDetails.get(i).getKey();
             String[] ingredientString = new String[6];
             ingredientString[0] = ingredient.getIngredientID();
             ingredientString[1] = ingredient.getName();
             ingredientString[2] = ingredient.getUnit();
-            ingredientString[3] = VNString.currency(ingredient.getUnitPrice());
+            ingredientString[3] = String.valueOf(ingredient.getUnitPrice());
             ingredientString[4] = ingredient.getSupplierID();
 
-            int index = listQuantityChoice.get(i);
+            int quantity = receiptDetails.get(i).getValue();
 
             billDetailPanel.getPaymentFrame().addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
-                    new FrameIngredient(IngredientGUI.this, ingredientString, index).setVisible(true);
+                    new FrameIngredient(ingredientString, quantity).setVisible(true);
                 }
             });
 
@@ -492,16 +516,15 @@ public class IngredientGUI extends JPanel {
                         null,
                         new String[]{"Xoá", "Huỷ"},
                         "Xoá") == JOptionPane.YES_NO_OPTION) {
-                        listIngredientArray.remove(vt);
-                        listQuantityChoice.remove(vt);
+                        receiptDetails.remove(index);
                         roundPanel[10].removeAll();
                         roundPanel[10].repaint();
                         roundPanel[10].revalidate();
-                        addIngredient(listIngredientArray, listQuantityChoice);
+                        addIngredient(receiptDetails);
                     }
                 }
             });
-            totalPrice += ingredient.getUnitPrice() * listQuantityChoice.get(i);
+            totalPrice += ingredient.getUnitPrice() * quantity;
             roundPanel[10].add(billDetailPanel);
             roundPanel[10].repaint();
             roundPanel[10].revalidate();
@@ -519,7 +542,7 @@ public class IngredientGUI extends JPanel {
         if (frameIngredient != null) {
             frameIngredient.dispose();
         }
-        frameIngredient = new FrameIngredient(IngredientGUI.this, data, 1);
+        frameIngredient = new FrameIngredient(data, 1);
         frameIngredient.setVisible(true);
     }
 
@@ -534,6 +557,7 @@ public class IngredientGUI extends JPanel {
         ingredientBLL.setIngredientList(ingredientBLL.searchIngredients("DELETED = 0"));
         loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", data[0]));
         supplierID = data[0];
+        btExcel.setEnabled(true);
 
         pressCancel();
     }
@@ -573,12 +597,44 @@ public class IngredientGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn nhà cung cấp!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
         if (receiptDetails.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn nguyên liệu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-
         return true;
+    }
+
+    public int findReceiptDetailsIndex(String ingredientName) {
+        for (int i = 0; i < receiptDetails.size(); ++i) {
+            Ingredient ingredient = receiptDetails.get(i).getKey();
+            if (ingredient.getName().equals(ingredientName))
+                return i;
+        }
+        return -1;
+    }
+
+    public void changeTheQuantityOfReceiptDetails(String ingredientName, int quantity) {
+        int index = findReceiptDetailsIndex(ingredientName);
+        Ingredient ingredient = receiptDetails.get(index).getKey();
+        receiptDetails.set(index, new Pair<>(ingredient, quantity));
+    }
+
+    public void pressExcel() {
+        if (!btExcel.isEnabled()) {
+            JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Vui lòng chọn nhà cung cấp.");
+            return;
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Excel Workbook (*.xls, *.xlsx)", "xls", "xlsx"));
+        fileChooser.setCurrentDirectory(new File(Resource.getPathOutsideJAR("")));
+        if (fileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        String supplierName = label[7].getText();
+        Supplier supplier = supplierBLL.findSuppliersBy(Map.of("NAME", supplierName)).get(0);
+        String path = fileChooser.getSelectedFile().getAbsolutePath();
+        Excel.importExcel(supplier, path);
     }
 }

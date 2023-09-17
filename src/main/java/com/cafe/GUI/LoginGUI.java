@@ -2,7 +2,9 @@ package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
 import com.cafe.DTO.Account;
+import com.cafe.custom.RoundPanel;
 import com.cafe.main.CafeManagement;
+import com.cafe.utils.Password;
 import com.cafe.utils.Resource;
 import com.cafe.utils.Settings;
 
@@ -12,7 +14,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class LoginGUI extends JFrame {
-    ImageIcon logo = Resource.loadImageIcon("img/logo_cafe.png");
+    ImageIcon logo = Resource.loadImageIconIn("img/logo_cafe.png");
     JPanel contentPane = new JPanel();
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
@@ -29,6 +31,10 @@ public class LoginGUI extends JFrame {
     JLabel jLabel3 = new JLabel();
     JLabel jLabel4 = new JLabel();
     JButton button = new JButton();
+
+    JLabel lbPassWord = new JLabel();
+
+    RoundPanel rpPassword = new RoundPanel();
     JButton exit = new JButton();
     JButton minimize = new JButton();
 
@@ -59,7 +65,7 @@ public class LoginGUI extends JFrame {
         panel2.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, new Color(0xFFFFFF)));
         contentPane.add(panel2, BorderLayout.WEST);
 
-        panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
+        panel3.setLayout(new FlowLayout(FlowLayout.CENTER));
         panel3.setPreferredSize(new Dimension(400, 410));
         panel3.setBackground(new Color(0xFFFFFF));
         panel3.setBorder(BorderFactory.createMatteBorder(50, 0, 200, 0, new Color(0xFFFFFF)));
@@ -107,7 +113,6 @@ public class LoginGUI extends JFrame {
         jLabel2.setHorizontalAlignment(JLabel.CENTER);
         jLabel2.setFont(new Font("open sans", Font.BOLD, 40));
         jLabel2.setForeground(new Color(35, 166, 97));
-
 
         jLabel3.setText("Username");
         jLabel3.setHorizontalAlignment(JLabel.CENTER);
@@ -161,9 +166,7 @@ public class LoginGUI extends JFrame {
         button.setText("Login");
         button.setBackground(new Color(44, 119, 44));
         button.setForeground(null);
-        button.setPreferredSize(new Dimension(90, 40));
-        button.setMaximumSize(new Dimension(90, 40));
-        button.setMinimumSize(new Dimension(90, 40));
+        button.setPreferredSize(new Dimension(100, 40));
         button.setForeground(new Color(0xFFFFFF));
         button.setFocusPainted(false);
         button.addMouseListener(new MouseAdapter() {
@@ -171,7 +174,39 @@ public class LoginGUI extends JFrame {
                 login();
             }
         });
+
+
+        rpPassword.setPreferredSize(new Dimension(400, 40));
+        rpPassword.setBackground(new Color(0xFFFFFF));
+        panel3.add(rpPassword);
+
+        lbPassWord.setText("Forget password?");
+        lbPassWord.setPreferredSize(new Dimension(122, 20));
+        lbPassWord.setForeground(new Color(44, 119, 44));
+        rpPassword.add(lbPassWord);
         panel3.add(button);
+        lbPassWord.setFont(lbPassWord.getFont().deriveFont(Font.PLAIN, 15));
+        lbPassWord.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Set the initial label border to empty
+        lbPassWord.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        lbPassWord.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Add a bottom border to underline the text
+                lbPassWord.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(44, 119, 44)));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Remove the bottom border when the mouse exits
+                lbPassWord.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            }
+            public void mouseClicked(MouseEvent e) {
+                forgetPassword();
+            }
+        });
 
         exit.setText("X");
         exit.setFont(new Font("Public Sans", Font.BOLD, 15));
@@ -212,7 +247,6 @@ public class LoginGUI extends JFrame {
         panel4.add(jLabel4, gbc);
         gbc.gridx++;
         panel4.add(panel7, gbc);
-
     }
 
     private void textFieldFocusGained(FocusEvent ignoredEvt) {
@@ -222,43 +256,73 @@ public class LoginGUI extends JFrame {
     }
 
     private void textFieldFocusLost(FocusEvent ignoredEvt) {
-        if (textField.getText().equals("")) {
+        if (textField.getText().isEmpty()) {
             textField.setText("Username");
         }
     }
 
     private void passwordFieldFocusGained(FocusEvent ignoredEvt) {
-        if (passwordField.getText().equals("Password")) {
+        String password = new String(passwordField.getPassword());
+        if (password.equals("Password")) {
             passwordField.setText("");
         }
     }
 
     private void passwordFieldFocusLost(FocusEvent ignoredEvt) {
-        if (passwordField.getText().equals("")) {
+        String password = new String(passwordField.getPassword());
+        if (password.isEmpty()) {
             passwordField.setText("Password");
         }
+    }
+
+    private void forgetPassword() {
+        new OTPGUI();
     }
 
     private void login() {
         String userName, passWord;
         userName = textField.getText();
-        passWord = String.valueOf(passwordField.getPassword());
+        passWord = new String(passwordField.getPassword());
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'", "DELETED = 0");
-        if (accountList.size() == 0) {
-            JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        } else {
-            Account account = accountList.get(0);
-            try {
-                Thread thread = new Thread(() -> CafeManagement.homeGUI.setAccount(account));
-                thread.start();
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                thread.join();
-            } catch (Exception ignored) {
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "DELETED = 0");
+        if (accountList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tên tài khoản không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String hashedPassword = accountList.get(0).getPassword();
+        boolean first = false;
+        if (hashedPassword.startsWith("first")) {
+            first = true;
+            hashedPassword = hashedPassword.substring(5);
+        }
+        if (!Password.verifyPassword(passWord, hashedPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Account account = accountList.get(0);
+        try {
+            Thread thread = new Thread(() -> CafeManagement.homeGUI.setAccount(account));
+            thread.start();
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            thread.join();
+        } catch (Exception ignored) {
 
-            }
-            dispose();
-            CafeManagement.homeGUI.setVisible(true);
+        }
+        dispose();
+        CafeManagement.homeGUI.setVisible(true);
+        if (first) {
+            CafeManagement.homeGUI.setEnabled(false);
+            OTPGUI otpgui = new OTPGUI();
+            otpgui.setAccount(account);
+            otpgui.toStep(3);
+            otpgui.toFront();
+            otpgui.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    CafeManagement.homeGUI.setEnabled(true);
+                    CafeManagement.homeGUI.toFront();
+                }
+            });
         }
     }
 
