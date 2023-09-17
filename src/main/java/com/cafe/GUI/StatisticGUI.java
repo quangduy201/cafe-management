@@ -771,7 +771,7 @@ public class StatisticGUI extends JPanel {
                     jDateChooser[index].setDate(day.toDate());
 
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }

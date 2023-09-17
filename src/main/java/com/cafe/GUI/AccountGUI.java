@@ -380,14 +380,6 @@ public class AccountGUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Tên tài khoản không được chứa \" \" or \"|\"", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (!jTextFieldsForm[2].getText().matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[^\\s|]{3,32}$")) {
-            // Password can't contain " " or "|"
-            // Password must contain at lease 1 lower-case, 1 upper-case and 1 number
-            jTextFieldsForm[2].requestFocusInWindow();
-            jTextFieldsForm[2].selectAll();
-            JOptionPane.showMessageDialog(this, "Mật khẩu không được chứa \" \" or \"|\"\nMật khẩu phải chứa ít nhất 1 chữ cái thường, 1 chữ cái hoa and 1 chữ số", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
         return true;
     }
 }

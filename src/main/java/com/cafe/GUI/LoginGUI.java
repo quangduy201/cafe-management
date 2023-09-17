@@ -1,15 +1,24 @@
 package com.cafe.GUI;
 
 import com.cafe.BLL.AccountBLL;
+import com.cafe.BLL.StaffBLL;
 import com.cafe.DTO.Account;
+import com.cafe.DTO.Staff;
 import com.cafe.main.CafeManagement;
+import com.cafe.utils.OTP;
+import com.cafe.utils.Password;
 import com.cafe.utils.Resource;
 import com.cafe.utils.Settings;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class LoginGUI extends JFrame {
     ImageIcon logo = Resource.loadImageIconIn("img/logo_cafe.png");
@@ -212,7 +221,6 @@ public class LoginGUI extends JFrame {
         panel4.add(jLabel4, gbc);
         gbc.gridx++;
         panel4.add(panel7, gbc);
-
     }
 
     private void textFieldFocusGained(FocusEvent ignoredEvt) {
@@ -222,43 +230,73 @@ public class LoginGUI extends JFrame {
     }
 
     private void textFieldFocusLost(FocusEvent ignoredEvt) {
-        if (textField.getText().equals("")) {
+        if (textField.getText().isEmpty()) {
             textField.setText("Username");
         }
     }
 
     private void passwordFieldFocusGained(FocusEvent ignoredEvt) {
-        if (passwordField.getText().equals("Password")) {
+        String password = new String(passwordField.getPassword());
+        if (password.equals("Password")) {
             passwordField.setText("");
         }
     }
 
     private void passwordFieldFocusLost(FocusEvent ignoredEvt) {
-        if (passwordField.getText().equals("")) {
+        String password = new String(passwordField.getPassword());
+        if (password.isEmpty()) {
             passwordField.setText("Password");
         }
+    }
+
+    private void forgetPassword() {
+        new OTPGUI();
     }
 
     private void login() {
         String userName, passWord;
         userName = textField.getText();
-        passWord = String.valueOf(passwordField.getPassword());
+        passWord = new String(passwordField.getPassword());
         AccountBLL accountBLL = new AccountBLL();
-        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "PASSWD = '" + passWord + "'", "DELETED = 0");
-        if (accountList.size() == 0) {
-            JOptionPane.showMessageDialog(this, "Tên tài khoản hoặc mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-        } else {
-            Account account = accountList.get(0);
-            try {
-                Thread thread = new Thread(() -> CafeManagement.homeGUI.setAccount(account));
-                thread.start();
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-                thread.join();
-            } catch (Exception ignored) {
+        List<Account> accountList = accountBLL.searchAccounts("USERNAME = '" + userName + "'", "DELETED = 0");
+        if (accountList.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tên tài khoản không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        String hashedPassword = accountList.get(0).getPassword();
+        boolean first = false;
+        if (hashedPassword.startsWith("first")) {
+            first = true;
+            hashedPassword = hashedPassword.substring(5);
+        }
+        if (!Password.verifyPassword(passWord, hashedPassword)) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Account account = accountList.get(0);
+        try {
+            Thread thread = new Thread(() -> CafeManagement.homeGUI.setAccount(account));
+            thread.start();
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            thread.join();
+        } catch (Exception ignored) {
 
-            }
-            dispose();
-            CafeManagement.homeGUI.setVisible(true);
+        }
+        dispose();
+        CafeManagement.homeGUI.setVisible(true);
+        if (first) {
+            CafeManagement.homeGUI.setEnabled(false);
+            OTPGUI otpgui = new OTPGUI();
+            otpgui.setAccount(account);
+            otpgui.toStep(3);
+            otpgui.toFront();
+            otpgui.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    CafeManagement.homeGUI.setEnabled(true);
+                    CafeManagement.homeGUI.toFront();
+                }
+            });
         }
     }
 

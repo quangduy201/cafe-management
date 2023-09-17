@@ -6,6 +6,7 @@ import com.cafe.custom.BillDetailPanel;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import com.cafe.main.CafeManagement;
 import com.cafe.utils.*;
 import com.toedter.calendar.JDateChooser;
 
@@ -541,10 +542,10 @@ public class BillGUI extends JPanel {
             Day from = new Day(jDateChooser[0].getDate());
             Day to = new Day(jDateChooser[1].getDate());
             if (dataTable.getModel().getRowCount() == 0) {
-                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            int message = JOptionPane.showOptionDialog(null,
+            int message = JOptionPane.showOptionDialog(CafeManagement.homeGUI,
                 "Xuất dữ liệu từ ngày " + from + " đến " + to + " sang PDF?", "Xuất dữ liệu?",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -554,7 +555,7 @@ public class BillGUI extends JPanel {
             if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
                 return;
             }
-            if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(CafeManagement.homeGUI) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             File selectedFile = fileChooser.getSelectedFile();
@@ -569,9 +570,9 @@ public class BillGUI extends JPanel {
                     bills.add(billBLL.searchBills("BILL_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
                 if (PDF.exportBillsPDF(bills, from, to, path))
-                    JOptionPane.showMessageDialog(null, "Đã xuất bảng hóa đơn sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất bảng hóa đơn sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 List<Receipt> receipts = new ArrayList<>();
                 for (Object row : data) {
@@ -579,17 +580,17 @@ public class BillGUI extends JPanel {
                     receipts.add(receiptBLL.searchReceipts("RECEIPT_ID = '" + vector.elementAt(0) + "'").get(0));
                 }
                 if (PDF.exportReceiptsPDF(receipts, from, to, path))
-                    JOptionPane.showMessageDialog(null, "Đ xuất bảng phiếu nhập hàng sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất bảng phiếu nhập hàng sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             String id = label[3].getText();
             if (id.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Không thể xuất dữ liệu rỗng!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            int message = JOptionPane.showOptionDialog(null,
+            int message = JOptionPane.showOptionDialog(CafeManagement.homeGUI,
                 "Xuất dữ liệu của " + id + " sang PDF?",
                 "Xuất dữ liệu?",
                 JOptionPane.YES_NO_OPTION,
@@ -600,7 +601,7 @@ public class BillGUI extends JPanel {
             if (message == JOptionPane.NO_OPTION || message == JOptionPane.CLOSED_OPTION) {
                 return;
             }
-            if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showOpenDialog(CafeManagement.homeGUI) != JFileChooser.APPROVE_OPTION) {
                 return;
             }
             File selectedFile = fileChooser.getSelectedFile();
@@ -609,15 +610,15 @@ public class BillGUI extends JPanel {
             if (inSaleMode) {
                 Bill bill = billBLL.findBillsBy(Map.of("BILL_ID", id)).get(0);
                 if (PDF.exportPDF(bill, path))
-                    JOptionPane.showMessageDialog(null, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của hoá đơn " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu của hoá đơn " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             } else {
                 Receipt receipt = receiptBLL.findReceiptsBy(Map.of("RECEIPT_ID", id)).get(0);
                 if (PDF.exportPDF(receipt, path))
-                    JOptionPane.showMessageDialog(null, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đã xuất " + id + " sang PDF.", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 else
-                    JOptionPane.showMessageDialog(null, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Xuất dữ liệu của phiếu nhập hàng " + id + " sang PDF thất bại.", "Thất bại", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

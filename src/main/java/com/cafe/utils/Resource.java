@@ -30,10 +30,6 @@ public class Resource {
         return new ImageIcon(resource);
     }
 
-//    public static ImageIcon loadImageIcon(String absolutePath) {
-//
-//    }
-
     public static InputStream loadInputStream(String relativePath) {
         InputStream inputStream = Resource.class.getResourceAsStream("/" + relativePath);
         if (inputStream == null) {

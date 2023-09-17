@@ -52,13 +52,31 @@ public class AccountDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(account.getAccountID());
             updateValues.add(account.getUsername());
-            updateValues.add(account.getPassword());
             updateValues.add(account.getDecentralizationID());
             updateValues.add(account.getStaffID());
             updateValues.add(account.isDeleted());
             return update(updateValues, "ACCOUNT_ID = '" + account.getAccountID() + "'");
         } catch (Exception e) {
             System.out.println("Error occurred in AccountDAL.updateAccount(): " + e.getMessage());
+        }
+        return 0;
+    }
+
+    @Override
+    public int update(List<Object> updateValues, String... conditions) throws SQLException {
+        String query = String.format("""
+            UPDATE `%s` SET ACCOUNT_ID = '%s', USERNAME = '%s', DECENTRALIZATION_ID = '%s', STAFF_ID = '%s', DELETED = %d
+            WHERE ACCOUNT_ID = '%s';""",
+            getTableName(), updateValues.get(0), updateValues.get(1), updateValues.get(2), updateValues.get(3), (boolean) updateValues.get(4) ? 1 : 0, updateValues.get(0));
+        return executeUpdate(query);
+    }
+
+    public int updateAccountPassword(Account account) {
+        try {
+            String query = "UPDATE `" + getTableName() + "` SET PASSWD = '" + account.getPassword() + "' WHERE ACCOUNT_ID = '" + account.getAccountID() + "';";
+            return executeUpdate(query);
+        } catch (Exception e) {
+            System.out.println("Error occurred in AccountDAL.updateAccountPassword(): " + e.getMessage());
         }
         return 0;
     }

@@ -135,7 +135,7 @@ public class FrameCustomer extends JFrame {
                     Day day = Day.parseDay(dateTextField[index].getText());
                     jDateChooser[index].setDate(day.toDate());
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Ngày không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             });
         }
