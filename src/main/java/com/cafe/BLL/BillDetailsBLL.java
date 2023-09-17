@@ -61,6 +61,7 @@ public class BillDetailsBLL extends Manager<BillDetails> {
             case "BILL_ID" -> billDetails.getBillID();
             case "PRODUCT_ID" -> billDetails.getProductID();
             case "QUANTITY" -> billDetails.getQuantity();
+            case "NOTE" -> billDetails.getNote();
             case "TOTAL" -> billDetails.getTotal();
             case "PERCENT" -> billDetails.getPercent();
             default -> null;

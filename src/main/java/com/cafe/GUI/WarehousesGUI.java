@@ -4,6 +4,7 @@ import com.cafe.BLL.IngredientBLL;
 import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.DecentralizationDetail;
 import com.cafe.DTO.Ingredient;
+import com.cafe.DTO.Supplier;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
@@ -16,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,8 +36,8 @@ public class WarehousesGUI extends JPanel {
     private JPanel showImg;
     private JLabel[] jLabelsForm;
     private JComboBox<Object> cbbSearchFilter;
-    private JComboBox<Object> cbbSupplierID;
-    private JComboBox<Object> cbbSupplierIDSearch;
+    private JComboBox<Object> cbbSupplierName;
+    private JComboBox<Object> cbbSupplierNameSearch;
     private JComboBox<Object> cbbUnit;
     private JComboBox<Object> cbbUnitSearch;
     private JTextField txtSearch;
@@ -52,11 +54,12 @@ public class WarehousesGUI extends JPanel {
         setBackground(new Color(70, 67, 67));
         initComponents();
     }
-
+    private List<Supplier> supplierList = new ArrayList<>();
     public void initComponents() {
         List<String> columnNames = ingredientBLL.getIngredientDAL().getColumnNames();
         SupplierBLL supplierBLL = new SupplierBLL();
-        List<Object> suppliersID = supplierBLL.getObjectsProperty("SUPPLIER_ID", supplierBLL.getSupplierList());
+        List<Object> suppliersName = supplierBLL.getObjectsProperty("NAME", supplierBLL.getSupplierList());
+        supplierList = new SupplierBLL().getSupplierList();
 
         wareHouses = new RoundPanel();
         roundPanel1 = new RoundPanel();
@@ -66,11 +69,11 @@ public class WarehousesGUI extends JPanel {
         mode = new JPanel();
         showImg = new JPanel();
         jLabelsForm = new JLabel[columnNames.size() - 1];
-        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"});
+        cbbSearchFilter = new JComboBox<>(new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Tên nhà cung cấp"});
         cbbUnit = new JComboBox<>(new String[]{"kg", "l", "bag"});
         cbbUnitSearch = new JComboBox<>(new String[]{"kg", "l", "bag"});
-        cbbSupplierID = new JComboBox<>(suppliersID.toArray());
-        cbbSupplierIDSearch = new JComboBox<>(suppliersID.toArray());
+        cbbSupplierName = new JComboBox<>(suppliersName.toArray());
+        cbbSupplierNameSearch = new JComboBox<>(suppliersName.toArray());
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[columnNames.size() - 3];
         btAdd = new Button();
@@ -117,14 +120,14 @@ public class WarehousesGUI extends JPanel {
             }
         });
         search.add(txtSearch);
-        cbbSupplierIDSearch.setVisible(false);
-        cbbSupplierIDSearch.addItemListener(e -> supplierIDSearch());
-        search.add(cbbSupplierIDSearch);
+        cbbSupplierNameSearch.setVisible(false);
+        cbbSupplierNameSearch.addItemListener(e -> supplierIDSearch());
+        search.add(cbbSupplierNameSearch);
         cbbUnitSearch.setVisible(false);
         cbbUnitSearch.addItemListener(e -> unitSearch());
         search.add(cbbUnitSearch);
 
-        dataTable = new DataTable(ingredientBLL.getData(), new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Mã nhà cung cấp"}, e -> fillForm());
+        dataTable = new DataTable(null, new String[]{"Mã nguyên liệu", "Tên nguyên liệu", "Số lượng", "Đơn vị", "Đơn giá", "Tên nhà cung cấp"}, e -> fillForm());
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
@@ -191,8 +194,8 @@ public class WarehousesGUI extends JPanel {
                     index++;
                 }
                 case "SUPPLIER_ID" -> {
-                    jLabelsForm[i].setText("Mã nhà cung cấp: ");
-                    pnlIngredientConfiguration.add(cbbSupplierID);
+                    jLabelsForm[i].setText("Tên nhà cung cấp: ");
+                    pnlIngredientConfiguration.add(cbbSupplierName);
                 }
                 default -> {
                 }
@@ -230,6 +233,7 @@ public class WarehousesGUI extends JPanel {
             dataTable.setRowSelectionInterval(0, 0);
             fillForm();
         }
+        loadDataTable(ingredientBLL.getIngredientList());
     }
 
     private void unitSearch() {
@@ -237,24 +241,29 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void supplierIDSearch() {
-        loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", Objects.requireNonNull(cbbSupplierIDSearch.getSelectedItem()).toString()));
+        for(Supplier supplier : supplierList) {
+            if (supplier.getName().equals(cbbSupplierNameSearch.getSelectedItem())) {
+                loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", Objects.requireNonNull(supplier.getSupplierID()).toString()));
+                break;
+            }
+        }
     }
 
     private void selectSearchFilter() {
         if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().equals("Đơn vị")) {
             txtSearch.setVisible(false);
-            cbbSupplierIDSearch.setVisible(false);
+            cbbSupplierNameSearch.setVisible(false);
             cbbUnitSearch.setSelectedIndex(0);
             cbbUnitSearch.setVisible(true);
             unitSearch();
-        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Mã nhà cung cấp")) {
+        } else if (Objects.requireNonNull(cbbSearchFilter.getSelectedItem()).toString().contains("Tên nhà cung cấp")) {
             txtSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
-            cbbSupplierIDSearch.setSelectedIndex(0);
-            cbbSupplierIDSearch.setVisible(true);
+            cbbSupplierNameSearch.setSelectedIndex(0);
+            cbbSupplierNameSearch.setVisible(true);
             supplierIDSearch();
         } else {
-            cbbSupplierIDSearch.setVisible(false);
+            cbbSupplierNameSearch.setVisible(false);
             cbbUnitSearch.setVisible(false);
             txtSearch.setVisible(true);
             searchIngredients();
@@ -341,7 +350,7 @@ public class WarehousesGUI extends JPanel {
             jTextFieldsForm[i].setText(null);
         }
         cbbUnit.setSelectedIndex(0);
-        cbbSupplierID.setSelectedIndex(0);
+        cbbSupplierName.setSelectedIndex(0);
         btAdd.setEnabled(true);
         btUpd.setEnabled(false);
         btDel.setEnabled(false);
@@ -360,7 +369,7 @@ public class WarehousesGUI extends JPanel {
         jTextFieldsForm[2].setText(ingredient[2]);
         cbbUnit.setSelectedItem(ingredient[3]);
         jTextFieldsForm[3].setText(VNString.currency(Double.parseDouble(ingredient[4])));
-        cbbSupplierID.setSelectedItem(ingredient[5]);
+        cbbSupplierName.setSelectedItem(ingredient[5]);
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
         btDel.setEnabled(true);
@@ -372,7 +381,7 @@ public class WarehousesGUI extends JPanel {
         double quantity = 0;
         String unit;
         double unitPrice = 0;
-        String supplierID;
+        String supplierID = null;
         for (int i = 0; i < jTextFieldsForm.length; i++) {
             switch (i) {
                 case 0 -> ingredientID = jTextFieldsForm[i].getText();
@@ -384,7 +393,12 @@ public class WarehousesGUI extends JPanel {
             }
         }
         unit = Objects.requireNonNull(cbbUnit.getSelectedItem()).toString();
-        supplierID = Objects.requireNonNull(cbbSupplierID.getSelectedItem()).toString();
+        for (Supplier supplier: supplierList) {
+            if (supplier.getName().equals(cbbSupplierName.getSelectedItem())) {
+                supplierID = supplier.getSupplierID();
+                break;
+            }
+        }
         return new Ingredient(ingredientID, name, quantity, unit, unitPrice, supplierID, false);
     }
 
@@ -392,7 +406,12 @@ public class WarehousesGUI extends JPanel {
         DefaultTableModel model = (DefaultTableModel) dataTable.getModel();
         model.setRowCount(0);
         for (Ingredient ingredient : ingredientList) {
-            model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getUnitPrice(), ingredient.getSupplierID()});
+            for (Supplier supplier: supplierList) {
+                if(ingredient.getSupplierID().equals(supplier.getSupplierID())) {
+                    model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getUnitPrice(), supplier.getName()});
+                    break;
+                }
+            }
         }
     }
 
