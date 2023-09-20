@@ -77,15 +77,18 @@ ___
 
 ## External Dependencies
 
+- JavaFX Base 21-ea+31
 - MySQL Connector/J 8.0.32
-- Apache POI 5.2.3
-- Apache Log4j 2.20.0
+- Apache POI Based On OPC and OOXML Schemas 5.2.3
+- Apache Log4j Core 2.20.0
 - JCalendar 1.4
 - FlatLaf 3.1.1
 - Timing Framework 1.0
-- MiGLayout 3.7.4
-- GroupDocs.Conversion 23.4
-- OpenCV 4.7.0
+- MiGLayout Swing 11.1
+- Apache PDFBox 3.0.0
+- Angus Mail Default Provider 2.0.2
+- JBCrypt 0.4
+- OpenCV Platform 4.7.0-1.5.9
 
 ___
 

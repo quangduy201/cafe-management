@@ -13,7 +13,6 @@ import org.opencv.videoio.Videoio;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 public class Recorder {
     public static final int NUMBER_OF_PICTURES = 40;

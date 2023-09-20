@@ -12,12 +12,8 @@ public class SupplierBLL extends Manager<Supplier> {
     private List<Supplier> supplierList;
 
     public SupplierBLL() {
-        try {
-            supplierDAL = new SupplierDAL();
-            supplierList = searchSuppliers("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        supplierDAL = new SupplierDAL();
+        supplierList = searchSuppliers("DELETED = 0");
     }
 
     public SupplierDAL getSupplierDAL() {

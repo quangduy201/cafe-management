@@ -12,12 +12,8 @@ public class DecentralizationDetailBLL extends Manager<DecentralizationDetail>{
     private List<DecentralizationDetail> decentralizationDetailList;
 
     public DecentralizationDetailBLL() {
-        try {
-            decentralizationDetailDAL = new DecentralizationDetailDAL();
-            decentralizationDetailList = searchDecentralizationDetail("DELETED = 0", "DECENTRALIZATION_ID != 'DE00'");
-        } catch (Exception ignored) {
-
-        }
+        decentralizationDetailDAL = new DecentralizationDetailDAL();
+        decentralizationDetailList = searchDecentralizationDetail("DELETED = 0", "DECENTRALIZATION_ID != 'DE00'");
     }
 
     public DecentralizationDetailDAL getDecentralizationDetailDAL() {

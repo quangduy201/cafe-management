@@ -414,13 +414,7 @@ public class DiscountGUI extends JPanel {
 
     public void addDiscount() {
         if (checkInput()) {
-            Discount newDiscount = null;
-            try {
-                newDiscount = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newDiscount != null;
+            Discount newDiscount = getForm();
 //            if (discountBLL.exists(newDiscount))
 //                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //            else
@@ -434,13 +428,7 @@ public class DiscountGUI extends JPanel {
 
     public void updateDiscount() {
         if (checkInput()) {
-            Discount newDiscount = null;
-            try {
-                newDiscount = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newDiscount != null;
+            Discount newDiscount = getForm();
             int selectedRow = dataTable[0].getSelectedRow();
 //            if (discountBLL.exists(newDiscount))
 //                JOptionPane.showMessageDialog(this, "Discount already existed!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -585,7 +573,7 @@ public class DiscountGUI extends JPanel {
         }
     }
 
-    public Discount getForm() throws Exception {
+    public Discount getForm() {
         String discountID;
         int discountPercent;
         Day startDay;

@@ -11,11 +11,7 @@ public class StatisticBLL extends Manager<Statistic> {
     private StatisticDAL statisticDAL;
 
     public StatisticBLL() {
-        try {
-            statisticDAL = new StatisticDAL();
-        } catch (Exception ignored) {
-
-        }
+        statisticDAL = new StatisticDAL();
     }
 
     public StatisticDAL getStatisticDAL() {

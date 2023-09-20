@@ -7,14 +7,13 @@ import com.cafe.DTO.Staff;
 import com.cafe.utils.OTP;
 import com.cafe.utils.Password;
 
-import java.awt.*;
-import java.util.Map;
-
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+import java.awt.*;
+import java.util.Map;
 
 public class OTPGUI extends JFrame {
     private Account account;

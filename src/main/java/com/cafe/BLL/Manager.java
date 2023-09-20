@@ -16,7 +16,7 @@ public abstract class Manager<T> {
 
     public String getAutoID(String type, int digits, List<T> objectList) {
         int count = 0;
-        if (objectList.size() == 0) {
+        if (objectList.isEmpty()) {
             return type + formatNumberToString(1, digits);
         }
 

@@ -12,12 +12,8 @@ public class ModuleBLL extends Manager<Module> {
     private List<Module> moduleList;
 
     public ModuleBLL() {
-        try {
-            moduleDAL = new ModuleDAL();
-            moduleList = searchModules("DELETED = 0", "MODULE_ID != 'DE00'");
-        } catch (Exception ignored) {
-
-        }
+        moduleDAL = new ModuleDAL();
+        moduleList = searchModules("DELETED = 0", "MODULE_ID != 'DE00'");
     }
 
     public List<Module> searchModules(String... conditions) {

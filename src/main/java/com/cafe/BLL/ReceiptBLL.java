@@ -12,12 +12,8 @@ public class ReceiptBLL extends Manager<Receipt> {
     private List<Receipt> receiptList;
 
     public ReceiptBLL() {
-        try {
-            receiptDAL = new ReceiptDAL();
-            receiptList = searchReceipts("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        receiptDAL = new ReceiptDAL();
+        receiptList = searchReceipts("DELETED = 0");
     }
 
     public ReceiptDAL getReceiptDAL() {

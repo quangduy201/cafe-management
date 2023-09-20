@@ -12,12 +12,8 @@ public class StaffBLL extends Manager<Staff> {
     private List<Staff> staffList;
 
     public StaffBLL() {
-        try {
-            staffDAL = new StaffDAL();
-            staffList = searchStaffs("DELETED = 0", "STAFF_ID != 'ST00'");
-        } catch (Exception ignored) {
-
-        }
+        staffDAL = new StaffDAL();
+        staffList = searchStaffs("DELETED = 0", "STAFF_ID != 'ST00'");
     }
 
     public StaffDAL getStaffDAL() {

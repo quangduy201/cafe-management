@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAL extends Manager {
-    public ProductDAL() throws SQLException {
+    public ProductDAL() {
         super("product",
             List.of("PRODUCT_ID",
                 "NAME",

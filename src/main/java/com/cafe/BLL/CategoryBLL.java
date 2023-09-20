@@ -12,12 +12,8 @@ public class CategoryBLL extends Manager<Category> {
     private List<Category> categoryList;
 
     public CategoryBLL() {
-        try {
-            categoryDAL = new CategoryDAL();
-            categoryList = searchCategories("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        categoryDAL = new CategoryDAL();
+        categoryList = searchCategories("DELETED = 0");
     }
 
     public CategoryDAL getCategoryDAL() {

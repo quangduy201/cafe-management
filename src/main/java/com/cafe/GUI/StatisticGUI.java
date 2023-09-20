@@ -990,7 +990,6 @@ public class StatisticGUI extends JPanel {
             jScrollPane[i] = new JScrollPane();
         }
 
-
         roundPanel[3].setLayout(new BorderLayout(10, 10));
         roundPanel[3].setBackground(new Color(70, 67, 67));
         roundPanel[3].setPreferredSize(new Dimension(1000, 640));
@@ -1030,39 +1029,39 @@ public class StatisticGUI extends JPanel {
 //        jLabel[2].setAutoscrolls(true);
 //        roundPanel[9].add(jLabel[2]);
 
-
         panelShadow1 = new PanelShadow();
         chart = new CurveLineChart();
         roundPanel[4].add(panelShadow1);
 
         panelShadow1.setPreferredSize(new Dimension(1000, 440));
-        panelShadow1.setBackground(new java.awt.Color(34, 59, 69));
+        panelShadow1.setBackground(new Color(34, 59, 69));
         panelShadow1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panelShadow1.setColorGradient(new java.awt.Color(17, 38, 47));
+        panelShadow1.setColorGradient(new Color(17, 38, 47));
         panelShadow1.add(chart);
 
         chart.setPreferredSize(new Dimension(970, 420));
-        chart.setForeground(new java.awt.Color(237, 237, 237));
+        chart.setForeground(new Color(237, 237, 237));
         chart.setFillColor(true);
 
-        chart.setTitle("Biểu đồ thống kê theo tháng trong năm 2023");
+        int year = new Day().getYear();
+        chart.setTitle("Biểu đồ thống kê theo tháng trong năm " + year);
         chart.addLegend("Bán hàng ", Color.decode("#7b4397"), Color.decode("#dc2430"));
         chart.addLegend("Nguyên liệu", Color.decode("#e65c00"), Color.decode("#F9D423"));
         chart.addLegend("Khách hàng", Color.decode("#0099F7"), Color.decode("#F11712"));
 
         chart.clear();
-        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1, 2023)));
-        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2, 2023)));
-        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3, 2023)));
-        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4, 2023)));
-        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5, 2023)));
-        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6, 2023)));
-        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7, 2023)));
-        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8, 2023)));
-        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9, 2023)));
-        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10, 2023)));
-        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11, 2023)));
-        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12, 2023)));
+        chart.addData(new ModelChart("January", statisticBLL.getMonthStatistic(1, year)));
+        chart.addData(new ModelChart("February", statisticBLL.getMonthStatistic(2, year)));
+        chart.addData(new ModelChart("March", statisticBLL.getMonthStatistic(3, year)));
+        chart.addData(new ModelChart("April", statisticBLL.getMonthStatistic(4, year)));
+        chart.addData(new ModelChart("May", statisticBLL.getMonthStatistic(5, year)));
+        chart.addData(new ModelChart("June", statisticBLL.getMonthStatistic(6, year)));
+        chart.addData(new ModelChart("July", statisticBLL.getMonthStatistic(7, year)));
+        chart.addData(new ModelChart("August", statisticBLL.getMonthStatistic(8, year)));
+        chart.addData(new ModelChart("September", statisticBLL.getMonthStatistic(9, year)));
+        chart.addData(new ModelChart("October", statisticBLL.getMonthStatistic(10, year)));
+        chart.addData(new ModelChart("November", statisticBLL.getMonthStatistic(11, year)));
+        chart.addData(new ModelChart("December", statisticBLL.getMonthStatistic(12, year)));
         chart.start();
 
 
@@ -1147,35 +1146,18 @@ public class StatisticGUI extends JPanel {
         dataTable[2] = new DataTable(null, columnName1.subList(0, columnName1.size()).toArray(), null);
         jScrollPane[2] = new JScrollPane(dataTable[2]);
 
-        chart.getLegendItem(0).addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                roundPanel[5].removeAll();
-                roundPanel[5].revalidate();
-                roundPanel[5].repaint();
-                roundPanel[5].add(jScrollPane[0], BorderLayout.CENTER);
-            }
-        });
-
-        chart.getLegendItem(1).addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                roundPanel[5].removeAll();
-                roundPanel[5].revalidate();
-                roundPanel[5].repaint();
-                roundPanel[5].add(jScrollPane[1], BorderLayout.CENTER);
-            }
-        });
-
-        chart.getLegendItem(2).addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                roundPanel[5].removeAll();
-                roundPanel[5].revalidate();
-                roundPanel[5].repaint();
-                roundPanel[5].add(jScrollPane[2], BorderLayout.CENTER);
-            }
-        });
+        for (int i = 0; i < 3; ++i) {
+            int index = i;
+            chart.getLegendItem(i).addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    roundPanel[5].removeAll();
+                    roundPanel[5].revalidate();
+                    roundPanel[5].repaint();
+                    roundPanel[5].add(jScrollPane[index], BorderLayout.CENTER);
+                }
+            });
+        }
         if (jTextField[0].getText().isEmpty()) this.today = new Day();
         else this.today = new Day(1, 1, Integer.parseInt(jTextField[0].getText()));
         loadStatisticTable();

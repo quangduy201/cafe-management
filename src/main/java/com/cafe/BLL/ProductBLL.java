@@ -12,12 +12,8 @@ public class ProductBLL extends Manager<Product> {
     private List<Product> productList;
 
     public ProductBLL() {
-        try {
-            productDAL = new ProductDAL();
-            productList = searchProducts("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        productDAL = new ProductDAL();
+        productList = searchProducts("DELETED = 0");
     }
 
     public ProductDAL getProductDAL() {

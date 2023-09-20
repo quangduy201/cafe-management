@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DecentralizationDetailDAL extends Manager {
-    public DecentralizationDetailDAL() throws SQLException {
+    public DecentralizationDetailDAL() {
         super("decentralization_detail",
             List.of("DECENTRALIZATION_ID",
                 "MODULE_ID",

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAL extends Manager {
-    public CustomerDAL() throws SQLException {
+    public CustomerDAL() {
         super("customer",
             List.of("CUSTOMER_ID",
                 "NAME",

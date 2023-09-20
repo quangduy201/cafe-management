@@ -12,6 +12,7 @@ import com.cafe.utils.Day;
 import com.cafe.utils.Excel;
 import com.cafe.utils.Resource;
 import com.cafe.utils.VNString;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -22,13 +23,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import javafx.util.Pair;
 
 public class IngredientGUI extends JPanel {
 

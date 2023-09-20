@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupplierDAL extends Manager {
-    public SupplierDAL() throws SQLException {
+    public SupplierDAL() {
         super("supplier", new ArrayList<>(
             List.of("SUPPLIER_ID",
                 "NAME",

@@ -12,12 +12,8 @@ public class IngredientBLL extends Manager<Ingredient> {
     private List<Ingredient> ingredientList;
 
     public IngredientBLL() {
-        try {
-            ingredientDAL = new IngredientDAL();
-            ingredientList = searchIngredients("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        ingredientDAL = new IngredientDAL();
+        ingredientList = searchIngredients("DELETED = 0");
     }
 
     public IngredientDAL getIngredientDAL() {
