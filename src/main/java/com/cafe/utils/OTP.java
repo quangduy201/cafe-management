@@ -76,7 +76,6 @@ public class OTP {
                 return new PasswordAuthentication(email, password);
             }
         });
-        session.setDebug(true);
 
         try {
             Message message = new MimeMessage(session);
