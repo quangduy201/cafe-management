@@ -232,7 +232,7 @@ public class FrameCustomer extends JFrame {
         roundPanel1[9].add(confirm);
     }
 
-    public Customer getForm() throws Exception {
+    public Customer getForm() {
         String customerID = null;
         String name = null;
         boolean gender;
@@ -262,13 +262,7 @@ public class FrameCustomer extends JFrame {
 
     public void addCustomer() {
         if (checkInput()) {
-            Customer newCustomer = null;
-            try {
-                newCustomer = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newCustomer != null;
+            Customer newCustomer = getForm();
             if (customerBLL.exists(newCustomer))
                 JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))

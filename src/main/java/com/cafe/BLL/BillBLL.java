@@ -13,12 +13,8 @@ public class BillBLL extends Manager<Bill> {
     private List<Bill> billList;
 
     public BillBLL() {
-        try {
-            billDAL = new BillDAL();
-            billList = searchBills("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        billDAL = new BillDAL();
+        billList = searchBills("DELETED = 0");
     }
 
     public BillDAL getBillDAL() {

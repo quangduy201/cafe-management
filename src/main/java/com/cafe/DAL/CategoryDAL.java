@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAL extends Manager {
-    public CategoryDAL() throws SQLException {
+    public CategoryDAL() {
         super("category",
             List.of("CATEGORY_ID",
                 "NAME",

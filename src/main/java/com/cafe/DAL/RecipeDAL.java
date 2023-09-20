@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeDAL extends Manager {
-    public RecipeDAL() throws SQLException {
+    public RecipeDAL() {
         super("recipe",
             List.of("RECIPE_ID",
                 "PRODUCT_ID",

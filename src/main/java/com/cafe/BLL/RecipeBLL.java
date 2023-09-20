@@ -12,12 +12,8 @@ public class RecipeBLL extends Manager<Recipe> {
     private List<Recipe> recipeList;
 
     public RecipeBLL() {
-        try {
-            recipeDAL = new RecipeDAL();
-            recipeList = searchRecipes("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        recipeDAL = new RecipeDAL();
+        recipeList = searchRecipes("DELETED = 0");
     }
 
     public RecipeDAL getRecipeDAL() {

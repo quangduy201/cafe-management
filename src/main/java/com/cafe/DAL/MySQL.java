@@ -1,8 +1,10 @@
 package com.cafe.DAL;
 
+import com.cafe.utils.Database;
 import com.cafe.utils.Day;
 import com.cafe.utils.Resource;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,48 +12,17 @@ import java.util.List;
 import java.util.Properties;
 
 public class MySQL {
-    private static final Connection conn;
-    private static Statement stmt;
-
-    static {
-        Properties properties;
-        try {
-            properties = Resource.loadProperties("database/db.properties");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String dbUrl = properties.getProperty("db.url");
-        String dbUsername = properties.getProperty("db.username");
-        String dbPassword = properties.getProperty("db.password");
-        try {
-            conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public MySQL() throws SQLException {
-        stmt = conn.createStatement();
-    }
-
-    public void close() throws SQLException {
-        if (conn != null) {
-            conn.close();
-        }
-    }
-
-    public Connection getConnection() {
-        return conn;
-    }
-
-    public Statement getStatement() {
-        return stmt;
+    public MySQL() {
     }
 
     public List<List<String>> executeQuery(String query, Object... values) throws SQLException {
+        Connection connection = Database.getConnection();
+        if (connection == null)
+            return new ArrayList<>();
+        Statement statement = connection.createStatement();
         String formattedQuery = formatQuery(query, values);
         List<List<String>> result = new ArrayList<>();
-        ResultSet resultSet = stmt.executeQuery(formattedQuery);
+        ResultSet resultSet = statement.executeQuery(formattedQuery);
         ResultSetMetaData metaData = resultSet.getMetaData();
         int columnCount = metaData.getColumnCount();
         while (resultSet.next()) {
@@ -61,13 +32,21 @@ public class MySQL {
             }
             result.add(row);
         }
+        statement.close();
+        Database.closeConnection(connection);
         return result;
     }
 
     public int executeUpdate(String query, Object... values) throws SQLException {
+        Connection connection = Database.getConnection();
+        if (connection == null)
+            return 0;
+        Statement statement = connection.createStatement();
         String formattedQuery = formatQuery(query, values);
         int numOfRows;
-        numOfRows = stmt.executeUpdate(formattedQuery);
+        numOfRows = statement.executeUpdate(formattedQuery);
+        statement.close();
+        Database.closeConnection(connection);
         return numOfRows;
     }
 

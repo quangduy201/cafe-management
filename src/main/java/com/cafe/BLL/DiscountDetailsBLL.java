@@ -12,12 +12,8 @@ public class DiscountDetailsBLL extends Manager<DiscountDetails> {
     private List<DiscountDetails> discountDetailsList;
 
     public DiscountDetailsBLL() {
-        try {
-            discountDetailsDAL = new DiscountDetailsDAL();
-            discountDetailsList = searchDiscountDetails("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        discountDetailsDAL = new DiscountDetailsDAL();
+        discountDetailsList = searchDiscountDetails("DELETED = 0");
     }
 
     public DiscountDetailsDAL getDiscountDetailsDAL() {

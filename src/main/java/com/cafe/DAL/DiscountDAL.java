@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DiscountDAL extends Manager {
-    public DiscountDAL() throws SQLException {
+    public DiscountDAL() {
         super("discount",
             List.of("DISCOUNT_ID",
                 "DISCOUNT_PERCENT",

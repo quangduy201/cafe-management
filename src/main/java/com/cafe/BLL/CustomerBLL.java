@@ -12,12 +12,8 @@ public class CustomerBLL extends Manager<Customer> {
     private List<Customer> customerList;
 
     public CustomerBLL() {
-        try {
-            customerDAL = new CustomerDAL();
-            customerList = searchCustomers("DELETED = 0", "CUSTOMER_ID != 'CUS000'");
-        } catch (Exception ignored) {
-
-        }
+        customerDAL = new CustomerDAL();
+        customerList = searchCustomers("DELETED = 0", "CUSTOMER_ID != 'CUS000'");
     }
 
     public CustomerDAL getCustomerDAL() {

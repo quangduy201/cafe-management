@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountDAL extends Manager {
-    public AccountDAL() throws SQLException {
+    public AccountDAL() {
         super("account",
             List.of("ACCOUNT_ID",
                 "USERNAME",

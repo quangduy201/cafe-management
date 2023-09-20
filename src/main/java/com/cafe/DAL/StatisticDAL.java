@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticDAL extends Manager {
-    public StatisticDAL() throws SQLException {
+    public StatisticDAL() {
         super("statistic",
             List.of("STATISTIC_ID",
                 "DATE",

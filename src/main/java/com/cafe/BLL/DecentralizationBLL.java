@@ -13,12 +13,8 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     private List<Decentralization> decentralizationList;
 
     public DecentralizationBLL() {
-        try {
-            decentralizationDAL = new DecentralizationDAL();
-            decentralizationList = searchDecentralization("DELETED = 0", "DECENTRALIZATION_ID != 'DE00'");
-        } catch (Exception ignored) {
-
-        }
+        decentralizationDAL = new DecentralizationDAL();
+        decentralizationList = searchDecentralization("DELETED = 0", "DECENTRALIZATION_ID != 'DE00'");
     }
 
     public DecentralizationDAL getDecentralizationDAL() {

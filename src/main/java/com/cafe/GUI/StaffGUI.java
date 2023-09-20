@@ -339,13 +339,7 @@ public class StaffGUI extends JPanel {
 
     public void addStaff() {
         if (checkInput()) {
-            Staff newStaff = null;
-            try {
-                newStaff = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newStaff != null;
+            Staff newStaff = getForm();
             if (staffBLL.exists(newStaff))
                 JOptionPane.showMessageDialog(this, "Nhân viên đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (staffBLL.exists(Map.of("PHONE", newStaff.getPhone())))
@@ -360,13 +354,7 @@ public class StaffGUI extends JPanel {
 
     public void updateStaff() {
         if (checkInput()) {
-            Staff newStaff = null;
-            try {
-                newStaff = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newStaff != null;
+            Staff newStaff = getForm();
             int selectedRow = dataTable.getSelectedRow();
             String currentPhone = dataTable.getValueAt(selectedRow, 5).toString();
             boolean valueChanged = !newStaff.getPhone().equals(currentPhone);
@@ -451,7 +439,7 @@ public class StaffGUI extends JPanel {
         btDel.setEnabled(true);
     }
 
-    public Staff getForm() throws Exception {
+    public Staff getForm() {
         String staffID = null;
         String name = null;
         boolean gender;

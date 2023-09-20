@@ -10,7 +10,7 @@ public class Manager extends MySQL {
     private final String tableName;
     private final List<String> columnNames;
 
-    public Manager(String tableName, List<String> columnNames) throws SQLException {
+    public Manager(String tableName, List<String> columnNames) {
         super();
         this.tableName = tableName;
         this.columnNames = columnNames;

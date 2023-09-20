@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffDAL extends Manager {
-    public StaffDAL() throws SQLException {
+    public StaffDAL() {
         super("staff",
             List.of("STAFF_ID",
                 "NAME",

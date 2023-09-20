@@ -9,11 +9,11 @@ import java.io.*;
 import java.util.Properties;
 
 public class Settings {
-    public static final String PROPERTIES_FILE = "config.properties";
+    public static final String CONFIG_FILE = "config.properties";
     public static FlatLaf theme;
 
     public static void saveTheme() {
-        try (OutputStream outputStream = new FileOutputStream(PROPERTIES_FILE)) {
+        try (OutputStream outputStream = new FileOutputStream(Resource.getPathOutsideJAR(CONFIG_FILE))) {
             Properties properties = new Properties();
             properties.setProperty("theme", theme.isDark() ? "dark" : "light");
             properties.store(outputStream, "Theme Information");
@@ -24,7 +24,7 @@ public class Settings {
 
     public static String loadTheme() {
         String themeName;
-        try (InputStream inputStream = new FileInputStream(PROPERTIES_FILE)) {
+        try (InputStream inputStream = new FileInputStream(Resource.getPathOutsideJAR(CONFIG_FILE))) {
             Properties properties = new Properties();
             properties.load(inputStream);
             themeName = properties.getProperty("theme");

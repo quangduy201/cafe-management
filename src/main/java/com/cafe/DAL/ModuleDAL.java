@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleDAL extends Manager {
-    public ModuleDAL() throws SQLException {
+    public ModuleDAL() {
         super("module",
             List.of("MODULE_ID",
                 "MODULE_NAME",

@@ -11,12 +11,8 @@ public class ReceiptDetailsBLL extends Manager<ReceiptDetails> {
     private List<ReceiptDetails> receiptDetailsList;
 
     public ReceiptDetailsBLL() {
-        try {
-            receiptDetailsDAL = new ReceiptDetailsDAL();
-            receiptDetailsList = searchReceiptDetails();
-        } catch (Exception ignored) {
-
-        }
+        receiptDetailsDAL = new ReceiptDetailsDAL();
+        receiptDetailsList = searchReceiptDetails();
     }
 
     public ReceiptDetailsDAL getReceiptDetailsDAL() {

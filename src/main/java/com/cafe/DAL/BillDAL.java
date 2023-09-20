@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BillDAL extends Manager {
-    public BillDAL() throws SQLException {
+    public BillDAL() {
         super("bill",
             List.of("BILL_ID",
                 "CUSTOMER_ID",

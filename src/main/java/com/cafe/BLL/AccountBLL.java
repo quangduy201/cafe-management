@@ -12,12 +12,8 @@ public class AccountBLL extends Manager<Account> {
     private List<Account> accountList;
 
     public AccountBLL() {
-        try {
-            accountDAL = new AccountDAL();
-            accountList = searchAccounts("DELETED = 0", "ACCOUNT_ID != 'AC000'");
-        } catch (Exception ignored) {
-
-        }
+        accountDAL = new AccountDAL();
+        accountList = searchAccounts("DELETED = 0", "ACCOUNT_ID != 'AC000'");
     }
 
     public AccountDAL getAccountDAL() {

@@ -11,12 +11,8 @@ public class BillDetailsBLL extends Manager<BillDetails> {
     private List<BillDetails> billDetailsList;
 
     public BillDetailsBLL() {
-        try {
-            billDetailsDAL = new BillDetailsDAL();
-            billDetailsList = searchBillDetails();
-        } catch (Exception ignored) {
-
-        }
+        billDetailsDAL = new BillDetailsDAL();
+        billDetailsList = searchBillDetails();
     }
 
     public BillDetailsDAL getBillDetailsDAL() {

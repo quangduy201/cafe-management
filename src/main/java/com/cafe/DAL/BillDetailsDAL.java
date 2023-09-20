@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BillDetailsDAL extends Manager {
-    public BillDetailsDAL() throws SQLException {
+    public BillDetailsDAL() {
         super("bill_details",
             List.of("BILL_ID",
                 "PRODUCT_ID",

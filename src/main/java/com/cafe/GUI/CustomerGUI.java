@@ -399,13 +399,7 @@ public class CustomerGUI extends JPanel {
 
     public void addCustomer() {
         if (checkInput()) {
-            Customer newCustomer = null;
-            try {
-                newCustomer = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newCustomer != null;
+            Customer newCustomer = getForm();
             if (customerBLL.exists(newCustomer))
                 JOptionPane.showMessageDialog(this, "Khách hàng đã tồn tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             else if (customerBLL.exists(Map.of("PHONE", newCustomer.getPhone())))
@@ -420,13 +414,7 @@ public class CustomerGUI extends JPanel {
 
     public void updateCustomer() {
         if (checkInput()) {
-            Customer newCustomer = null;
-            try {
-                newCustomer = getForm();
-            } catch (Exception ignored) {
-
-            }
-            assert newCustomer != null;
+            Customer newCustomer = getForm();
             int selectedRow = dataTable.getSelectedRow();
             String currentPhone = dataTable.getValueAt(selectedRow, 4).toString();
             boolean valueChanged = !newCustomer.getPhone().equals(currentPhone);
@@ -520,7 +508,7 @@ public class CustomerGUI extends JPanel {
         btDel.setEnabled(true);
     }
 
-    public Customer getForm() throws Exception {
+    public Customer getForm() {
         String customerID = null;
         String name = null;
         boolean gender;

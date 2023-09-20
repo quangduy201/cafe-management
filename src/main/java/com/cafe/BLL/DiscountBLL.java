@@ -13,12 +13,8 @@ public class DiscountBLL extends Manager<Discount> {
     private List<Discount> discountList;
 
     public DiscountBLL() {
-        try {
-            discountDAL = new DiscountDAL();
-            discountList = searchDiscounts("DELETED = 0");
-        } catch (Exception ignored) {
-
-        }
+        discountDAL = new DiscountDAL();
+        discountList = searchDiscounts("DELETED = 0");
     }
 
     public DiscountDAL getDiscountDAL() {
