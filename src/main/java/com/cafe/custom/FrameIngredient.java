@@ -196,7 +196,7 @@ public class FrameIngredient extends JFrame {
         label1[9].setText(supplier.getName());
 
         configButton.accept(confirm, java.util.List.of("THÊM", 120, 45, 45, new Color(135, 255, 58), new Color(0x499D20), new Color(0x2DFF00), (Runnable) this::pressConfirm));
-        confirm.setIcon(Resource.loadImageIconIn("img/icons/add-user.png"));
+        confirm.setIcon(Resource.loadImageIcon("img/icons/add-user.png"));
         roundPanel1[9].add(confirm);
 
         roundPanel[6].setPreferredSize(new Dimension(220, 40));

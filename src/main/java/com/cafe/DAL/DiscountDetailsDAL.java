@@ -36,7 +36,7 @@ public class DiscountDetailsDAL extends Manager {
                 discountDetails.getProductID(),
                 false
             );
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDetailsDAL.addDiscountDetails(): " + e.getMessage());
         }
         return 0;
@@ -49,7 +49,7 @@ public class DiscountDetailsDAL extends Manager {
             updateValues.add(discountDetails.getProductID());
             updateValues.add(discountDetails.isDeleted());
             return update(updateValues, "DISCOUNT_ID = '" + discountDetails.getDiscountID() + "'", "PRODUCT_ID = '" + discountDetails.getProductID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDetailsDAL.deletedDiscountDetails(): " + e.getMessage());
         }
         return 0;
@@ -62,7 +62,7 @@ public class DiscountDetailsDAL extends Manager {
             updateValues.add(discountDetails.getProductID());
             updateValues.add(true);
             return update(updateValues, "DISCOUNT_ID = '" + discountDetails.getDiscountID() + "'", "PRODUCT_ID = '" + discountDetails.getProductID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDetailsDAL.deletedDiscountDetails(): " + e.getMessage());
         }
         return 0;
@@ -71,7 +71,7 @@ public class DiscountDetailsDAL extends Manager {
     public List<DiscountDetails> searchDiscountDetails(String... conditions) {
         try {
             return convertToDiscountDetails(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDetailsDAL.searchDiscountDetails(): " + e.getMessage());
         }
         return new ArrayList<>();

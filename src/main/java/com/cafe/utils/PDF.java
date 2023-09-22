@@ -2,7 +2,6 @@ package com.cafe.utils;
 
 import com.cafe.BLL.*;
 import com.cafe.DTO.*;
-import com.formdev.flatlaf.FlatIntelliJLaf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -12,7 +11,6 @@ import org.apache.pdfbox.pdmodel.common.PDImmutableRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,7 +52,7 @@ public class PDF {
         italicFont = newFont("Roboto/Roboto-Italic.ttf");
         try {
             contentStream = new PDPageContentStream(document, currentPage);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -64,7 +62,7 @@ public class PDF {
             contentStream.close();
             document.save(file);
             document.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -76,7 +74,7 @@ public class PDF {
             contentStream.newLineAtOffset(x, pageHeight - y);
             contentStream.showText(text);
             contentStream.endText();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -91,7 +89,7 @@ public class PDF {
             contentStream.moveTo(x1, pageHeight - y1);
             contentStream.lineTo(x2, pageHeight - y2);
             contentStream.stroke();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -117,7 +115,7 @@ public class PDF {
     public static boolean exportPDF(Bill bill, String path) {
         try {
             Files.createDirectories(Paths.get(path));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         }
@@ -171,7 +169,7 @@ public class PDF {
                 data[5] = VNString.currency(discountedCost);
                 try {
                     pdf.contentStream.setLineWidth(0.5F);
-                } catch (Exception e) {
+                } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
                 pdf.addLineAt(8.1F, 6.8F + i, 9.9F, 6.8F + i, 0.1F);
@@ -212,7 +210,7 @@ public class PDF {
     public static boolean exportPDF(Receipt receipt, String path) {
         try {
             Files.createDirectories(Paths.get(path));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         }
@@ -279,7 +277,7 @@ public class PDF {
     public static boolean exportBillsPDF(List<Bill> bills, Day from, Day to, String path) {
         try {
             Files.createDirectories(Paths.get(path));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         }
@@ -310,7 +308,7 @@ public class PDF {
     public static boolean exportReceiptsPDF(List<Receipt> receipts, Day from, Day to, String path) {
         try {
             Files.createDirectories(Paths.get(path));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         }
@@ -334,36 +332,6 @@ public class PDF {
 
         pdf.closeDocument(file);
         return true;
-    }
-
-    public static void main(String[] args) throws IOException {
-        try {
-            UIManager.setLookAndFeel(new FlatIntelliJLaf());
-        } catch (UnsupportedLookAndFeelException e) {
-            throw new RuntimeException(e);
-        }
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setCurrentDirectory(new File(Resource.getPathOutsideJAR("transaction/export")));
-        if (fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-        File selectedFile = fileChooser.getSelectedFile();
-        String path = selectedFile.getAbsolutePath();
-        Bill bill = new BillBLL().searchBills("BILL_ID = 'BI0001'").get(0);
-        exportPDF(bill, path);
-        Receipt receipt = new ReceiptBLL().searchReceipts("RECEIPT_ID = 'REC001'").get(0);
-        exportPDF(receipt, path);
-        try {
-            Day from = Day.parseDay("2015-01-01");
-            Day to = new Day();
-            List<Bill> bills = new BillBLL().searchBills();
-            exportBillsPDF(bills, from, to, path);
-            List<Receipt> receipts = new ReceiptBLL().searchReceipts();
-            exportReceiptsPDF(receipts, from, to, path);
-        } catch (Exception ignored) {
-
-        }
     }
 
     PDType0Font newFont(String path) {

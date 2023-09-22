@@ -5,6 +5,7 @@ import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,18 +20,18 @@ public class Detector {
 
     public Detector() {
         try {
-            Files.createDirectories(Paths.get(Resource.getPathOutsideJAR("resources")));
-            Path haar = Path.of(Resource.getResourceOutsideJAR(HAAR_CASCADE_PATH));
+            Files.createDirectories(Paths.get(Resource.getResourcePathOutsideJAR("")));
+            Path haar = Path.of(Resource.getResourcePathOutsideJAR(HAAR_CASCADE_PATH));
             if (Files.notExists(haar)) {
-                InputStream inputStream = Resource.loadInputStream(HAAR_CASCADE_PATH);
+                InputStream inputStream = Resource.loadInputStream(HAAR_CASCADE_PATH, true);
                 if (inputStream != null)
                     Files.copy(inputStream, haar);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         classifier = new CascadeClassifier();
-        classifier.load(Resource.getResourceOutsideJAR(HAAR_CASCADE_PATH));
+        classifier.load(Resource.getResourcePathOutsideJAR(HAAR_CASCADE_PATH));
         faces = new MatOfRect();
         gray = new Mat();
     }

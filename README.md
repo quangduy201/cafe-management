@@ -29,6 +29,7 @@ The Cafe Management application includes the following features:
 - Create, manage and export bills (selling products) and receipt (importing ingredients) to Excel or PDF.
 - Generate reports on sales, inventory and other metrics.
 - Have a curved line chart that represents the statistics of the cafe (monthly and annual profit, cost, customers).
+- Retrieve forgotten password via email.
 
 ___
 
@@ -39,8 +40,6 @@ To install the Cafe Management application, follow these steps:
 - Clone the repository to your local machine.
 - Import the project into your Java IDE as **Maven project** (e.g. IntelliJ, Eclipse).
 - Create a MySQL database and run this [`SQL`](database/cafe_db.sql) file.
-- Create a file named `db.properties` inside [`database`](database) based on [`db.properties.example`](database/db.properties.example).
-- Configure the file `db.properties` you just created to connect to database.
 - Build the project and run this [`CafeManagement`](src/com/cafe/main/CafeManagement.java) class.
 - Login with the default account: `username = 'admin'`, `password = 'admin'`
 
@@ -57,7 +56,7 @@ mvn clean package
 To run the application, open Command Prompt or PowerShell and run:
 
 ```powershell
-java -jar .\target\cafe-management-1.0-SNAPSHOT.jar
+java -jar .\target\cafe-management-1.0-SNAPSHOT-uber.jar
 ```
 
 ___

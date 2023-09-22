@@ -41,7 +41,7 @@ public class SupplierDAL extends Manager {
                 supplier.getEmail(),
                 false
             ); // supplier khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in SupplierDAL.addSupplier(): " + e.getMessage());
         }
         return 0;
@@ -57,7 +57,7 @@ public class SupplierDAL extends Manager {
             updateValues.add(supplier.getEmail());
             updateValues.add(supplier.isDeleted());
             return update(updateValues, "SUPPLIER_ID = '" + supplier.getSupplierID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in SupplierDAL.updateSupplier(): " + e.getMessage());
         }
         return 0;
@@ -68,7 +68,7 @@ public class SupplierDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in SupplierDAL.deleteSupplier(): " + e.getMessage());
         }
         return 0;
@@ -77,7 +77,7 @@ public class SupplierDAL extends Manager {
     public List<Supplier> searchSuppliers(String... conditions) {
         try {
             return convertToSuppliers(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in SupplierDAL.searchSuppliers(): " + e.getMessage());
         }
         return new ArrayList<>();

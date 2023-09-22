@@ -46,7 +46,7 @@ public class DiscountDAL extends Manager {
                 discount.getStatus(),
                 false
             ); // discount khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDAL.addDiscount(): " + e.getMessage());
         }
         return 0;
@@ -62,7 +62,7 @@ public class DiscountDAL extends Manager {
             updateValues.add(discount.getStatus());
             updateValues.add(discount.isDeleted());
             return update(updateValues, "DISCOUNT_ID = '" + discount.getDiscountID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDAL.updateDiscount(): " + e.getMessage());
         }
         return 0;
@@ -73,7 +73,7 @@ public class DiscountDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDAL.deleteDiscount(): " + e.getMessage());
         }
         return 0;
@@ -82,7 +82,7 @@ public class DiscountDAL extends Manager {
     public List<Discount> searchDiscounts(String... conditions) {
         try {
             return convertToDiscounts(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DiscountDAL.searchDiscounts(): " + e.getMessage());
         }
         return new ArrayList<>();

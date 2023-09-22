@@ -39,7 +39,8 @@ public class VNString {
     }
 
     public static String currency(double money) {
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.of("vi", "VN"));
+        Locale locale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
         return formatter.format(money);
     }
 }

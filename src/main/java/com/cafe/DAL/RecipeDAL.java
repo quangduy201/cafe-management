@@ -41,7 +41,7 @@ public class RecipeDAL extends Manager {
                 recipe.getUnit(),
                 false
             );
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in RecipeDAL.addRecipe(): " + e.getMessage());
         }
         return 0;
@@ -57,7 +57,7 @@ public class RecipeDAL extends Manager {
             updateValues.add(recipe.getUnit());
             updateValues.add(recipe.isDeleted());
             return update(updateValues, "RECIPE_ID = '" + recipe.getRecipeID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in RecipeDAL.updateRecipe(): " + e.getMessage());
         }
         return 0;
@@ -68,7 +68,7 @@ public class RecipeDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in RecipeDAL.deleteRecipe(): " + e.getMessage());
         }
         return 0;
@@ -77,17 +77,9 @@ public class RecipeDAL extends Manager {
     public List<Recipe> searchRecipes(String... conditions) {
         try {
             return convertToRecipes(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in RecipeDAL.searchRecipes(): " + e.getMessage());
         }
         return new ArrayList<>();
     }
-
-//    public List<List<String>> getFullRecipeTable() {
-//        try {
-//            return executeQuery("");
-//        } catch (Exception e) {
-//
-//        }
-//    }
 }

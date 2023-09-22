@@ -39,7 +39,7 @@ public class StatisticDAL extends Manager {
                 statistic.getAmount(),
                 statistic.getIngredientCost()
             );
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.addStatistic(): " + e.getMessage());
         }
         return 0;
@@ -53,7 +53,7 @@ public class StatisticDAL extends Manager {
             updateValues.add(statistic.getAmount());
             updateValues.add(statistic.getIngredientCost());
             return update(updateValues, "STATISTIC_ID = '" + statistic.getStatisticID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.updateStatistic(): " + e.getMessage());
         }
         return 0;
@@ -62,7 +62,7 @@ public class StatisticDAL extends Manager {
     public int deleteStatistic(String... conditions) {
         try {
             return delete(conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.deleteStatistic(): " + e.getMessage());
         }
         return 0;
@@ -71,7 +71,7 @@ public class StatisticDAL extends Manager {
     public List<Statistic> searchStatistics(String... conditions) {
         try {
             return convertToStatistics(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.searchStatistics(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -84,7 +84,7 @@ public class StatisticDAL extends Manager {
                 WHERE DATE BETWEEN ? AND ?;
                 """,
                 start.toMySQLString(), end.toMySQLString()));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.searchStatistics(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -97,7 +97,7 @@ public class StatisticDAL extends Manager {
                 ORDER BY DATE DESC
                 LIMIT 1;
                 """)).get(0);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StatisticDAL.getTheLastStatistic(): " + e.getMessage());
         }
         return new Statistic();

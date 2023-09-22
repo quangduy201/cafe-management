@@ -44,7 +44,7 @@ public class ProductDAL extends Manager {
                 product.getImage(),
                 false
             ); // product khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ProductDAL.addProduct(): " + e.getMessage());
         }
         return 0;
@@ -61,7 +61,7 @@ public class ProductDAL extends Manager {
             updateValues.add(product.getImage());
             updateValues.add(product.isDeleted());
             return update(updateValues, "PRODUCT_ID = '" + product.getProductID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ProductDAL.updateProduct(): " + e.getMessage());
         }
         return 0;
@@ -72,7 +72,7 @@ public class ProductDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ProductDAL.deleteProduct(): " + e.getMessage());
         }
         return 0;
@@ -81,7 +81,7 @@ public class ProductDAL extends Manager {
     public List<Product> searchProducts(String... conditions) {
         try {
             return convertToProducts(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ProductDAL.searchProducts(): " + e.getMessage());
         }
         return new ArrayList<>();

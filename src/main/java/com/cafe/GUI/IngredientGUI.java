@@ -347,7 +347,7 @@ public class IngredientGUI extends JPanel {
             button.setColor((Color) properties.get(1));
             button.setColorOver((Color) properties.get(2));
             button.setColorClick((Color) properties.get(3));
-            button.setIcon(Resource.loadImageIconIn((String) properties.get(4)));
+            button.setIcon(Resource.loadImageIcon((String) properties.get(4)));
             button.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {

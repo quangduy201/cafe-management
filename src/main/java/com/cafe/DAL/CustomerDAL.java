@@ -55,7 +55,7 @@ public class CustomerDAL extends Manager {
                 customer.getDateOfSup(),
                 false
             ); // customer khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CustomerDAL.addCustomer(): " + e.getMessage());
         }
         return 0;
@@ -73,7 +73,7 @@ public class CustomerDAL extends Manager {
             updateValues.add(customer.getDateOfSup());
             updateValues.add(customer.isDeleted());
             return update(updateValues, "CUSTOMER_ID = '" + customer.getCustomerID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CustomerDAL.updateCustomer(): " + e.getMessage());
         }
         return 0;
@@ -84,7 +84,7 @@ public class CustomerDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CustomerDAL.deleteCustomer(): " + e.getMessage());
         }
         return 0;
@@ -93,7 +93,7 @@ public class CustomerDAL extends Manager {
     public List<Customer> searchCustomers(String... conditions) {
         try {
             return convertToCustomers(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CustomerDAL.searchCustomers(): " + e.getMessage());
         }
         return new ArrayList<>();

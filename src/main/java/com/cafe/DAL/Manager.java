@@ -76,7 +76,7 @@ public class Manager extends MySQL {
 
         if (conditions != null && conditions.length > 0) {
             query += " WHERE " + String.join(" AND ", conditions);
-            values = Arrays.asList(conditions);
+            values = Arrays.asList((Object[]) conditions);
         }
 
         query += ";";

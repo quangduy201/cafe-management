@@ -38,7 +38,7 @@ public class BillDetailsDAL extends Manager {
                 billDetails.getTotal(),
                 billDetails.getPercent()
             );
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDetailsDAL.addBillDetails(): " + e.getMessage());
         }
         return 0;
@@ -47,7 +47,7 @@ public class BillDetailsDAL extends Manager {
     public List<BillDetails> searchBillDetails(String... conditions) {
         try {
             return convertToBillDetails(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDetailsDAL.searchBillDetails(): " + e.getMessage());
         }
         return new ArrayList<>();

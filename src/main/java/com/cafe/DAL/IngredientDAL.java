@@ -44,7 +44,7 @@ public class IngredientDAL extends Manager {
                 ingredient.getSupplierID(),
                 false
             ); // ingredient khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in IngredientDAL.addIngredient(): " + e.getMessage());
         }
         return 0;
@@ -61,7 +61,7 @@ public class IngredientDAL extends Manager {
             updateValues.add(ingredient.getSupplierID());
             updateValues.add(ingredient.isDeleted());
             return update(updateValues, "INGREDIENT_ID = '" + ingredient.getIngredientID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in IngredientDAL.updateIngredient(): " + e.getMessage());
         }
         return 0;
@@ -72,7 +72,7 @@ public class IngredientDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in IngredientDAL.deleteIngredient(): " + e.getMessage());
         }
         return 0;
@@ -81,7 +81,7 @@ public class IngredientDAL extends Manager {
     public List<Ingredient> searchIngredients(String... conditions) {
         try {
             return convertToIngredients(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in IngredientDAL.searchIngredients(): " + e.getMessage());
         }
         return new ArrayList<>();

@@ -1,6 +1,0 @@
-# Please make a copy of this file and name it "db.properties"
-
-# Database configuration
-db.url=jdbc:mysql://localhost:3306/cafe-management
-db.username=root
-db.password=

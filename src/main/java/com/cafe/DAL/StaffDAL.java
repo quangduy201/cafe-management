@@ -59,7 +59,7 @@ public class StaffDAL extends Manager {
                 staff.getDateOfEntry(),
                 false
             ); // staff khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StaffDAL.addStaff(): " + e.getMessage());
         }
         return 0;
@@ -79,7 +79,7 @@ public class StaffDAL extends Manager {
             updateValues.add(staff.getDateOfEntry());
             updateValues.add(staff.isDeleted());
             return update(updateValues, "STAFF_ID = '" + staff.getStaffID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StaffDAL.updateStaff(): " + e.getMessage());
         }
         return 0;
@@ -90,7 +90,7 @@ public class StaffDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StaffDAL.deleteStaff(): " + e.getMessage());
         }
         return 0;
@@ -99,7 +99,7 @@ public class StaffDAL extends Manager {
     public List<Staff> searchStaffs(String... conditions) {
         try {
             return convertToStaffs(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in StaffDAL.searchStaffs(): " + e.getMessage());
         }
         return new ArrayList<>();
