@@ -164,7 +164,7 @@ public class BillGUI extends JPanel {
                 button[i].setText("Xuất PDF");
                 button[i].setColor(new Color(240, 240, 240));
                 button[i].setPreferredSize(new Dimension(160, 40));
-                button[i].setIcon(Resource.loadImageIconIn("img/icons/folder.png"));
+                button[i].setIcon(Resource.loadImageIcon("img/icons/folder.png"));
             }
             switch (i) {
                 case 0 -> button[i].setText("Bán");
@@ -195,7 +195,7 @@ public class BillGUI extends JPanel {
         btFaceSignUp = new Button();
         btFaceSignUp.setBackground(new Color(35, 166, 97));
         btFaceSignUp.setBorder(null);
-        btFaceSignUp.setIcon(new ImageIcon(Resource.loadImageIconIn("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
+        btFaceSignUp.setIcon(new ImageIcon(Resource.loadImageIcon("img/icons/face-scanner.png").getImage().getScaledInstance(35, 35, Image.SCALE_SMOOTH)));
         btFaceSignUp.setText("Tìm hóa đơn");
         btFaceSignUp.setColor(new Color(240, 240, 240));
         btFaceSignUp.setColorClick(new Color(141, 222, 175));
@@ -256,7 +256,7 @@ public class BillGUI extends JPanel {
 //        btnCancel.setBorderPainted(false);
 //        btnCancel.setRadius(15);
 //        btnCancel.setFocusPainted(false);
-//        btnCancel.setIcon(Resource.loadImageIconIn("img/icons/remove.png"));
+//        btnCancel.setIcon(Resource.loadImageIcon("img/icons/remove.png"));
 //        btnCancel.setColor(new Color(0xFFBD3737));
 //        btnCancel.setColorOver(new Color(0xFF0000));
 //        btnCancel.setColorClick(new Color(0xB65858));

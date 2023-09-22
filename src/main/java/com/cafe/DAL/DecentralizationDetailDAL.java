@@ -44,7 +44,7 @@ public class DecentralizationDetailDAL extends Manager {
                 DecentralizationDetail.isCanREMOVE(),
                 false
             ); // decentralization khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DecentralizationDetailDAL.addDecentralizationDetail(): " + e.getMessage());
         }
         return 0;
@@ -60,7 +60,7 @@ public class DecentralizationDetailDAL extends Manager {
             updateValues.add(decentralizationDetail.isCanREMOVE());
             updateValues.add(decentralizationDetail.isDeleted());
             return update(updateValues, "DECENTRALIZATION_ID = '" + decentralizationDetail.getDecentralizationID() + "'", "MODULE_ID = '" + decentralizationDetail.getModuleID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DecentralizationDetailDAL.updateDecentralizationDetail(): " + e.getMessage());
         }
         return 0;
@@ -71,7 +71,7 @@ public class DecentralizationDetailDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DecentralizationDetailDAL.deleteDecentralizationDetail(): " + e.getMessage());
         }
         return 0;
@@ -80,7 +80,7 @@ public class DecentralizationDetailDAL extends Manager {
     public List<DecentralizationDetail> searchDecentralizationDetails(String... conditions) {
         try {
             return convertToDecentralizationDetail(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in DecentralizationDetailDAL.searchDecentralizationDetails(): " + e.getMessage());
         }
         return new ArrayList<>();

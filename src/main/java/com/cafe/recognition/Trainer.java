@@ -10,6 +10,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class Trainer {
         detector = new Detector();
         recognizer = new Recognizer();
         try {
-            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(CLASSIFIER_DIRECTORY)));
-        } catch (Exception e) {
+            Files.createDirectories(Paths.get(Resource.getResourcePathOutsideJAR(CLASSIFIER_DIRECTORY)));
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -48,14 +49,8 @@ public class Trainer {
         this.recognizer = recognizer;
     }
 
-    public static void main(String[] args) {
-        Trainer trainer = new Trainer();
-        trainer.train("CUS001", 80);
-        System.out.println("DONE");
-    }
-
     public void train(String customerID, double percentToSuccess) {
-        String imageDirPath = new File(Resource.getResourceOutsideJAR(FACE_DIRECTORY), customerID).getPath();
+        String imageDirPath = new File(Resource.getResourcePathOutsideJAR(FACE_DIRECTORY), customerID).getPath();
         System.out.println(imageDirPath);
         List<Mat> faceSamples = new ArrayList<>();
         List<Integer> labels = new ArrayList<>();
@@ -83,7 +78,7 @@ public class Trainer {
         MatOfInt labelsMat = new MatOfInt();
         labelsMat.fromList(labels);
         recognizer.model.train(faceSamples, labelsMat);
-        recognizer.model.save(new File(Resource.getResourceOutsideJAR(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
+        recognizer.model.save(new File(Resource.getResourcePathOutsideJAR(CLASSIFIER_DIRECTORY), customerID + ".xml").getPath());
         JOptionPane.showMessageDialog(CafeManagement.homeGUI, "Đăng ký gương mặt thành công.");
     }
 

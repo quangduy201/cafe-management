@@ -32,7 +32,7 @@ public class CategoryDAL extends Manager {
                 category.getQuantity(),
                 false
             ); // category khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CategoryDAL.addCategory(): " + e.getMessage());
         }
         return 0;
@@ -46,7 +46,7 @@ public class CategoryDAL extends Manager {
             updateValues.add(category.getQuantity());
             updateValues.add(category.isDeleted());
             return update(updateValues, "CATEGORY_ID = '" + category.getCategoryID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CategoryDAL.updateCategory(): " + e.getMessage());
         }
         return 0;
@@ -57,7 +57,7 @@ public class CategoryDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CategoryDAL.deleteCategory(): " + e.getMessage());
         }
         return 0;
@@ -66,7 +66,7 @@ public class CategoryDAL extends Manager {
     public List<Category> searchCategories(String... conditions) {
         try {
             return convertToCategories(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in CategoryDAL.searchCategories(): " + e.getMessage());
         }
         return new ArrayList<>();

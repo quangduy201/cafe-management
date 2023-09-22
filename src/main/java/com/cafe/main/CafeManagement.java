@@ -21,7 +21,7 @@ public class CafeManagement {
     }
 
     public static void start() {
-        Settings.applyTheme("light");
+        Settings.initialize();
         statisticBLL = new StatisticBLL();
         discountBLL = new DiscountBLL();
         statisticBLL.addStatisticsSinceTheLastStatistic();
@@ -35,7 +35,9 @@ public class CafeManagement {
         while (true) {
             Day nextDay = new Day().after(1, 0, 0);
             while (true) {
-                CafeManagement.homeGUI.setTime();
+                if (homeGUI == null)
+                    return;
+                homeGUI.setTime();
                 Day today = new Day();
                 if (today.equals(nextDay)) {
                     break;
@@ -49,5 +51,17 @@ public class CafeManagement {
             statisticBLL.addStatistic(statistic);
             discountBLL.checkDateDiscount(new Day());
         }
+    }
+
+    public static void exit(int status) {
+        statisticBLL = null;
+        discountBLL = null;
+        if (loginGUI != null)
+            loginGUI.dispose();
+        loginGUI = null;
+        if (homeGUI != null)
+            homeGUI.dispose();
+        homeGUI = null;
+        System.exit(status);
     }
 }

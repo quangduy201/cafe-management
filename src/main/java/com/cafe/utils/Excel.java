@@ -1,7 +1,6 @@
 package com.cafe.utils;
 
 import com.cafe.BLL.IngredientBLL;
-import com.cafe.BLL.SupplierBLL;
 import com.cafe.DTO.Ingredient;
 import com.cafe.DTO.Supplier;
 import com.cafe.GUI.IngredientGUI;
@@ -14,6 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class Excel {
     public void close() {
         try {
             workbook.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -106,11 +106,6 @@ public class Excel {
         }
         excel.close();
         return true;
-    }
-
-    public static void main(String[] args) {
-        Supplier supplier = new SupplierBLL().searchSuppliers("SUPPLIER_ID = 'SUP001'").get(0);
-        Excel.importExcel(supplier, "D:\\Workspace\\Project\\cafe-management\\target\\test.xlsx");
     }
 
     public Object readCell(int row, int column) {

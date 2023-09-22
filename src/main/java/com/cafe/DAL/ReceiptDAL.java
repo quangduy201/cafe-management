@@ -46,7 +46,7 @@ public class ReceiptDAL extends Manager {
                 receipt.getSupplierID(),
                 false
             ); // receipt khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.addReceipt(): " + e.getMessage());
         }
         return 0;
@@ -62,7 +62,7 @@ public class ReceiptDAL extends Manager {
             updateValues.add(receipt.getSupplierID());
             updateValues.add(receipt.isDeleted());
             return update(updateValues, "RECEIPT_ID = '" + receipt.getReceiptID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.updateReceipt(): " + e.getMessage());
         }
         return 0;
@@ -73,7 +73,7 @@ public class ReceiptDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.deleteReceipt(): " + e.getMessage());
         }
         return 0;
@@ -82,7 +82,7 @@ public class ReceiptDAL extends Manager {
     public List<Receipt> searchReceipts(String... conditions) {
         try {
             return convertToReceipts(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.searchReceipts(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -95,7 +95,7 @@ public class ReceiptDAL extends Manager {
                 "DELETED = 0"
             };
             return convertToReceipts(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.searchReceipts(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -109,7 +109,7 @@ public class ReceiptDAL extends Manager {
                 ORDER BY DOR DESC
                 LIMIT 1;
                 """)).get(0);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDAL.getTheLastReceipt(): " + e.getMessage());
         }
         return new Receipt();

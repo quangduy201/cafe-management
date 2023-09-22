@@ -52,7 +52,7 @@ public class BillDAL extends Manager {
                 bill.getExcess(),
                 false
             ); // bill khi tạo mặc định total, deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.addBill(): " + e.getMessage());
         }
         return 0;
@@ -70,7 +70,7 @@ public class BillDAL extends Manager {
             updateValues.add(bill.getExcess());
             updateValues.add(bill.isDeleted());
             return update(updateValues, "BILL_ID = '" + bill.getBillID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.updateBill(): " + e.getMessage());
         }
         return 0;
@@ -81,7 +81,7 @@ public class BillDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.deleteBill(): " + e.getMessage());
         }
         return 0;
@@ -90,7 +90,7 @@ public class BillDAL extends Manager {
     public List<Bill> searchBills(String... conditions) {
         try {
             return convertToBills(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.searchBills(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -103,7 +103,7 @@ public class BillDAL extends Manager {
                 "DELETED = 0"
             };
             return convertToBills(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.searchBills(): " + e.getMessage());
         }
         return new ArrayList<>();
@@ -117,7 +117,7 @@ public class BillDAL extends Manager {
                 ORDER BY DOPURCHASE DESC
                 LIMIT 1;
                 """)).get(0);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in BillDAL.getTheLastBill(): " + e.getMessage());
         }
         return new Bill();

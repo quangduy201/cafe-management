@@ -33,7 +33,7 @@ public class ModuleDAL extends Manager {
                 Module.getModuleName(),
                 false
             ); // module khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ModuleDAL.addModule(): " + e.getMessage());
         }
         return 0;
@@ -46,7 +46,7 @@ public class ModuleDAL extends Manager {
             updateValues.add(Module.getModuleName());
             updateValues.add(Module.isDeleted());
             return update(updateValues, "MODULE_ID = '" + Module.getModuleID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ModuleDAL.updateModule(): " + e.getMessage());
         }
         return 0;
@@ -57,7 +57,7 @@ public class ModuleDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ModuleDAL.deleteModule(): " + e.getMessage());
         }
         return 0;
@@ -66,7 +66,7 @@ public class ModuleDAL extends Manager {
     public List<Module> searchModules(String... conditions) {
         try {
             return covertModule(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ModuleDAL.searchModules(): " + e.getMessage());
         }
         return new ArrayList<>();

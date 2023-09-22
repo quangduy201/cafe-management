@@ -11,6 +11,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.Videoio;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -27,8 +28,8 @@ public class Recorder {
         camera = new Camera(cameraName);
         detector = new Detector();
         try {
-            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(FACE_DIRECTORY)));
-        } catch (Exception e) {
+            Files.createDirectories(Paths.get(Resource.getResourcePathOutsideJAR(FACE_DIRECTORY)));
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -65,20 +66,12 @@ public class Recorder {
         this.count = count;
     }
 
-    public static void main(String[] args) {
-        Recorder recorder = new Recorder("Camera");
-        recorder.record("CUS001");
-        Trainer trainer = new Trainer();
-        trainer.train("CUS001", 80);
-        System.out.println("SUCCESS");
-    }
-
     public void takePictures(String customerID) {
-        String imageDirPath = new File(Resource.getResourceOutsideJAR(FACE_DIRECTORY), customerID).getPath();
+        String imageDirPath = new File(Resource.getResourcePathOutsideJAR(FACE_DIRECTORY), customerID).getPath();
         try {
             FileUtils.deleteDirectory(new File(imageDirPath));
             Files.createDirectories(Paths.get(imageDirPath));
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
         count = 0;

@@ -29,7 +29,7 @@ public class ReceiptDetailsDAL extends Manager {
                 receiptDetails.getIngredientID(),
                 receiptDetails.getQuantity()
             );
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDetailsDAL.addReceiptDetails(): " + e.getMessage());
         }
         return 0;
@@ -38,7 +38,7 @@ public class ReceiptDetailsDAL extends Manager {
     public List<ReceiptDetails> searchReceiptDetails(String... conditions) {
         try {
             return convertToReceiptDetails(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in ReceiptDetailsDAL.searchReceiptDetails(): " + e.getMessage());
         }
         return new ArrayList<>();

@@ -6,7 +6,7 @@ import com.cafe.custom.RoundPanel;
 import com.cafe.main.CafeManagement;
 import com.cafe.utils.Password;
 import com.cafe.utils.Resource;
-import com.cafe.utils.Settings;
+import com.cafe.utils.Theme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ import java.awt.event.*;
 import java.util.List;
 
 public class LoginGUI extends JFrame {
-    ImageIcon logo = Resource.loadImageIconIn("img/logo_cafe.png");
+    ImageIcon logo = Resource.loadImageIcon("img/logo_cafe.png");
     JPanel contentPane = new JPanel();
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
@@ -180,7 +180,7 @@ public class LoginGUI extends JFrame {
         rpPassword.setBackground(new Color(0xFFFFFF));
         panel3.add(rpPassword);
 
-        lbPassWord.setText("Forget password?");
+        lbPassWord.setText("Forgot password?");
         lbPassWord.setPreferredSize(new Dimension(122, 20));
         lbPassWord.setForeground(new Color(44, 119, 44));
         rpPassword.add(lbPassWord);
@@ -204,7 +204,7 @@ public class LoginGUI extends JFrame {
                 lbPassWord.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
             }
             public void mouseClicked(MouseEvent e) {
-                forgetPassword();
+                forgotPassword();
             }
         });
 
@@ -275,7 +275,7 @@ public class LoginGUI extends JFrame {
         }
     }
 
-    private void forgetPassword() {
+    private void forgotPassword() {
         new OTPGUI();
     }
 
@@ -327,7 +327,7 @@ public class LoginGUI extends JFrame {
     }
 
     private void exit() {
-        System.exit(0);
+        CafeManagement.exit(0);
     }
 
     private void minimize() {
@@ -336,7 +336,7 @@ public class LoginGUI extends JFrame {
 
     @Override
     public void setVisible(boolean b) {
-        Settings.applyTheme("light");
+        Theme.applyTheme("light");
         textField.setText("Username");
         passwordField.setText("Password");
         System.gc();

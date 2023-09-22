@@ -41,7 +41,7 @@ public class AccountDAL extends Manager {
                 account.getStaffID(),
                 false
             ); // account khi tạo mặc định deleted = 0
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in AccountDAL.addAccount(): " + e.getMessage());
         }
         return 0;
@@ -65,7 +65,7 @@ public class AccountDAL extends Manager {
             updateValues.add(account.getStaffID());
             updateValues.add(account.isDeleted());
             return update(updateValues, "ACCOUNT_ID = '" + account.getAccountID() + "'");
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in AccountDAL.updateAccount(): " + e.getMessage());
         }
         return 0;
@@ -84,7 +84,7 @@ public class AccountDAL extends Manager {
         try {
             String query = "UPDATE `" + getTableName() + "` SET PASSWD = '" + account.getPassword() + "' WHERE ACCOUNT_ID = '" + account.getAccountID() + "';";
             return executeUpdate(query);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in AccountDAL.updateAccountPassword(): " + e.getMessage());
         }
         return 0;
@@ -95,7 +95,7 @@ public class AccountDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(true);
             return update(updateValues, conditions);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in AccountDAL.deleteAccount(): " + e.getMessage());
         }
         return 0;
@@ -104,7 +104,7 @@ public class AccountDAL extends Manager {
     public List<Account> searchAccounts(String... conditions) {
         try {
             return convertToAccounts(read(conditions));
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Error occurred in AccountDAL.searchAccounts(): " + e.getMessage());
         }
         return new ArrayList<>();

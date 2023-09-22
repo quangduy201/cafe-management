@@ -131,6 +131,15 @@ public class Day {
         return year == day.year && month == day.month && date == day.date;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + this.date;
+        hash = 53 * hash + this.month;
+        hash = 53 * hash + this.year;
+        return hash;
+    }
+
     public boolean isBetween(Day day1, Day day2) {
         return (isAfter(day1) || equals(day1)) && (isBefore(day2) || equals(day2));
     }
@@ -204,7 +213,7 @@ public class Day {
         formatter.setLenient(false);
         try {
             return formatter.parse(date + "/" + month + "/" + year);
-        } catch (Exception ignored) {
+        } catch (ParseException ignored) {
             return new Date();
         }
     }

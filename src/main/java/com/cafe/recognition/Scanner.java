@@ -7,6 +7,7 @@ import org.opencv.core.Rect;
 import org.opencv.videoio.Videoio;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -24,8 +25,8 @@ public class Scanner {
         detector = new Detector();
         recognizers = new HashMap<>();
         try {
-            Files.createDirectories(Paths.get(Resource.getResourceOutsideJAR(Recorder.FACE_DIRECTORY)));
-        } catch (Exception e) {
+            Files.createDirectories(Paths.get(Resource.getResourcePathOutsideJAR(Recorder.FACE_DIRECTORY)));
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -55,7 +56,7 @@ public class Scanner {
     }
 
     public void loadModels() {
-        File[] files = new File(Objects.requireNonNull(Resource.getResourceOutsideJAR(Trainer.CLASSIFIER_DIRECTORY))).listFiles();
+        File[] files = new File(Objects.requireNonNull(Resource.getResourcePathOutsideJAR(Trainer.CLASSIFIER_DIRECTORY))).listFiles();
         assert files != null;
         for (File file : files) {
             String customerID = file.getName();

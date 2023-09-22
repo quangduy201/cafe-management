@@ -2,14 +2,10 @@ package com.cafe.DAL;
 
 import com.cafe.utils.Database;
 import com.cafe.utils.Day;
-import com.cafe.utils.Resource;
 
-import javax.swing.*;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class MySQL {
     public MySQL() {
@@ -19,20 +15,21 @@ public class MySQL {
         Connection connection = Database.getConnection();
         if (connection == null)
             return new ArrayList<>();
-        Statement statement = connection.createStatement();
-        String formattedQuery = formatQuery(query, values);
-        List<List<String>> result = new ArrayList<>();
-        ResultSet resultSet = statement.executeQuery(formattedQuery);
-        ResultSetMetaData metaData = resultSet.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        while (resultSet.next()) {
-            List<String> row = new ArrayList<>(columnCount);
-            for (int i = 1; i <= columnCount; i++) {
-                row.add(resultSet.getString(i));
+        List<List<String>> result;
+        try (Statement statement = connection.createStatement()) {
+            String formattedQuery = formatQuery(query, values);
+            result = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery(formattedQuery);
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            while (resultSet.next()) {
+                List<String> row = new ArrayList<>(columnCount);
+                for (int i = 1; i <= columnCount; i++) {
+                    row.add(resultSet.getString(i));
+                }
+                result.add(row);
             }
-            result.add(row);
         }
-        statement.close();
         Database.closeConnection(connection);
         return result;
     }
@@ -41,11 +38,11 @@ public class MySQL {
         Connection connection = Database.getConnection();
         if (connection == null)
             return 0;
-        Statement statement = connection.createStatement();
-        String formattedQuery = formatQuery(query, values);
         int numOfRows;
-        numOfRows = statement.executeUpdate(formattedQuery);
-        statement.close();
+        try (Statement statement = connection.createStatement()) {
+            String formattedQuery = formatQuery(query, values);
+            numOfRows = statement.executeUpdate(formattedQuery);
+        }
         Database.closeConnection(connection);
         return numOfRows;
     }
@@ -53,8 +50,8 @@ public class MySQL {
     public String formatQuery(String query, Object... values) {
         String stringValue;
         for (Object value : values) {
-            if (value instanceof Day) {
-                stringValue = "'" + ((Day) value).toMySQLString() + "'";
+            if (value instanceof Day day) {
+                stringValue = "'" + day.toMySQLString() + "'";
             } else if (value instanceof String || value instanceof Character) {
                 stringValue = "'" + value + "'";
             } else if (value instanceof Boolean) {
@@ -62,7 +59,7 @@ public class MySQL {
             } else if (value instanceof Number) {
                 stringValue = value.toString();
             } else {
-                stringValue = "'" + value.toString() + "'";
+                stringValue = "'" + value + "'";
             }
             query = query.replaceFirst("\\?", stringValue);
         }

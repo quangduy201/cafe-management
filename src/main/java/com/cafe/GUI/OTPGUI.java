@@ -57,6 +57,7 @@ public class OTPGUI extends JFrame {
         if (!this.email.isEmpty())
             textField.setText(this.email);
         textField.requestFocusInWindow();
+        textField.addActionListener(e -> this.validateStep1(textField.getText()));
         otpEnterEmail.add(textField);
 
         JLabel nothing = new JLabel();
@@ -117,6 +118,8 @@ public class OTPGUI extends JFrame {
 
                 if (currentText.matches("\\d{0,6}")) { // Only allow 0 to 6 digits
                     super.replace(fb, offset, length, text, attrs);
+                    if (currentText.length() == OTP.OTP_LENGTH)
+                        validateStep2(currentText);
                 }
             }
         });
@@ -126,7 +129,7 @@ public class OTPGUI extends JFrame {
         nothing.setPreferredSize(new Dimension(700, 50));
         otpConfirmPanel.add(nothing);
 
-        JButton[] buttons = new JButton[4];
+        JButton[] buttons = new JButton[3];
         buttons[0] = new JButton();
         buttons[0].setText("Gửi lại");
         buttons[0].setFont(new Font("Arial", Font.PLAIN, 12));
@@ -139,24 +142,14 @@ public class OTPGUI extends JFrame {
         buttons[1] = new JButton();
         buttons[1].setText("Quay lại");
         buttons[1].setFont(new Font("Arial", Font.PLAIN, 12));
-        buttons[1].addActionListener(e -> {
-            toStep(--step);
-        });
+        buttons[1].addActionListener(e -> toStep(--step));
         otpConfirmPanel.add(buttons[1]);
 
         buttons[2] = new JButton();
-        buttons[2].setText("Tiếp tục");
+        buttons[2].setText("Hủy");
         buttons[2].setFont(new Font("Arial", Font.PLAIN, 12));
-        buttons[2].addActionListener(e -> {
-            validateStep2(textField.getText());
-        });
+        buttons[2].addActionListener(e -> this.dispose());
         otpConfirmPanel.add(buttons[2]);
-
-        buttons[3] = new JButton();
-        buttons[3].setText("Hủy");
-        buttons[3].setFont(new Font("Arial", Font.PLAIN, 12));
-        buttons[3].addActionListener(e -> this.dispose());
-        otpConfirmPanel.add(buttons[3]);
     }
 
     public void showChangePassword() {
@@ -173,8 +166,15 @@ public class OTPGUI extends JFrame {
         otpChangePassword.add(label1);
 
         JPasswordField passwordField1 = new JPasswordField();
+        JPasswordField passwordField2 = new JPasswordField();
+
         passwordField1.setFont(new Font("Arial", Font.PLAIN, 14));
         passwordField1.setPreferredSize(new Dimension(200, 32));
+        passwordField1.addActionListener(e -> {
+            String password = new String(passwordField1.getPassword());
+            String confirm = new String(passwordField2.getPassword());
+            validateStep3(password, confirm);
+        });
         otpChangePassword.add(passwordField1);
 
         JLabel label2 = new JLabel("Nhập lại mật khẩu");
@@ -183,9 +183,13 @@ public class OTPGUI extends JFrame {
         label2.setHorizontalAlignment(JLabel.CENTER);
         otpChangePassword.add(label2);
 
-        JPasswordField passwordField2 = new JPasswordField();
         passwordField2.setFont(new Font("Arial", Font.PLAIN, 14));
         passwordField2.setPreferredSize(new Dimension(200, 32));
+        passwordField2.addActionListener(e -> {
+            String password = new String(passwordField1.getPassword());
+            String confirm = new String(passwordField2.getPassword());
+            validateStep3(password, confirm);
+        });
         otpChangePassword.add(passwordField2);
 
         JButton[] buttons = new JButton[2];

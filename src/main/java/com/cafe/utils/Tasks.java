@@ -29,7 +29,7 @@ public class Tasks {
 
     public void recordAndTrain(String customerID, double percentToSuccess) {
         recorder.record(customerID);
-        String imageDirPath = new File(Resource.getResourceOutsideJAR(Trainer.FACE_DIRECTORY), customerID).getPath();
+        String imageDirPath = new File(Resource.getResourcePathOutsideJAR(Trainer.FACE_DIRECTORY), customerID).getPath();
         int numberOfImages;
         try {
             numberOfImages = Objects.requireNonNull(new File(imageDirPath).list()).length;
