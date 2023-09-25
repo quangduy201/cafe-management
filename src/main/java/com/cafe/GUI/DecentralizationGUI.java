@@ -10,6 +10,7 @@ import com.cafe.DTO.Module;
 import com.cafe.custom.Button;
 import com.cafe.custom.DataTable;
 import com.cafe.custom.RoundPanel;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -69,7 +70,7 @@ public class DecentralizationGUI extends JPanel {
         jLabelsForm1 = new JLabel[3];
         cbbSearchFilter = new JComboBox<>(new String[]{"Mã quyền", "Tên quyền"});
         //jComboBoxForm = new JComboBox[modules.size() - 3];
-        checkBox = new JCheckBox[13 * 3];
+        checkBox = new JCheckBox[44];
         txtSearch = new JTextField(20);
         jTextFieldsForm = new JTextField[2];
         btAdd = new Button();
@@ -126,12 +127,22 @@ public class DecentralizationGUI extends JPanel {
         scrollPane = new JScrollPane(dataTable);
         roundPanel1.add(scrollPane);
 
-        JScrollPane jScrollPane = new JScrollPane(pnlDecentralizationConfiguration);
-        jScrollPane.setPreferredSize(new Dimension(600, 500));
-        pnlDecentralizationConfiguration.setLayout(new GridLayout(14, 3, 40, 20));
-        pnlDecentralizationConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
-        pnlDecentralizationConfiguration.setPreferredSize(new Dimension(600, 500));
-        roundPanel2.add(jScrollPane, BorderLayout.CENTER);
+//        JScrollPane jScrollPane = new JScrollPane(jpanel);
+//        jScrollPane.setPreferredSize(new Dimension(600, 500));
+        JPanel decPanel = new JPanel();
+        decPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        roundPanel2.add(decPanel, BorderLayout.CENTER);
+
+        JPanel secondRowPanel = new JPanel();
+        secondRowPanel.setPreferredSize(new Dimension(600, 75));
+        secondRowPanel.setLayout(new MigLayout("wrap 6, gap 0 20"));
+        decPanel.add(secondRowPanel);
+
+        pnlDecentralizationConfiguration.setLayout(new MigLayout("wrap 6, gap 80 20"));
+        pnlDecentralizationConfiguration.setPreferredSize(new Dimension(600, 800));
+//        pnlDecentralizationConfiguration.setBorder(BorderFactory.createEmptyBorder(20, 10, 0, 10));
+        decPanel.add(pnlDecentralizationConfiguration);
+//        pnlDecentralizationConfiguration.setPreferredSize(new Dimension(500, 500));
 
         jLabelsForm1[0] = new JLabel();
         jLabelsForm1[0].setText("Mã quyền: ");
@@ -151,17 +162,44 @@ public class DecentralizationGUI extends JPanel {
         roundPanel3.add(jTextFieldsForm[1]);
 
 
+
+
+
         int index2 = 0;
         for (int i = 0; i < modules.size(); i++) {
+            switch (i) {
+                case  0, 2 -> {
+                    jLabelsForm[i] = new JLabel();
+                    jLabelsForm[i].setPreferredSize(new Dimension(159,20));
+                    secondRowPanel.add(jLabelsForm[i], "span 2, grow");
+                    checkBox[index2] = new JCheckBox("Xem");
+                    secondRowPanel.add(checkBox[index2]);
+                    index2++;
+                    continue;
+                }
+                case 1, 9 -> {
+                    jLabelsForm[i] = new JLabel();
+                    jLabelsForm[i].setHorizontalAlignment(SwingConstants.CENTER);
+                    jLabelsForm[i].setPreferredSize(new Dimension(213,20));
+                    secondRowPanel.add(jLabelsForm[i], "span 2, grow");
+                    checkBox[index2] = new JCheckBox("Xem");
+                    secondRowPanel.add(checkBox[index2]);
+                    index2++;
+                    continue;
+                }
+            }
             jLabelsForm[i] = new JLabel();
-            pnlDecentralizationConfiguration.add(jLabelsForm[i]);
+            jLabelsForm[i].setPreferredSize(new Dimension(80,20));
+            pnlDecentralizationConfiguration.add(jLabelsForm[i], "span 2, grow");
             checkBox[index2] = new JCheckBox("Xem");
-            checkBox[index2 + 1] = new JCheckBox("Sửa");
-            checkBox[index2 + 2] = new JCheckBox("Xóa");
+            checkBox[index2 + 1] = new JCheckBox("Thêm");
+            checkBox[index2 + 2] = new JCheckBox("Sửa");
+            checkBox[index2 + 3] = new JCheckBox("Xóa");
             pnlDecentralizationConfiguration.add(checkBox[index2]);
             pnlDecentralizationConfiguration.add(checkBox[index2 + 1]);
             pnlDecentralizationConfiguration.add(checkBox[index2 + 2]);
-            index2 += 3;
+            pnlDecentralizationConfiguration.add(checkBox[index2 + 3]);
+            index2 += 4;
         }
 
         jLabelsForm[0].setText("Bán hàng: ");
@@ -173,12 +211,13 @@ public class DecentralizationGUI extends JPanel {
         jLabelsForm[6].setText("Công thức: ");
         jLabelsForm[7].setText("Giảm giá: ");
         jLabelsForm[8].setText("Khách hàng: ");
-        jLabelsForm[9].setText("Nhân viên: ");
-        jLabelsForm[10].setText("Tài khoản: ");
-        jLabelsForm[11].setText("Phân quyền: ");
-        jLabelsForm[12].setText("Nhà cung cấp: ");
+        jLabelsForm[9].setText("Thống kê: ");
+        jLabelsForm[10].setText("Nhân viên: ");
+        jLabelsForm[11].setText("Tài khoản: ");
+        jLabelsForm[12].setText("Phân quyền: ");
+        jLabelsForm[13].setText("Nhà cung cấp: ");
 
-        for (int i = 0; i < 39; i++) {
+        for (int i = 0; i < 44; i++) {
             checkBox[i].setSelected(false);
             checkBox[i].setEnabled(false);
         }
@@ -246,7 +285,7 @@ public class DecentralizationGUI extends JPanel {
                 for(int i = 0; i < 13; i++) {
                     decentralizationDetailBLL.addDecentralizationDetail(
                         new DecentralizationDetail(newDecentralization.getDecentralizationID()
-                        ,modules.get(i).getModuleID(),false,false,false,false));
+                        ,modules.get(i).getModuleID(),false,false,false,false,false));
                 }
             }
             else
@@ -293,18 +332,6 @@ public class DecentralizationGUI extends JPanel {
                 JOptionPane.showMessageDialog(this, "Xoá quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 decentralizationDetail = new DecentralizationDetailBLL()
                     .searchDecentralizationDetail("DECENTRALIZATION_ID = '" + jTextFieldsForm[0].getText() + "'");
-//                int index = 0;
-                for(int i = 0; i < 13; i++) {
-                    decentralizationDetailBLL.deleteDecentralizationDetail(decentralizationDetail.get(i));
-//                    if(decentralizationDetail.get(i).isCanADD() &&
-//                    decentralizationDetail.get(i).isCanEDIT() &&
-//                    decentralizationDetail.get(i).isCanREMOVE()) index++;
-                }
-//                Account account = CafeManagement.homeGUI.getAccount();
-//                if(index == 12 && jTextFieldsForm[0].getText().equals(account.getDecentralizationID())) {
-//                    CafeManagement.homeGUI.dispose();
-//                    CafeManagement.loginGUI.setVisible(true);
-//                }
             }
 
             else
@@ -319,7 +346,7 @@ public class DecentralizationGUI extends JPanel {
         loadDataTable(decentralizationBLL.getDecentralizationList());
         jTextFieldsForm[0].setText(decentralizationBLL.getAutoID());
         jTextFieldsForm[1].setText(null);
-        for (int i = 0; i < 39; i++) {
+        for (int i = 0; i < 44; i++) {
             checkBox[i].setSelected(false);
             checkBox[i].setEnabled(false);
         }
@@ -329,7 +356,7 @@ public class DecentralizationGUI extends JPanel {
     }
 
     public void fillForm() {
-        for (int i = 0; i < 39; i++) {
+        for (int i = 0; i < 44; i++) {
             checkBox[i].setSelected(false);
             checkBox[i].setEnabled(true);
         }
@@ -346,10 +373,19 @@ public class DecentralizationGUI extends JPanel {
         jTextFieldsForm[1].setText(decentralization[decentralization.length - 1]);
         int index = 0;
         for (int i = 0; i < decentralizationDetail.size(); i++) {
-            if(decentralizationDetail.get(i).isCanADD()) checkBox[index].setSelected(true);
-            if(decentralizationDetail.get(i).isCanEDIT())  checkBox[index + 1].setSelected(true);
-            if(decentralizationDetail.get(i).isCanREMOVE()) checkBox[index + 2].setSelected(true);
-            index += 3;
+            switch (i) {
+                case  0, 1, 2, 9 -> {
+                    if(decentralizationDetail.get(i).isCanVIEW()) checkBox[index].setSelected(true);
+                    index++;
+                }
+                default -> {
+                    if(decentralizationDetail.get(i).isCanVIEW()) checkBox[index].setSelected(true);
+                    if(decentralizationDetail.get(i).isCanADD()) checkBox[index + 1].setSelected(true);
+                    if(decentralizationDetail.get(i).isCanEDIT())  checkBox[index + 2].setSelected(true);
+                    if(decentralizationDetail.get(i).isCanREMOVE()) checkBox[index + 3].setSelected(true);
+                    index += 4;
+                }
+            }
         }
         btAdd.setEnabled(false);
         btUpd.setEnabled(true);
@@ -372,14 +408,24 @@ public class DecentralizationGUI extends JPanel {
         List<DecentralizationDetail> decentralizationDetails = new ArrayList<>();
         String decentralizationID = jTextFieldsForm[0].getText();
         int index = 0;
-        for (int i = 0; i < 13; ++i) {
+        boolean view, add, edit, remove;
+        for (int i = 0; i < 14; ++i) {
             String moduleID = modules.get(i).getModuleID();
-            boolean add, edit, remove;
-            add = checkBox[index].isSelected();
-            edit = checkBox[index + 1].isSelected();
-            remove = checkBox[index + 2].isSelected();
-            index += 3;
-            decentralizationDetails.add(new DecentralizationDetail(decentralizationID, moduleID, add, edit, remove, false));
+            switch (i) {
+                case 0, 1, 2, 9 -> {
+                    view = checkBox[index].isSelected();
+                    index += 1;
+                    decentralizationDetails.add(new DecentralizationDetail(decentralizationID, moduleID, view, false, false, false, false));
+                }
+                default -> {
+                    view = checkBox[index].isSelected();
+                    add = checkBox[index + 1].isSelected();
+                    edit = checkBox[index + 2].isSelected();
+                    remove = checkBox[index + 3].isSelected();
+                    index += 4;
+                    decentralizationDetails.add(new DecentralizationDetail(decentralizationID, moduleID, view, add, edit, remove, false));
+                }
+            }
         }
         return decentralizationDetails;
     }

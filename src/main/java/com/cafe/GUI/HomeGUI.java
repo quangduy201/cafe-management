@@ -94,10 +94,8 @@ public class HomeGUI extends JFrame {
             .searchStaffs("STAFF_ID = '" + account.getStaffID() + "'")
             .get(0);
         mang = new int[15];
-        for (int i = 0; i < 13; i++) {
-            if(decentralizationDetails.get(i).isCanADD() ||
-                decentralizationDetails.get(i).isCanEDIT() ||
-                decentralizationDetails.get(i).isCanREMOVE()) {
+        for (int i = 0; i < 14; i++) {
+            if(decentralizationDetails.get(i).isCanVIEW()) {
                 switch (decentralizationDetails.get(i).getModuleID()) {
                     case "MOD01" ->  mang[1] = 1;
                     case "MOD02" ->  mang[2] = 1;
@@ -107,14 +105,12 @@ public class HomeGUI extends JFrame {
                     case "MOD06" ->  mang[6] = 1;
                     case "MOD07" ->  mang[7] = 1;
                     case "MOD08" ->  mang[8] = 1;
-                    case "MOD09" ->  mang[10] = 1;
-                    case "MOD10" ->  mang[11] = 1;
-                    case "MOD11" ->  mang[12] = 1;
-                    case "MOD12" ->  {
-                        mang[13] = 1;
-                        mang[9] = 1;
-                    }
-                    case "MOD13" ->  mang[14] = 1;
+                    case "MOD09" ->  mang[9] = 1;
+                    case "MOD10" ->  mang[10] = 1;
+                    case "MOD11" ->  mang[11] = 1;
+                    case "MOD12" ->  mang[12] = 1;
+                    case "MOD13" ->  mang[13] = 1;
+                    case "MOD14" ->  mang[14] = 1;
                 }
             }
         }
@@ -689,11 +685,11 @@ public class HomeGUI extends JFrame {
             case 7 -> new RecipeGUI(decentralizationDetails.get(6));
             case 8 -> new DiscountGUI(decentralizationDetails.get(7));
             case 9 -> new StatisticGUI();
-            case 10 -> new CustomerGUI(decentralizationDetails.get(8));
-            case 11 -> new StaffGUI(decentralizationDetails.get(9));
-            case 12 -> new AccountGUI(decentralizationDetails.get(10));
-            case 13 -> new DecentralizationGUI(decentralizationDetails.get(11));
-            case 14 -> new SupplierGUI(decentralizationDetails.get(12));
+            case 10 -> new CustomerGUI(decentralizationDetails.get(9));
+            case 11 -> new StaffGUI(decentralizationDetails.get(10));
+            case 12 -> new AccountGUI(decentralizationDetails.get(11));
+            case 13 -> new DecentralizationGUI(decentralizationDetails.get(12));
+            case 14 -> new SupplierGUI(decentralizationDetails.get(13));
             default -> null;
         };
         OpenChildForm(panel);
