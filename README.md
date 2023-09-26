@@ -14,6 +14,7 @@ ___
 
 - [Features](#features)
 - [Installation](#installation)
+- [Build and run](#build-and-run)
 - [Contributors](#contributors)
 - [External Dependencies](#external-dependencies)
 - [License](#license)
@@ -40,8 +41,8 @@ To install the Cafe Management application, follow these steps:
 - Clone the repository to your local machine.
 - Import the project into your Java IDE as **Maven project** (e.g. IntelliJ, Eclipse).
 - Create a MySQL database and run this [`SQL`](database/cafe_db.sql) file.
-- Build the project and run this [`CafeManagement`](src/com/cafe/main/CafeManagement.java) class.
-- Login with the default account: `username = 'admin'`, `password = 'admin'`
+- Build the project and run this [`CafeManagement`](src/main/java/com/cafe/main/CafeManagement.java) class.
+- Login with the default account: `username = 'admin'`, `password = 'Admin123'`
 
 ___
 
