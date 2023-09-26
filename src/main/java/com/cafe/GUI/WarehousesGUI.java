@@ -241,7 +241,7 @@ public class WarehousesGUI extends JPanel {
     }
 
     private void supplierIDSearch() {
-        for(Supplier supplier : supplierList) {
+        for (Supplier supplier : supplierList) {
             if (supplier.getName().equals(cbbSupplierNameSearch.getSelectedItem())) {
                 loadDataTable(ingredientBLL.findIngredients("SUPPLIER_ID", Objects.requireNonNull(supplier.getSupplierID()).toString()));
                 break;
@@ -407,7 +407,7 @@ public class WarehousesGUI extends JPanel {
         model.setRowCount(0);
         for (Ingredient ingredient : ingredientList) {
             for (Supplier supplier: supplierList) {
-                if(ingredient.getSupplierID().equals(supplier.getSupplierID())) {
+                if (ingredient.getSupplierID().equals(supplier.getSupplierID())) {
                     model.addRow(new Object[]{ingredient.getIngredientID(), ingredient.getName(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getUnitPrice(), supplier.getName()});
                     break;
                 }

@@ -52,8 +52,7 @@ public class IngredientBLL extends Manager<Ingredient> {
     }
 
     public List<Ingredient> searchIngredients(String... conditions) {
-        this.ingredientList = ingredientDAL.searchIngredients(conditions);
-        return this.ingredientList;
+        return ingredientDAL.searchIngredients(conditions);
     }
 
     public List<Ingredient> findIngredients(String key, String value) {

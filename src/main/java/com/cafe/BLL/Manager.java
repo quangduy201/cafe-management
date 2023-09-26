@@ -15,21 +15,13 @@ public abstract class Manager<T> {
     }
 
     public String getAutoID(String type, int digits, List<T> objectList) {
-        int count = 0;
         if (objectList.isEmpty()) {
             return type + formatNumberToString(1, digits);
         }
-
         T lastObject = objectList.get(objectList.size() - 1);
-        if (lastObject.toString().split(" \\| ")[0]
-            .equals(type + formatNumberToString(objectList.size(), digits))) {
-            count += objectList.size();
-        } else {
-            while (objectList.get(count).toString().split(" \\| ")[0]
-                .equals(type + formatNumberToString(count + 1, digits)))
-                count++;
-        }
-        return type + formatNumberToString(count + 1, digits);
+        String lastID = lastObject.toString().split(" \\| ")[0];
+        int id = Integer.parseInt(lastID.substring(type.length()));
+        return type + formatNumberToString(id + 1, digits);
     }
 
     public String formatNumberToString(int number, int digits) {
@@ -61,6 +53,4 @@ public abstract class Manager<T> {
     }
 
     public abstract Object getValueByKey(T object, String key);
-
-//    public abstract Object getValueByKey(Decentralization decentralization, String key);
 }
