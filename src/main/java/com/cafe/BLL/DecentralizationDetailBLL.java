@@ -65,6 +65,7 @@ public class DecentralizationDetailBLL extends Manager<DecentralizationDetail>{
         return switch (key) {
             case "DECENTRALIZATION_ID" -> decentralizationDetail.getDecentralizationID();
             case "MODULE_ID" -> decentralizationDetail.getModuleID();
+            case "IS_VIEW" -> decentralizationDetail.isCanVIEW();
             case "IS_ADD" -> decentralizationDetail.isCanADD();
             case "IS_EDIT" -> decentralizationDetail.isCanEDIT();
             case "IS_REMOVE" -> decentralizationDetail.isCanREMOVE();

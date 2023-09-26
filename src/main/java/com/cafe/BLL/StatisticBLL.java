@@ -148,7 +148,7 @@ public class StatisticBLL extends Manager<Statistic> {
     }
 
     public String getAutoID() {
-        return getAutoID("STAT", 4, searchStatistics("STATISTIC_ID != 'STAT0000'"));
+        return getAutoID("STAT", 4, searchStatistics());
     }
 
     @Override

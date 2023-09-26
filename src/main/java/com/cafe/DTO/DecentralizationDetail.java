@@ -3,6 +3,7 @@ package com.cafe.DTO;
 public class DecentralizationDetail {
     private String decentralizationID;
     private String moduleID;
+    private boolean canVIEW;
     private boolean canADD;
     private boolean canEDIT;
     private boolean canREMOVE;
@@ -11,13 +12,22 @@ public class DecentralizationDetail {
     public DecentralizationDetail() {
     }
 
-    public DecentralizationDetail(String decentralizationID, String moduleID, boolean canADD, boolean canEDIT, boolean canREMOVE, boolean deleted) {
+    public DecentralizationDetail(String decentralizationID, String moduleID, boolean canVIEW, boolean canADD, boolean canEDIT, boolean canREMOVE, boolean deleted) {
         this.decentralizationID = decentralizationID;
         this.moduleID =  moduleID;
+        this.canVIEW = canVIEW;
         this.canADD = canADD;
         this.canEDIT = canEDIT;
         this.canREMOVE = canREMOVE;
         this.deleted = deleted;
+    }
+
+    public boolean isCanVIEW() {
+        return canVIEW;
+    }
+
+    public void setCanVIEW(boolean canVIEW) {
+        this.canVIEW = canVIEW;
     }
 
     public boolean isCanADD() {
@@ -72,6 +82,7 @@ public class DecentralizationDetail {
     public String toString() {
         return  decentralizationID + " | "  +
              moduleID + " | " +
+             canVIEW + " | " +
              canADD + " | " +
              canEDIT + " | " +
              canREMOVE;

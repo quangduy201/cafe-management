@@ -97,7 +97,7 @@ public class StaffBLL extends Manager<Staff> {
     }
 
     public String getAutoID() {
-        return getAutoID("ST", 2, searchStaffs("STAFF_ID != 'ST00'"));
+        return getAutoID("ST", 2, searchStaffs());
     }
 
     @Override

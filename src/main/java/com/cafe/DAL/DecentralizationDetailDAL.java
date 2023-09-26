@@ -11,6 +11,7 @@ public class DecentralizationDetailDAL extends Manager {
         super("decentralization_detail",
             List.of("DECENTRALIZATION_ID",
                 "MODULE_ID",
+                "CAN_VIEW",
                 "CAN_ADD",
                 "CAN_EDIT",
                 "CAN_REMOVE",
@@ -23,14 +24,16 @@ public class DecentralizationDetailDAL extends Manager {
             row.set(2, row.get(2).equals("0") ? "false" : "true");
             row.set(3, row.get(3).equals("0") ? "false" : "true");
             row.set(4, row.get(4).equals("0") ? "false" : "true");
+            row.set(5, row.get(5).equals("0") ? "false" : "true");
             row.set(row.size() - 1, row.get(row.size() - 1).equals("0") ? "false" : "true");
             return new DecentralizationDetail(
                 row.get(0), // decentralizationID
                 row.get(1), // decentralizationName
-                Boolean.parseBoolean(row.get(2)), // canADD
-                Boolean.parseBoolean(row.get(3)), // canEDIT
-                Boolean.parseBoolean(row.get(4)), // canREMOVE
-                Boolean.parseBoolean(row.get(5)) // deleted
+                Boolean.parseBoolean(row.get(2)), // canVIEW
+                Boolean.parseBoolean(row.get(3)), // canADD
+                Boolean.parseBoolean(row.get(4)), // canEDIT
+                Boolean.parseBoolean(row.get(5)), // canREMOVE
+                Boolean.parseBoolean(row.get(6)) // deleted
             );
         });
     }
@@ -39,6 +42,7 @@ public class DecentralizationDetailDAL extends Manager {
         try {
             return create(DecentralizationDetail.getDecentralizationID(),
                 DecentralizationDetail.getModuleID(),
+                DecentralizationDetail.isCanVIEW(),
                 DecentralizationDetail.isCanADD(),
                 DecentralizationDetail.isCanEDIT(),
                 DecentralizationDetail.isCanREMOVE(),
@@ -55,6 +59,7 @@ public class DecentralizationDetailDAL extends Manager {
             List<Object> updateValues = new ArrayList<>();
             updateValues.add(decentralizationDetail.getDecentralizationID());
             updateValues.add(decentralizationDetail.getModuleID());
+            updateValues.add(decentralizationDetail.isCanVIEW());
             updateValues.add(decentralizationDetail.isCanADD());
             updateValues.add(decentralizationDetail.isCanEDIT());
             updateValues.add(decentralizationDetail.isCanREMOVE());

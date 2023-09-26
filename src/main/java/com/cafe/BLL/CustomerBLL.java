@@ -95,7 +95,7 @@ public class CustomerBLL extends Manager<Customer> {
     }
 
     public String getAutoID() {
-        return getAutoID("CUS", 3, searchCustomers("CUSTOMER_ID != 'CUS000'"));
+        return getAutoID("CUS", 3, searchCustomers());
     }
 
     @Override

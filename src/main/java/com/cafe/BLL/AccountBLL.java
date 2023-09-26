@@ -93,7 +93,7 @@ public class AccountBLL extends Manager<Account> {
     }
 
     public String getAutoID() {
-        return getAutoID("AC", 3, searchAccounts("ACCOUNT_ID != 'AC000'"));
+        return getAutoID("AC", 3, searchAccounts());
     }
 
     @Override

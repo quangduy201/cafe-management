@@ -88,7 +88,7 @@ public class DecentralizationBLL extends Manager<Decentralization> {
     }
 
     public String getAutoID() {
-        return getAutoID("DE", 2, searchDecentralization("DECENTRALIZATION_ID != 'DE00'"));
+        return getAutoID("DE", 2, searchDecentralization());
     }
 
     @Override
